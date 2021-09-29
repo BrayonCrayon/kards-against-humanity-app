@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, {useEffect, useState} from "react";
+import ExpansionCard from "../Components/ExpansionCard";
 
-interface Expansion {
+export interface Expansion {
+    id: number
     name: string
 }
 
@@ -18,7 +20,7 @@ export const CreateGamePage: React.FC = () => {
         })();
     }, []);
 
-    const submitToapi = (event) => {
+    const submitToapi = (event: any) => {
         event.prevent.default
 
     }
@@ -28,9 +30,7 @@ export const CreateGamePage: React.FC = () => {
 
             <div>
                 {expansions.map((expansion) => {
-                    return (<div>
-                        {expansion.name}
-                    </div>)
+                    return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name} data-testid={`expansion-${expansion.id}`}/>
                 })}
             </div>
             <form action="" onSubmit={submitToapi}>
