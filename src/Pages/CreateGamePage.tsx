@@ -1,11 +1,7 @@
 import axios from "axios";
 import React, {useEffect, useState} from "react";
 import ExpansionCard from "../Components/ExpansionCard";
-
-export interface Expansion {
-    id: number
-    name: string
-}
+import {Expansion} from "../Types/Expansion";
 
 export const CreateGamePage: React.FC = () => {
 
@@ -20,29 +16,32 @@ export const CreateGamePage: React.FC = () => {
         })();
     }, []);
 
-    const submitToapi = (event: any) => {
-        event.prevent.default
+    const submitToApi = (event: any) => {
+        event.preventDefault();
 
+        axios.post('http://localhost:8080/api/game/store', {
+            name: userName,
+            expansionIds: expansions.map(e => e.id)
+        })
+        // todo: make the game
     }
 
     return (<div className='w-full flex justify-center'>
         <div className='w-1/3 h-1/3 border flex'>
 
-            <div>
-                {expansions.map((expansion) => {
-                    return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name} data-testid={`expansion-${expansion.id}`}/>
-                })}
-            </div>
-            <form action="" onSubmit={submitToapi}>
+            <form onSubmit={submitToApi}>
+                <div>
+                    {expansions.map((expansion) => {
+                        return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name}
+                                              data-testid={`expansion-${expansion.id}`}/>
+                    })}
+                </div>
                 <label>
                     Name:
-                    <input type='text' className='border' onChange={(event) => setUserName(event.target.value)}/>
+                    <input type='text' data-testid='user-name' name="name" className='border'
+                           onChange={(event) => setUserName(event.target.value)}/>
                 </label>
-                <label>
-                    Expansion:
-                    <input type='text' className='border'/>
-                </label>
-                <button className='bg-gray-500' onClick={() => console.log('submiting')}>Enter game</button>
+                <button data-testid='create-game-submit-button' className='bg-gray-300 p-2 text-gray-900 rounded shadow'>Enter game</button>
             </form>
         </div>
     </div>)
