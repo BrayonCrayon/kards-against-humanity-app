@@ -3,12 +3,16 @@ import React, {useCallback, useEffect, useState} from "react";
 import ExpansionCard from "../Components/ExpansionCard";
 import {Expansion} from "../Types/Expansion";
 import {API_URL} from "../config";
+import { useHistory } from "react-router-dom";
+
+axios.defaults.withCredentials = true;
 
 export const CreateGamePage: React.FC = () => {
 
     const [expansions, setExpansions] = useState<Expansion[]>([])
     const [selectedExpansions, setSelectedExpansions] = useState<Expansion[]>([]);
     const [userName, setUserName] = useState('');
+    const history = useHistory()
 
     useEffect(() => {
         (async () => {
@@ -16,16 +20,21 @@ export const CreateGamePage: React.FC = () => {
             const {data} = await axios.get(`${API_URL}/api/expansions`);
             setExpansions(data.data)
             setSelectedExpansions(data.data)
+            await axios.get(`${API_URL}/sanctum/csrf-cookie`);
+            console.log(axios.defaults);
         })();
     }, []);
 
-    const submitToApi = (event: any) => {
+    const submitToApi = async (event: any) => {
         event.preventDefault();
 
-        axios.post(`${API_URL}/api/game/store`, {
+
+        await axios.post(`${API_URL}/api/game/store`, {
             name: userName,
             expansionIds: selectedExpansions.map(e => e.id)
         })
+
+        history.push('/game');
     }
 
     const onToggle = useCallback((id: number, checked: boolean) => {
