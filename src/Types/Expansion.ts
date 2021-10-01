@@ -4,4 +4,5 @@ export interface Expansion {
     name: string;
     created_at?: Date;
     deleted_at?: Date;
+
 }

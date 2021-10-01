@@ -1,30 +1,45 @@
 import axios from "axios";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import ExpansionCard from "../Components/ExpansionCard";
 import {Expansion} from "../Types/Expansion";
+import {API_URL} from "../config";
 
 export const CreateGamePage: React.FC = () => {
 
     const [expansions, setExpansions] = useState<Expansion[]>([])
+    const [selectedExpansions, setSelectedExpansions] = useState<Expansion[]>([]);
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
         (async () => {
             // @ts-ignore
-            const {data} = await axios.get('http://localhost:8080/api/expansions');
+            const {data} = await axios.get(`${API_URL}/api/expansions`);
             setExpansions(data.data)
+            setSelectedExpansions(data.data)
         })();
     }, []);
 
     const submitToApi = (event: any) => {
         event.preventDefault();
 
-        axios.post('http://localhost:8080/api/game/store', {
+        axios.post(`${API_URL}/api/game/store`, {
             name: userName,
-            expansionIds: expansions.map(e => e.id)
+            expansionIds: selectedExpansions.map(e => e.id)
         })
-        // todo: make the game
     }
+
+    const onToggle = useCallback((id: number, checked: boolean) => {
+        if (checked) {
+            const exp = expansions.find(e => e.id === id);
+            if (exp) selectedExpansions.push(exp);
+            setSelectedExpansions(selectedExpansions);
+        } else {
+            setSelectedExpansions(selectedExpansions.filter((e) => {
+                return e.id !== id
+            }));
+        }
+
+    }, [selectedExpansions, expansions]);
 
     return (<div className='w-full flex justify-center'>
         <div className='w-1/3 h-1/3 border flex'>
@@ -33,7 +48,7 @@ export const CreateGamePage: React.FC = () => {
                 <div>
                     {expansions.map((expansion) => {
                         return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name}
-                                              data-testid={`expansion-${expansion.id}`}/>
+                                              data-testid={`expansion-${expansion.id}`} onToggle={onToggle}/>
                     })}
                 </div>
                 <label>

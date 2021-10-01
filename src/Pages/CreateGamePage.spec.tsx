@@ -3,6 +3,7 @@ import {CreateGamePage} from "./CreateGamePage";
 import axios from "axios";
 import userEvent from "@testing-library/user-event";
 import {Expansion} from "../Types/Expansion";
+import {API_URL} from "../config";
 
 jest.mock('axios')
 
@@ -12,8 +13,12 @@ const expansion = {
     id: 1,
     name: expectedExpansionName
 }
+const otherExpansion = {
+    id: 2,
+    name: expectedExpansionName + ' but different'
+}
 
-const responses: Expansion[] = [expansion]
+const responses: Expansion[] = [expansion, otherExpansion]
 
 describe('CreateGamePage', () => {
 
@@ -39,6 +44,23 @@ describe('CreateGamePage', () => {
         const name = "Slim Shady"
         render(<CreateGamePage/>);
 
+        const nameInput = await screen.findByTestId('user-name');
+        userEvent.type(nameInput, name);
+
+        const submitBtn = await screen.findByTestId('create-game-submit-button');
+        userEvent.click(submitBtn);
+
+        // expect axios to be called with selected expansions and users name
+        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`,{
+            expansionIds: [expansion.id, otherExpansion.id],
+            name
+        })
+    })
+
+    it('handles form submit with selected expansions only', async () => {
+        const name = "Slim Shady"
+        render(<CreateGamePage/>);
+
         const checkbox = await screen.findByTestId(`expansion-${expansion.id}-checkbox`);
         userEvent.click(checkbox)
 
@@ -51,8 +73,8 @@ describe('CreateGamePage', () => {
         userEvent.click(submitBtn);
 
         // expect axios to be called with selected expansions and users name
-        expect(mockedAxios.post).toHaveBeenCalledWith('http://localhost:8080/api/game/store',{
-            expansionIds: [expansion.id],
+        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`,{
+            expansionIds: [otherExpansion.id],
             name
         })
     })
