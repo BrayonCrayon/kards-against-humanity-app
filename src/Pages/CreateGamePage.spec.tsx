@@ -4,6 +4,8 @@ import axios from "axios";
 import userEvent from "@testing-library/user-event";
 import {Expansion} from "../Types/Expansion";
 import {API_URL} from "../config";
+import {Router, useHistory} from 'react-router-dom'
+import {createMemoryHistory} from 'history'
 
 jest.mock('axios')
 
@@ -23,7 +25,7 @@ const responses: Expansion[] = [expansion, otherExpansion]
 describe('CreateGamePage', () => {
 
     beforeEach(() => {
-        mockedAxios.get.mockResolvedValue({data: {data: responses}})
+        mockedAxios.get.mockResolvedValue({data: {data: responses}});
     })
 
     it('renders expansion cards', async () => {
@@ -42,7 +44,14 @@ describe('CreateGamePage', () => {
 
     it('handles form submit', async () => {
         const name = "Slim Shady"
-        render(<CreateGamePage/>);
+        const history = createMemoryHistory();
+        history.push = jest.fn();
+
+        render(
+            <Router history={history}>
+                <CreateGamePage/>
+            </Router>
+        );
 
         const nameInput = await screen.findByTestId('user-name');
         userEvent.type(nameInput, name);
@@ -51,18 +60,25 @@ describe('CreateGamePage', () => {
         userEvent.click(submitBtn);
 
         // expect axios to be called with selected expansions and users name
-        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`,{
+        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`, {
             expansionIds: [expansion.id, otherExpansion.id],
             name
-        })
+        });
     })
 
     it('handles form submit with selected expansions only', async () => {
-        const name = "Slim Shady"
-        render(<CreateGamePage/>);
+        const name = "Slim Shady";
+        const history = createMemoryHistory();
+        history.push = jest.fn();
+
+        render(
+            <Router history={history}>
+                <CreateGamePage/>
+            </Router>
+        );
 
         const checkbox = await screen.findByTestId(`expansion-${expansion.id}-checkbox`);
-        userEvent.click(checkbox)
+        userEvent.click(checkbox);
 
         expect(checkbox).not.toBeChecked();
 
@@ -73,9 +89,13 @@ describe('CreateGamePage', () => {
         userEvent.click(submitBtn);
 
         // expect axios to be called with selected expansions and users name
-        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`,{
+        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`, {
             expansionIds: [otherExpansion.id],
             name
-        })
+        });
+
+        await waitFor(() => {
+            expect(history.push).toHaveBeenCalledWith('/game')
+        });
     })
 })

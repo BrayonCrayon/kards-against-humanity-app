@@ -3,14 +3,19 @@ import React, {useCallback, useEffect, useState} from "react";
 import ExpansionCard from "../Components/ExpansionCard";
 import {Expansion} from "../Types/Expansion";
 import {API_URL} from "../config";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
+type ExpansionOption = {
+    expansion: Expansion
+    isSelected: boolean
+}
+
+
 export const CreateGamePage: React.FC = () => {
 
-    const [expansions, setExpansions] = useState<Expansion[]>([])
-    const [selectedExpansions, setSelectedExpansions] = useState<Expansion[]>([]);
+    const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
     const [userName, setUserName] = useState('');
     const history = useHistory()
 
@@ -18,8 +23,15 @@ export const CreateGamePage: React.FC = () => {
         (async () => {
             // @ts-ignore
             const {data} = await axios.get(`${API_URL}/api/expansions`);
-            setExpansions(data.data)
-            setSelectedExpansions(data.data)
+            // setExpansions(data.data)
+            setExpansions(data.data.map((item: Expansion) => {
+                return {
+                    expansion: item,
+                    isSelected: true
+                }
+            }))
+
+            // setSelectedExpansions(data.data)
             await axios.get(`${API_URL}/sanctum/csrf-cookie`);
             console.log(axios.defaults);
         })();
@@ -31,31 +43,39 @@ export const CreateGamePage: React.FC = () => {
 
         await axios.post(`${API_URL}/api/game/store`, {
             name: userName,
-            expansionIds: selectedExpansions.map(e => e.id)
+            expansionIds: expansions.map(e => {
+                return e.isSelected ? e.expansion.id : null
+            }).filter(Boolean)
         })
 
+        console.log('about to push')
         history.push('/game');
     }
 
     const onToggle = useCallback((id: number, checked: boolean) => {
-        if (checked) {
-            const exp = expansions.find(e => e.id === id);
-            if (exp) selectedExpansions.push(exp);
-            setSelectedExpansions(selectedExpansions);
-        } else {
-            setSelectedExpansions(selectedExpansions.filter((e) => {
-                return e.id !== id
-            }));
-        }
+        setExpansions((prev) => {
+            const expansionOption = prev.find(item => item.expansion.id === id);
+            if (expansionOption) expansionOption.isSelected = checked;
+            return prev;
+        })
+        // if (checked) {
+        //     const exp = expansions.find(e => e.id === id);
+        //     if (exp) expansions.push(exp);
+        //     setSelectedExpansions(selectedExpansions);
+        // } else {
+        //     setSelectedExpansions(selectedExpansions.filter((e) => {
+        //         return e.id !== id
+        //     }));
+        // }
 
-    }, [selectedExpansions, expansions]);
+    }, []);
 
     return (<div className='w-full flex justify-center'>
         <div className='w-1/3 h-1/3 border flex'>
 
             <form onSubmit={submitToApi}>
                 <div>
-                    {expansions.map((expansion) => {
+                    {expansions.map(({expansion}) => {
                         return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name}
                                               data-testid={`expansion-${expansion.id}`} onToggle={onToggle}/>
                     })}
@@ -65,7 +85,9 @@ export const CreateGamePage: React.FC = () => {
                     <input type='text' data-testid='user-name' name="name" className='border'
                            onChange={(event) => setUserName(event.target.value)}/>
                 </label>
-                <button data-testid='create-game-submit-button' className='bg-gray-300 p-2 text-gray-900 rounded shadow'>Enter game</button>
+                <button data-testid='create-game-submit-button'
+                        className='bg-gray-300 p-2 text-gray-900 rounded shadow'>Enter game
+                </button>
             </form>
         </div>
     </div>)
