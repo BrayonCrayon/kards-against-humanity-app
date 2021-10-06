@@ -58,7 +58,7 @@ describe('CreateGamePage', () => {
         const submitBtn = await screen.findByTestId('create-game-submit-button');
         userEvent.click(submitBtn);
 
-        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`, {
+        expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/store`, {
             expansionIds: [expansion.id, otherExpansion.id],
             name
         });
@@ -86,7 +86,7 @@ describe('CreateGamePage', () => {
         const submitBtn = await screen.findByTestId('create-game-submit-button');
         userEvent.click(submitBtn);
 
-        expect(mockedAxios.post).toHaveBeenCalledWith(`${API_URL}/api/game/store`, {
+        expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/store`, {
             expansionIds: [otherExpansion.id],
             name
         });

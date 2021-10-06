@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,8 +7,18 @@ import {
 } from "react-router-dom";
 import {CreateGamePage} from "./Pages/CreateGamePage";
 import Game from "./Pages/Game";
+import {apiClient} from "./api/apiClient";
 
 export default function App() {
+
+  useEffect(() => {
+    apiClient
+        .get(`/sanctum/csrf-cookie`)
+        .catch(error => {
+          console.error(error);
+        });
+  });
+
   return (
       <Router >
         <div className="h-screen">
