@@ -1,17 +1,15 @@
-import axios from "axios";
 import React, {useCallback, useEffect, useState} from "react";
 import ExpansionCard from "../Components/ExpansionCard";
 import {Expansion} from "../Types/Expansion";
 import {API_URL} from "../config";
 import {useHistory} from "react-router-dom";
+import {apiClient} from "../api/apiClient";
 
-axios.defaults.withCredentials = true;
 
 type ExpansionOption = {
     expansion: Expansion
     isSelected: boolean
 }
-
 
 export const CreateGamePage: React.FC = () => {
 
@@ -22,7 +20,7 @@ export const CreateGamePage: React.FC = () => {
     useEffect(() => {
         (async () => {
             // @ts-ignore
-            const {data} = await axios.get(`${API_URL}/api/expansions`);
+            const {data} = await apiClient.get(`${API_URL}/api/expansions`);
             // setExpansions(data.data)
             setExpansions(data.data.map((item: Expansion) => {
                 return {
@@ -32,8 +30,8 @@ export const CreateGamePage: React.FC = () => {
             }))
 
             // setSelectedExpansions(data.data)
-            await axios.get(`${API_URL}/sanctum/csrf-cookie`);
-            console.log(axios.defaults);
+            await apiClient.get(`${API_URL}/sanctum/csrf-cookie`);
+            console.log(apiClient.defaults);
         })();
     }, []);
 
@@ -41,14 +39,13 @@ export const CreateGamePage: React.FC = () => {
         event.preventDefault();
 
 
-        await axios.post(`${API_URL}/api/game/store`, {
+        await apiClient.post(`${API_URL}/api/game/store`, {
             name: userName,
             expansionIds: expansions.map(e => {
                 return e.isSelected ? e.expansion.id : null
             }).filter(Boolean)
         })
 
-        console.log('about to push')
         history.push('/game');
     }
 
@@ -58,15 +55,6 @@ export const CreateGamePage: React.FC = () => {
             if (expansionOption) expansionOption.isSelected = checked;
             return prev;
         })
-        // if (checked) {
-        //     const exp = expansions.find(e => e.id === id);
-        //     if (exp) expansions.push(exp);
-        //     setSelectedExpansions(selectedExpansions);
-        // } else {
-        //     setSelectedExpansions(selectedExpansions.filter((e) => {
-        //         return e.id !== id
-        //     }));
-        // }
 
     }, []);
 
