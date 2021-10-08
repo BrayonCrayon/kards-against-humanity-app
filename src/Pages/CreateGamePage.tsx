@@ -47,11 +47,11 @@ export const CreateGamePage: React.FC = () => {
     const onToggle = useCallback((id: number, checked: boolean) => {
         setExpansions((prev) => {
             const expansionOption = prev.find(item => item.expansion.id === id);
-            if (expansionOption) expansionOption.isSelected = checked;
+            if (expansionOption) expansionOption.isSelected = !checked;
             return prev;
-        })
+        });
 
-    }, []);
+    }, [expansions]);
 
     return (<div className='w-full flex justify-center'>
         <div className='w-1/3 border flex'>
@@ -59,8 +59,8 @@ export const CreateGamePage: React.FC = () => {
             <form onSubmit={submitToApi} className="flex flex-col p-2 shadow-lg rounded">
                 <div className="text-2xl font-semibold mb-4">Create Game</div>
                 <div className="h-64 overflow-x-auto p-2 border rounded mb-4">
-                    {expansions.map(({expansion}) => {
-                        return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name}
+                    {expansions.map(({expansion, isSelected}) => {
+                        return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name} checked={isSelected}
                                               data-testid={`expansion-${expansion.id}`} onToggle={onToggle}/>
                     })}
                 </div>

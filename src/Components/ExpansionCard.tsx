@@ -1,24 +1,25 @@
-import React, {ChangeEventHandler, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {Expansion} from "../Types/Expansion";
 
 interface ExpansionCardProps extends Pick<Expansion, 'id' | 'name'> {
-    onToggle: (id: number, checked: boolean) => void
+    checked: boolean;
+    onToggle: (id: number, checked: boolean) => void;
 }
 
-const ExpansionCard: React.FC<ExpansionCardProps> = ({id, name, onToggle}) => {
-    const [isChecked, setIsChecked] = useState(true)
+const ExpansionCard: React.FC<ExpansionCardProps> = ({id, name, checked, onToggle}) => {
+    const [isChecked, setIsChecked] = useState(true);
 
-    const onChange = ({target: {checked}}: any) => {
-        onToggle(id, checked)
-        console.log('checked', checked)
+    const onChange = useCallback(() => {
+        onToggle(id, checked);
         setIsChecked((checked) => !checked)
-    }
+    }, []);
 
-    return <div className='rounded border my-2 px-2 hover:bg-blue-300 cursor-pointer'>
-        <input type="checkbox" className={'mr-3'} data-testid={`expansion-${id}-checkbox`} checked={isChecked}
-               onChange={onChange}/>
-        {name}
-    </div>
+    return (
+        <div className={`rounded border my-2 px-2 hover:shadow cursor-pointer my-2${isChecked ? ' bg-blue-100' : ''}`}
+             onClick={onChange}>
+            {name}
+        </div>
+    );
 }
 
 export default ExpansionCard
