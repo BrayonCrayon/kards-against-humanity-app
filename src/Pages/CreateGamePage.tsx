@@ -16,18 +16,19 @@ export const CreateGamePage: React.FC = () => {
     const [userName, setUserName] = useState('');
     const history = useHistory()
 
-    useEffect(() => {
-        (async () => {
-            // @ts-ignore
-            const {data} = await apiClient.get(`/api/expansions`);
+    const fetchExpansions = useCallback(async () => {
+        const {data} = await apiClient.get(`/api/expansions`);
 
-            setExpansions(data.data.map((item: Expansion) => {
-                return {
-                    expansion: item,
-                    isSelected: true
-                }
-            }))
-        })();
+        setExpansions(data.data.map((item: Expansion) => {
+            return {
+                expansion: item,
+                isSelected: true
+            }
+        }))
+    }, []);
+
+    useEffect(() => {
+        fetchExpansions();
     }, []);
 
     const submitToApi = async (event: any) => {
