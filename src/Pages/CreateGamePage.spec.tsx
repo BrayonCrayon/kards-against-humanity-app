@@ -33,12 +33,12 @@ describe('CreateGamePage', () => {
         await screen.findByText(expectedExpansionName);
     })
 
-    it('renders expansion cards with checkboxes checked', async () => {
+    it('renders expansion cards with blue background to indicate that it is selected', async () => {
         render(<CreateGamePage/>);
 
-        const checkbox = await screen.findByTestId(`expansion-${expansion.id}-checkbox`);
+        const expansionCard = await screen.findByTestId(`expansion-${expansion.id}`);
 
-        expect(checkbox).toBeChecked();
+        expect(expansionCard).toHaveClass('bg-blue-100');
     })
 
     it('handles form submit', async () => {
@@ -75,10 +75,10 @@ describe('CreateGamePage', () => {
             </Router>
         );
 
-        const checkbox = await screen.findByTestId(`expansion-${expansion.id}-checkbox`);
-        userEvent.click(checkbox);
+        const expansionCard = await screen.findByTestId(`expansion-${expansion.id}`);
+        userEvent.click(expansionCard);
 
-        expect(checkbox).not.toBeChecked();
+        expect(expansionCard).not.toHaveClass('bg-blue-100');
 
         const nameInput = await screen.findByTestId('user-name');
         userEvent.type(nameInput, name);

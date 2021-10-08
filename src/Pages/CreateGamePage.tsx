@@ -61,7 +61,7 @@ export const CreateGamePage: React.FC = () => {
                 <div className="h-64 overflow-x-auto p-2 border rounded mb-4">
                     {expansions.map(({expansion, isSelected}) => {
                         return <ExpansionCard key={`expansion-${expansion.id}`} id={expansion.id} name={expansion.name} checked={isSelected}
-                                              data-testid={`expansion-${expansion.id}`} onToggle={onToggle}/>
+                                              onToggle={onToggle}/>
                     })}
                 </div>
                 <label className="mb-4">

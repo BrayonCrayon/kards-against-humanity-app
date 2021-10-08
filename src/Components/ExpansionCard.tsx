@@ -16,7 +16,7 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({id, name, checked, onToggl
 
     return (
         <div className={`rounded border my-2 px-2 hover:shadow cursor-pointer my-2${isChecked ? ' bg-blue-100' : ''}`}
-             onClick={onChange}>
+             data-testid={`expansion-${id}`} onClick={onChange}>
             {name}
         </div>
     );
