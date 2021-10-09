@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import GameContextProvider from './State/Game/GameContextProvider';
 
 // import Echo from 'laravel-echo';
 
@@ -30,7 +31,9 @@ import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <GameContextProvider>
+        <App />
+      </GameContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

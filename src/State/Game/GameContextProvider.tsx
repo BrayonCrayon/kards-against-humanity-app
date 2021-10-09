@@ -11,3 +11,5 @@ const GameContextProvider: React.FC = ({children}) => {
         </GameContext.Provider>
     );
 }
+
+export default GameContextProvider;
