@@ -4,7 +4,7 @@ import './index.scss';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-import Echo from 'laravel-echo';
+// import Echo from 'laravel-echo';
 
 // @ts-ignore
 // window.Pusher = require('pusher-js');

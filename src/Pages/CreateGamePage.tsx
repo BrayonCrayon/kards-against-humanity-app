@@ -36,9 +36,9 @@ export const CreateGamePage: React.FC = () => {
     useEffect(() => {
         if (expansions.length > 0) return;
         fetchExpansions();
-    }, []);
+    }, [fetchExpansions, expansions]);
 
-    const submitToApi = async (event: any) => {
+    const submitToApi = useCallback(async (event: any) => {
         event.preventDefault();
 
         try {
@@ -55,7 +55,7 @@ export const CreateGamePage: React.FC = () => {
         {
             console.error(error);
         }
-    }
+    }, [expansions, userName, history]);
 
     const onToggle = useCallback((id: number, checked: boolean) => {
         setExpansions((prev) => {
@@ -64,11 +64,11 @@ export const CreateGamePage: React.FC = () => {
             return prev;
         });
 
-    }, [expansions]);
+    }, []);
 
     return (
         <div className='w-full flex justify-center self-center mt-4 '>
-            <form onSubmit={submitToApi} className="flex w-1/3 flex-col bg-white p-4 shadow-lg rounded border">
+            <form onSubmit={submitToApi} className="flex w-1/3 flex-col p-4 shadow-lg rounded border">
                 <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
                 <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
                     {expansions.map(({expansion, isSelected}) => {

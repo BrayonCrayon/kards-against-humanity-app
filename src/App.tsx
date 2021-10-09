@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import {CreateGamePage} from "./Pages/CreateGamePage";
 import Game from "./Pages/Game";
@@ -22,7 +21,7 @@ export default function App() {
 
   return (
       <Router >
-        <div className="h-screen bg-gray-100">
+        <div className="h-screen ">
           <Navigation/>
 
           {/* A <Switch> looks through its children <Route>s and
