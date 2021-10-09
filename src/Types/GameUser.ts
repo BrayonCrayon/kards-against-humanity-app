@@ -1,6 +1,5 @@
-
 export interface GameUser {
-    id: number;
-    user_id: number;
-    game_id: string;
+  id: number;
+  user_id: number;
+  game_id: string;
 }

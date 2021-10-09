@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.scss';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import GameContextProvider from './State/Game/GameContextProvider';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.scss";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import GameContextProvider from "./State/Game/GameContextProvider";
 
 // import Echo from 'laravel-echo';
 
@@ -31,11 +31,11 @@ import GameContextProvider from './State/Game/GameContextProvider';
 
 ReactDOM.render(
   <React.StrictMode>
-      <GameContextProvider>
-        <App />
-      </GameContextProvider>
+    <GameContextProvider>
+      <App />
+    </GameContextProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
