@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import ExpansionCard from "../Components/ExpansionCard";
 import {Expansion} from "../Types/Expansion";
 import {useHistory} from "react-router-dom";
-import {apiClient} from "../api/apiClient";
+import {apiClient} from "../Api/apiClient";
 
 
 type ExpansionOption = {
@@ -67,8 +67,8 @@ export const CreateGamePage: React.FC = () => {
     }, [expansions]);
 
     return (
-        <div className='w-full flex justify-center'>
-            <form onSubmit={submitToApi} className="flex w-1/3 flex-col p-4 shadow-lg rounded border">
+        <div className='w-full flex justify-center self-center mt-4 '>
+            <form onSubmit={submitToApi} className="flex w-1/3 flex-col bg-white p-4 shadow-lg rounded border">
                 <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
                 <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
                     {expansions.map(({expansion, isSelected}) => {

@@ -7,7 +7,8 @@ import {
 } from "react-router-dom";
 import {CreateGamePage} from "./Pages/CreateGamePage";
 import Game from "./Pages/Game";
-import {apiClient} from "./api/apiClient";
+import {apiClient} from "./Api/apiClient";
+import Navigation from "./Layouts/Navigation";
 
 export default function App() {
 
@@ -21,14 +22,8 @@ export default function App() {
 
   return (
       <Router >
-        <div className="h-screen">
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-            </ul>
-          </nav>
+        <div className="h-screen bg-gray-100">
+          <Navigation/>
 
           {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}

@@ -5,9 +5,9 @@ import {Expansion} from "../Types/Expansion";
 import {API_URL} from "../config";
 import {Router} from 'react-router-dom'
 import {createMemoryHistory} from 'history'
-import {apiClient} from "../api/apiClient";
+import {apiClient} from "../Api/apiClient";
 
-jest.mock('../api/apiClient');
+jest.mock('../Api/apiClient');
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const expectedExpansionName = 'Some Sweet Expansion';
