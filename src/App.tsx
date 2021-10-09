@@ -5,7 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import {CreateGamePage} from "./Pages/CreateGamePage";
-import Game from "./Pages/Game";
+import GamePage from "./Pages/GamePage";
 import {apiClient} from "./Api/apiClient";
 import Navigation from "./Layouts/Navigation";
 
@@ -28,7 +28,7 @@ export default function App() {
             renders the first one that matches the current URL. */}
           <Switch>
             <Route path="/game">
-              <Game />
+              <GamePage />
             </Route>
 
             <Route path="/">
