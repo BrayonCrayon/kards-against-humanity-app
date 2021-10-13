@@ -1,4 +1,4 @@
-import {createContext} from "react";
+import {createContext, SetStateAction} from "react";
 import {WhiteCard} from "../../Types/WhiteCard";
 import {Game} from "../../Types/Game";
 import {User} from "../../Types/User";
@@ -7,6 +7,9 @@ export interface IGameContext {
     hand: WhiteCard[];
     game: Game;
     user: User;
+    setGame: (game: Game) => void;
+    setUser: (user: User) => void;
+    setHand: (hand: WhiteCard[]) => void;
 }
 
 export const initialState: IGameContext = {
@@ -21,6 +24,9 @@ export const initialState: IGameContext = {
         name: "",
         judge_id: 0,
     },
+    setGame: (game) => {},
+    setUser: (user) => {},
+    setHand: (hand) => {}
 };
 
 export const GameContext = createContext<IGameContext>(initialState);
