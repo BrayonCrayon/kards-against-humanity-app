@@ -1,34 +1,36 @@
 import React, {useCallback, useState} from "react";
-import { GameContext, IGameContext, initialState } from "./GameContext";
+import {GameContext, IGameContext, initialState} from "./GameContext";
 import {Game} from "../../Types/Game";
 import {User} from "../../Types/User";
 import {WhiteCard} from "../../Types/WhiteCard";
 
-const GameContextProvider: React.FC = ({ children }) => {
-  const [state, setState] = useState<IGameContext>(initialState);
+const GameContextProvider: React.FC = ({children}) => {
+    const [game, setRealGame] = useState(initialState.game);
+    const [user, setContextUser] = useState(initialState.user);
+    const [hand, setContextHand] = useState(initialState.hand);
 
-  const [game, setRealGame] = useState<Game>(initialState.game);
+    const setGame = (game: Game) => {
+        setRealGame(game);
+    }
 
-  const setGame = (game: Game) => {
-    setRealGame(game)
-  }
+    const setUser = useCallback((user: User) => {
+        setContextUser(user);
+    }, []);
 
-  const setUser = useCallback((user: User) => {
-    setState({
-      ...state,
-      user
-    });
-  }, []);
-
-  const setHand = useCallback((hand: WhiteCard[]) => {
-    setState({
-      ...state,
-      hand
-    });
-  }, []);
+    const setHand = useCallback((hand: WhiteCard[]) => {
+        setContextHand(hand);
+    }, []);
 
 
-  return <GameContext.Provider value={{...state, game, setGame, setUser, setHand}}>{children}</GameContext.Provider>;
+    return <GameContext.Provider
+        value={{
+            game,
+            user,
+            hand,
+            setGame: setRealGame,
+            setUser,
+            setHand
+        }}>{children}</GameContext.Provider>;
 };
 
 export default GameContextProvider;

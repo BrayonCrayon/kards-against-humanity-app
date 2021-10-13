@@ -1,4 +1,4 @@
-import {createContext, SetStateAction} from "react";
+import {createContext, SetStateAction, Dispatch} from "react";
 import {WhiteCard} from "../../Types/WhiteCard";
 import {Game} from "../../Types/Game";
 import {User} from "../../Types/User";
@@ -7,7 +7,7 @@ export interface IGameContext {
     hand: WhiteCard[];
     game: Game;
     user: User;
-    setGame: (game: Game) => void;
+    setGame: Dispatch<SetStateAction<Game>>;
     setUser: (user: User) => void;
     setHand: (hand: WhiteCard[]) => void;
 }

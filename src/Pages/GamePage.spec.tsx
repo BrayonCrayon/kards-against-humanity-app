@@ -1,7 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import { WhiteCard } from "../Types/WhiteCard";
-import { GameContext } from "../State/Game/GameContext";
+import {GameContext, initialState} from "../State/Game/GameContext";
 import { Game } from "../Types/Game";
 import {User} from "../Types/User";
 
@@ -63,7 +63,7 @@ describe("GamePage", () => {
   it("shows users hand of seven white cards", async () => {
     const wrapper = render(
       <GameContext.Provider
-        value={{ hand: cardsInHand, game: { id: "", name: "", judge_id: 0 }, user }}
+        value={{ ...initialState, hand: cardsInHand, game: { id: "", name: "", judge_id: 0 }, user }}
       >
         <GamePage />
       </GameContext.Provider>
@@ -84,7 +84,7 @@ describe("GamePage", () => {
       judge_id: 1,
     };
     const wrapper = render(
-      <GameContext.Provider value={{ game, hand: [], user}}>
+      <GameContext.Provider value={{ ...initialState, game, hand: [], user}}>
         <GamePage />
       </GameContext.Provider>
     );
@@ -108,7 +108,7 @@ describe("GamePage", () => {
     jest.spyOn(navigator.clipboard, "writeText");
 
     const wrapper = render(
-      <GameContext.Provider value={{ game, hand: [], user }}>
+      <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
         <GamePage />
       </GameContext.Provider>
     );
@@ -130,7 +130,7 @@ describe("GamePage", () => {
     };
 
     const wrapper = render(
-        <GameContext.Provider value={{ game, hand: [], user }}>
+        <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
           <GamePage />
         </GameContext.Provider>
     );
