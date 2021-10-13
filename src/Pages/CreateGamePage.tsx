@@ -41,7 +41,7 @@ export const CreateGamePage: React.FC = () => {
       event.preventDefault();
 
       try {
-        await apiClient.post(`/api/game/store`, {
+        const data = await apiClient.post(`/api/game/store`, {
           name: userName,
           expansionIds: expansions
             .filter((e) => {
@@ -49,6 +49,8 @@ export const CreateGamePage: React.FC = () => {
             })
             .map((e) => e.expansion.id),
         });
+
+        console.log(data);
 
         history.push("/game");
       } catch (error) {

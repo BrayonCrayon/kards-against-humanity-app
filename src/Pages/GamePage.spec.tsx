@@ -3,6 +3,7 @@ import GamePage from "./GamePage";
 import { WhiteCard } from "../Types/WhiteCard";
 import { GameContext } from "../State/Game/GameContext";
 import { Game } from "../Types/Game";
+import {User} from "../Types/User";
 
 const cardsInHand: WhiteCard[] = [
   {
@@ -42,6 +43,12 @@ const cardsInHand: WhiteCard[] = [
   },
 ];
 
+const user: User = {
+  id: 1,
+  name: 'Rick Sanchez',
+  whiteCards: cardsInHand
+}
+
 Object.assign(navigator, {
   clipboard: {
     writeText: () => {},
@@ -56,7 +63,7 @@ describe("GamePage", () => {
   it("shows users hand of seven white cards", async () => {
     const wrapper = render(
       <GameContext.Provider
-        value={{ hand: cardsInHand, game: { id: "", name: "", judge_id: 0 } }}
+        value={{ hand: cardsInHand, game: { id: "", name: "", judge_id: 0 }, user }}
       >
         <GamePage />
       </GameContext.Provider>
@@ -77,7 +84,7 @@ describe("GamePage", () => {
       judge_id: 1,
     };
     const wrapper = render(
-      <GameContext.Provider value={{ game, hand: [] }}>
+      <GameContext.Provider value={{ game, hand: [], user}}>
         <GamePage />
       </GameContext.Provider>
     );
@@ -97,9 +104,11 @@ describe("GamePage", () => {
       name: "Game 1",
       judge_id: 1,
     };
+
     jest.spyOn(navigator.clipboard, "writeText");
+
     const wrapper = render(
-      <GameContext.Provider value={{ game, hand: [] }}>
+      <GameContext.Provider value={{ game, hand: [], user }}>
         <GamePage />
       </GameContext.Provider>
     );
@@ -112,4 +121,20 @@ describe("GamePage", () => {
       expect(navigator.clipboard.writeText).toBeCalledWith(game.id);
     });
   });
+
+  it("displays the user's name", async () => {
+    const game: Game = {
+      id: "121313klhj3-eqweewq-2323-dasd",
+      name: "Game 1",
+      judge_id: 1,
+    };
+
+    const wrapper = render(
+        <GameContext.Provider value={{ game, hand: [], user }}>
+          <GamePage />
+        </GameContext.Provider>
+    );
+
+    expect(wrapper.getByText(user.name)).toBeInTheDocument()
+  })
 });

@@ -12,7 +12,7 @@ const GamePage = () => {
 
   return (
     <GameContext.Consumer>
-      {({ hand, game }) => (
+      {({ hand, game, user }) => (
         <div>
           <div
             data-testid={`game-${game.id}`}
@@ -20,6 +20,7 @@ const GamePage = () => {
           >
             {game.id}
           </div>
+          <div>{user.name}</div>
           {hand.map((card) => (
             <div key={card.id} data-testid={`white-card-${card.id}`}>
               {card.text}
