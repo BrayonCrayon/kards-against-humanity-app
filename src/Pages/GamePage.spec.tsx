@@ -1,9 +1,9 @@
 import { render, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import { WhiteCard } from "../Types/WhiteCard";
-import {GameContext, initialState} from "../State/Game/GameContext";
+import { GameContext, initialState } from "../State/Game/GameContext";
 import { Game } from "../Types/Game";
-import {User} from "../Types/User";
+import { User } from "../Types/User";
 
 const cardsInHand: WhiteCard[] = [
   {
@@ -45,9 +45,9 @@ const cardsInHand: WhiteCard[] = [
 
 const user: User = {
   id: 1,
-  name: 'Rick Sanchez',
-  whiteCards: cardsInHand
-}
+  name: "Rick Sanchez",
+  whiteCards: cardsInHand,
+};
 
 Object.assign(navigator, {
   clipboard: {
@@ -63,7 +63,12 @@ describe("GamePage", () => {
   it("shows users hand of seven white cards", async () => {
     const wrapper = render(
       <GameContext.Provider
-        value={{ ...initialState, hand: cardsInHand, game: { id: "", name: "", judge_id: 0 }, user }}
+        value={{
+          ...initialState,
+          hand: cardsInHand,
+          game: { id: "", name: "", judge_id: 0 },
+          user,
+        }}
       >
         <GamePage />
       </GameContext.Provider>
@@ -84,7 +89,7 @@ describe("GamePage", () => {
       judge_id: 1,
     };
     const wrapper = render(
-      <GameContext.Provider value={{ ...initialState, game, hand: [], user}}>
+      <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
         <GamePage />
       </GameContext.Provider>
     );
@@ -130,11 +135,11 @@ describe("GamePage", () => {
     };
 
     const wrapper = render(
-        <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
-          <GamePage />
-        </GameContext.Provider>
+      <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
+        <GamePage />
+      </GameContext.Provider>
     );
 
-    expect(wrapper.getByText(user.name)).toBeInTheDocument()
-  })
+    expect(wrapper.getByText(user.name)).toBeInTheDocument();
+  });
 });

@@ -1,9 +1,9 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import ExpansionCard from "../Components/ExpansionCard";
 import { Expansion } from "../Types/Expansion";
 import { useHistory } from "react-router-dom";
 import { apiClient } from "../Api/apiClient";
-import {GameContext} from "../State/Game/GameContext";
+import { GameContext } from "../State/Game/GameContext";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -14,7 +14,7 @@ export const CreateGamePage: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const { setGame, setUser, setHand } = useContext(GameContext)
+  const { setGame, setUser, setHand } = useContext(GameContext);
 
   const fetchExpansions = useCallback(async () => {
     try {

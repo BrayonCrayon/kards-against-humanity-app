@@ -1,7 +1,7 @@
-import {WhiteCard} from "./WhiteCard";
+import { WhiteCard } from "./WhiteCard";
 
-export type User = {
-    id: number
-    name: string
-    whiteCards: WhiteCard[]
+export interface User {
+  id: number;
+  name: string;
+  whiteCards: WhiteCard[];
 }
