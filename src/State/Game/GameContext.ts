@@ -3,13 +3,15 @@ import {WhiteCard} from "../../Types/WhiteCard";
 import {Game} from "../../Types/Game";
 import {User} from "../../Types/User";
 
+export type setState<T> = Dispatch<SetStateAction<T>>;
+
 export interface IGameContext {
     hand: WhiteCard[];
     game: Game;
     user: User;
-    setGame: Dispatch<SetStateAction<Game>>;
-    setUser: (user: User) => void;
-    setHand: (hand: WhiteCard[]) => void;
+    setGame: setState<Game>;
+    setUser: setState<User>;
+    setHand: setState<WhiteCard[]>;
 }
 
 export const initialState: IGameContext = {

@@ -52,7 +52,6 @@ export const CreateGamePage: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        console.log(data.data);
         setGame(data.data.game);
         setUser(data.data.user);
         setHand(data.data.user.white_cards);

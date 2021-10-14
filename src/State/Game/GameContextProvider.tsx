@@ -5,21 +5,21 @@ import {User} from "../../Types/User";
 import {WhiteCard} from "../../Types/WhiteCard";
 
 const GameContextProvider: React.FC = ({children}) => {
-    const [game, setRealGame] = useState(initialState.game);
-    const [user, setContextUser] = useState(initialState.user);
-    const [hand, setContextHand] = useState(initialState.hand);
+    const [game, setGame] = useState(initialState.game);
+    const [user, setUser] = useState(initialState.user);
+    const [hand, setHand] = useState(initialState.hand);
 
-    const setGame = (game: Game) => {
-        setRealGame(game);
-    }
+    // const setGame = (game: Game) => {
+    //     setRealGame(game);
+    // }
 
-    const setUser = useCallback((user: User) => {
-        setContextUser(user);
-    }, []);
+    // const setUser = useCallback((user: User) => {
+    //     setContextUser(user);
+    // }, []);
 
-    const setHand = useCallback((hand: WhiteCard[]) => {
-        setContextHand(hand);
-    }, []);
+    // const setHand = useCallback((hand: WhiteCard[]) => {
+    //     setContextHand(hand);
+    // }, []);
 
 
     return <GameContext.Provider
@@ -27,7 +27,7 @@ const GameContextProvider: React.FC = ({children}) => {
             game,
             user,
             hand,
-            setGame: setRealGame,
+            setGame,
             setUser,
             setHand
         }}>{children}</GameContext.Provider>;

@@ -6,6 +6,7 @@ import { API_URL } from "../config";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { apiClient } from "../Api/apiClient";
+import {initialState} from "../State/Game/GameContext";
 
 jest.mock("../Api/apiClient");
 
@@ -22,9 +23,17 @@ const otherExpansion = {
 
 const responses: Expansion[] = [expansion, otherExpansion];
 
+const createGameResponse = {
+  ...initialState,
+  game: {
+    id: '12234455'
+  }
+};
+
 describe("CreateGamePage", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValue({ data: { data: responses } });
+    mockedAxios.post.mockResolvedValue({ data: createGameResponse });
   });
 
   it("renders expansion cards", async () => {
@@ -95,7 +104,7 @@ describe("CreateGamePage", () => {
     });
 
     await waitFor(() => {
-      expect(history.push).toHaveBeenCalledWith("/game");
+      expect(history.push).toHaveBeenCalledWith(`/game/${createGameResponse.game.id}`);
     });
   });
 });
