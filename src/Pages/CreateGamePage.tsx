@@ -43,7 +43,7 @@ export const CreateGamePage: React.FC = () => {
       event.preventDefault();
 
       try {
-        const data = await apiClient.post(`/api/game/store`, {
+        const data = await apiClient.post(`/api/game`, {
           name: userName,
           expansionIds: expansions
             .filter((e) => {

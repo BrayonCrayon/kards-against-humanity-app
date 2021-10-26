@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { GameContext } from "../State/Game/GameContext";
+import { Kard } from "../Components/Kard";
 
 const GamePage = () => {
   const copyGameId = useCallback(async (id: string) => {
@@ -22,9 +23,7 @@ const GamePage = () => {
           </div>
           <div>{user.name}</div>
           {hand.map((card) => (
-            <div key={card.id} data-testid={`white-card-${card.id}`}>
-              {card.text}
-            </div>
+            <Kard id={card.id} text={card.text} key={card.id} />
           ))}
         </div>
       )}
