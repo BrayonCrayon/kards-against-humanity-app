@@ -6,7 +6,7 @@ import { API_URL } from "../config";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { apiClient } from "../Api/apiClient";
-import {initialState} from "../State/Game/GameContext";
+import { initialState } from "../State/Game/GameContext";
 
 jest.mock("../Api/apiClient");
 
@@ -26,8 +26,8 @@ const responses: Expansion[] = [expansion, otherExpansion];
 const createGameResponse = {
   ...initialState,
   game: {
-    id: '12234455'
-  }
+    id: "12234455",
+  },
 };
 
 describe("CreateGamePage", () => {
@@ -68,7 +68,7 @@ describe("CreateGamePage", () => {
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     userEvent.click(submitBtn);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/store`, {
+    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
       expansionIds: [expansion.id, otherExpansion.id],
       name,
     });
@@ -98,13 +98,15 @@ describe("CreateGamePage", () => {
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     userEvent.click(submitBtn);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/store`, {
+    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
       expansionIds: [otherExpansion.id],
       name,
     });
 
     await waitFor(() => {
-      expect(history.push).toHaveBeenCalledWith(`/game/${createGameResponse.game.id}`);
+      expect(history.push).toHaveBeenCalledWith(
+        `/game/${createGameResponse.game.id}`
+      );
     });
   });
 });

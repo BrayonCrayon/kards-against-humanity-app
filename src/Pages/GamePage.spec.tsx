@@ -1,6 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import { WhiteCard } from "../Types/WhiteCard";
+import { BlackCard } from "../Types/BlackCard";
 import { GameContext, initialState } from "../State/Game/GameContext";
 import { Game } from "../Types/Game";
 import { User } from "../Types/User";
@@ -79,7 +80,7 @@ describe("GamePage", () => {
         value={{
           ...initialState,
           hand: cardsInHand,
-          game: { id: "", name: "", judge_id: 0 },
+          game: { id: "abc123", name: "", judge_id: 0 },
           user,
         }}
       >
@@ -168,5 +169,35 @@ describe("GamePage", () => {
     );
 
     expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
+  });
+
+  it("displays the black card", () => {
+    const game: Game = {
+      id: "121313klhj3-eqweewq-2323-dasd",
+      name: "Game 1",
+      judge_id: 1,
+    };
+
+    const mockBlackCard: BlackCard = {
+      id: 1234,
+      pick: 12,
+      text: "_____ is what you tell cheap hookers.",
+      expansion_id: 69,
+    };
+
+    const wrapper = render(
+      <GameContext.Provider
+        value={{ ...initialState, game, blackCard: mockBlackCard }}
+      >
+        <GamePage />
+      </GameContext.Provider>
+    );
+
+    expect(
+      wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
+    ).toBeInTheDocument();
+    expect(
+      wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
+    ).toHaveTextContent(mockBlackCard.text);
   });
 });
