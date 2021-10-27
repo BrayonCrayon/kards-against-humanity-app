@@ -6,7 +6,7 @@ import { apiClient } from "../Api/apiClient";
 import { Game } from "../Types/Game";
 
 const GamePage = () => {
-  const { setGame, setUser, setHand, hand, game, user } =
+  const { setGame, setUser, setHand, hand, game, user, blackCard } =
     useContext(GameContext);
 
   const copyGameId = useCallback(async (id: string) => {
@@ -42,6 +42,7 @@ const GamePage = () => {
         {game.id}
       </div>
       <div>{user.name}</div>
+      <div data-testid={`black-card-${blackCard.id}`}>{blackCard.text}</div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         {hand.map((card) => (
           <Kard id={card.id} text={card.text} key={card.id} />
