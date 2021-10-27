@@ -21,7 +21,6 @@ const GamePage = () => {
 
   const fetchGameState = useCallback(async () => {
     const { data } = await apiClient.get(`/api/game/${id}`);
-    console.log("game state", data);
     setUser(data.data.current_user);
     setGame({
       id: data.data.id,
@@ -43,9 +42,11 @@ const GamePage = () => {
         {game.id}
       </div>
       <div>{user.name}</div>
-      {hand.map((card) => (
-        <Kard id={card.id} text={card.text} key={card.id} />
-      ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
+        {hand.map((card) => (
+          <Kard id={card.id} text={card.text} key={card.id} />
+        ))}
+      </div>
     </div>
   );
 };
