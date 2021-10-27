@@ -4,6 +4,19 @@ import { WhiteCard } from "../Types/WhiteCard";
 import { GameContext, initialState } from "../State/Game/GameContext";
 import { Game } from "../Types/Game";
 import { User } from "../Types/User";
+import { apiClient } from "../Api/apiClient";
+import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+
+jest.mock("../Api/apiClient");
+
+const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
+  useParams: () => ({
+    id: "abc123",
+  }),
+}));
 
 const cardsInHand: WhiteCard[] = [
   {
@@ -141,5 +154,19 @@ describe("GamePage", () => {
     );
 
     expect(wrapper.getByText(user.name)).toBeInTheDocument();
+  });
+
+  it("performs an api call to get game state data to be loaded on refresh", () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const gameId = "abc123";
+
+    render(
+      <GameContext.Provider value={{ ...initialState }}>
+        <GamePage />
+      </GameContext.Provider>
+    );
+
+    expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
   });
 });
