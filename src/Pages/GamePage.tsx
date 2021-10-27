@@ -6,8 +6,16 @@ import { apiClient } from "../Api/apiClient";
 import { Game } from "../Types/Game";
 
 const GamePage = () => {
-  const { setGame, setUser, setHand, hand, game, user, blackCard } =
-    useContext(GameContext);
+  const {
+    setGame,
+    setUser,
+    setHand,
+    setBlackCard,
+    hand,
+    game,
+    user,
+    blackCard,
+  } = useContext(GameContext);
 
   const copyGameId = useCallback(async (id: string) => {
     try {
@@ -28,6 +36,7 @@ const GamePage = () => {
       name: data.data.name,
     } as Game);
     setHand(data.data.hand);
+    setBlackCard(data.data.current_black_card);
   }, []);
 
   useEffect(() => {

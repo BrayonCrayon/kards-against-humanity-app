@@ -5,6 +5,7 @@ const GameContextProvider: React.FC = ({ children }) => {
   const [game, setGame] = useState(initialState.game);
   const [user, setUser] = useState(initialState.user);
   const [hand, setHand] = useState(initialState.hand);
+  const [blackCard, setBlackCard] = useState(initialState.blackCard);
 
   return (
     <GameContext.Provider
@@ -12,9 +13,11 @@ const GameContextProvider: React.FC = ({ children }) => {
         game,
         user,
         hand,
+        blackCard,
         setGame,
         setUser,
         setHand,
+        setBlackCard,
       }}
     >
       {children}
