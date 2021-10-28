@@ -28,15 +28,19 @@ const GamePage = () => {
   const { id } = useParams<{ id: string }>();
 
   const fetchGameState = useCallback(async () => {
-    const { data } = await apiClient.get(`/api/game/${id}`);
-    setUser(data.data.current_user);
-    setGame({
-      id: data.data.id,
-      judge_id: data.data.judge.id,
-      name: data.data.name,
-    } as Game);
-    setHand(data.data.hand);
-    setBlackCard(data.data.current_black_card);
+    try {
+      const { data } = await apiClient.get(`/api/game/${id}`);
+      setUser(data.data.current_user);
+      setGame({
+        id: data.data.id,
+        judge_id: data.data.judge.id,
+        name: data.data.name,
+      } as Game);
+      setHand(data.data.hand);
+      setBlackCard(data.data.current_black_card);
+    } catch (error) {
+      console.error(error);
+    }
   }, []);
 
   useEffect(() => {

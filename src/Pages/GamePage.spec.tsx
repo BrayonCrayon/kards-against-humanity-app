@@ -157,10 +157,14 @@ describe("GamePage", () => {
     expect(wrapper.getByText(user.name)).toBeInTheDocument();
   });
 
-  it("performs an api call to get game state data to be loaded on refresh", () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+  it("performs an api call to get game state data to be loaded on refresh", async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: gameStateExampleResponse });
 
     const gameId = "abc123";
+
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     render(
       <GameContext.Provider value={{ ...initialState }}>
@@ -168,7 +172,10 @@ describe("GamePage", () => {
       </GameContext.Provider>
     );
 
-    expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
+    await waitFor(() => {
+      expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
+      expect(consoleSpy).not.toHaveBeenCalled();
+    });
   });
 
   it("displays the black card", () => {
@@ -199,5 +206,24 @@ describe("GamePage", () => {
     expect(
       wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
     ).toHaveTextContent(mockBlackCard.text);
+  });
+
+  it("catches error if api call to fetch game state fails", async () => {
+    const errorResponse = { message: "No Api" };
+    mockedAxios.get.mockRejectedValueOnce(errorResponse);
+    console.error = jest.fn();
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    render(
+      <GameContext.Provider value={initialState}>
+        <GamePage />
+      </GameContext.Provider>
+    );
+
+    await waitFor(() => {
+      expect(consoleSpy).toBeCalledWith(errorResponse);
+    });
   });
 });
