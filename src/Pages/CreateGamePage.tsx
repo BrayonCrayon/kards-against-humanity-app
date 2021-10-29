@@ -3,7 +3,7 @@ import ExpansionCard from "../Components/ExpansionCard";
 import { Expansion } from "../Types/Expansion";
 import { useHistory } from "react-router-dom";
 import { apiClient } from "../Api/apiClient";
-import { GameContext } from "../State/Game/GameContext";
+import { GameContext, initialState } from "../State/Game/GameContext";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -14,7 +14,7 @@ export const CreateGamePage: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const { setGame, setUser, setHand } = useContext(GameContext);
+  const { setGame, setUser, setHand, setBlackCard } = useContext(GameContext);
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -55,6 +55,7 @@ export const CreateGamePage: React.FC = () => {
         setGame(data.data.game);
         setUser(data.data.user);
         setHand(data.data.user.white_cards);
+        setBlackCard(data.data.black_card);
 
         history.push("/game/" + data.data.game.id);
       } catch (error) {
