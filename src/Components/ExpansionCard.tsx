@@ -27,6 +27,14 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({
       data-testid={`expansion-${id}`}
       onClick={onChange}
     >
+      <input
+        className="mr-2"
+        type="checkbox"
+        data-testid={`checkbox-${id}`}
+        checked={isChecked}
+        readOnly={true}
+        onChange={() => {}}
+      />
       {name}
     </div>
   );
