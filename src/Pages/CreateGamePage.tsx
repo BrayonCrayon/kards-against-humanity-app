@@ -4,6 +4,7 @@ import { Expansion } from "../Types/Expansion";
 import { useHistory } from "react-router-dom";
 import { apiClient } from "../Api/apiClient";
 import { GameContext, initialState } from "../State/Game/GameContext";
+import { Game } from "../Types/Game";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -52,12 +53,12 @@ export const CreateGamePage: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        setGame(data.data.game);
-        setUser(data.data.user);
-        setHand(data.data.user.white_cards);
-        setBlackCard(data.data.black_card);
+        setGame({ id: data.data.id, name: data.data.name } as Game);
+        setUser(data.data.current_user);
+        setHand(data.data.hand);
+        setBlackCard(data.data.current_black_card);
 
-        history.push("/game/" + data.data.game.id);
+        history.push("/game/" + data.data.id);
       } catch (error) {
         console.error(error);
       }

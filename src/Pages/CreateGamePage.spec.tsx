@@ -8,7 +8,8 @@ import { createMemoryHistory } from "history";
 import { apiClient } from "../Api/apiClient";
 import { GameContext, initialState } from "../State/Game/GameContext";
 import GameContextProvider from "../State/Game/GameContextProvider";
-import { createGameExampleResponse } from "../Api/fixtures/createGameExampleResponse";
+import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+import { Game } from "../Types/Game";
 
 jest.mock("../Api/apiClient");
 
@@ -25,17 +26,12 @@ const otherExpansion = {
 
 const responses: Expansion[] = [expansion, otherExpansion];
 
-const createGameResponse = {
-  ...initialState,
-  game: {
-    id: "12234455",
-  },
-};
+const createGameResponse = { ...gameStateExampleResponse };
 
 describe("CreateGamePage", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValue({ data: { data: responses } });
-    mockedAxios.post.mockResolvedValue({ data: createGameResponse });
+    mockedAxios.post.mockResolvedValue(createGameResponse);
   });
 
   it("renders expansion cards", async () => {
@@ -107,7 +103,7 @@ describe("CreateGamePage", () => {
 
     await waitFor(() => {
       expect(history.push).toHaveBeenCalledWith(
-        `/game/${createGameResponse.game.id}`
+        `/game/${createGameResponse.data.id}`
       );
     });
   });
@@ -121,7 +117,7 @@ describe("CreateGamePage", () => {
     const setBlackCard = jest.fn();
 
     mockedAxios.post.mockResolvedValue({
-      ...createGameExampleResponse,
+      ...gameStateExampleResponse,
     });
 
     render(
@@ -141,13 +137,16 @@ describe("CreateGamePage", () => {
     userEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(setGame).toHaveBeenCalledWith(createGameExampleResponse.data.game);
-      expect(setHand).toHaveBeenCalledWith(
-        createGameExampleResponse.data.user.white_cards
+      expect(setGame).toHaveBeenCalledWith({
+        id: gameStateExampleResponse.data.id,
+        name: gameStateExampleResponse.data.name,
+      } as Game);
+      expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
+      expect(setUser).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.current_user
       );
-      expect(setUser).toHaveBeenCalledWith(createGameExampleResponse.data.user);
       expect(setBlackCard).toHaveBeenCalledWith(
-        createGameExampleResponse.data.black_card
+        gameStateExampleResponse.data.current_black_card
       );
     });
   });
