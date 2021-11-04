@@ -158,7 +158,7 @@ describe("GamePage", () => {
   });
 
   it("performs an api call to get game state data to be loaded on refresh", async () => {
-    mockedAxios.get.mockResolvedValueOnce({ data: gameStateExampleResponse });
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
     const gameId = "abc123";
 

@@ -30,7 +30,7 @@ const createGameResponse = { ...gameStateExampleResponse };
 
 describe("CreateGamePage", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue({ data: { data: responses } });
+    mockedAxios.get.mockResolvedValue({ data: responses });
     mockedAxios.post.mockResolvedValue(createGameResponse);
   });
 

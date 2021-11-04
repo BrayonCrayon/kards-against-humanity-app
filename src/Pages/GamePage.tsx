@@ -30,14 +30,14 @@ const GamePage = () => {
   const fetchGameState = useCallback(async () => {
     try {
       const { data } = await apiClient.get(`/api/game/${id}`);
-      setUser(data.data.current_user);
+      setUser(data.current_user);
       setGame({
-        id: data.data.id,
-        judge_id: data.data.judge.id,
-        name: data.data.name,
+        id: data.id,
+        judge_id: data.judge.id,
+        name: data.name,
       } as Game);
-      setHand(data.data.hand);
-      setBlackCard(data.data.current_black_card);
+      setHand(data.hand);
+      setBlackCard(data.current_black_card);
     } catch (error) {
       console.error(error);
     }

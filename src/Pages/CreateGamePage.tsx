@@ -22,7 +22,7 @@ export const CreateGamePage: React.FC = () => {
       const { data } = await apiClient.get(`/api/expansions`);
 
       setExpansions(
-        data.data.map((item: Expansion) => {
+        data.map((item: Expansion) => {
           return {
             expansion: item,
             isSelected: true,
@@ -44,7 +44,7 @@ export const CreateGamePage: React.FC = () => {
       event.preventDefault();
 
       try {
-        const data = await apiClient.post(`/api/game`, {
+        const { data } = await apiClient.post(`/api/game`, {
           name: userName,
           expansionIds: expansions
             .filter((e) => {
@@ -53,12 +53,14 @@ export const CreateGamePage: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        setGame({ id: data.data.id, name: data.data.name } as Game);
-        setUser(data.data.current_user);
-        setHand(data.data.hand);
-        setBlackCard(data.data.current_black_card);
+        console.log("game", data);
 
-        history.push("/game/" + data.data.id);
+        setGame({ id: data.id, name: data.name } as Game);
+        setUser(data.current_user);
+        setHand(data.hand);
+        setBlackCard(data.current_black_card);
+
+        history.push("/game/" + data.id);
       } catch (error) {
         console.error(error);
       }
