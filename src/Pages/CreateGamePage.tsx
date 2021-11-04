@@ -53,8 +53,6 @@ export const CreateGamePage: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        console.log("game", data);
-
         setGame({ id: data.id, name: data.name } as Game);
         setUser(data.current_user);
         setHand(data.hand);

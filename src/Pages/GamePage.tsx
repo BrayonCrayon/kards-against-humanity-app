@@ -4,6 +4,7 @@ import { GameContext } from "../State/Game/GameContext";
 import { Kard } from "../Components/Kard";
 import { apiClient } from "../Api/apiClient";
 import { Game } from "../Types/Game";
+import { BlackKard } from "../Components/BlackKard";
 
 const GamePage = () => {
   const {
@@ -55,7 +56,9 @@ const GamePage = () => {
         {game.id}
       </div>
       <div>{user.name}</div>
-      <div data-testid={`black-card-${blackCard.id}`}>{blackCard.text}</div>
+      <div className="mx-auto my-2 w-1/3">
+        <BlackKard card={blackCard} />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         {hand.map((card) => (
           <Kard id={card.id} text={card.text} key={card.id} />
