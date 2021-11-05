@@ -6,7 +6,10 @@ import { API_URL } from "../config";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { apiClient } from "../Api/apiClient";
-import { initialState } from "../State/Game/GameContext";
+import { GameContext, initialState } from "../State/Game/GameContext";
+import GameContextProvider from "../State/Game/GameContextProvider";
+import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+import { Game } from "../Types/Game";
 
 jest.mock("../Api/apiClient");
 
@@ -23,17 +26,12 @@ const otherExpansion = {
 
 const responses: Expansion[] = [expansion, otherExpansion];
 
-const createGameResponse = {
-  ...initialState,
-  game: {
-    id: "12234455",
-  },
-};
+const createGameResponse = { ...gameStateExampleResponse };
 
 describe("CreateGamePage", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue({ data: { data: responses } });
-    mockedAxios.post.mockResolvedValue({ data: createGameResponse });
+    mockedAxios.get.mockResolvedValue({ data: responses });
+    mockedAxios.post.mockResolvedValue(createGameResponse);
   });
 
   it("renders expansion cards", async () => {
@@ -105,7 +103,50 @@ describe("CreateGamePage", () => {
 
     await waitFor(() => {
       expect(history.push).toHaveBeenCalledWith(
-        `/game/${createGameResponse.game.id}`
+        `/game/${createGameResponse.data.id}`
+      );
+    });
+  });
+
+  it("calls setGame, setUser, setHand, and setBlackCard when game is created", async () => {
+    const history = createMemoryHistory();
+    history.push = jest.fn();
+    const setGame = jest.fn();
+    const setUser = jest.fn();
+    const setHand = jest.fn();
+    const setBlackCard = jest.fn();
+
+    mockedAxios.post.mockResolvedValue({
+      ...gameStateExampleResponse,
+    });
+
+    render(
+      <Router history={history}>
+        <GameContext.Provider
+          value={{ ...initialState, setGame, setUser, setHand, setBlackCard }}
+        >
+          <CreateGamePage />
+        </GameContext.Provider>
+      </Router>
+    );
+
+    const nameInput = await screen.findByTestId("user-name");
+    userEvent.type(nameInput, "Chewy");
+
+    const submitBtn = await screen.findByTestId("create-game-submit-button");
+    userEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(setGame).toHaveBeenCalledWith({
+        id: gameStateExampleResponse.data.id,
+        name: gameStateExampleResponse.data.name,
+      } as Game);
+      expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
+      expect(setUser).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.current_user
+      );
+      expect(setBlackCard).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.current_black_card
       );
     });
   });
