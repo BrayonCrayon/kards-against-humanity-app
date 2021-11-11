@@ -37,6 +37,7 @@ const GamePage = () => {
         id: data.id,
         judge_id: data.judge.id,
         name: data.name,
+        code: data.code,
       } as Game);
       setHand(data.hand);
       setBlackCard(data.current_black_card);
