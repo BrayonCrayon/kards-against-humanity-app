@@ -13,4 +13,13 @@ describe("JoinGameSection", () => {
 
     expect(wrapper.queryByTestId("join-game-section")).not.toBeNull();
   });
+
+  it("Check if form is displayed", () => {
+    const wrapper = render(
+      <GameContext.Provider value={initialState}>
+        <CreateGamePage />
+      </GameContext.Provider>
+    );
+    expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
+  });
 });
