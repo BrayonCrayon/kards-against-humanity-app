@@ -17,10 +17,11 @@ const GamePage = () => {
     user,
     blackCard,
   } = useContext(GameContext);
-
-  const copyGameId = useCallback(async (id: string) => {
+  //TODO:
+  //check to see if useCallBack is necessary for this functionality
+  const copyGameCode = useCallback(async (code: string) => {
     try {
-      await navigator.clipboard.writeText(id);
+      await navigator.clipboard.writeText(code);
     } catch (error) {
       console.error(error);
     }
@@ -52,7 +53,10 @@ const GamePage = () => {
 
   return (
     <div>
-      <div data-testid={`game-${game.id}`} onClick={() => copyGameId(game.id)}>
+      <div
+        data-testid={`game-${game.id}`}
+        onClick={() => copyGameCode(game.code)}
+      >
         {game.code}
       </div>
       <div>{user.name}</div>

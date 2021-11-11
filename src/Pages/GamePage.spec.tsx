@@ -118,7 +118,7 @@ describe("GamePage", () => {
     });
   });
 
-  it("copies game id to clipboard when clicked", async () => {
+  it("copies game code to clipboard when clicked", async () => {
     const game: Game = {
       id: "121313klhj3-eqweewq-2323-dasd",
       name: "Game 1",
@@ -139,7 +139,7 @@ describe("GamePage", () => {
     ) as HTMLElement;
     gameIdDisplayElement.click();
     await waitFor(() => {
-      expect(navigator.clipboard.writeText).toBeCalledWith(game.id);
+      expect(navigator.clipboard.writeText).toBeCalledWith(game.code);
     });
   });
 
