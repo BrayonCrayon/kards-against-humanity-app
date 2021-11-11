@@ -140,6 +140,7 @@ describe("CreateGamePage", () => {
       expect(setGame).toHaveBeenCalledWith({
         id: gameStateExampleResponse.data.id,
         name: gameStateExampleResponse.data.name,
+        code: gameStateExampleResponse.data.code,
       } as Game);
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setUser).toHaveBeenCalledWith(

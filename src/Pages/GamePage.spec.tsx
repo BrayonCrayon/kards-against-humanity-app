@@ -80,7 +80,7 @@ describe("GamePage", () => {
         value={{
           ...initialState,
           hand: cardsInHand,
-          game: { id: "abc123", name: "", judge_id: 0 },
+          game: { id: "abc123", name: "", judge_id: 0, code: "1234" },
           user,
         }}
       >
@@ -96,11 +96,12 @@ describe("GamePage", () => {
     });
   });
 
-  it("shows game id", async () => {
+  it("shows game code", async () => {
     const game: Game = {
       id: "121313klhj3-eqweewq-2323-dasd",
       name: "Game 1",
       judge_id: 1,
+      code: "1234",
     };
     const wrapper = render(
       <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
@@ -109,11 +110,11 @@ describe("GamePage", () => {
     );
 
     await waitFor(() => {
-      const gameIdDisplayElement = wrapper.queryByTestId(
+      const gameCodeDisplayElement = wrapper.queryByTestId(
         `game-${game.id}`
       ) as HTMLElement;
-      expect(gameIdDisplayElement).not.toBeNull();
-      expect(gameIdDisplayElement.innerHTML).toBe(game.id);
+      expect(gameCodeDisplayElement).not.toBeNull();
+      expect(gameCodeDisplayElement.innerHTML).toBe(game.code);
     });
   });
 
@@ -122,6 +123,7 @@ describe("GamePage", () => {
       id: "121313klhj3-eqweewq-2323-dasd",
       name: "Game 1",
       judge_id: 1,
+      code: "1234",
     };
 
     jest.spyOn(navigator.clipboard, "writeText");
@@ -146,6 +148,7 @@ describe("GamePage", () => {
       id: "121313klhj3-eqweewq-2323-dasd",
       name: "Game 1",
       judge_id: 1,
+      code: "1234",
     };
 
     const wrapper = render(
@@ -183,6 +186,7 @@ describe("GamePage", () => {
       id: "121313klhj3-eqweewq-2323-dasd",
       name: "Game 1",
       judge_id: 1,
+      code: "1234",
     };
 
     const mockBlackCard: BlackCard = {

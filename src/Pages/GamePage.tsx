@@ -53,7 +53,7 @@ const GamePage = () => {
   return (
     <div>
       <div data-testid={`game-${game.id}`} onClick={() => copyGameId(game.id)}>
-        {game.id}
+        {game.code}
       </div>
       <div>{user.name}</div>
       <div className="mx-auto my-2 w-1/3">

@@ -28,6 +28,7 @@ export const initialState: IGameContext = {
     id: "",
     name: "",
     judge_id: 0,
+    code: "",
   },
   blackCard: {
     id: 0,
