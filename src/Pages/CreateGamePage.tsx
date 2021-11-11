@@ -3,8 +3,9 @@ import ExpansionCard from "../Components/ExpansionCard";
 import { Expansion } from "../Types/Expansion";
 import { useHistory } from "react-router-dom";
 import { apiClient } from "../Api/apiClient";
-import { GameContext, initialState } from "../State/Game/GameContext";
+import { GameContext } from "../State/Game/GameContext";
 import { Game } from "../Types/Game";
+import JoinGameSection from "../Components/JoinGameSection";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -112,6 +113,7 @@ export const CreateGamePage: React.FC = () => {
           Enter game
         </button>
       </form>
+      <JoinGameSection />
     </div>
   );
 };
