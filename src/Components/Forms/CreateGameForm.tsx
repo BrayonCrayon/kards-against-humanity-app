@@ -4,7 +4,6 @@ import { Expansion } from "../../Types/Expansion";
 import { useHistory } from "react-router-dom";
 import { apiClient } from "../../Api/apiClient";
 import { GameContext } from "../../State/Game/GameContext";
-import JoinGameForm from "./JoinGameForm";
 
 type ExpansionOption = {
   expansion: Expansion;
