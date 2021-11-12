@@ -1,31 +1,31 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import { CreateGamePage } from "./CreateGamePage";
+import { CreateGameForm } from "./CreateGameForm";
 import userEvent from "@testing-library/user-event";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { apiClient } from "../Api/apiClient";
-import { GameContext, initialState } from "../State/Game/GameContext";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "../Api/fixtures/getExpansionsExampleResponse";
-import { Game } from "../Types/Game";
+import { GameContext, initialState } from "../../State/Game/GameContext";
+import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
+import { Game } from "../../Types/Game";
+import { apiClient } from "../../Api/apiClient";
 
-jest.mock("../Api/apiClient");
+jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-describe("CreateGamePage", () => {
+describe("CreateGameForm", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
   });
 
   it("renders expansion cards", async () => {
-    render(<CreateGamePage />);
+    render(<CreateGameForm />);
     await screen.findByText(getExpansionsExampleResponse.data[0].name);
   });
 
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
-    render(<CreateGamePage />);
+    render(<CreateGameForm />);
 
     const expansion = getExpansionsExampleResponse.data[0];
 
@@ -43,7 +43,7 @@ describe("CreateGamePage", () => {
 
     render(
       <Router history={history}>
-        <CreateGamePage />
+        <CreateGameForm />
       </Router>
     );
 
@@ -66,7 +66,7 @@ describe("CreateGamePage", () => {
 
     render(
       <Router history={history}>
-        <CreateGamePage />
+        <CreateGameForm />
       </Router>
     );
 
@@ -116,7 +116,7 @@ describe("CreateGamePage", () => {
         <GameContext.Provider
           value={{ ...initialState, setGame, setUser, setHand, setBlackCard }}
         >
-          <CreateGamePage />
+          <CreateGameForm />
         </GameContext.Provider>
       </Router>
     );

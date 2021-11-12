@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { apiClient } from "../Api/apiClient";
+import { apiClient } from "../../Api/apiClient";
 import { useHistory } from "react-router-dom";
 
-const JoinGameSection: React.FC = () => {
+const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
@@ -66,4 +66,4 @@ const JoinGameSection: React.FC = () => {
   );
 };
 
-export default JoinGameSection;
+export default JoinGameForm;

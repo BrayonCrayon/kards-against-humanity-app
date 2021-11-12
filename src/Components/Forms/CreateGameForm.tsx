@@ -1,17 +1,17 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import ExpansionCard from "../Components/ExpansionCard";
-import { Expansion } from "../Types/Expansion";
+import ExpansionCard from "../ExpansionCard";
+import { Expansion } from "../../Types/Expansion";
 import { useHistory } from "react-router-dom";
-import { apiClient } from "../Api/apiClient";
-import { GameContext } from "../State/Game/GameContext";
-import JoinGameSection from "../Components/JoinGameSection";
+import { apiClient } from "../../Api/apiClient";
+import { GameContext } from "../../State/Game/GameContext";
+import JoinGameForm from "./JoinGameForm";
 
 type ExpansionOption = {
   expansion: Expansion;
   isSelected: boolean;
 };
 
-export const CreateGamePage: React.FC = () => {
+export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();

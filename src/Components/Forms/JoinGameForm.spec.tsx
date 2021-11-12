@@ -1,19 +1,18 @@
 import { render, waitFor } from "@testing-library/react";
-import { GameContext, initialState } from "../State/Game/GameContext";
-import { CreateGamePage } from "../Pages/CreateGamePage";
+import { GameContext, initialState } from "../../State/Game/GameContext";
 import userEvent from "@testing-library/user-event";
-import { apiClient } from "../Api/apiClient";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "../Api/fixtures/getExpansionsExampleResponse";
+import { apiClient } from "../../Api/apiClient";
+import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
-import JoinGameSection from "./JoinGameSection";
+import JoinGameForm from "./JoinGameForm";
 
-jest.mock("../Api/apiClient");
+jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-describe("JoinGameSection", () => {
+describe("JoinGameForm", () => {
   beforeEach(() => {
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
@@ -22,7 +21,7 @@ describe("JoinGameSection", () => {
   it("renders", async () => {
     const wrapper = render(
       <GameContext.Provider value={initialState}>
-        <JoinGameSection />
+        <JoinGameForm />
       </GameContext.Provider>
     );
 
@@ -37,7 +36,7 @@ describe("JoinGameSection", () => {
     const wrapper = render(
       <Router history={history}>
         <GameContext.Provider value={initialState}>
-          <JoinGameSection />
+          <JoinGameForm />
         </GameContext.Provider>
       </Router>
     );
@@ -69,7 +68,7 @@ describe("JoinGameSection", () => {
     const wrapper = render(
       <Router history={history}>
         <GameContext.Provider value={initialState}>
-          <JoinGameSection />
+          <JoinGameForm />
         </GameContext.Provider>
       </Router>
     );
@@ -107,7 +106,7 @@ describe("JoinGameSection", () => {
     const wrapper = render(
       <Router history={history}>
         <GameContext.Provider value={initialState}>
-          <JoinGameSection />
+          <JoinGameForm />
         </GameContext.Provider>
       </Router>
     );
