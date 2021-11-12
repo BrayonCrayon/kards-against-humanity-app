@@ -90,4 +90,40 @@ describe("JoinGameSection", () => {
       );
     });
   });
+
+  it("catches error if join game fails", async () => {
+    const errorMessage = { message: "No Api" };
+    mockedAxios.post.mockRejectedValueOnce(errorMessage);
+    console.error = jest.fn();
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+    const history = createMemoryHistory();
+    history.push = jest.fn();
+    const wrapper = render(
+      <Router history={history}>
+        <GameContext.Provider value={initialState}>
+          <CreateGamePage />
+        </GameContext.Provider>
+      </Router>
+    );
+    const userName = "Joe";
+    const code = "1234";
+    expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
+
+    const nameInput = wrapper.queryByTestId("join-game-name-input");
+    expect(nameInput).not.toBeNull();
+    userEvent.type(nameInput!, userName);
+
+    const codeInput = wrapper.queryByTestId("join-game-code-input");
+    expect(codeInput).not.toBeNull();
+    userEvent.type(codeInput!, code);
+
+    const submit = wrapper.getByTestId("join-game-form-submit");
+    userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
+    });
+  });
 });

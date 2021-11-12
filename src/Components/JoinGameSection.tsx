@@ -11,11 +11,15 @@ const JoinGameSection: React.FC = () => {
     async (event) => {
       event.preventDefault();
 
-      const { data } = await apiClient.post(`/api/game/${code}/join`, {
-        userName,
-      });
+      try {
+        const { data } = await apiClient.post(`/api/game/${code}/join`, {
+          userName,
+        });
 
-      history.push(`/game/${data.id}`);
+        history.push(`/game/${data.id}`);
+      } catch (e) {
+        console.error(e);
+      }
     },
     [userName, code]
   );
