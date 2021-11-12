@@ -1,12 +1,19 @@
 import { Expansion } from "../../Types/Expansion";
+import ExpansionCard from "../../Components/ExpansionCard";
 
-export const getExpansionsExampleResponse: Expansion[] = [
-  {
-    id: 1,
-    name: "Base set",
-  },
-  {
-    id: 2,
-    name: "Christmas Set",
-  },
-];
+interface IGetExpansionsExampleResponse {
+  data: Expansion[];
+}
+
+export const getExpansionsExampleResponse: IGetExpansionsExampleResponse = {
+  data: [
+    {
+      id: 1,
+      name: "Base set",
+    },
+    {
+      id: 2,
+      name: "Christmas Set",
+    },
+  ],
+};

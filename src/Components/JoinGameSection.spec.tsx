@@ -5,6 +5,7 @@ import { CreateGamePage } from "../Pages/CreateGamePage";
 import userEvent from "@testing-library/user-event";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "../Api/fixtures/getExpansionsExampleResponse";
 
 jest.mock("../Api/apiClient");
 
@@ -13,20 +14,19 @@ const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 describe("JoinGameSection", () => {
   beforeEach(() => {
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
+    mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
   });
 
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
-
-  it("renders", () => {
+  it("renders", async () => {
     const wrapper = render(
       <GameContext.Provider value={initialState}>
         <CreateGamePage />
       </GameContext.Provider>
     );
 
-    expect(wrapper.queryByTestId("join-game-section")).not.toBeNull();
+    await waitFor(() => {
+      expect(wrapper.queryByTestId("join-game-section")).not.toBeNull();
+    });
   });
 
   it("submits form with username and game code", async () => {

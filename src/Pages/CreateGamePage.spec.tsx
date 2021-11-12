@@ -1,7 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { CreateGamePage } from "./CreateGamePage";
 import userEvent from "@testing-library/user-event";
-import { Expansion } from "../Types/Expansion";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import { apiClient } from "../Api/apiClient";
@@ -16,19 +15,19 @@ const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 describe("CreateGamePage", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue({ data: getExpansionsExampleResponse });
+    mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
   });
 
   it("renders expansion cards", async () => {
     render(<CreateGamePage />);
-    await screen.findByText(getExpansionsExampleResponse[0].name);
+    await screen.findByText(getExpansionsExampleResponse.data[0].name);
   });
 
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
     render(<CreateGamePage />);
 
-    const expansion = getExpansionsExampleResponse[0];
+    const expansion = getExpansionsExampleResponse.data[0];
 
     const expansionCard = await screen.findByTestId(
       `expansion-${expansion.id}`
@@ -55,7 +54,7 @@ describe("CreateGamePage", () => {
     userEvent.click(submitBtn);
 
     expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
-      expansionIds: getExpansionsExampleResponse.map((exp) => exp.id),
+      expansionIds: getExpansionsExampleResponse.data.map((exp) => exp.id),
       name,
     });
   });
@@ -71,7 +70,7 @@ describe("CreateGamePage", () => {
       </Router>
     );
 
-    const expansionToExclude = getExpansionsExampleResponse[0];
+    const expansionToExclude = getExpansionsExampleResponse.data[0];
 
     const expansionCard = await screen.findByTestId(
       `expansion-${expansionToExclude.id}`
@@ -87,7 +86,7 @@ describe("CreateGamePage", () => {
     userEvent.click(submitBtn);
 
     expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
-      expansionIds: getExpansionsExampleResponse
+      expansionIds: getExpansionsExampleResponse.data
         .filter((exp) => exp.id !== expansionToExclude.id)
         .map((exp) => exp.id),
       name,

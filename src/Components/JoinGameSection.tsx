@@ -12,7 +12,6 @@ const JoinGameSection: React.FC = () => {
       const { data } = await apiClient.post(`/api/game/${code}/join`, {
         userName,
       });
-      console.log(data);
     },
     [userName, code]
   );
