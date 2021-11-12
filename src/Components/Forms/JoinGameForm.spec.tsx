@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, RenderResult, waitFor } from "@testing-library/react";
 import { GameContext, initialState } from "../../State/Game/GameContext";
 import userEvent from "@testing-library/user-event";
 import { apiClient } from "../../Api/apiClient";
@@ -11,19 +11,52 @@ import JoinGameForm from "./JoinGameForm";
 jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+const history = createMemoryHistory();
+const userName = "Joe";
+const code = "1234";
+
+const renderer = () => {
+  return render(
+    <Router history={history}>
+      <GameContext.Provider value={initialState}>
+        <JoinGameForm />
+      </GameContext.Provider>
+    </Router>
+  );
+};
+
+const setupAndSubmitForm = (): RenderResult => {
+  const wrapper = renderer();
+
+  expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
+
+  const nameInput = wrapper.queryByTestId("join-game-name-input");
+  expect(nameInput).not.toBeNull();
+  userEvent.type(nameInput!, userName);
+
+  const codeInput = wrapper.queryByTestId("join-game-code-input");
+  expect(codeInput).not.toBeNull();
+  userEvent.type(codeInput!, code);
+
+  const submit = wrapper.getByTestId("join-game-form-submit");
+  userEvent.click(submit);
+
+  return wrapper;
+};
 
 describe("JoinGameForm", () => {
   beforeEach(() => {
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
+    history.push = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   it("renders", async () => {
-    const wrapper = render(
-      <GameContext.Provider value={initialState}>
-        <JoinGameForm />
-      </GameContext.Provider>
-    );
+    const wrapper = renderer();
 
     await waitFor(() => {
       expect(wrapper.queryByTestId("join-game-section")).not.toBeNull();
@@ -31,29 +64,7 @@ describe("JoinGameForm", () => {
   });
 
   it("submits form with username and game code", async () => {
-    const history = createMemoryHistory();
-    history.push = jest.fn();
-    const wrapper = render(
-      <Router history={history}>
-        <GameContext.Provider value={initialState}>
-          <JoinGameForm />
-        </GameContext.Provider>
-      </Router>
-    );
-    const userName = "Joe";
-    const code = "1234";
-    expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
-
-    const nameInput = wrapper.queryByTestId("join-game-name-input");
-    expect(nameInput).not.toBeNull();
-    userEvent.type(nameInput!, userName);
-
-    const codeInput = wrapper.queryByTestId("join-game-code-input");
-    expect(codeInput).not.toBeNull();
-    userEvent.type(codeInput!, code);
-
-    const submit = wrapper.getByTestId("join-game-form-submit");
-    userEvent.click(submit);
+    setupAndSubmitForm();
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${code}/join`, {
@@ -63,29 +74,7 @@ describe("JoinGameForm", () => {
   });
 
   it("navigates to game page after join form has been submitted", async () => {
-    const history = createMemoryHistory();
-    history.push = jest.fn();
-    const wrapper = render(
-      <Router history={history}>
-        <GameContext.Provider value={initialState}>
-          <JoinGameForm />
-        </GameContext.Provider>
-      </Router>
-    );
-    const userName = "Joe";
-    const code = "1234";
-    expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
-
-    const nameInput = wrapper.queryByTestId("join-game-name-input");
-    expect(nameInput).not.toBeNull();
-    userEvent.type(nameInput!, userName);
-
-    const codeInput = wrapper.queryByTestId("join-game-code-input");
-    expect(codeInput).not.toBeNull();
-    userEvent.type(codeInput!, code);
-
-    const submit = wrapper.getByTestId("join-game-form-submit");
-    userEvent.click(submit);
+    setupAndSubmitForm();
 
     await waitFor(() => {
       expect(history.push).toHaveBeenCalledWith(
@@ -101,29 +90,8 @@ describe("JoinGameForm", () => {
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
-    const history = createMemoryHistory();
-    history.push = jest.fn();
-    const wrapper = render(
-      <Router history={history}>
-        <GameContext.Provider value={initialState}>
-          <JoinGameForm />
-        </GameContext.Provider>
-      </Router>
-    );
-    const userName = "Joe";
-    const code = "1234";
-    expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
 
-    const nameInput = wrapper.queryByTestId("join-game-name-input");
-    expect(nameInput).not.toBeNull();
-    userEvent.type(nameInput!, userName);
-
-    const codeInput = wrapper.queryByTestId("join-game-code-input");
-    expect(codeInput).not.toBeNull();
-    userEvent.type(codeInput!, code);
-
-    const submit = wrapper.getByTestId("join-game-form-submit");
-    userEvent.click(submit);
+    setupAndSubmitForm();
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
