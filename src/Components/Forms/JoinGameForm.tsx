@@ -29,7 +29,7 @@ const JoinGameForm: React.FC = () => {
       <form
         data-testid="join-game-form"
         onSubmit={submitToApi}
-        className="flex flex-col p-4 shadow-lg rounded border md:w-1/3"
+        className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
         <label className="mb-4 pl-2 mt-4">

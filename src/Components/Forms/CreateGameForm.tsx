@@ -83,7 +83,7 @@ export const CreateGameForm: React.FC = () => {
     <div className="w-full flex justify-center">
       <form
         onSubmit={submitToApi}
-        className="flex flex-col p-4 shadow-lg rounded border md:w-1/3"
+        className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
         <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
