@@ -6,6 +6,8 @@ import userEvent from "@testing-library/user-event";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { getExpansionsExampleResponse } from "../Api/fixtures/getExpansionsExampleResponse";
+import { createMemoryHistory } from "history";
+import { Router } from "react-router-dom";
 
 jest.mock("../Api/apiClient");
 
@@ -54,6 +56,38 @@ describe("JoinGameSection", () => {
       expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${code}/join`, {
         userName,
       });
+    });
+  });
+
+  it("navigates to game page after join form has been submitted", async () => {
+    const history = createMemoryHistory();
+    history.push = jest.fn();
+    const wrapper = render(
+      <Router history={history}>
+        <GameContext.Provider value={initialState}>
+          <CreateGamePage />
+        </GameContext.Provider>
+      </Router>
+    );
+    const userName = "Joe";
+    const code = "1234";
+    expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
+
+    const nameInput = wrapper.queryByTestId("join-game-name-input");
+    expect(nameInput).not.toBeNull();
+    userEvent.type(nameInput!, userName);
+
+    const codeInput = wrapper.queryByTestId("join-game-code-input");
+    expect(codeInput).not.toBeNull();
+    userEvent.type(codeInput!, code);
+
+    const submit = wrapper.getByTestId("join-game-form-submit");
+    userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(history.push).toHaveBeenCalledWith(
+        `/game/${gameStateExampleResponse.data.id}`
+      );
     });
   });
 });
