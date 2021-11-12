@@ -25,12 +25,13 @@ const JoinGameSection: React.FC = () => {
   );
 
   return (
-    <div data-testid="join-game-section">
+    <div className="flex justify-center" data-testid="join-game-section">
       <form
         data-testid="join-game-form"
         onSubmit={submitToApi}
-        className="flex w-1/3 flex-col p-4 shadow-lg rounded border"
+        className="flex flex-col p-4 shadow-lg rounded border md:w-1/3"
       >
+        <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
         <label className="mb-4 pl-2 mt-4">
           Name:
           <input
@@ -58,7 +59,7 @@ const JoinGameSection: React.FC = () => {
           data-testid="join-game-form-submit"
           className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
         >
-          Enter game
+          Join game
         </button>
       </form>
     </div>

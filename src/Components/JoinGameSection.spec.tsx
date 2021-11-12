@@ -7,6 +7,7 @@ import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleRespon
 import { getExpansionsExampleResponse } from "../Api/fixtures/getExpansionsExampleResponse";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
+import JoinGameSection from "./JoinGameSection";
 
 jest.mock("../Api/apiClient");
 
@@ -21,7 +22,7 @@ describe("JoinGameSection", () => {
   it("renders", async () => {
     const wrapper = render(
       <GameContext.Provider value={initialState}>
-        <CreateGamePage />
+        <JoinGameSection />
       </GameContext.Provider>
     );
 
@@ -31,10 +32,14 @@ describe("JoinGameSection", () => {
   });
 
   it("submits form with username and game code", async () => {
+    const history = createMemoryHistory();
+    history.push = jest.fn();
     const wrapper = render(
-      <GameContext.Provider value={initialState}>
-        <CreateGamePage />
-      </GameContext.Provider>
+      <Router history={history}>
+        <GameContext.Provider value={initialState}>
+          <JoinGameSection />
+        </GameContext.Provider>
+      </Router>
     );
     const userName = "Joe";
     const code = "1234";
@@ -64,7 +69,7 @@ describe("JoinGameSection", () => {
     const wrapper = render(
       <Router history={history}>
         <GameContext.Provider value={initialState}>
-          <CreateGamePage />
+          <JoinGameSection />
         </GameContext.Provider>
       </Router>
     );
@@ -102,7 +107,7 @@ describe("JoinGameSection", () => {
     const wrapper = render(
       <Router history={history}>
         <GameContext.Provider value={initialState}>
-          <CreateGamePage />
+          <JoinGameSection />
         </GameContext.Provider>
       </Router>
     );

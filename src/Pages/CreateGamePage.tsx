@@ -80,10 +80,10 @@ export const CreateGamePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full flex justify-center self-center mt-4 ">
+    <div className="w-full flex justify-center">
       <form
         onSubmit={submitToApi}
-        className="flex w-1/3 flex-col p-4 shadow-lg rounded border"
+        className="flex flex-col p-4 shadow-lg rounded border md:w-1/3"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
         <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
@@ -117,7 +117,6 @@ export const CreateGamePage: React.FC = () => {
           Enter game
         </button>
       </form>
-      <JoinGameSection />
     </div>
   );
 };
