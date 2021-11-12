@@ -1,6 +1,5 @@
-import { fireEvent, render, wait, waitFor } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import { GameContext, initialState } from "../State/Game/GameContext";
-import GamePage from "../Pages/GamePage";
 import { CreateGamePage } from "../Pages/CreateGamePage";
 import userEvent from "@testing-library/user-event";
 import { apiClient } from "../Api/apiClient";
