@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { apiClient } from "../Api/apiClient";
 
 const JoinGameSection: React.FC = () => {
+  const [code, setCode] = useState("");
+  const [userName, setUserName] = useState("");
+
+  const submitToApi = useCallback(
+    async (event) => {
+      event.preventDefault();
+
+      const { data } = await apiClient.post(`/api/game/${code}/join`, {
+        userName,
+      });
+      console.log(data);
+    },
+    [userName, code]
+  );
+
   return (
     <div data-testid="join-game-section">
       <form
@@ -15,6 +31,8 @@ const JoinGameSection: React.FC = () => {
             data-testid="join-game-name-input"
             name="name"
             className="border-2 rounded shadow ml-2 px-2"
+            required
+            onChange={(e) => setUserName(e.target.value)}
           />
         </label>
         <label className="mb-4 pl-2 mt-4">
@@ -24,6 +42,8 @@ const JoinGameSection: React.FC = () => {
             data-testid="join-game-code-input"
             name="code"
             className="border-2 rounded shadow ml-2 px-2"
+            required
+            onChange={(e) => setCode(e.target.value)}
           />
         </label>
 
