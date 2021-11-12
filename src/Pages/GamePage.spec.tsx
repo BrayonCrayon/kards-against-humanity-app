@@ -1,41 +1,21 @@
 import { render, RenderResult, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
-import { BlackCard } from "../Types/BlackCard";
 import { GameContext, initialState } from "../State/Game/GameContext";
-import { Game } from "../Types/Game";
-import { User } from "../Types/User";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
+import { userFixture } from "../Api/fixtures/userFixture";
+import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
+import { gameFixture } from "../Api/fixtures/gameFixture";
 
 jest.mock("../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-const user: User = {
-  id: 1,
-  name: "Rick Sanchez",
-  whiteCards: cardsInHand,
-};
-
-const game: Game = {
-  id: "121313klhj3-eqweewq-2323-dasd",
-  name: "Game 1",
-  judge_id: 1,
-  code: "1234",
-};
-
-const mockBlackCard: BlackCard = {
-  id: 1234,
-  pick: 12,
-  text: "_____ is what you tell cheap hookers.",
-  expansion_id: 69,
-};
-
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
-    id: game.id,
+    id: "121313klhj3-eqweewq-2323-dasd",
   }),
 }));
 
@@ -50,10 +30,10 @@ const renderer = (): RenderResult => {
     <GameContext.Provider
       value={{
         ...initialState,
-        game,
-        user,
+        game: gameFixture,
+        user: userFixture,
         hand: cardsInHand,
-        blackCard: mockBlackCard,
+        blackCard: blackCardFixture,
       }}
     >
       <GamePage />
@@ -82,10 +62,10 @@ describe("GamePage", () => {
 
     await waitFor(() => {
       const gameCodeDisplayElement = wrapper.queryByTestId(
-        `game-${game.id}`
+        `game-${gameFixture.id}`
       ) as HTMLElement;
       expect(gameCodeDisplayElement).not.toBeNull();
-      expect(gameCodeDisplayElement.innerHTML).toBe(game.code);
+      expect(gameCodeDisplayElement.innerHTML).toBe(gameFixture.code);
     });
   });
 
@@ -95,18 +75,18 @@ describe("GamePage", () => {
     const wrapper = renderer();
 
     const gameIdDisplayElement = wrapper.queryByTestId(
-      `game-${game.id}`
+      `game-${gameFixture.id}`
     ) as HTMLElement;
     gameIdDisplayElement.click();
     await waitFor(() => {
-      expect(navigator.clipboard.writeText).toBeCalledWith(game.code);
+      expect(navigator.clipboard.writeText).toBeCalledWith(gameFixture.code);
     });
   });
 
   it("displays the user's name", async () => {
     const wrapper = renderer();
 
-    expect(wrapper.getByText(user.name)).toBeInTheDocument();
+    expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
   });
 
   it("performs an api call to get game state data to be loaded on refresh", async () => {
@@ -123,7 +103,9 @@ describe("GamePage", () => {
     );
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${game.id}`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        `/api/game/${gameFixture.id}`
+      );
       expect(consoleSpy).not.toHaveBeenCalled();
     });
   });
@@ -132,11 +114,11 @@ describe("GamePage", () => {
     const wrapper = renderer();
 
     expect(
-      wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
+      wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
     ).toBeInTheDocument();
     expect(
-      wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
-    ).toHaveTextContent(mockBlackCard.text);
+      wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
+    ).toHaveTextContent(blackCardFixture.text);
   });
 
   it("catches error if api call to fetch game state fails", async () => {
