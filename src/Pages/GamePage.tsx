@@ -17,8 +17,7 @@ const GamePage = () => {
     user,
     blackCard,
   } = useContext(GameContext);
-  //TODO:
-  //check to see if useCallBack is necessary for this functionality
+
   const copyGameCode = useCallback(async (code: string) => {
     try {
       await navigator.clipboard.writeText(code);
