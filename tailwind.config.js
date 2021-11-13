@@ -1,4 +1,5 @@
 const colors = require("tailwindcss/colors");
+const flowBite = require("@themesberg/flowbite/tailwind.config");
 
 module.exports = {
   purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
@@ -913,5 +914,5 @@ module.exports = {
     wordBreak: ["responsive"],
     zIndex: ["responsive", "focus-within", "focus"],
   },
-  plugins: [],
+  plugins: [flowBite],
 };
