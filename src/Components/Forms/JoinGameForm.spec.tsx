@@ -68,7 +68,7 @@ describe("JoinGameForm", () => {
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${code}/join`, {
-        userName,
+        name: userName,
       });
     });
   });

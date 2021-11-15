@@ -13,7 +13,7 @@ const JoinGameForm: React.FC = () => {
 
       try {
         const { data } = await apiClient.post(`/api/game/${code}/join`, {
-          userName,
+          name: userName,
         });
 
         history.push(`/game/${data.id}`);
