@@ -11,14 +11,17 @@ export interface IGameContext {
   game: Game;
   user: User;
   blackCard: BlackCard;
+  users: User[];
   setGame: setState<Game>;
   setUser: setState<User>;
+  setUsers: setState<User[]>;
   setHand: setState<WhiteCard[]>;
   setBlackCard: setState<BlackCard>;
 }
 
 export const initialState: IGameContext = {
   hand: [],
+  users: [],
   user: {
     id: 0,
     name: "",
@@ -38,6 +41,7 @@ export const initialState: IGameContext = {
   },
   setGame: (game) => {},
   setUser: (user) => {},
+  setUsers: (user) => {},
   setHand: (hand) => {},
   setBlackCard: () => {},
 };

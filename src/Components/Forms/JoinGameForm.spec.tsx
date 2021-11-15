@@ -7,6 +7,7 @@ import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsEx
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import JoinGameForm from "./JoinGameForm";
+import { Game } from "../../Types/Game";
 
 jest.mock("../../Api/apiClient");
 
@@ -95,6 +96,64 @@ describe("JoinGameForm", () => {
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
+    });
+  });
+
+  it("sets game state after join game submitted", async () => {
+    const history = createMemoryHistory();
+    history.push = jest.fn();
+    const setGame = jest.fn();
+    const setUser = jest.fn();
+    const setHand = jest.fn();
+    const setBlackCard = jest.fn();
+    const setUsers = jest.fn();
+
+    mockedAxios.post.mockResolvedValue({
+      ...gameStateExampleResponse,
+    });
+
+    const { findByTestId } = render(
+      <Router history={history}>
+        <GameContext.Provider
+          value={{
+            ...initialState,
+            setGame,
+            setUser,
+            setHand,
+            setBlackCard,
+            setUsers,
+          }}
+        >
+          <JoinGameForm />
+        </GameContext.Provider>
+      </Router>
+    );
+
+    const nameInput = await findByTestId("join-game-name-input");
+    userEvent.type(nameInput, gameStateExampleResponse.data.current_user.name);
+
+    const codeInput = await findByTestId("join-game-code-input");
+    userEvent.type(codeInput, gameStateExampleResponse.data.code);
+
+    const submit = await findByTestId("join-game-form-submit");
+    userEvent.click(submit);
+
+    await waitFor(() => {
+      expect(setGame).toHaveBeenCalledWith({
+        id: gameStateExampleResponse.data.id,
+        judge_id: gameStateExampleResponse.data.judge.id,
+        code: gameStateExampleResponse.data.code,
+      } as Game);
+      expect(setUser).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.current_user
+      );
+      expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
+      expect(setBlackCard).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.current_black_card
+      );
+      expect(setUsers).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.users
+      );
     });
   });
 });

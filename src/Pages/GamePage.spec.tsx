@@ -139,4 +139,10 @@ describe("GamePage", () => {
       expect(consoleSpy).toBeCalledWith(errorResponse);
     });
   });
+
+  it("shows names of users after api call", () => {
+    // arrange
+    // act
+    // assert
+  });
 });

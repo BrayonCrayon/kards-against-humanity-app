@@ -1,11 +1,15 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { apiClient } from "../../Api/apiClient";
 import { useHistory } from "react-router-dom";
+import { GameContext } from "../../State/Game/GameContext";
+import { Game } from "../../Types/Game";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
+  const { setGame, setUser, setUsers, setHand, setBlackCard } =
+    useContext(GameContext);
 
   const submitToApi = useCallback(
     async (event) => {
@@ -15,6 +19,15 @@ const JoinGameForm: React.FC = () => {
         const { data } = await apiClient.post(`/api/game/${code}/join`, {
           name: userName,
         });
+        setGame({
+          id: data.id,
+          judge_id: data.judge.id,
+          code: data.code,
+        } as Game);
+        setUser(data.current_user);
+        setHand(data.hand);
+        setBlackCard(data.current_black_card);
+        setUsers(data.users);
 
         history.push(`/game/${data.id}`);
       } catch (e) {

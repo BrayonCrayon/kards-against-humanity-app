@@ -11,8 +11,20 @@ export const gameStateExampleResponse = {
     },
     users: [
       {
-        id: 2,
+        id: 1,
         name: "brady",
+        created_at: "2021-10-27T19:33:43.000000Z",
+        updated_at: "2021-10-27T19:33:43.000000Z",
+      },
+      {
+        id: 2,
+        name: "Rick",
+        created_at: "2021-10-27T19:33:43.000000Z",
+        updated_at: "2021-10-27T19:33:43.000000Z",
+      },
+      {
+        id: 3,
+        name: "Morty",
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },
