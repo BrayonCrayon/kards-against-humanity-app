@@ -7,6 +7,7 @@ import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixtur
 import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
+import { User } from "../Types/User";
 
 jest.mock("../Api/apiClient");
 
@@ -32,6 +33,7 @@ const renderer = (): RenderResult => {
         ...initialState,
         game: gameFixture,
         user: userFixture,
+        users: gameStateExampleResponse.data.users as User[],
         hand: cardsInHand,
         blackCard: blackCardFixture,
       }}
@@ -141,8 +143,12 @@ describe("GamePage", () => {
   });
 
   it("shows names of users after api call", () => {
-    // arrange
-    // act
-    // assert
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = renderer();
+
+    gameStateExampleResponse.data.users.forEach((user) => {
+      expect(wrapper.getByText(user.name)).toBeInTheDocument();
+    });
   });
 });

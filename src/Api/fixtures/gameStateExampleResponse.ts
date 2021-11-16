@@ -13,18 +13,21 @@ export const gameStateExampleResponse = {
       {
         id: 1,
         name: "brady",
+        whiteCards: [],
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },
       {
         id: 2,
         name: "Rick",
+        whiteCards: [],
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },
       {
         id: 3,
         name: "Morty",
+        whiteCards: [],
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },

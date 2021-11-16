@@ -15,6 +15,7 @@ const GamePage = () => {
     hand,
     game,
     user,
+    users,
     blackCard,
   } = useContext(GameContext);
 
@@ -53,6 +54,13 @@ const GamePage = () => {
 
   return (
     <div>
+      <div className="">
+        {users.map((user) => (
+          <div key={user.id}>
+            <p>{user.name}</p>
+          </div>
+        ))}
+      </div>
       <div
         data-testid={`game-${game.id}`}
         onClick={() => copyGameCode(game.code)}
