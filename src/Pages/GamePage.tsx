@@ -10,6 +10,7 @@ const GamePage = () => {
   const {
     setGame,
     setUser,
+    setUsers,
     setHand,
     setBlackCard,
     hand,
@@ -33,6 +34,7 @@ const GamePage = () => {
     try {
       const { data } = await apiClient.get(`/api/game/${id}`);
       setUser(data.current_user);
+      setUsers(data.users);
       setGame({
         id: data.id,
         judge_id: data.judge.id,

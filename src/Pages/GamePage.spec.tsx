@@ -93,13 +93,14 @@ describe("GamePage", () => {
 
   it("performs an api call to get game state data to be loaded on refresh", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    const setUsers = jest.fn();
 
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
     render(
-      <GameContext.Provider value={initialState}>
+      <GameContext.Provider value={{ ...initialState, setUsers }}>
         <GamePage />
       </GameContext.Provider>
     );
@@ -109,6 +110,9 @@ describe("GamePage", () => {
         `/api/game/${gameFixture.id}`
       );
       expect(consoleSpy).not.toHaveBeenCalled();
+      expect(setUsers).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.users
+      );
     });
   });
 
