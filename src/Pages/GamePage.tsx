@@ -56,20 +56,27 @@ const GamePage = () => {
 
   return (
     <div>
-      <div className="">
-        {users.map((user) => (
-          <div key={user.id}>
-            <p>{user.name}</p>
-          </div>
-        ))}
+      <div className="flex justify-between items-start">
+        <div
+          data-testid={`game-${game.id}`}
+          onClick={() => copyGameCode(game.code)}
+          className="border p-2 m-2"
+        >
+          <span className="font-bold">Game Code</span> {game.code}
+        </div>
+
+        <div className="border p-2 m-2">
+          <span className="font-bold">You</span> {user.name}
+        </div>
+        <div className="border p-2 m-2">
+          <h1 className="font-bold">Users</h1>
+          {users.map((user) => (
+            <div key={user.id}>
+              <p>{user.name}</p>
+            </div>
+          ))}
+        </div>
       </div>
-      <div
-        data-testid={`game-${game.id}`}
-        onClick={() => copyGameCode(game.code)}
-      >
-        {game.code}
-      </div>
-      <div>{user.name}</div>
       <div className="mx-auto my-2 w-1/3">
         <BlackKard card={blackCard} />
       </div>
