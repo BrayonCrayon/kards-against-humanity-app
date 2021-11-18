@@ -99,11 +99,12 @@ describe("CreateGameForm", () => {
     });
   });
 
-  it("calls setGame, setUser, setHand, and setBlackCard when game is created", async () => {
+  it("calls setGame, setUser, setUsers, setHand, and setBlackCard when game is created", async () => {
     const history = createMemoryHistory();
     history.push = jest.fn();
     const setGame = jest.fn();
     const setUser = jest.fn();
+    const setUsers = jest.fn();
     const setHand = jest.fn();
     const setBlackCard = jest.fn();
 
@@ -114,7 +115,14 @@ describe("CreateGameForm", () => {
     render(
       <Router history={history}>
         <GameContext.Provider
-          value={{ ...initialState, setGame, setUser, setHand, setBlackCard }}
+          value={{
+            ...initialState,
+            setGame,
+            setUsers,
+            setUser,
+            setHand,
+            setBlackCard,
+          }}
         >
           <CreateGameForm />
         </GameContext.Provider>
@@ -138,6 +146,9 @@ describe("CreateGameForm", () => {
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setUser).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_user
+      );
+      expect(setUsers).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.users
       );
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card

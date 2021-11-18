@@ -14,7 +14,8 @@ export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const { setGame, setUser, setHand, setBlackCard } = useContext(GameContext);
+  const { setGame, setUser, setUsers, setHand, setBlackCard } =
+    useContext(GameContext);
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -59,6 +60,7 @@ export const CreateGameForm: React.FC = () => {
           judge_id: data.judge.id,
         });
         setUser(data.current_user);
+        setUsers(data.users);
         setHand(data.hand);
         setBlackCard(data.current_black_card);
 
