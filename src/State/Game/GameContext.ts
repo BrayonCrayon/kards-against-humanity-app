@@ -3,8 +3,7 @@ import { WhiteCard } from "../../Types/WhiteCard";
 import { Game } from "../../Types/Game";
 import { User } from "../../Types/User";
 import { BlackCard } from "../../Types/BlackCard";
-
-export type setState<T> = Dispatch<SetStateAction<T>>;
+import { setState } from "../GeneralTypes";
 
 export interface IGameContext {
   hand: WhiteCard[];

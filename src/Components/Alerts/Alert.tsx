@@ -1,5 +1,5 @@
-import React, { useCallback } from "react";
-import { IAlert } from "../../State/Alert/AlertContext";
+import React, { useCallback, useContext } from "react";
+import { AlertContext, IAlert } from "../../State/Alert/AlertContext";
 
 interface IAlertProps {
   alert: IAlert;
@@ -7,6 +7,7 @@ interface IAlertProps {
 }
 
 const Alert: React.FC<IAlertProps> = ({ alert, id, children }) => {
+  const { removeAlert } = useContext(AlertContext);
   const alertColor = useCallback(() => {
     switch (alert.type) {
       case "info":
@@ -25,7 +26,7 @@ const Alert: React.FC<IAlertProps> = ({ alert, id, children }) => {
   return (
     <div
       data-testid={`alert-${id}`}
-      id="alert-1"
+      id="alertID"
       className={`flex bg-${alertColor()}-100 rounded-lg p-4 mb-4`}
       role="alert"
     >
@@ -42,12 +43,14 @@ const Alert: React.FC<IAlertProps> = ({ alert, id, children }) => {
         />
       </svg>
       <div className={`ml-3 text-sm font-medium text-${alertColor()}-700`}>
-        {children}
+        {alert.text}
       </div>
       <button
+        data-testid={`alert-${id}-close-button`}
+        onClick={() => removeAlert(alert)}
         type="button"
         className={`ml-auto -mx-1.5 -my-1.5 bg-${alertColor()}-100 text-${alertColor()}-500 rounded-lg focus:ring-2 focus:ring-${alertColor()}-400 p-1.5 hover:bg-${alertColor()}-200 inline-flex h-8 w-8`}
-        data-collapse-toggle="alert-1"
+        data-collapse-toggle="alertID"
         aria-label="Close"
       >
         <span className="sr-only">Close</span>

@@ -5,6 +5,8 @@ import { Kard } from "../Components/Kard";
 import { apiClient } from "../Api/apiClient";
 import { Game } from "../Types/Game";
 import { BlackKard } from "../Components/BlackKard";
+import ShowAlerts from "../Components/Alerts/ShowAlerts";
+import Alert from "../Components/Alerts/Alert";
 
 const GamePage = () => {
   const {
@@ -56,6 +58,7 @@ const GamePage = () => {
 
   return (
     <div>
+      <Alert alert={{ type: "info", text: "Hello please" }} id={1} />
       <div className="flex justify-between items-start">
         <div
           data-testid={`game-${game.id}`}
