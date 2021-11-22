@@ -58,7 +58,6 @@ const GamePage = () => {
 
   return (
     <div>
-      <Alert alert={{ type: "info", text: "Hello please" }} id={1} />
       <div className="flex justify-between items-start">
         <div
           data-testid={`game-${game.id}`}
