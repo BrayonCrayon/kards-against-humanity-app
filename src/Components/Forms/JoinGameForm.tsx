@@ -3,6 +3,8 @@ import { apiClient } from "../../Api/apiClient";
 import { useHistory } from "react-router-dom";
 import { GameContext } from "../../State/Game/GameContext";
 import { Game } from "../../Types/Game";
+import Swal from "sweetalert2";
+import { errorToast } from "../../Utilities/toasts";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -32,6 +34,7 @@ const JoinGameForm: React.FC = () => {
         history.push(`/game/${data.id}`);
       } catch (e) {
         console.error(e);
+        errorToast("Game does not exist");
       }
     },
     [userName, code]

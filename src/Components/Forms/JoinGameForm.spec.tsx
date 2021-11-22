@@ -8,8 +8,10 @@ import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import JoinGameForm from "./JoinGameForm";
 import { Game } from "../../Types/Game";
+import { errorToast } from "../../Utilities/toasts";
 
 jest.mock("../../Api/apiClient");
+jest.mock("../../Utilities/toasts");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const history = createMemoryHistory();
@@ -97,6 +99,8 @@ describe("JoinGameForm", () => {
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
     });
+
+    expect(errorToast).toHaveBeenCalledWith("Game does not exist");
   });
 
   it("sets game state after join game submitted", async () => {

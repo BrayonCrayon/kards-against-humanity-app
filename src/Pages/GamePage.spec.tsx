@@ -67,7 +67,7 @@ describe("GamePage", () => {
         `game-${gameFixture.id}`
       ) as HTMLElement;
       expect(gameCodeDisplayElement).not.toBeNull();
-      expect(gameCodeDisplayElement.innerHTML).toBe(gameFixture.code);
+      expect(gameCodeDisplayElement).toHaveTextContent(gameFixture.code);
     });
   });
 
