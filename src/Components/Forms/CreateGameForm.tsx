@@ -1,21 +1,21 @@
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import ExpansionCard from "../Components/ExpansionCard";
-import { Expansion } from "../Types/Expansion";
+import ExpansionCard from "../ExpansionCard";
+import { Expansion } from "../../Types/Expansion";
 import { useHistory } from "react-router-dom";
-import { apiClient } from "../Api/apiClient";
-import { GameContext, initialState } from "../State/Game/GameContext";
-import { Game } from "../Types/Game";
+import { apiClient } from "../../Api/apiClient";
+import { GameContext } from "../../State/Game/GameContext";
 
 type ExpansionOption = {
   expansion: Expansion;
   isSelected: boolean;
 };
 
-export const CreateGamePage: React.FC = () => {
+export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const { setGame, setUser, setHand, setBlackCard } = useContext(GameContext);
+  const { setGame, setUser, setUsers, setHand, setBlackCard } =
+    useContext(GameContext);
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -53,8 +53,14 @@ export const CreateGamePage: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        setGame({ id: data.id, name: data.name } as Game);
+        setGame({
+          id: data.id,
+          name: data.name,
+          code: data.code,
+          judge_id: data.judge.id,
+        });
         setUser(data.current_user);
+        setUsers(data.users);
         setHand(data.hand);
         setBlackCard(data.current_black_card);
 
@@ -75,10 +81,10 @@ export const CreateGamePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full flex justify-center self-center mt-4 ">
+    <div className="w-full flex justify-center">
       <form
         onSubmit={submitToApi}
-        className="flex w-1/3 flex-col p-4 shadow-lg rounded border"
+        className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
         <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">

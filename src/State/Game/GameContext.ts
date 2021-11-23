@@ -3,22 +3,24 @@ import { WhiteCard } from "../../Types/WhiteCard";
 import { Game } from "../../Types/Game";
 import { User } from "../../Types/User";
 import { BlackCard } from "../../Types/BlackCard";
-
-export type setState<T> = Dispatch<SetStateAction<T>>;
+import { setState } from "../GeneralTypes";
 
 export interface IGameContext {
   hand: WhiteCard[];
   game: Game;
   user: User;
   blackCard: BlackCard;
+  users: User[];
   setGame: setState<Game>;
   setUser: setState<User>;
+  setUsers: setState<User[]>;
   setHand: setState<WhiteCard[]>;
   setBlackCard: setState<BlackCard>;
 }
 
 export const initialState: IGameContext = {
   hand: [],
+  users: [],
   user: {
     id: 0,
     name: "",
@@ -28,6 +30,7 @@ export const initialState: IGameContext = {
     id: "",
     name: "",
     judge_id: 0,
+    code: "",
   },
   blackCard: {
     id: 0,
@@ -37,6 +40,7 @@ export const initialState: IGameContext = {
   },
   setGame: (game) => {},
   setUser: (user) => {},
+  setUsers: (user) => {},
   setHand: (hand) => {},
   setBlackCard: () => {},
 };

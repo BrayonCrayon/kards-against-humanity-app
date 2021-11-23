@@ -1,12 +1,13 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, RenderResult, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
-import { WhiteCard } from "../Types/WhiteCard";
-import { BlackCard } from "../Types/BlackCard";
 import { GameContext, initialState } from "../State/Game/GameContext";
-import { Game } from "../Types/Game";
-import { User } from "../Types/User";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
+import { userFixture } from "../Api/fixtures/userFixture";
+import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
+import { gameFixture } from "../Api/fixtures/gameFixture";
+import { User } from "../Types/User";
 
 jest.mock("../Api/apiClient");
 
@@ -15,53 +16,9 @@ const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
-    id: "abc123",
+    id: "121313klhj3-eqweewq-2323-dasd",
   }),
 }));
-
-const cardsInHand: WhiteCard[] = [
-  {
-    id: 1625,
-    text: "White card 1",
-    expansion_id: 4,
-  },
-  {
-    id: 828,
-    text: "White card 1",
-    expansion_id: 1,
-  },
-  {
-    id: 237,
-    text: "White card 1",
-    expansion_id: 2,
-  },
-  {
-    id: 408,
-    text: "White card 1",
-    expansion_id: 8,
-  },
-  {
-    id: 95,
-    text: "White card 1",
-    expansion_id: 12,
-  },
-  {
-    id: 16,
-    text: "White card 1",
-    expansion_id: 1,
-  },
-  {
-    id: 253,
-    text: "White card 1",
-    expansion_id: 1,
-  },
-];
-
-const user: User = {
-  id: 1,
-  name: "Rick Sanchez",
-  whiteCards: cardsInHand,
-};
 
 Object.assign(navigator, {
   clipboard: {
@@ -69,24 +26,30 @@ Object.assign(navigator, {
   },
 });
 
+const renderer = (): RenderResult => {
+  return render(
+    <GameContext.Provider
+      value={{
+        ...initialState,
+        game: gameFixture,
+        user: userFixture,
+        users: gameStateExampleResponse.data.users as User[],
+        hand: cardsInHand,
+        blackCard: blackCardFixture,
+      }}
+    >
+      <GamePage />
+    </GameContext.Provider>
+  );
+};
+
 describe("GamePage", () => {
   afterAll(() => {
     jest.resetAllMocks();
   });
 
   it("shows users hand of seven white cards", async () => {
-    const wrapper = render(
-      <GameContext.Provider
-        value={{
-          ...initialState,
-          hand: cardsInHand,
-          game: { id: "abc123", name: "", judge_id: 0 },
-          user,
-        }}
-      >
-        <GamePage />
-      </GameContext.Provider>
-    );
+    const wrapper = renderer();
 
     await waitFor(() => {
       cardsInHand.forEach((card) => {
@@ -96,116 +59,72 @@ describe("GamePage", () => {
     });
   });
 
-  it("shows game id", async () => {
-    const game: Game = {
-      id: "121313klhj3-eqweewq-2323-dasd",
-      name: "Game 1",
-      judge_id: 1,
-    };
-    const wrapper = render(
-      <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
-        <GamePage />
-      </GameContext.Provider>
-    );
+  it("shows game code", async () => {
+    const wrapper = renderer();
 
     await waitFor(() => {
-      const gameIdDisplayElement = wrapper.queryByTestId(
-        `game-${game.id}`
+      const gameCodeDisplayElement = wrapper.queryByTestId(
+        `game-${gameFixture.id}`
       ) as HTMLElement;
-      expect(gameIdDisplayElement).not.toBeNull();
-      expect(gameIdDisplayElement.innerHTML).toBe(game.id);
+      expect(gameCodeDisplayElement).not.toBeNull();
+      expect(gameCodeDisplayElement).toHaveTextContent(gameFixture.code);
     });
   });
 
-  it("copies game id to clipboard when clicked", async () => {
-    const game: Game = {
-      id: "121313klhj3-eqweewq-2323-dasd",
-      name: "Game 1",
-      judge_id: 1,
-    };
-
+  it("copies game code to clipboard when clicked", async () => {
     jest.spyOn(navigator.clipboard, "writeText");
 
-    const wrapper = render(
-      <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
-        <GamePage />
-      </GameContext.Provider>
-    );
+    const wrapper = renderer();
 
     const gameIdDisplayElement = wrapper.queryByTestId(
-      `game-${game.id}`
+      `game-${gameFixture.id}`
     ) as HTMLElement;
     gameIdDisplayElement.click();
     await waitFor(() => {
-      expect(navigator.clipboard.writeText).toBeCalledWith(game.id);
+      expect(navigator.clipboard.writeText).toBeCalledWith(gameFixture.code);
     });
   });
 
   it("displays the user's name", async () => {
-    const game: Game = {
-      id: "121313klhj3-eqweewq-2323-dasd",
-      name: "Game 1",
-      judge_id: 1,
-    };
+    const wrapper = renderer();
 
-    const wrapper = render(
-      <GameContext.Provider value={{ ...initialState, game, hand: [], user }}>
-        <GamePage />
-      </GameContext.Provider>
-    );
-
-    expect(wrapper.getByText(user.name)).toBeInTheDocument();
+    expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
   });
 
   it("performs an api call to get game state data to be loaded on refresh", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
-    const gameId = "abc123";
+    const setUsers = jest.fn();
 
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
     render(
-      <GameContext.Provider value={{ ...initialState }}>
+      <GameContext.Provider value={{ ...initialState, setUsers }}>
         <GamePage />
       </GameContext.Provider>
     );
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        `/api/game/${gameFixture.id}`
+      );
       expect(consoleSpy).not.toHaveBeenCalled();
+      expect(setUsers).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.users
+      );
     });
   });
 
   it("displays the black card", () => {
-    const game: Game = {
-      id: "121313klhj3-eqweewq-2323-dasd",
-      name: "Game 1",
-      judge_id: 1,
-    };
-
-    const mockBlackCard: BlackCard = {
-      id: 1234,
-      pick: 12,
-      text: "_____ is what you tell cheap hookers.",
-      expansion_id: 69,
-    };
-
-    const wrapper = render(
-      <GameContext.Provider
-        value={{ ...initialState, game, blackCard: mockBlackCard }}
-      >
-        <GamePage />
-      </GameContext.Provider>
-    );
+    const wrapper = renderer();
 
     expect(
-      wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
+      wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
     ).toBeInTheDocument();
     expect(
-      wrapper.queryByTestId(`black-card-${mockBlackCard.id}`)
-    ).toHaveTextContent(mockBlackCard.text);
+      wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
+    ).toHaveTextContent(blackCardFixture.text);
   });
 
   it("catches error if api call to fetch game state fails", async () => {
@@ -224,6 +143,16 @@ describe("GamePage", () => {
 
     await waitFor(() => {
       expect(consoleSpy).toBeCalledWith(errorResponse);
+    });
+  });
+
+  it("shows names of users after api call", () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = renderer();
+
+    gameStateExampleResponse.data.users.forEach((user) => {
+      expect(wrapper.getByText(user.name)).toBeInTheDocument();
     });
   });
 });

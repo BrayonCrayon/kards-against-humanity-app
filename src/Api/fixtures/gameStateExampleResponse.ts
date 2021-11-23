@@ -1,6 +1,7 @@
 export const gameStateExampleResponse = {
   data: {
     id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
+    code: "1234",
     name: "Puzzled Penguin",
     judge: {
       id: 2,
@@ -10,8 +11,23 @@ export const gameStateExampleResponse = {
     },
     users: [
       {
-        id: 2,
+        id: 1,
         name: "brady",
+        whiteCards: [],
+        created_at: "2021-10-27T19:33:43.000000Z",
+        updated_at: "2021-10-27T19:33:43.000000Z",
+      },
+      {
+        id: 2,
+        name: "Rick",
+        whiteCards: [],
+        created_at: "2021-10-27T19:33:43.000000Z",
+        updated_at: "2021-10-27T19:33:43.000000Z",
+      },
+      {
+        id: 3,
+        name: "Morty",
+        whiteCards: [],
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },

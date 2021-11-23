@@ -1,46 +1,33 @@
-import { act, render, screen, waitFor } from "@testing-library/react";
-import { CreateGamePage } from "./CreateGamePage";
+import { render, screen, waitFor } from "@testing-library/react";
+import { CreateGameForm } from "./CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import { Expansion } from "../Types/Expansion";
-import { API_URL } from "../config";
 import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import { apiClient } from "../Api/apiClient";
-import { GameContext, initialState } from "../State/Game/GameContext";
-import GameContextProvider from "../State/Game/GameContextProvider";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { Game } from "../Types/Game";
+import { GameContext, initialState } from "../../State/Game/GameContext";
+import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
+import { Game } from "../../Types/Game";
+import { apiClient } from "../../Api/apiClient";
 
-jest.mock("../Api/apiClient");
+jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
-const expectedExpansionName = "Some Sweet Expansion";
-const expansion = {
-  id: 1,
-  name: expectedExpansionName,
-};
-const otherExpansion = {
-  id: 2,
-  name: expectedExpansionName + " but different",
-};
 
-const responses: Expansion[] = [expansion, otherExpansion];
-
-const createGameResponse = { ...gameStateExampleResponse };
-
-describe("CreateGamePage", () => {
+describe("CreateGameForm", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue({ data: responses });
-    mockedAxios.post.mockResolvedValue(createGameResponse);
+    mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
+    mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
   });
 
   it("renders expansion cards", async () => {
-    render(<CreateGamePage />);
-    await screen.findByText(expectedExpansionName);
+    render(<CreateGameForm />);
+    await screen.findByText(getExpansionsExampleResponse.data[0].name);
   });
 
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
-    render(<CreateGamePage />);
+    render(<CreateGameForm />);
+
+    const expansion = getExpansionsExampleResponse.data[0];
 
     const expansionCard = await screen.findByTestId(
       `expansion-${expansion.id}`
@@ -56,7 +43,7 @@ describe("CreateGamePage", () => {
 
     render(
       <Router history={history}>
-        <CreateGamePage />
+        <CreateGameForm />
       </Router>
     );
 
@@ -67,7 +54,7 @@ describe("CreateGamePage", () => {
     userEvent.click(submitBtn);
 
     expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
-      expansionIds: [expansion.id, otherExpansion.id],
+      expansionIds: getExpansionsExampleResponse.data.map((exp) => exp.id),
       name,
     });
   });
@@ -79,12 +66,14 @@ describe("CreateGamePage", () => {
 
     render(
       <Router history={history}>
-        <CreateGamePage />
+        <CreateGameForm />
       </Router>
     );
 
+    const expansionToExclude = getExpansionsExampleResponse.data[0];
+
     const expansionCard = await screen.findByTestId(
-      `expansion-${expansion.id}`
+      `expansion-${expansionToExclude.id}`
     );
     userEvent.click(expansionCard);
 
@@ -97,22 +86,25 @@ describe("CreateGamePage", () => {
     userEvent.click(submitBtn);
 
     expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
-      expansionIds: [otherExpansion.id],
+      expansionIds: getExpansionsExampleResponse.data
+        .filter((exp) => exp.id !== expansionToExclude.id)
+        .map((exp) => exp.id),
       name,
     });
 
     await waitFor(() => {
       expect(history.push).toHaveBeenCalledWith(
-        `/game/${createGameResponse.data.id}`
+        `/game/${gameStateExampleResponse.data.id}`
       );
     });
   });
 
-  it("calls setGame, setUser, setHand, and setBlackCard when game is created", async () => {
+  it("calls setGame, setUser, setUsers, setHand, and setBlackCard when game is created", async () => {
     const history = createMemoryHistory();
     history.push = jest.fn();
     const setGame = jest.fn();
     const setUser = jest.fn();
+    const setUsers = jest.fn();
     const setHand = jest.fn();
     const setBlackCard = jest.fn();
 
@@ -123,9 +115,16 @@ describe("CreateGamePage", () => {
     render(
       <Router history={history}>
         <GameContext.Provider
-          value={{ ...initialState, setGame, setUser, setHand, setBlackCard }}
+          value={{
+            ...initialState,
+            setGame,
+            setUsers,
+            setUser,
+            setHand,
+            setBlackCard,
+          }}
         >
-          <CreateGamePage />
+          <CreateGameForm />
         </GameContext.Provider>
       </Router>
     );
@@ -137,13 +136,19 @@ describe("CreateGamePage", () => {
     userEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(setGame).toHaveBeenCalledWith({
+      const receivedGame: Game = {
         id: gameStateExampleResponse.data.id,
         name: gameStateExampleResponse.data.name,
-      } as Game);
+        code: gameStateExampleResponse.data.code,
+        judge_id: gameStateExampleResponse.data.judge.id,
+      };
+      expect(setGame).toHaveBeenCalledWith(receivedGame);
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setUser).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_user
+      );
+      expect(setUsers).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.users
       );
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card

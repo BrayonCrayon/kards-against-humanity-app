@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { CreateGamePage } from "./Pages/CreateGamePage";
 import GamePage from "./Pages/GamePage";
 import { apiClient } from "./Api/apiClient";
 import Navigation from "./Layouts/Navigation";
+import HomePage from "./Pages/HomePage";
 
 export default function App() {
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function App() {
           </Route>
 
           <Route path="/">
-            <CreateGamePage />
+            <HomePage />
           </Route>
         </Switch>
       </div>
