@@ -4,26 +4,8 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GameContextProvider from "./State/Game/GameContextProvider";
-
-import Echo from "laravel-echo";
-
 // @ts-ignore
 window.Pusher = require("pusher-js");
-
-// @ts-ignore
-window.Echo = new Echo({
-  broadcaster: "pusher",
-  key: "80e06980f526e21fc058",
-  cluster: "us2",
-  forceTLS: true,
-  authEndpoint: "http://localhost:8080/broadcasting/auth",
-});
-
-//echo.connect();
-// @ts-ignore
-window.Echo.private("private-game.test").listen("GameJoined", () => {
-  console.log("Heard an event");
-});
 
 ReactDOM.render(
   <React.StrictMode>
