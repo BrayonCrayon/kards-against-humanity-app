@@ -4,8 +4,9 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GameContextProvider from "./State/Game/GameContextProvider";
-// @ts-ignore
-window.Pusher = require("pusher-js");
+import { apiClient } from "./Api/apiClient";
+
+apiClient.get(`/sanctum/csrf-cookie`);
 
 ReactDOM.render(
   <React.StrictMode>

@@ -5,8 +5,7 @@ import { Kard } from "../Components/Kard";
 import { apiClient } from "../Api/apiClient";
 import { Game } from "../Types/Game";
 import { BlackKard } from "../Components/BlackKard";
-import ShowAlerts from "../Components/Alerts/ShowAlerts";
-import Alert from "../Components/Alerts/Alert";
+import { listenWhenUserJoinsGame } from "../Services/PusherService";
 
 const GamePage = () => {
   const {
@@ -20,6 +19,7 @@ const GamePage = () => {
     user,
     users,
     blackCard,
+    userJoinedGameCallback,
   } = useContext(GameContext);
 
   const copyGameCode = useCallback(async (code: string) => {
@@ -45,6 +45,7 @@ const GamePage = () => {
       } as Game);
       setHand(data.hand);
       setBlackCard(data.current_black_card);
+      listenWhenUserJoinsGame(data.id, userJoinedGameCallback);
     } catch (error) {
       console.error(error);
     }
@@ -53,8 +54,10 @@ const GamePage = () => {
   useEffect(() => {
     if (!game.id) {
       fetchGameState();
+    } else {
+      listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
     }
-  });
+  }, []);
 
   return (
     <div>

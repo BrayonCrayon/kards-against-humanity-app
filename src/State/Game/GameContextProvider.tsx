@@ -21,6 +21,7 @@ const GameContextProvider: React.FC = ({ children }) => {
         setUsers,
         setHand,
         setBlackCard,
+        userJoinedGameCallback: initialState.userJoinedGameCallback,
       }}
     >
       {children}
