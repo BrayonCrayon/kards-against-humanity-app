@@ -15,10 +15,11 @@ jest.mock("../Services/PusherService");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
+const gameId = "123123";
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
-    id: "121313klhj3-eqweewq-2323-dasd",
+    id: gameId,
   }),
 }));
 
@@ -111,15 +112,13 @@ describe("GamePage", () => {
     );
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        `/api/game/${gameFixture.id}`
-      );
+      expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
       expect(consoleSpy).not.toHaveBeenCalled();
       expect(setUsers).toHaveBeenCalledWith(
         gameStateExampleResponse.data.users
       );
       expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.id,
+        gameId,
         userJoinedGameCallback
       );
     });

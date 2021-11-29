@@ -15,6 +15,7 @@ function useFetchGameState() {
         return data;
       } catch (error) {
         console.error(error);
+        throw error;
       }
     },
     [setGame, setUsers, setUser, setHand, setBlackCard]

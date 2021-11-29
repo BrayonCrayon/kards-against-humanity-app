@@ -36,19 +36,21 @@ const GamePage = () => {
 
   useEffect(() => {
     if (!game.id) {
-      fetchGameState(id).then((data) => {
-        listenWhenUserJoinsGame(id, userJoinedGameCallback);
-        setUser(data.current_user);
-        setUsers(data.users);
-        setGame({
-          id: data.id,
-          judge_id: data.judge.id,
-          name: data.name,
-          code: data.code,
-        } as Game);
-        setHand(data.hand);
-        setBlackCard(data.current_black_card);
-      });
+      fetchGameState(id)
+        .then((data) => {
+          listenWhenUserJoinsGame(id, userJoinedGameCallback);
+          setUser(data.current_user);
+          setUsers(data.users);
+          setGame({
+            id: data.id,
+            judge_id: data.judge.id,
+            name: data.name,
+            code: data.code,
+          } as Game);
+          setHand(data.hand);
+          setBlackCard(data.current_black_card);
+        })
+        .catch((error) => console.error(error));
     } else {
       listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
     }
