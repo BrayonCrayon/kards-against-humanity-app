@@ -4,6 +4,7 @@ import useFetchGameState from "./UseFetchGameState";
 import { apiClient } from "../../Api/apiClient";
 import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
 import { GameContext, initialState } from "../../State/Game/GameContext";
+import { Game } from "../../Types/Game";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
@@ -43,10 +44,17 @@ describe("UseFetchGameState", () => {
     const gameId = "123";
     await result.current(gameId);
 
-    expect(setUsers).toHaveBeenCalled();
-    expect(setUser).toHaveBeenCalled();
-    expect(setGame).toHaveBeenCalled();
-    expect(setHand).toHaveBeenCalled();
-    expect(setBlackCard).toHaveBeenCalled();
+    const { data } = gameStateExampleResponse;
+
+    expect(setUser).toHaveBeenCalledWith(data.current_user);
+    expect(setUsers).toHaveBeenCalledWith(data.users);
+    expect(setGame).toHaveBeenCalledWith({
+      id: data.id,
+      judge_id: data.judge.id,
+      name: data.name,
+      code: data.code,
+    } as Game);
+    expect(setHand).toHaveBeenCalledWith(data.hand);
+    expect(setBlackCard).toHaveBeenCalledWith(data.current_black_card);
   });
 });
