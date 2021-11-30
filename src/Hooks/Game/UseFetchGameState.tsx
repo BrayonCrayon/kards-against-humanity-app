@@ -12,6 +12,17 @@ function useFetchGameState() {
       try {
         const { data } = await apiClient.get(`/api/game/${gameId}`);
 
+        setUser(data.current_user);
+        setUsers(data.users);
+        setGame({
+          id: data.id,
+          judge_id: data.judge.id,
+          name: data.name,
+          code: data.code,
+        } as Game);
+        setHand(data.hand);
+        setBlackCard(data.current_black_card);
+
         return data;
       } catch (error) {
         console.error(error);
