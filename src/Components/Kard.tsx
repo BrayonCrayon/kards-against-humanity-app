@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 
 interface KardProps {
   id: number;
@@ -6,9 +6,18 @@ interface KardProps {
 }
 
 export const Kard: React.FC<KardProps> = ({ id, text }) => {
+  const [isSelected, setIsSelected] = useState<boolean>(false);
+
+  const toggle = useCallback(() => {
+    setIsSelected(!isSelected);
+  }, [isSelected, setIsSelected]);
+
   return (
     <div
-      className="border border-black rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between"
+      className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between ${
+        isSelected ? "border-4 border-blue-400" : "border border-black"
+      }`}
+      onClick={toggle}
       data-testid={`white-card-${id}`}
     >
       <span>{text}</span>
