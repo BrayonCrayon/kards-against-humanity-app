@@ -4,9 +4,6 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GameContextProvider from "./State/Game/GameContextProvider";
-import { apiClient } from "./Api/apiClient";
-
-apiClient.get(`/sanctum/csrf-cookie`);
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { GameContext, initialState } from "./GameContext";
 import { UserJoinedGameData } from "../../Services/PusherService";
 import useFetchGameState from "../../Hooks/Game/UseFetchGameState";
@@ -19,11 +19,10 @@ const GameContextProvider: React.FC = ({ children }) => {
   );
 
   const userJoinedGameCallback = useCallback(
-    async (dataish: UserJoinedGameData) => {
-      console.log("in callback from pusher", dataish);
-      await fetchGameState(dataish.gameId);
+    async (data: UserJoinedGameData) => {
+      await fetchGameState(data.gameId);
     },
-    [users, user, game, hand, blackCard]
+    [fetchGameState]
   );
 
   return (

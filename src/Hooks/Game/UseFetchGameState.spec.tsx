@@ -1,12 +1,11 @@
-import React, { useContext } from "react";
-import { renderHook } from "@testing-library/react-hooks";
-import useFetchGameState from "./UseFetchGameState";
-import { apiClient } from "../../Api/apiClient";
-import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
-import { GameContext, initialState } from "../../State/Game/GameContext";
-import { Game } from "../../Types/Game";
+import React from 'react';
+import { renderHook } from '@testing-library/react-hooks';
+import useFetchGameState from './UseFetchGameState';
+import { apiClient } from '../../Api/apiClient';
+import { gameStateExampleResponse } from '../../Api/fixtures/gameStateExampleResponse';
+import { Game } from '../../Types/Game';
 
-jest.mock("../../Api/apiClient");
+jest.mock('../../Api/apiClient');
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 const setUsers = jest.fn();
@@ -15,37 +14,16 @@ const setGame = jest.fn();
 const setHand = jest.fn();
 const setBlackCard = jest.fn();
 
-// @ts-ignore
-// const wrapper = ({ children }) => {
-//   const { ...rest } = initialState;
-//
-//   return (
-//     <GameContext.Provider
-//       value={{
-//         ...rest,
-//         setUsers,
-//         setUser,
-//         setGame,
-//         setHand,
-//         setBlackCard,
-//       }}
-//     >
-//       {children}
-//     </GameContext.Provider>
-//   );
-// };
-
-describe("UseFetchGameState", () => {
+describe('UseFetchGameState', () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
   });
 
-  it("returns correct data", async () => {
-    const { result } = renderHook(
-      () => useFetchGameState(setUsers, setUser, setGame, setHand, setBlackCard)
-      // { wrapper }
+  it('returns correct data', async () => {
+    const { result } = renderHook(() =>
+      useFetchGameState(setUsers, setUser, setGame, setHand, setBlackCard)
     );
-    const gameId = "123";
+    const gameId = '123';
     await result.current(gameId);
 
     const { data } = gameStateExampleResponse;

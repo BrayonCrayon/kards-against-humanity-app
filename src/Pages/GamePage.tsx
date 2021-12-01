@@ -41,13 +41,13 @@ const GamePage = () => {
 
   useEffect(() => {
     if (!game.id) {
-      fetchGameState(id)
-        .then(() => listenWhenUserJoinsGame(id, userJoinedGameCallback))
-        .catch((error) => console.error(error));
+      fetchGameState(id).then(() =>
+        listenWhenUserJoinsGame(id, userJoinedGameCallback)
+      );
     } else {
       listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
     }
-  }, []);
+  }, [game, fetchGameState, id, userJoinedGameCallback]);
 
   return (
     <div>

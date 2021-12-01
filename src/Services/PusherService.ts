@@ -9,8 +9,6 @@ window.Echo = new Echo({
   broadcaster: "pusher",
   key: "80e06980f526e21fc058",
   cluster: "us2",
-  // encrypted: true,
-  // client: client,
 });
 
 // @ts-ignore

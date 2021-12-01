@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { IGameContext } from "../../State/Game/GameContext";
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
 import { setState } from "../../State/GeneralTypes";
@@ -28,11 +27,8 @@ function useFetchGameState(
         } as Game);
         setHand(data.hand);
         setBlackCard(data.current_black_card);
-
-        return data;
       } catch (error) {
         console.error(error);
-        throw error;
       }
     },
     [setUsers, setUser, setGame, setHand, setBlackCard]
