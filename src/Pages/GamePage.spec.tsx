@@ -8,15 +8,18 @@ import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
 import { User } from "../Types/User";
+import { listenWhenUserJoinsGame } from "../Services/PusherService";
 
 jest.mock("../Api/apiClient");
+jest.mock("../Services/PusherService");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
+const gameId = "123123";
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
-    id: "121313klhj3-eqweewq-2323-dasd",
+    id: gameId,
   }),
 }));
 
@@ -94,24 +97,29 @@ describe("GamePage", () => {
   it("performs an api call to get game state data to be loaded on refresh", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
     const setUsers = jest.fn();
+    const userJoinedGameCallback = jest.fn();
 
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
     render(
-      <GameContext.Provider value={{ ...initialState, setUsers }}>
+      <GameContext.Provider
+        value={{ ...initialState, setUsers, userJoinedGameCallback }}
+      >
         <GamePage />
       </GameContext.Provider>
     );
 
     await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        `/api/game/${gameFixture.id}`
-      );
+      expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
       expect(consoleSpy).not.toHaveBeenCalled();
       expect(setUsers).toHaveBeenCalledWith(
         gameStateExampleResponse.data.users
+      );
+      expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
+        gameId,
+        userJoinedGameCallback
       );
     });
   });
@@ -154,5 +162,14 @@ describe("GamePage", () => {
     gameStateExampleResponse.data.users.forEach((user) => {
       expect(wrapper.getByText(user.name)).toBeInTheDocument();
     });
+  });
+
+  it("listens on pusher event when loading game page", () => {
+    renderer();
+
+    expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
+      gameFixture.id,
+      initialState.userJoinedGameCallback
+    );
   });
 });

@@ -2,25 +2,32 @@ import React, { useCallback, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { Kard } from "../Components/Kard";
-import { apiClient } from "../Api/apiClient";
-import { Game } from "../Types/Game";
 import { BlackKard } from "../Components/BlackKard";
-import ShowAlerts from "../Components/Alerts/ShowAlerts";
-import Alert from "../Components/Alerts/Alert";
+import { listenWhenUserJoinsGame } from "../Services/PusherService";
+import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 
 const GamePage = () => {
   const {
-    setGame,
-    setUser,
-    setUsers,
-    setHand,
-    setBlackCard,
     hand,
     game,
     user,
     users,
     blackCard,
+    userJoinedGameCallback,
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard,
   } = useContext(GameContext);
+
+  const fetchGameState = useFetchGameState(
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard
+  );
 
   const copyGameCode = useCallback(async (code: string) => {
     try {
@@ -32,29 +39,15 @@ const GamePage = () => {
 
   const { id } = useParams<{ id: string }>();
 
-  const fetchGameState = useCallback(async () => {
-    try {
-      const { data } = await apiClient.get(`/api/game/${id}`);
-      setUser(data.current_user);
-      setUsers(data.users);
-      setGame({
-        id: data.id,
-        judge_id: data.judge.id,
-        name: data.name,
-        code: data.code,
-      } as Game);
-      setHand(data.hand);
-      setBlackCard(data.current_black_card);
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
-
   useEffect(() => {
     if (!game.id) {
-      fetchGameState();
+      fetchGameState(id).then(() =>
+        listenWhenUserJoinsGame(id, userJoinedGameCallback)
+      );
+    } else {
+      listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
     }
-  });
+  }, [game, fetchGameState, id, userJoinedGameCallback]);
 
   return (
     <div>

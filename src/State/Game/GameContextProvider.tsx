@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { GameContext, initialState } from "./GameContext";
+import { UserJoinedGameData } from "../../Services/PusherService";
+import useFetchGameState from "../../Hooks/Game/UseFetchGameState";
 
 const GameContextProvider: React.FC = ({ children }) => {
   const [game, setGame] = useState(initialState.game);
@@ -7,6 +9,21 @@ const GameContextProvider: React.FC = ({ children }) => {
   const [users, setUsers] = useState(initialState.users);
   const [hand, setHand] = useState(initialState.hand);
   const [blackCard, setBlackCard] = useState(initialState.blackCard);
+
+  const fetchGameState = useFetchGameState(
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard
+  );
+
+  const userJoinedGameCallback = useCallback(
+    async (data: UserJoinedGameData) => {
+      await fetchGameState(data.gameId);
+    },
+    [fetchGameState]
+  );
 
   return (
     <GameContext.Provider
@@ -21,6 +38,7 @@ const GameContextProvider: React.FC = ({ children }) => {
         setUsers,
         setHand,
         setBlackCard,
+        userJoinedGameCallback,
       }}
     >
       {children}

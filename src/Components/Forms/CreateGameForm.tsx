@@ -69,7 +69,16 @@ export const CreateGameForm: React.FC = () => {
         console.error(error);
       }
     },
-    [expansions, userName, history]
+    [
+      expansions,
+      userName,
+      history,
+      setGame,
+      setUser,
+      setUsers,
+      setHand,
+      setBlackCard,
+    ]
   );
 
   const onToggle = useCallback((id: number, checked: boolean) => {

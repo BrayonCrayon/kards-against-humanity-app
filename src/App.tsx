@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import GamePage from "./Pages/GamePage";
-import { apiClient } from "./Api/apiClient";
 import Navigation from "./Layouts/Navigation";
 import HomePage from "./Pages/HomePage";
+import { apiClient } from "./Api/apiClient";
 
 export default function App() {
   useEffect(() => {

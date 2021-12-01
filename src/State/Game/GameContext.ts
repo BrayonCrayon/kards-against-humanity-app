@@ -1,9 +1,10 @@
-import { createContext, SetStateAction, Dispatch } from "react";
+import { createContext } from "react";
 import { WhiteCard } from "../../Types/WhiteCard";
 import { Game } from "../../Types/Game";
 import { User } from "../../Types/User";
 import { BlackCard } from "../../Types/BlackCard";
 import { setState } from "../GeneralTypes";
+import { UserJoinedGameData } from "../../Services/PusherService";
 
 export interface IGameContext {
   hand: WhiteCard[];
@@ -11,11 +12,14 @@ export interface IGameContext {
   user: User;
   blackCard: BlackCard;
   users: User[];
+
   setGame: setState<Game>;
   setUser: setState<User>;
   setUsers: setState<User[]>;
   setHand: setState<WhiteCard[]>;
   setBlackCard: setState<BlackCard>;
+
+  userJoinedGameCallback: (data: UserJoinedGameData) => void;
 }
 
 export const initialState: IGameContext = {
@@ -38,11 +42,14 @@ export const initialState: IGameContext = {
     pick: 0,
     expansion_id: 0,
   },
+
   setGame: (game) => {},
   setUser: (user) => {},
   setUsers: (user) => {},
   setHand: (hand) => {},
   setBlackCard: () => {},
+
+  userJoinedGameCallback: () => {},
 };
 
 export const GameContext = createContext<IGameContext>(initialState);
