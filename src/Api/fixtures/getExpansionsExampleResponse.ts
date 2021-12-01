@@ -1,5 +1,4 @@
 import { Expansion } from "../../Types/Expansion";
-import ExpansionCard from "../../Components/ExpansionCard";
 
 interface IGetExpansionsExampleResponse {
   data: Expansion[];

@@ -10,6 +10,7 @@ export const createGameExampleResponse = {
           id: 5718,
           text: "her virgin-knot",
           expansion_id: 76,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {
@@ -21,6 +22,7 @@ export const createGameExampleResponse = {
           id: 17276,
           text: "T-shirts!",
           expansion_id: 157,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {
@@ -32,6 +34,7 @@ export const createGameExampleResponse = {
           id: 13133,
           text: "idiot face",
           expansion_id: 134,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {
@@ -43,6 +46,7 @@ export const createGameExampleResponse = {
           id: 14962,
           text: "Workups.",
           expansion_id: 140,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {
@@ -54,6 +58,7 @@ export const createGameExampleResponse = {
           id: 21189,
           text: "Your sweet cheeks",
           expansion_id: 181,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {
@@ -65,6 +70,7 @@ export const createGameExampleResponse = {
           id: 10390,
           text: "Using the bible for rolling papers",
           expansion_id: 110,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {
@@ -76,6 +82,7 @@ export const createGameExampleResponse = {
           id: 4205,
           text: "Eating an entire pizza as a legit medical condition.",
           expansion_id: 50,
+          selected: false,
           created_at: null,
           updated_at: null,
           pivot: {

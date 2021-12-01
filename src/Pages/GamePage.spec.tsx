@@ -9,6 +9,7 @@ import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
 import { User } from "../Types/User";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -171,5 +172,38 @@ describe("GamePage", () => {
       gameFixture.id,
       initialState.userJoinedGameCallback
     );
+  });
+
+  it("saves selected white cards to state", async () => {
+    const wrapper = renderer();
+
+    const cardsToSelect = cardsInHand.slice(0, blackCardFixture.pick);
+    for (const item of cardsToSelect) {
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
+      });
+    }
+  });
+
+  it("does not allow user to select more white cards than the black card pick amount", async () => {
+    const wrapper = renderer();
+
+    const cardsToSelect = cardsInHand.slice(0, blackCardFixture.pick + 1);
+    for (const item of cardsToSelect) {
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
+      });
+    }
+
+    const [cardNotSelected] = cardsToSelect.slice(
+      cardsToSelect.length - 1,
+      cardsToSelect.length
+    );
+    expect(
+      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+    ).not.toHaveClass("border-4");
+    expect(
+      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+    ).not.toHaveClass("border-blue-400");
   });
 });
