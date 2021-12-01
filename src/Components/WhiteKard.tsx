@@ -5,7 +5,7 @@ interface KardProps {
   text: string;
 }
 
-export const Kard: React.FC<KardProps> = ({ id, text }) => {
+export const WhiteKard: React.FC<KardProps> = ({ id, text }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const toggle = useCallback(() => {

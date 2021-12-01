@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
-import { Kard } from "../Components/Kard";
+import { WhiteKard } from "../Components/WhiteKard";
 import { BlackKard } from "../Components/BlackKard";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
@@ -77,7 +77,7 @@ const GamePage = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         {hand.map((card) => (
-          <Kard id={card.id} text={card.text} key={card.id} />
+          <WhiteKard id={card.id} text={card.text} key={card.id} />
         ))}
       </div>
     </div>
