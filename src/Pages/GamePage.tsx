@@ -5,7 +5,6 @@ import { Kard } from "../Components/Kard";
 import { BlackKard } from "../Components/BlackKard";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
-import { Game } from "../Types/Game";
 
 const GamePage = () => {
   const {
@@ -15,14 +14,20 @@ const GamePage = () => {
     users,
     blackCard,
     userJoinedGameCallback,
-    setUser,
     setUsers,
+    setUser,
     setGame,
-    setBlackCard,
     setHand,
+    setBlackCard,
   } = useContext(GameContext);
 
-  const fetchGameState = useFetchGameState();
+  const fetchGameState = useFetchGameState(
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard
+  );
 
   const copyGameCode = useCallback(async (code: string) => {
     try {
@@ -37,19 +42,7 @@ const GamePage = () => {
   useEffect(() => {
     if (!game.id) {
       fetchGameState(id)
-        .then((data) => {
-          listenWhenUserJoinsGame(id, userJoinedGameCallback);
-          setUser(data.current_user);
-          setUsers(data.users);
-          setGame({
-            id: data.id,
-            judge_id: data.judge.id,
-            name: data.name,
-            code: data.code,
-          } as Game);
-          setHand(data.hand);
-          setBlackCard(data.current_black_card);
-        })
+        .then(() => listenWhenUserJoinsGame(id, userJoinedGameCallback))
         .catch((error) => console.error(error));
     } else {
       listenWhenUserJoinsGame(game.id, userJoinedGameCallback);

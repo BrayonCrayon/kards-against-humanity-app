@@ -15,24 +15,25 @@ const setGame = jest.fn();
 const setHand = jest.fn();
 const setBlackCard = jest.fn();
 
-const wrapper = ({ children }) => {
-  const { ...rest } = initialState;
-
-  return (
-    <GameContext.Provider
-      value={{
-        ...rest,
-        setUsers,
-        setUser,
-        setGame,
-        setHand,
-        setBlackCard,
-      }}
-    >
-      {children}
-    </GameContext.Provider>
-  );
-};
+// @ts-ignore
+// const wrapper = ({ children }) => {
+//   const { ...rest } = initialState;
+//
+//   return (
+//     <GameContext.Provider
+//       value={{
+//         ...rest,
+//         setUsers,
+//         setUser,
+//         setGame,
+//         setHand,
+//         setBlackCard,
+//       }}
+//     >
+//       {children}
+//     </GameContext.Provider>
+//   );
+// };
 
 describe("UseFetchGameState", () => {
   beforeEach(() => {
@@ -40,11 +41,16 @@ describe("UseFetchGameState", () => {
   });
 
   it("returns correct data", async () => {
-    const { result } = renderHook(() => useFetchGameState(), { wrapper });
+    const { result } = renderHook(
+      () => useFetchGameState(setUsers, setUser, setGame, setHand, setBlackCard)
+      // { wrapper }
+    );
     const gameId = "123";
     await result.current(gameId);
 
     const { data } = gameStateExampleResponse;
+
+    expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
 
     expect(setUser).toHaveBeenCalledWith(data.current_user);
     expect(setUsers).toHaveBeenCalledWith(data.users);

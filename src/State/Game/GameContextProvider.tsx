@@ -1,11 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { GameContext, initialState } from "./GameContext";
-import { apiClient } from "../../Api/apiClient";
-import { Game } from "../../Types/Game";
-import {
-  listenWhenUserJoinsGame,
-  UserJoinedGameData,
-} from "../../Services/PusherService";
+import { UserJoinedGameData } from "../../Services/PusherService";
 import useFetchGameState from "../../Hooks/Game/UseFetchGameState";
 
 const GameContextProvider: React.FC = ({ children }) => {
@@ -15,24 +10,20 @@ const GameContextProvider: React.FC = ({ children }) => {
   const [hand, setHand] = useState(initialState.hand);
   const [blackCard, setBlackCard] = useState(initialState.blackCard);
 
-  const fetchGameState = useFetchGameState();
+  const fetchGameState = useFetchGameState(
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard
+  );
 
   const userJoinedGameCallback = useCallback(
     async (dataish: UserJoinedGameData) => {
-      const data = await fetchGameState(dataish.gameId);
-
-      setUser(data.current_user);
-      setUsers(data.users);
-      setGame({
-        id: data.id,
-        judge_id: data.judge.id,
-        name: data.name,
-        code: data.code,
-      } as Game);
-      setHand(data.hand);
-      setBlackCard(data.current_black_card);
+      console.log("in callback from pusher", dataish);
+      await fetchGameState(dataish.gameId);
     },
-    []
+    [users, user, game, hand, blackCard]
   );
 
   return (
