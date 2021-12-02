@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { WhiteCard } from "../Types/WhiteCard";
+import { GameContext } from "../State/Game/GameContext";
 
 interface KardProps {
   card: WhiteCard;
@@ -7,17 +8,18 @@ interface KardProps {
 }
 
 export const WhiteKard: React.FC<KardProps> = ({ card, disable }) => {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const { setHand, hand } = useContext(GameContext);
 
   const toggle = useCallback(() => {
     if (disable) return;
-    setIsSelected(!isSelected);
-  }, [isSelected, setIsSelected, disable]);
+    setHand()
+    setIsSelected(!card.selected);
+  }, [setIsSelected, disable]);
 
   return (
     <div
       className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between cursor-pointer hover:bg-gray-100 ${
-        isSelected ? "border-4 border-blue-400" : "border border-black"
+        card.selected ? "border-4 border-blue-400" : "border border-black"
       }`}
       onClick={toggle}
       data-testid={`white-card-${card.id}`}

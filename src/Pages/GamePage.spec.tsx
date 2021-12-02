@@ -185,25 +185,34 @@ describe("GamePage", () => {
     }
   });
 
-  it("does not allow user to select more white cards than the black card pick amount", async () => {
+  describe("User selects cards", () => {
     const wrapper = renderer();
-
+    const setHand = jest.fn();
     const cardsToSelect = cardsInHand.slice(0, blackCardFixture.pick + 1);
-    for (const item of cardsToSelect) {
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-      });
-    }
 
-    const [cardNotSelected] = cardsToSelect.slice(
-      cardsToSelect.length - 1,
-      cardsToSelect.length
-    );
-    expect(
-      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
-    ).not.toHaveClass("border-4");
-    expect(
-      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
-    ).not.toHaveClass("border-blue-400");
+    beforeEach(async () => {
+      for (const item of cardsToSelect) {
+        await waitFor(() => {
+          userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
+        });
+      }
+    });
+
+    it("does not allow user to select more white cards than the black card pick amount", async () => {
+      const [cardNotSelected] = cardsToSelect.slice(
+        cardsToSelect.length - 1,
+        cardsToSelect.length
+      );
+      expect(
+        wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+      ).not.toHaveClass("border-4");
+      expect(
+        wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+      ).not.toHaveClass("border-blue-400");
+    });
+
+    it("calls set hand when a user selects a card", async () => {
+      expect(setHand).toHaveBeenCalled();
+    });
   });
 });
