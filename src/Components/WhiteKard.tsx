@@ -20,7 +20,7 @@ export const WhiteKard: React.FC<KardProps> = ({
 
   return (
     <div
-      className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between ${
+      className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between cursor-pointer hover:bg-gray-100 ${
         isSelected ? "border-4 border-blue-400" : "border border-black"
       }`}
       onClick={toggle}
