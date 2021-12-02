@@ -1,16 +1,12 @@
 import React, { useCallback, useState } from "react";
+import { WhiteCard } from "../Types/WhiteCard";
 
 interface KardProps {
-  id: number;
-  text: string;
+  card: WhiteCard;
   disable?: boolean;
 }
 
-export const WhiteKard: React.FC<KardProps> = ({
-  id,
-  text,
-  disable = false,
-}) => {
+export const WhiteKard: React.FC<KardProps> = ({ card, disable }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const toggle = useCallback(() => {
@@ -24,9 +20,9 @@ export const WhiteKard: React.FC<KardProps> = ({
         isSelected ? "border-4 border-blue-400" : "border border-black"
       }`}
       onClick={toggle}
-      data-testid={`white-card-${id}`}
+      data-testid={`white-card-${card.id}`}
     >
-      <span>{text}</span>
+      <span>{card.text}</span>
       <div className="text-xs self-end hidden md:block">
         Kards Against Humanity
       </div>
