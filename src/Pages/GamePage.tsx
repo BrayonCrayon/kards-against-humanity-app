@@ -55,18 +55,20 @@ const GamePage = () => {
         <div
           data-testid={`game-${game.id}`}
           onClick={() => copyGameCode(game.code)}
-          className="border p-2 m-2"
+          className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold"
         >
-          <span className="font-bold">Game Code</span> {game.code}
+          <span className="text-gray-700">Game Code:</span> {game.code}
         </div>
 
-        <div className="border p-2 m-2">
-          <span className="font-bold">You</span> {user.name}
+        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold">
+          <span className="text-gray-700">You:</span> {user.name}
         </div>
-        <div className="border p-2 m-2">
-          <h1 className="font-bold">Users</h1>
+        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded flex-col">
+          <h1 className="text-gray-700 text-xl border-b-2 border-gray-500">
+            Users
+          </h1>
           {users.map((user) => (
-            <div key={user.id}>
+            <div className="py-2 text-center font-semibold" key={user.id}>
               <p>{user.name}</p>
             </div>
           ))}
