@@ -4,6 +4,7 @@ import { Expansion } from "../../Types/Expansion";
 import { useHistory } from "react-router-dom";
 import { apiClient } from "../../Api/apiClient";
 import { GameContext } from "../../State/Game/GameContext";
+import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -61,7 +62,10 @@ export const CreateGameForm: React.FC = () => {
         });
         setUser(data.current_user);
         setUsers(data.users);
-        setHand(data.hand);
+        const hand = data.hand.map((item: IWhiteCard) => {
+          return new WhiteCard(item.id, item.text, item.expansion_id);
+        });
+        setHand(hand);
         setBlackCard(data.current_black_card);
 
         history.push("/game/" + data.id);

@@ -79,7 +79,7 @@ const GamePage = () => {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         {hand.map((card) => (
-          <WhiteKard id={card.id} text={card.text} key={card.id} />
+          <WhiteKard card={card} key={card.id} />
         ))}
       </div>
     </div>

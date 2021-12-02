@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { GameContext } from "../../State/Game/GameContext";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
+import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -26,7 +27,10 @@ const JoinGameForm: React.FC = () => {
           code: data.code,
         } as Game);
         setUser(data.current_user);
-        setHand(data.hand);
+        const hand = data.hand.map((item: IWhiteCard) => {
+          return new WhiteCard(item.id, item.text, item.expansion_id);
+        });
+        setHand(hand);
         setBlackCard(data.current_black_card);
         setUsers(data.users);
 
