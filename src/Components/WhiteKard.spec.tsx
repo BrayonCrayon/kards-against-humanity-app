@@ -2,29 +2,12 @@ import { render, RenderResult, waitFor } from "@testing-library/react";
 import { WhiteKard } from "./WhiteKard";
 import userEvent from "@testing-library/user-event";
 import { whiteCardFixture } from "../Api/fixtures/whiteCardFixture";
-import { GameContext, initialState } from "../State/Game/GameContext";
-import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 
 const card = whiteCardFixture[0];
 const whiteCardTestId = `white-card-${card.id}`;
 
-const blackCard = {
-  ...blackCardFixture,
-  pick: 0,
-};
-
 const selectableWhiteKardRender = (): RenderResult => {
-  return render(
-    <GameContext.Provider
-      value={{
-        ...initialState,
-        hand: whiteCardFixture,
-        blackCard,
-      }}
-    >
-      <WhiteKard card={card} />
-    </GameContext.Provider>
-  );
+  return render(<WhiteKard card={card} />);
 };
 
 const notSelectableWhiteKardRender = (): RenderResult => {
