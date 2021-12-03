@@ -55,7 +55,7 @@ const GamePage = () => {
         <div
           data-testid={`game-${game.id}`}
           onClick={() => copyGameCode(game.code)}
-          className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold"
+          className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold cursor-pointer"
         >
           <span className="text-gray-700">Game Code:</span> {game.code}
         </div>
