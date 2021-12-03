@@ -20,19 +20,6 @@ describe("Kards", function () {
     getByText(card.text);
   });
 
-  it("can be selected", async () => {
-    const wrapper = selectableWhiteKardRender();
-
-    userEvent.click(wrapper.getByTestId(whiteCardTestId));
-
-    await waitFor(() => {
-      expect(wrapper.getByTestId(whiteCardTestId)).toHaveClass("border-4");
-      expect(wrapper.getByTestId(whiteCardTestId)).toHaveClass(
-        "border-blue-400"
-      );
-    });
-  });
-
   it("does not allow white kard to be selected when disabled", async () => {
     const wrapper = notSelectableWhiteKardRender();
 

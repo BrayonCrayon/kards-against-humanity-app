@@ -1,10 +1,11 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
 import { BlackKard } from "../Components/BlackKard";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
+import { WhiteCard } from "../Types/WhiteCard";
 
 const GamePage = () => {
   const {

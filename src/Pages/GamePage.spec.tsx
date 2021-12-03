@@ -10,6 +10,7 @@ import { gameFixture } from "../Api/fixtures/gameFixture";
 import { User } from "../Types/User";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
+import GameContextProvider from "../State/Game/GameContextProvider";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -30,11 +31,14 @@ Object.assign(navigator, {
   },
 });
 
+const setHand = jest.fn();
+
 const renderer = (): RenderResult => {
   return render(
     <GameContext.Provider
       value={{
         ...initialState,
+        setHand,
         game: gameFixture,
         user: userFixture,
         users: gameStateExampleResponse.data.users as User[],
@@ -185,34 +189,88 @@ describe("GamePage", () => {
     }
   });
 
-  describe("User selects cards", () => {
+  it("calls set hand when a user selects a card", async () => {
     const wrapper = renderer();
-    const setHand = jest.fn();
-    const cardsToSelect = cardsInHand.slice(0, blackCardFixture.pick + 1);
 
-    beforeEach(async () => {
-      for (const item of cardsToSelect) {
-        await waitFor(() => {
-          userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-        });
-      }
+    const [cardToSelect] = cardsInHand;
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
     });
 
-    it("does not allow user to select more white cards than the black card pick amount", async () => {
-      const [cardNotSelected] = cardsToSelect.slice(
-        cardsToSelect.length - 1,
-        cardsToSelect.length
-      );
-      expect(
-        wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
-      ).not.toHaveClass("border-4");
-      expect(
-        wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
-      ).not.toHaveClass("border-blue-400");
+    expect(setHand).toHaveBeenCalled();
+  });
+
+  it("can toggle white card twice when black card pick amount is already reached", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = render(
+      <GameContextProvider>
+        <GamePage />
+      </GameContextProvider>
+    );
+
+    const [cardToSelect] = gameStateExampleResponse.data.hand;
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
     });
 
-    it("calls set hand when a user selects a card", async () => {
-      expect(setHand).toHaveBeenCalled();
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+    });
+
+    expect(
+      wrapper.getByTestId(`white-card-${cardToSelect.id}`)
+    ).not.toHaveClass("border-4 border-blue-400");
+  });
+
+  it("does not allow user to select more white cards than the black card pick amount", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = render(
+      <GameContextProvider>
+        <GamePage />
+      </GameContextProvider>
+    );
+
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      gameStateExampleResponse.data.current_black_card.pick + 1
+    );
+
+    for (const item of cardsToSelect) {
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
+      });
+    }
+    const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
+    expect(
+      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+    ).not.toHaveClass("border-4 border-blue-400");
+  });
+
+  it("applies correct class when a white card is selected", async () => {
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      blackCardFixture.pick
+    );
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = render(
+      <GameContextProvider>
+        <GamePage />
+      </GameContextProvider>
+    );
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`)
+      ).toHaveClass("border-4 border-blue-400");
     });
   });
 });
