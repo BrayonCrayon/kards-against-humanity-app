@@ -33,9 +33,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
     <div
       className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between cursor-pointer hover:bg-gray-100 ${
         card.selected ? "border-4 border-blue-400" : "border border-black"
-      } ${canSelect ? "" : "opacity-25"} ${
-        canSelect ? "" : "cursor-not-allowed"
-      }`}
+      } ${canSelect ? "" : "opacity-25 cursor-not-allowed"} `}
       onClick={toggle}
       data-testid={`white-card-${card.id}`}
     >
