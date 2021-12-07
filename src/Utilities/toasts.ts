@@ -1,4 +1,4 @@
-import Swal from "sweetalert2";
+import Swal, { SweetAlertPosition } from "sweetalert2";
 
 export const errorToast = (message: string = "Error") => {
   Swal.fire({
@@ -12,11 +12,14 @@ export const errorToast = (message: string = "Error") => {
   });
 };
 
-export const happyToast = (message: string = "Success") => {
+export const happyToast = (
+  message: string = "Success",
+  position: SweetAlertPosition = "bottom-end"
+) => {
   Swal.fire({
     toast: true,
     text: message,
-    position: "bottom-end",
+    position: position,
     icon: "success",
     timer: 3000,
     timerProgressBar: true,

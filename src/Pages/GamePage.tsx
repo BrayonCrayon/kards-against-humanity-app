@@ -6,6 +6,7 @@ import { BlackKard } from "../Components/BlackKard";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { WhiteCard } from "../Types/WhiteCard";
+import { happyToast } from "../Utilities/toasts";
 
 const GamePage = () => {
   const {
@@ -55,10 +56,27 @@ const GamePage = () => {
       <div className="flex justify-between items-start">
         <div
           data-testid={`game-${game.id}`}
-          onClick={() => copyGameCode(game.code)}
-          className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold cursor-pointer"
+          onClick={() => {
+            copyGameCode(game.code);
+            happyToast("Game code copied!", "top-start");
+          }}
+          className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold cursor-pointer flex"
         >
-          <span className="text-gray-700">Game Code:</span> {game.code}
+          <span className="text-gray-700 px-1">Game Code:</span> {game.code}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 ml-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
+          </svg>
         </div>
 
         <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold">

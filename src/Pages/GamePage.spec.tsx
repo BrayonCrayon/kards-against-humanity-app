@@ -11,9 +11,11 @@ import { User } from "../Types/User";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
+import { happyToast } from "../Utilities/toasts";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
+jest.mock("../Utilities/toasts");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
@@ -91,6 +93,17 @@ describe("GamePage", () => {
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toBeCalledWith(gameFixture.code);
     });
+  });
+
+  it("displays notification when game code is clicked", async () => {
+    const wrapper = renderer();
+
+    const gameIdDisplayElement = wrapper.queryByTestId(
+      `game-${gameFixture.id}`
+    ) as HTMLElement;
+    gameIdDisplayElement.click();
+
+    expect(happyToast).toHaveBeenCalledWith("Game code copied!", "top-start");
   });
 
   it("displays the user's name", async () => {
