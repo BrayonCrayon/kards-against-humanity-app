@@ -273,4 +273,31 @@ describe("GamePage", () => {
       ).toHaveClass("border-4 border-blue-400");
     });
   });
+
+  it("visually disables cards after select limit was reached", async () => {
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      blackCardFixture.pick
+    );
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = render(
+      <GameContextProvider>
+        <GamePage />
+      </GameContextProvider>
+    );
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
+    });
+
+    await waitFor(() => {
+      expect(
+        wrapper.getByTestId(`white-card-${cardsToSelect[1].id}`)
+      ).toHaveClass("opacity-25");
+      expect(
+        wrapper.getByTestId(`white-card-${cardsToSelect[1].id}`)
+      ).toHaveClass("cursor-not-allowed");
+    });
+  });
 });
