@@ -298,3 +298,42 @@ describe("GamePage", () => {
     });
   });
 });
+
+describe("Submitting cards", () => {
+  it("can submit white card selection", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    mockedAxios.post.mockResolvedValueOnce({});
+    // arrange
+    // game wrapper
+    const wrapper = wrapperer();
+    // set selected cards
+    const [cardToSelect] = gameStateExampleResponse.data.hand;
+
+    let selectedCard: HTMLElement | undefined = undefined;
+    await waitFor(() => {
+      selectedCard = wrapper.getByTestId(`white-card-${cardToSelect.id}`);
+    });
+
+    // act
+    // select the cards
+    await waitFor(() => {
+      userEvent.click(selectedCard!);
+    });
+    // get the submit button
+    const submitButton = wrapper.getByTestId("white-card-submit-btn");
+    // click on it
+    userEvent.click(submitButton);
+    // assert
+    // that the cards were submitted
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        `/api/game/${gameStateExampleResponse.data.id}/submit`,
+        {
+          submitAmount: gameStateExampleResponse.data.current_black_card.pick,
+          whiteCardIds: [cardToSelect.id],
+        }
+      );
+    });
+    //
+  });
+});

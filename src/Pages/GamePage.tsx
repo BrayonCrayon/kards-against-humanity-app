@@ -7,6 +7,7 @@ import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { WhiteCard } from "../Types/WhiteCard";
 import { happyToast } from "../Utilities/toasts";
+import { apiClient } from "../Api/apiClient";
 
 const GamePage = () => {
   const {
@@ -30,6 +31,13 @@ const GamePage = () => {
     setHand,
     setBlackCard
   );
+
+  const onSubmit = async () => {
+    apiClient.post(`/api/game/${game.id}/submit`, {
+      submitAmount: blackCard.pick,
+      whiteCardIds: hand.filter((card) => card.selected).map((card) => card.id),
+    });
+  };
 
   const copyGameCode = useCallback(async (code: string) => {
     try {
@@ -100,6 +108,11 @@ const GamePage = () => {
         {hand.map((card) => (
           <WhiteKard card={card} key={card.id} />
         ))}
+      </div>
+      <div>
+        <button onClick={onSubmit} data-testid="white-card-submit-btn">
+          Submit
+        </button>
       </div>
     </div>
   );
