@@ -60,6 +60,7 @@ const wrapperer = () =>
     </GameContextProvider>
   );
 
+const selectedCardClass = "border-4 border-blue-400";
 describe("GamePage", () => {
   afterAll(() => {
     jest.resetAllMocks();
@@ -226,13 +227,13 @@ describe("GamePage", () => {
       userEvent.click(selectedCard!);
     });
 
-    expect(selectedCard).toHaveClass("border-4 border-blue-400");
+    expect(selectedCard).toHaveClass(selectedCardClass);
 
     await waitFor(() => {
       userEvent.click(selectedCard!);
     });
 
-    expect(selectedCard).not.toHaveClass("border-4 border-blue-400");
+    expect(selectedCard).not.toHaveClass(selectedCardClass);
   });
 
   it("does not allow user to select more white cards than the black card pick amount", async () => {
@@ -253,7 +254,7 @@ describe("GamePage", () => {
     const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
     expect(
       wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
-    ).not.toHaveClass("border-4 border-blue-400");
+    ).not.toHaveClass(selectedCardClass);
   });
 
   it("applies correct class when a white card is selected", async () => {
@@ -272,7 +273,7 @@ describe("GamePage", () => {
     await waitFor(() => {
       expect(
         wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`)
-      ).toHaveClass("border-4 border-blue-400");
+      ).toHaveClass(selectedCardClass);
     });
   });
 
