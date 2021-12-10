@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
 import { setState } from "../../State/GeneralTypes";
-import { WhiteCard } from "../../Types/WhiteCard";
+import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 import { BlackCard } from "../../Types/BlackCard";
 import { User } from "../../Types/User";
 
@@ -25,7 +25,10 @@ function useFetchGameState(
           name: data.name,
           code: data.code,
         } as Game);
-        setHand(data.hand);
+        const hand = data.hand.map((item: IWhiteCard) => {
+          return new WhiteCard(item.id, item.text, item.expansion_id);
+        });
+        setHand(hand);
         setBlackCard(data.current_black_card);
       } catch (error) {
         console.error(error);
