@@ -61,6 +61,7 @@ const wrapperer = () =>
   );
 
 const selectedCardClass = "border-4 border-blue-400";
+const cannotSelectCardClass = "opacity-25 cursor-not-allowed";
 describe("GamePage", () => {
   afterAll(() => {
     jest.resetAllMocks();
@@ -293,10 +294,7 @@ describe("GamePage", () => {
     await waitFor(() => {
       expect(
         wrapper.getByTestId(`white-card-${cardsToSelect[1].id}`)
-      ).toHaveClass("opacity-25");
-      expect(
-        wrapper.getByTestId(`white-card-${cardsToSelect[1].id}`)
-      ).toHaveClass("cursor-not-allowed");
+      ).toHaveClass(cannotSelectCardClass);
     });
   });
 });
