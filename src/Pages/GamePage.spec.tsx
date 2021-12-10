@@ -191,17 +191,6 @@ describe("GamePage", () => {
     );
   });
 
-  it("saves selected white cards to state", async () => {
-    const wrapper = renderer();
-
-    const cardsToSelect = cardsInHand.slice(0, blackCardFixture.pick);
-    for (const item of cardsToSelect) {
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-      });
-    }
-  });
-
   it("calls set hand when a user selects a card", async () => {
     const wrapper = renderer();
 
@@ -225,17 +214,22 @@ describe("GamePage", () => {
 
     const [cardToSelect] = gameStateExampleResponse.data.hand;
 
+    let selectedCard: HTMLElement | undefined = undefined;
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+      selectedCard = wrapper.getByTestId(`white-card-${cardToSelect.id}`);
     });
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+      userEvent.click(selectedCard!);
     });
 
-    expect(
-      wrapper.getByTestId(`white-card-${cardToSelect.id}`)
-    ).not.toHaveClass("border-4 border-blue-400");
+    expect(selectedCard).toHaveClass("border-4 border-blue-400");
+
+    await waitFor(() => {
+      userEvent.click(selectedCard!);
+    });
+
+    expect(selectedCard).not.toHaveClass("border-4 border-blue-400");
   });
 
   it("does not allow user to select more white cards than the black card pick amount", async () => {
