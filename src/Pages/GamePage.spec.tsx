@@ -53,6 +53,13 @@ const renderer = (): RenderResult => {
   );
 };
 
+const wrapperer = () =>
+  render(
+    <GameContextProvider>
+      <GamePage />
+    </GameContextProvider>
+  );
+
 describe("GamePage", () => {
   afterAll(() => {
     jest.resetAllMocks();
@@ -206,11 +213,7 @@ describe("GamePage", () => {
   it("can toggle white card twice when black card pick amount is already reached", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = render(
-      <GameContextProvider>
-        <GamePage />
-      </GameContextProvider>
-    );
+    const wrapper = wrapperer();
 
     const [cardToSelect] = gameStateExampleResponse.data.hand;
 
@@ -235,11 +238,7 @@ describe("GamePage", () => {
   it("does not allow user to select more white cards than the black card pick amount", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = render(
-      <GameContextProvider>
-        <GamePage />
-      </GameContextProvider>
-    );
+    const wrapper = wrapperer();
 
     const cardsToSelect = gameStateExampleResponse.data.hand.slice(
       0,
@@ -264,11 +263,7 @@ describe("GamePage", () => {
     );
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = render(
-      <GameContextProvider>
-        <GamePage />
-      </GameContextProvider>
-    );
+    const wrapper = wrapperer();
 
     await waitFor(() => {
       userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
@@ -288,11 +283,7 @@ describe("GamePage", () => {
     );
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = render(
-      <GameContextProvider>
-        <GamePage />
-      </GameContextProvider>
-    );
+    const wrapper = wrapperer();
 
     await waitFor(() => {
       userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
