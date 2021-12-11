@@ -12,6 +12,7 @@ import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
 import { happyToast } from "../Utilities/toasts";
+import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -382,6 +383,44 @@ describe("Submitting cards", () => {
 
     await waitFor(() => {
       expect(mockedAxios.post).not.toBeCalledTimes(2);
+    });
+  });
+
+  it("will not allow user to submit white cards when tey are already submitted before refresh", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateSubmittedWhiteCardsExampleResponse
+    );
+
+    const wrapper = renderGameWrapper();
+
+    const submitButton = wrapper.getByTestId("white-card-submit-btn");
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+    });
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockedAxios.post).not.toHaveBeenCalled();
+    });
+  });
+
+  it("will toggle already submitted white cards after user refresh", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateSubmittedWhiteCardsExampleResponse
+    );
+    const alreadySubmittedCardIds =
+      gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds;
+
+    const wrapper = renderGameWrapper();
+
+    await waitFor(() => {
+      alreadySubmittedCardIds.forEach((cardId) => {
+        expect(wrapper.getByTestId(`white-card-${cardId}`)).toHaveClass(
+          selectedCardClass
+        );
+      });
     });
   });
 });

@@ -11,7 +11,8 @@ function useFetchGameState(
   setUser: setState<User>,
   setGame: setState<Game>,
   setHand: setState<WhiteCard[]>,
-  setBlackCard: setState<BlackCard>
+  setBlackCard: setState<BlackCard>,
+  setHasSubmittedWhiteCards: setState<boolean>
 ) {
   const fetchGameState = useCallback(
     async (gameId: string) => {
@@ -28,6 +29,7 @@ function useFetchGameState(
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
+        setHasSubmittedWhiteCards(data.hasSubmittedWhiteCards);
         setHand(hand);
         setBlackCard(data.current_black_card);
       } catch (error) {
