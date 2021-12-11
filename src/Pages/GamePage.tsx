@@ -125,10 +125,11 @@ const GamePage = () => {
           <WhiteKard card={card} key={card.id} />
         ))}
       </div>
-      <div>
+      <div className="flex justify-center">
         <button
           onClick={onSubmit}
           data-testid="white-card-submit-btn"
+          className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
           disabled={!canSubmitCards}
         >
           Submit
