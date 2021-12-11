@@ -343,4 +343,17 @@ describe("Submitting cards", () => {
       expect(consoleSpy).toHaveBeenCalledWith(apiFailedResponse);
     });
   });
+
+  it("will not allow api to be called when no cards are selected", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    mockedAxios.post.mockResolvedValueOnce({});
+
+    const wrapper = wrapperer();
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(mockedAxios.post).not.toHaveBeenCalled();
+    });
+  });
 });

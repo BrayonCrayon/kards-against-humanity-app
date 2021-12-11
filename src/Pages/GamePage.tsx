@@ -115,7 +115,11 @@ const GamePage = () => {
         ))}
       </div>
       <div>
-        <button onClick={onSubmit} data-testid="white-card-submit-btn">
+        <button
+          onClick={onSubmit}
+          data-testid="white-card-submit-btn"
+          disabled={hand.filter((item) => item.selected).length === 0}
+        >
           Submit
         </button>
       </div>
