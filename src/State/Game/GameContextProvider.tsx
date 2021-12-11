@@ -9,6 +9,9 @@ const GameContextProvider: React.FC = ({ children }) => {
   const [users, setUsers] = useState(initialState.users);
   const [hand, setHand] = useState(initialState.hand);
   const [blackCard, setBlackCard] = useState(initialState.blackCard);
+  const [hasSubmittedCards, setHasSubmittedCards] = useState(
+    initialState.hasSubmittedCards
+  );
 
   const fetchGameState = useFetchGameState(
     setUsers,
@@ -33,11 +36,13 @@ const GameContextProvider: React.FC = ({ children }) => {
         users,
         hand,
         blackCard,
+        hasSubmittedCards,
         setGame,
         setUser,
         setUsers,
         setHand,
         setBlackCard,
+        setHasSubmittedCards,
         userJoinedGameCallback,
       }}
     >

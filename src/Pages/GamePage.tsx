@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
@@ -15,12 +15,14 @@ const GamePage = () => {
     user,
     users,
     blackCard,
+    hasSubmittedCards,
     userJoinedGameCallback,
     setUsers,
     setUser,
     setGame,
     setHand,
     setBlackCard,
+    setHasSubmittedCards,
   } = useContext(GameContext);
 
   const fetchGameState = useFetchGameState(
@@ -31,7 +33,15 @@ const GamePage = () => {
     setBlackCard
   );
 
-  const onSubmit = async () => {
+  const canSubmitCards = useMemo(() => {
+    return (
+      hand.filter((item) => item.selected).length > 0 && !hasSubmittedCards
+    );
+  }, [hand, hasSubmittedCards]);
+
+  const onSubmit = useCallback(async () => {
+    if (hasSubmittedCards) return;
+
     try {
       await apiClient.post(`/api/game/${game.id}/submit`, {
         submitAmount: blackCard.pick,
@@ -39,10 +49,11 @@ const GamePage = () => {
           .filter((card) => card.selected)
           .map((card) => card.id),
       });
+      setHasSubmittedCards(true);
     } catch (e) {
       console.error(e);
     }
-  };
+  }, [blackCard, hand, game, setHasSubmittedCards, hasSubmittedCards]);
 
   const copyGameCode = useCallback(async (code: string) => {
     try {
@@ -118,7 +129,7 @@ const GamePage = () => {
         <button
           onClick={onSubmit}
           data-testid="white-card-submit-btn"
-          disabled={hand.filter((item) => item.selected).length === 0}
+          disabled={!canSubmitCards}
         >
           Submit
         </button>
