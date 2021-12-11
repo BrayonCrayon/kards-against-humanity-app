@@ -1,11 +1,10 @@
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
 import { BlackKard } from "../Components/BlackKard";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
-import { WhiteCard } from "../Types/WhiteCard";
 import { happyToast } from "../Utilities/toasts";
 import { apiClient } from "../Api/apiClient";
 
@@ -33,10 +32,16 @@ const GamePage = () => {
   );
 
   const onSubmit = async () => {
-    apiClient.post(`/api/game/${game.id}/submit`, {
-      submitAmount: blackCard.pick,
-      whiteCardIds: hand.filter((card) => card.selected).map((card) => card.id),
-    });
+    try {
+      await apiClient.post(`/api/game/${game.id}/submit`, {
+        submitAmount: blackCard.pick,
+        whiteCardIds: hand
+          .filter((card) => card.selected)
+          .map((card) => card.id)
+      });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const copyGameCode = useCallback(async (code: string) => {
