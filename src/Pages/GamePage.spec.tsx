@@ -304,7 +304,7 @@ describe("GamePage", () => {
 
 describe("Submitting cards", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    mockedAxios.get.mockResolvedValue(gameStateExampleResponse);
     mockedAxios.post.mockResolvedValue({});
   });
 
@@ -407,7 +407,7 @@ describe("Submitting cards", () => {
   });
 
   it("will toggle already submitted white cards after user refresh", async () => {
-    mockedAxios.get.mockResolvedValueOnce(
+    mockedAxios.get.mockResolvedValue(
       gameStateSubmittedWhiteCardsExampleResponse
     );
     const alreadySubmittedCardIds =

@@ -30,7 +30,8 @@ const GamePage = () => {
     setUser,
     setGame,
     setHand,
-    setBlackCard
+    setBlackCard,
+    setHasSubmittedCards
   );
 
   const canSubmitCards = useMemo(() => {

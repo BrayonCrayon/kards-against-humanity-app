@@ -4,6 +4,7 @@ import useFetchGameState from "./UseFetchGameState";
 import { apiClient } from "../../Api/apiClient";
 import { Game } from "../../Types/Game";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import { constructWhiteCardArray } from "../../Types/WhiteCard";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
@@ -48,7 +49,14 @@ describe("UseFetchGameState", () => {
       name: data.name,
       code: data.code,
     } as Game);
-    expect(setHand).toHaveBeenCalledWith(data.hand);
+
+    expect(setHand).toHaveBeenCalledWith(
+      constructWhiteCardArray(
+        data.hand,
+        data.hasSubmittedWhiteCards,
+        data.submittedWhiteCardIds
+      )
+    );
     expect(setBlackCard).toHaveBeenCalledWith(data.current_black_card);
     expect(setHasSubmittedWhiteCards).toHaveBeenCalledWith(
       data.hasSubmittedWhiteCards
