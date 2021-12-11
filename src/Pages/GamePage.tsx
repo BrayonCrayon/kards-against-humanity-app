@@ -37,7 +37,7 @@ const GamePage = () => {
         submitAmount: blackCard.pick,
         whiteCardIds: hand
           .filter((card) => card.selected)
-          .map((card) => card.id)
+          .map((card) => card.id),
       });
     } catch (e) {
       console.error(e);

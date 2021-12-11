@@ -317,7 +317,7 @@ describe("Submitting cards", () => {
         `/api/game/${gameStateExampleResponse.data.id}/submit`,
         {
           submitAmount: gameStateExampleResponse.data.current_black_card.pick,
-          whiteCardIds: [cardToSelect.id]
+          whiteCardIds: [cardToSelect.id],
         }
       );
     });
@@ -331,8 +331,7 @@ describe("Submitting cards", () => {
     const [cardToSelect] = gameStateExampleResponse.data.hand;
     const consoleSpy = jest
       .spyOn(console, "error")
-      .mockImplementation(() => {
-      });
+      .mockImplementation(() => {});
 
     await waitFor(() => {
       userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
