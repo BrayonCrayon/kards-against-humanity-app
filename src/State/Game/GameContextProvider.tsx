@@ -18,7 +18,8 @@ const GameContextProvider: React.FC = ({ children }) => {
     setUser,
     setGame,
     setHand,
-    setBlackCard
+    setBlackCard,
+    setHasSubmittedCards
   );
 
   const userJoinedGameCallback = useCallback(
