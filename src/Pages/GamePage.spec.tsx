@@ -1,4 +1,4 @@
-import { render, RenderResult, waitFor } from "@testing-library/react";
+import { render, RenderResult, screen, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import { GameContext, initialState } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
@@ -13,6 +13,7 @@ import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
 import { happyToast } from "../Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import { WhiteCard } from "../Types/WhiteCard";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -65,6 +66,15 @@ const renderGameWrapper = (): RenderResult => {
 };
 const selectedCardClass = "border-4 border-blue-400";
 const cannotSelectCardClass = "opacity-25 cursor-not-allowed";
+
+const selectWhiteCards = async (cards: WhiteCard[]) => {
+  await waitFor(() => {
+    cards.forEach((item) => {
+      userEvent.click(screen.getByTestId(`white-card-${item.id}`));
+    });
+  });
+};
+
 describe("GamePage", () => {
   afterAll(() => {
     jest.resetAllMocks();
@@ -386,7 +396,42 @@ describe("Submitting cards", () => {
     });
   });
 
-  it("will not allow user to submit white cards when tey are already submitted before refresh", async () => {
+  it("will not allow user to toggle white cards after they have submitted their cards", async () => {
+    const wrapper = renderGameWrapper();
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      gameStateExampleResponse.data.current_black_card.pick
+    );
+    const notSelectedCards = gameStateExampleResponse.data.hand.slice(
+      gameStateExampleResponse.data.current_black_card.pick,
+      gameStateExampleResponse.data.hand.length - 1
+    );
+
+    await selectWhiteCards(cardsToSelect);
+
+    await waitFor(() => {
+      const submitButton = wrapper.getByTestId("white-card-submit-btn");
+      userEvent.click(submitButton);
+    });
+
+    await selectWhiteCards(cardsToSelect);
+
+    cardsToSelect.forEach((item) => {
+      expect(wrapper.getByTestId(`white-card-${item.id}`)).toHaveClass(
+        selectedCardClass
+      );
+    });
+
+    await selectWhiteCards(notSelectedCards);
+
+    notSelectedCards.forEach((item) => {
+      expect(wrapper.getByTestId(`white-card-${item.id}`)).toHaveClass(
+        cannotSelectCardClass
+      );
+    });
+  });
+
+  it("will not allow user to submit white cards when they are already submitted before refresh", async () => {
     mockedAxios.get.mockResolvedValueOnce(
       gameStateSubmittedWhiteCardsExampleResponse
     );

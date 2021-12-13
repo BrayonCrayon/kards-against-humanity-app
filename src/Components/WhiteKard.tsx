@@ -7,7 +7,8 @@ interface WhiteKardProps {
 }
 
 export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
-  const { setHand, hand, blackCard } = useContext(GameContext);
+  const { setHand, hand, blackCard, hasSubmittedCards } =
+    useContext(GameContext);
 
   const canSelect = useMemo(() => {
     return (
@@ -18,6 +19,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
 
   const toggle = useCallback(() => {
     if (!canSelect) return;
+    if (hasSubmittedCards) return;
 
     const clone = [...hand];
     const cardToSelect = clone.find((item) => item.id === card.id);
@@ -27,7 +29,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
     cardToSelect.selected = !card.selected;
 
     setHand(() => clone);
-  }, [card, setHand, canSelect]);
+  }, [card, setHand, canSelect, hand, hasSubmittedCards]);
 
   return (
     <div
