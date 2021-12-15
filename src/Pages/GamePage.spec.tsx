@@ -1,6 +1,10 @@
-import { render, RenderResult, screen, waitFor } from "@testing-library/react";
+import { render, RenderResult, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
-import { GameContext, initialState } from "../State/Game/GameContext";
+import {
+  GameContext,
+  IGameContext,
+  initialState,
+} from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
@@ -13,8 +17,8 @@ import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
 import { happyToast } from "../Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { WhiteCard } from "../Types/WhiteCard";
 import { whiteCardTestId } from "../Tests/selectors";
+import { selectWhiteCards } from "../Tests/actions";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -39,7 +43,7 @@ Object.assign(navigator, {
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
 
-const renderer = (): RenderResult => {
+const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return render(
     <GameContext.Provider
       value={{
@@ -51,6 +55,7 @@ const renderer = (): RenderResult => {
         users: gameStateExampleResponse.data.users as User[],
         hand: cardsInHand,
         blackCard: blackCardFixture,
+        ...value,
       }}
     >
       <GamePage />
@@ -67,14 +72,6 @@ const renderGameWrapper = (): RenderResult => {
 };
 const selectedCardClass = "border-4 border-blue-400";
 const cannotSelectCardClass = "opacity-25 cursor-not-allowed";
-
-const selectWhiteCards = async (cards: WhiteCard[]) => {
-  await waitFor(() => {
-    cards.forEach((item) => {
-      userEvent.click(screen.getByTestId(whiteCardTestId(item.id)));
-    });
-  });
-};
 
 describe("GamePage", () => {
   afterAll(() => {

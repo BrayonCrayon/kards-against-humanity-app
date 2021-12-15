@@ -13,6 +13,35 @@ jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
+const history = createMemoryHistory();
+history.push = jest.fn();
+const setGame = jest.fn();
+const setUser = jest.fn();
+const setUsers = jest.fn();
+const setHand = jest.fn();
+const setBlackCard = jest.fn();
+const setHasSubmittedCards = jest.fn();
+
+const renderer = () => {
+  return render(
+    <Router history={history}>
+      <GameContext.Provider
+        value={{
+          ...initialState,
+          setGame,
+          setUsers,
+          setUser,
+          setHand,
+          setBlackCard,
+          setHasSubmittedCards,
+        }}
+      >
+        <CreateGameForm />
+      </GameContext.Provider>
+    </Router>
+  );
+};
+
 describe("CreateGameForm", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
@@ -20,12 +49,12 @@ describe("CreateGameForm", () => {
   });
 
   it("renders expansion cards", async () => {
-    render(<CreateGameForm />);
+    renderer();
     await screen.findByText(getExpansionsExampleResponse.data[0].name);
   });
 
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
-    render(<CreateGameForm />);
+    renderer();
 
     const expansion = getExpansionsExampleResponse.data[0];
 
@@ -38,14 +67,8 @@ describe("CreateGameForm", () => {
 
   it("handles form submit", async () => {
     const name = "Slim Shady";
-    const history = createMemoryHistory();
-    history.push = jest.fn();
 
-    render(
-      <Router history={history}>
-        <CreateGameForm />
-      </Router>
-    );
+    renderer();
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, name);
@@ -61,14 +84,8 @@ describe("CreateGameForm", () => {
 
   it("handles form submit with selected expansions only", async () => {
     const name = "Slim Shady";
-    const history = createMemoryHistory();
-    history.push = jest.fn();
 
-    render(
-      <Router history={history}>
-        <CreateGameForm />
-      </Router>
-    );
+    renderer();
 
     const expansionToExclude = getExpansionsExampleResponse.data[0];
 
@@ -100,36 +117,11 @@ describe("CreateGameForm", () => {
   });
 
   it("calls setGame, setUser, setUsers, setHand, setHasSubmittedCards and setBlackCard when game is created", async () => {
-    const history = createMemoryHistory();
-    history.push = jest.fn();
-    const setGame = jest.fn();
-    const setUser = jest.fn();
-    const setUsers = jest.fn();
-    const setHand = jest.fn();
-    const setBlackCard = jest.fn();
-    const setHasSubmittedCards = jest.fn();
-
     mockedAxios.post.mockResolvedValue({
       ...gameStateExampleResponse,
     });
 
-    render(
-      <Router history={history}>
-        <GameContext.Provider
-          value={{
-            ...initialState,
-            setGame,
-            setUsers,
-            setUser,
-            setHand,
-            setBlackCard,
-            setHasSubmittedCards,
-          }}
-        >
-          <CreateGameForm />
-        </GameContext.Provider>
-      </Router>
-    );
+    renderer();
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, "Chewy");
