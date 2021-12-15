@@ -14,6 +14,7 @@ import GameContextProvider from "../State/Game/GameContextProvider";
 import { happyToast } from "../Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { WhiteCard } from "../Types/WhiteCard";
+import { whiteCardTestId } from "../Tests/selectors";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -70,7 +71,7 @@ const cannotSelectCardClass = "opacity-25 cursor-not-allowed";
 const selectWhiteCards = async (cards: WhiteCard[]) => {
   await waitFor(() => {
     cards.forEach((item) => {
-      userEvent.click(screen.getByTestId(`white-card-${item.id}`));
+      userEvent.click(screen.getByTestId(whiteCardTestId(item.id)));
     });
   });
 };
@@ -85,7 +86,9 @@ describe("GamePage", () => {
 
     await waitFor(() => {
       cardsInHand.forEach((card) => {
-        const whiteCardElement = wrapper.queryByTestId(`white-card-${card.id}`);
+        const whiteCardElement = wrapper.queryByTestId(
+          whiteCardTestId(card.id)
+        );
         expect(whiteCardElement).not.toBeNull();
       });
     });
@@ -219,7 +222,7 @@ describe("GamePage", () => {
     const [cardToSelect] = cardsInHand;
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
     });
 
     expect(setHand).toHaveBeenCalled();
@@ -234,7 +237,7 @@ describe("GamePage", () => {
 
     let selectedCard: HTMLElement | undefined = undefined;
     await waitFor(() => {
-      selectedCard = wrapper.getByTestId(`white-card-${cardToSelect.id}`);
+      selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
     });
 
     await waitFor(() => {
@@ -264,7 +267,7 @@ describe("GamePage", () => {
 
     const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
     expect(
-      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+      wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
     ).not.toHaveClass(selectedCardClass);
   });
 
@@ -278,12 +281,14 @@ describe("GamePage", () => {
     const wrapper = renderGameWrapper();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
+      userEvent.click(
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+      );
     });
 
     await waitFor(() => {
       expect(
-        wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`)
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
       ).toHaveClass(selectedCardClass);
     });
   });
@@ -298,12 +303,14 @@ describe("GamePage", () => {
     const wrapper = renderGameWrapper();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
+      userEvent.click(
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+      );
     });
 
     await waitFor(() => {
       expect(
-        wrapper.getByTestId(`white-card-${cardsToSelect[1].id}`)
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
       ).toHaveClass(cannotSelectCardClass);
     });
   });
@@ -320,7 +327,7 @@ describe("Submitting cards", () => {
     const [cardToSelect] = gameStateExampleResponse.data.hand;
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
     });
 
     userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
@@ -346,7 +353,7 @@ describe("Submitting cards", () => {
       .mockImplementation(() => {});
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
     });
 
     userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
@@ -414,7 +421,7 @@ describe("Submitting cards", () => {
     await selectWhiteCards(cardsToSelect);
 
     cardsToSelect.forEach((item) => {
-      expect(wrapper.getByTestId(`white-card-${item.id}`)).toHaveClass(
+      expect(wrapper.getByTestId(whiteCardTestId(item.id))).toHaveClass(
         selectedCardClass
       );
     });
@@ -422,7 +429,7 @@ describe("Submitting cards", () => {
     await selectWhiteCards(notSelectedCards);
 
     notSelectedCards.forEach((item) => {
-      expect(wrapper.getByTestId(`white-card-${item.id}`)).toHaveClass(
+      expect(wrapper.getByTestId(whiteCardTestId(item.id))).toHaveClass(
         cannotSelectCardClass
       );
     });
@@ -459,7 +466,7 @@ describe("Submitting cards", () => {
 
     await waitFor(() => {
       alreadySubmittedCardIds.forEach((cardId) => {
-        expect(wrapper.getByTestId(`white-card-${cardId}`)).toHaveClass(
+        expect(wrapper.getByTestId(whiteCardTestId(cardId))).toHaveClass(
           selectedCardClass
         );
       });
