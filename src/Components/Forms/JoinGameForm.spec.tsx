@@ -111,6 +111,7 @@ describe("JoinGameForm", () => {
     const setHand = jest.fn();
     const setBlackCard = jest.fn();
     const setUsers = jest.fn();
+    const setHasSubmittedCards = jest.fn();
 
     mockedAxios.post.mockResolvedValue({
       ...gameStateExampleResponse,
@@ -126,6 +127,7 @@ describe("JoinGameForm", () => {
             setHand,
             setBlackCard,
             setUsers,
+            setHasSubmittedCards,
           }}
         >
           <JoinGameForm />
@@ -157,6 +159,9 @@ describe("JoinGameForm", () => {
       );
       expect(setUsers).toHaveBeenCalledWith(
         gameStateExampleResponse.data.users
+      );
+      expect(setHasSubmittedCards).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
     });
   });
