@@ -260,11 +260,8 @@ describe("GamePage", () => {
       gameStateExampleResponse.data.current_black_card.pick + 1
     );
 
-    for (const item of cardsToSelect) {
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-      });
-    }
+    await selectWhiteCards(cardsToSelect);
+
     const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
     expect(
       wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
@@ -376,11 +373,7 @@ describe("Submitting cards", () => {
       gameStateExampleResponse.data.current_black_card.pick
     );
 
-    await waitFor(() => {
-      for (const item of cardsToSelect) {
-        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-      }
-    });
+    await selectWhiteCards(cardsToSelect);
 
     const submitButton = wrapper.getByTestId("white-card-submit-btn");
     userEvent.click(submitButton);
