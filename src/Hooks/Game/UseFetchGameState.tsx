@@ -39,7 +39,14 @@ function useFetchGameState(
         console.error(error);
       }
     },
-    [setUsers, setUser, setGame, setHand, setBlackCard]
+    [
+      setUsers,
+      setUser,
+      setGame,
+      setHand,
+      setBlackCard,
+      setHasSubmittedWhiteCards,
+    ]
   );
 
   return fetchGameState;
