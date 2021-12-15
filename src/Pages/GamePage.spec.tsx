@@ -376,11 +376,11 @@ describe("Submitting cards", () => {
       gameStateExampleResponse.data.current_black_card.pick
     );
 
-    for (const item of cardsToSelect) {
-      await waitFor(() => {
+    await waitFor(() => {
+      for (const item of cardsToSelect) {
         userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-      });
-    }
+      }
+    });
 
     const submitButton = wrapper.getByTestId("white-card-submit-btn");
     userEvent.click(submitButton);
