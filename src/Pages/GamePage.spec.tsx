@@ -387,6 +387,10 @@ describe("Submitting cards", () => {
 
     await waitFor(() => {
       expect(submitButton).toBeDisabled();
+      expect(submitButton).toHaveClass(
+        "shadow-inner opacity-70 cursor-not-allowed"
+      );
+      expect(submitButton).not.toHaveClass("hover:bg-gray-200");
     });
 
     userEvent.click(submitButton);

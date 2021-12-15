@@ -130,7 +130,11 @@ const GamePage = () => {
         <button
           onClick={onSubmit}
           data-testid="white-card-submit-btn"
-          className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
+          className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 ${
+            !canSubmitCards
+              ? "shadow-inner opacity-70 cursor-not-allowed"
+              : "hover:bg-gray-200"
+          }`}
           disabled={!canSubmitCards}
         >
           Submit
