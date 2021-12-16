@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
 import { setState } from "../../State/GeneralTypes";
-import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
+import { constructWhiteCardArray, WhiteCard } from "../../Types/WhiteCard";
 import { BlackCard } from "../../Types/BlackCard";
 import { User } from "../../Types/User";
 
@@ -11,7 +11,8 @@ function useFetchGameState(
   setUser: setState<User>,
   setGame: setState<Game>,
   setHand: setState<WhiteCard[]>,
-  setBlackCard: setState<BlackCard>
+  setBlackCard: setState<BlackCard>,
+  setHasSubmittedWhiteCards: setState<boolean>
 ) {
   const fetchGameState = useCallback(
     async (gameId: string) => {
@@ -25,16 +26,27 @@ function useFetchGameState(
           name: data.name,
           code: data.code,
         } as Game);
-        const hand = data.hand.map((item: IWhiteCard) => {
-          return new WhiteCard(item.id, item.text, item.expansion_id);
-        });
-        setHand(hand);
+        setHasSubmittedWhiteCards(data.hasSubmittedWhiteCards);
+        setHand(
+          constructWhiteCardArray(
+            data.hand,
+            data.hasSubmittedWhiteCards,
+            data.submittedWhiteCardIds
+          )
+        );
         setBlackCard(data.current_black_card);
       } catch (error) {
         console.error(error);
       }
     },
-    [setUsers, setUser, setGame, setHand, setBlackCard]
+    [
+      setUsers,
+      setUser,
+      setGame,
+      setHand,
+      setBlackCard,
+      setHasSubmittedWhiteCards,
+    ]
   );
 
   return fetchGameState;

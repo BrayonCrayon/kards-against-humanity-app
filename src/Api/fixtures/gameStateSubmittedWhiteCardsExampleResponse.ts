@@ -1,10 +1,10 @@
-export const gameStateExampleResponse = {
+export const gameStateSubmittedWhiteCardsExampleResponse = {
   data: {
     id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
     code: "1234",
     name: "Puzzled Penguin",
-    hasSubmittedWhiteCards: false,
-    submittedWhiteCardIds: [],
+    hasSubmittedWhiteCards: true,
+    submittedWhiteCardIds: [76],
     judge: {
       id: 2,
       name: "brady",

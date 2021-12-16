@@ -14,14 +14,32 @@ jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
-const history = createMemoryHistory();
 const userName = "Joe";
 const code = "1234";
+
+const history = createMemoryHistory();
+history.push = jest.fn();
+const setGame = jest.fn();
+const setUser = jest.fn();
+const setHand = jest.fn();
+const setBlackCard = jest.fn();
+const setUsers = jest.fn();
+const setHasSubmittedCards = jest.fn();
 
 const renderer = () => {
   return render(
     <Router history={history}>
-      <GameContext.Provider value={initialState}>
+      <GameContext.Provider
+        value={{
+          ...initialState,
+          setGame,
+          setUser,
+          setHand,
+          setBlackCard,
+          setUsers,
+          setHasSubmittedCards,
+        }}
+      >
         <JoinGameForm />
       </GameContext.Provider>
     </Router>
@@ -51,7 +69,6 @@ describe("JoinGameForm", () => {
   beforeEach(() => {
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
-    history.push = jest.fn();
   });
 
   afterEach(() => {
@@ -104,34 +121,11 @@ describe("JoinGameForm", () => {
   });
 
   it("sets game state after join game submitted", async () => {
-    const history = createMemoryHistory();
-    history.push = jest.fn();
-    const setGame = jest.fn();
-    const setUser = jest.fn();
-    const setHand = jest.fn();
-    const setBlackCard = jest.fn();
-    const setUsers = jest.fn();
-
     mockedAxios.post.mockResolvedValue({
       ...gameStateExampleResponse,
     });
 
-    const { findByTestId } = render(
-      <Router history={history}>
-        <GameContext.Provider
-          value={{
-            ...initialState,
-            setGame,
-            setUser,
-            setHand,
-            setBlackCard,
-            setUsers,
-          }}
-        >
-          <JoinGameForm />
-        </GameContext.Provider>
-      </Router>
-    );
+    const { findByTestId } = renderer();
 
     const nameInput = await findByTestId("join-game-name-input");
     userEvent.type(nameInput, gameStateExampleResponse.data.current_user.name);
@@ -157,6 +151,9 @@ describe("JoinGameForm", () => {
       );
       expect(setUsers).toHaveBeenCalledWith(
         gameStateExampleResponse.data.users
+      );
+      expect(setHasSubmittedCards).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
     });
   });

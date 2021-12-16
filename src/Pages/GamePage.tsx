@@ -5,8 +5,8 @@ import { WhiteKard } from "../Components/WhiteKard";
 import { BlackKard } from "../Components/BlackKard";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
-import { WhiteCard } from "../Types/WhiteCard";
 import { happyToast } from "../Utilities/toasts";
+import { apiClient } from "../Api/apiClient";
 
 const GamePage = () => {
   const {
@@ -15,12 +15,14 @@ const GamePage = () => {
     user,
     users,
     blackCard,
+    hasSubmittedCards,
     userJoinedGameCallback,
     setUsers,
     setUser,
     setGame,
     setHand,
     setBlackCard,
+    setHasSubmittedCards,
   } = useContext(GameContext);
 
   const fetchGameState = useFetchGameState(
@@ -28,8 +30,31 @@ const GamePage = () => {
     setUser,
     setGame,
     setHand,
-    setBlackCard
+    setBlackCard,
+    setHasSubmittedCards
   );
+
+  const canSubmitCards = useMemo(() => {
+    return (
+      hand.filter((item) => item.selected).length > 0 && !hasSubmittedCards
+    );
+  }, [hand, hasSubmittedCards]);
+
+  const onSubmit = useCallback(async () => {
+    if (hasSubmittedCards) return;
+
+    try {
+      await apiClient.post(`/api/game/${game.id}/submit`, {
+        submitAmount: blackCard.pick,
+        whiteCardIds: hand
+          .filter((card) => card.selected)
+          .map((card) => card.id),
+      });
+      setHasSubmittedCards(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [blackCard, hand, game, setHasSubmittedCards, hasSubmittedCards]);
 
   const copyGameCode = useCallback(async (code: string) => {
     try {
@@ -100,6 +125,20 @@ const GamePage = () => {
         {hand.map((card) => (
           <WhiteKard card={card} key={card.id} />
         ))}
+      </div>
+      <div className="flex justify-center">
+        <button
+          onClick={onSubmit}
+          data-testid="white-card-submit-btn"
+          className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 ${
+            !canSubmitCards
+              ? "shadow-inner opacity-70 cursor-not-allowed"
+              : "hover:bg-gray-200"
+          }`}
+          disabled={!canSubmitCards}
+        >
+          Submit
+        </button>
       </div>
     </div>
   );

@@ -10,8 +10,14 @@ const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
-  const { setGame, setUser, setUsers, setHand, setBlackCard } =
-    useContext(GameContext);
+  const {
+    setGame,
+    setUser,
+    setUsers,
+    setHand,
+    setBlackCard,
+    setHasSubmittedCards,
+  } = useContext(GameContext);
 
   const submitToApi = useCallback(
     async (event) => {
@@ -33,6 +39,7 @@ const JoinGameForm: React.FC = () => {
         setHand(hand);
         setBlackCard(data.current_black_card);
         setUsers(data.users);
+        setHasSubmittedCards(data.hasSubmittedWhiteCards);
 
         history.push(`/game/${data.id}`);
       } catch (e) {
@@ -40,7 +47,17 @@ const JoinGameForm: React.FC = () => {
         errorToast("Game does not exist");
       }
     },
-    [userName, code, setGame, setUsers, setUser, setBlackCard, setHand, history]
+    [
+      userName,
+      code,
+      setGame,
+      setUsers,
+      setUser,
+      setBlackCard,
+      setHasSubmittedCards,
+      setHand,
+      history,
+    ]
   );
 
   return (

@@ -12,12 +12,14 @@ export interface IGameContext {
   user: User;
   blackCard: BlackCard;
   users: User[];
+  hasSubmittedCards: boolean;
 
   setGame: setState<Game>;
   setUser: setState<User>;
   setUsers: setState<User[]>;
   setHand: setState<WhiteCard[]>;
   setBlackCard: setState<BlackCard>;
+  setHasSubmittedCards: setState<boolean>;
 
   userJoinedGameCallback: (data: UserJoinedGameData) => void;
 }
@@ -42,12 +44,14 @@ export const initialState: IGameContext = {
     pick: 0,
     expansion_id: 0,
   },
+  hasSubmittedCards: false,
 
   setGame: (game) => {},
   setUser: (user) => {},
   setUsers: (user) => {},
   setHand: (hand) => {},
   setBlackCard: () => {},
+  setHasSubmittedCards: () => {},
 
   userJoinedGameCallback: () => {},
 };

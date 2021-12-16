@@ -8,10 +8,40 @@ import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleRes
 import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
+import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
 
 jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+
+const history = createMemoryHistory();
+history.push = jest.fn();
+const setGame = jest.fn();
+const setUser = jest.fn();
+const setUsers = jest.fn();
+const setHand = jest.fn();
+const setBlackCard = jest.fn();
+const setHasSubmittedCards = jest.fn();
+
+const renderer = () => {
+  return render(
+    <Router history={history}>
+      <GameContext.Provider
+        value={{
+          ...initialState,
+          setGame,
+          setUsers,
+          setUser,
+          setHand,
+          setBlackCard,
+          setHasSubmittedCards,
+        }}
+      >
+        <CreateGameForm />
+      </GameContext.Provider>
+    </Router>
+  );
+};
 
 describe("CreateGameForm", () => {
   beforeEach(() => {
@@ -19,13 +49,8 @@ describe("CreateGameForm", () => {
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
   });
 
-  it("renders expansion cards", async () => {
-    render(<CreateGameForm />);
-    await screen.findByText(getExpansionsExampleResponse.data[0].name);
-  });
-
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
-    render(<CreateGameForm />);
+    renderer();
 
     const expansion = getExpansionsExampleResponse.data[0];
 
@@ -33,19 +58,13 @@ describe("CreateGameForm", () => {
       `expansion-${expansion.id}`
     );
 
-    expect(expansionCard).toHaveClass("bg-blue-100");
+    expect(expansionCard).toHaveClass(SELECTED_CARD_BACKGROUND);
   });
 
   it("handles form submit", async () => {
     const name = "Slim Shady";
-    const history = createMemoryHistory();
-    history.push = jest.fn();
 
-    render(
-      <Router history={history}>
-        <CreateGameForm />
-      </Router>
-    );
+    renderer();
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, name);
@@ -61,14 +80,8 @@ describe("CreateGameForm", () => {
 
   it("handles form submit with selected expansions only", async () => {
     const name = "Slim Shady";
-    const history = createMemoryHistory();
-    history.push = jest.fn();
 
-    render(
-      <Router history={history}>
-        <CreateGameForm />
-      </Router>
-    );
+    renderer();
 
     const expansionToExclude = getExpansionsExampleResponse.data[0];
 
@@ -77,7 +90,7 @@ describe("CreateGameForm", () => {
     );
     userEvent.click(expansionCard);
 
-    expect(expansionCard).not.toHaveClass("bg-blue-100");
+    expect(expansionCard).not.toHaveClass(SELECTED_CARD_BACKGROUND);
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, name);
@@ -99,35 +112,12 @@ describe("CreateGameForm", () => {
     });
   });
 
-  it("calls setGame, setUser, setUsers, setHand, and setBlackCard when game is created", async () => {
-    const history = createMemoryHistory();
-    history.push = jest.fn();
-    const setGame = jest.fn();
-    const setUser = jest.fn();
-    const setUsers = jest.fn();
-    const setHand = jest.fn();
-    const setBlackCard = jest.fn();
-
+  it("calls setGame, setUser, setUsers, setHand, setHasSubmittedCards and setBlackCard when game is created", async () => {
     mockedAxios.post.mockResolvedValue({
       ...gameStateExampleResponse,
     });
 
-    render(
-      <Router history={history}>
-        <GameContext.Provider
-          value={{
-            ...initialState,
-            setGame,
-            setUsers,
-            setUser,
-            setHand,
-            setBlackCard,
-          }}
-        >
-          <CreateGameForm />
-        </GameContext.Provider>
-      </Router>
-    );
+    renderer();
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, "Chewy");
@@ -152,6 +142,9 @@ describe("CreateGameForm", () => {
       );
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
+      );
+      expect(setHasSubmittedCards).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
     });
   });

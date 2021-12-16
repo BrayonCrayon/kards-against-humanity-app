@@ -1,6 +1,6 @@
 import { render, RenderResult, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
-import { GameContext, initialState } from "../State/Game/GameContext";
+import { GameContext, IGameContext, initialState } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
@@ -12,6 +12,9 @@ import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
 import { happyToast } from "../Utilities/toasts";
+import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import { cannotSelectCardClass, selectedCardClass, whiteCardTestId } from "../Tests/selectors";
+import { selectWhiteCards } from "../Tests/actions";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -34,18 +37,21 @@ Object.assign(navigator, {
 });
 
 const setHand = jest.fn();
+const setHasSubmittedCards = jest.fn();
 
-const renderer = (): RenderResult => {
+const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return render(
     <GameContext.Provider
       value={{
         ...initialState,
         setHand,
+        setHasSubmittedCards,
         game: gameFixture,
         user: userFixture,
         users: gameStateExampleResponse.data.users as User[],
         hand: cardsInHand,
         blackCard: blackCardFixture,
+        ...value,
       }}
     >
       <GamePage />
@@ -53,15 +59,14 @@ const renderer = (): RenderResult => {
   );
 };
 
-const wrapperer = () =>
-  render(
+const renderGameWrapper = (): RenderResult => {
+  return render(
     <GameContextProvider>
       <GamePage />
     </GameContextProvider>
   );
+};
 
-const selectedCardClass = "border-4 border-blue-400";
-const cannotSelectCardClass = "opacity-25 cursor-not-allowed";
 describe("GamePage", () => {
   afterAll(() => {
     jest.resetAllMocks();
@@ -72,7 +77,9 @@ describe("GamePage", () => {
 
     await waitFor(() => {
       cardsInHand.forEach((card) => {
-        const whiteCardElement = wrapper.queryByTestId(`white-card-${card.id}`);
+        const whiteCardElement = wrapper.queryByTestId(
+          whiteCardTestId(card.id)
+        );
         expect(whiteCardElement).not.toBeNull();
       });
     });
@@ -206,7 +213,7 @@ describe("GamePage", () => {
     const [cardToSelect] = cardsInHand;
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardToSelect.id}`));
+      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
     });
 
     expect(setHand).toHaveBeenCalled();
@@ -215,13 +222,13 @@ describe("GamePage", () => {
   it("can toggle white card twice when black card pick amount is already reached", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = wrapperer();
+    const wrapper = renderGameWrapper();
 
     const [cardToSelect] = gameStateExampleResponse.data.hand;
 
     let selectedCard: HTMLElement | undefined = undefined;
     await waitFor(() => {
-      selectedCard = wrapper.getByTestId(`white-card-${cardToSelect.id}`);
+      selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
     });
 
     await waitFor(() => {
@@ -240,21 +247,18 @@ describe("GamePage", () => {
   it("does not allow user to select more white cards than the black card pick amount", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = wrapperer();
+    const wrapper = renderGameWrapper();
 
     const cardsToSelect = gameStateExampleResponse.data.hand.slice(
       0,
       gameStateExampleResponse.data.current_black_card.pick + 1
     );
 
-    for (const item of cardsToSelect) {
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`white-card-${item.id}`));
-      });
-    }
+    await selectWhiteCards(cardsToSelect);
+
     const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
     expect(
-      wrapper.getByTestId(`white-card-${cardNotSelected.id}`)
+      wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
     ).not.toHaveClass(selectedCardClass);
   });
 
@@ -265,15 +269,17 @@ describe("GamePage", () => {
     );
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = wrapperer();
+    const wrapper = renderGameWrapper();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
+      userEvent.click(
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+      );
     });
 
     await waitFor(() => {
       expect(
-        wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`)
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
       ).toHaveClass(selectedCardClass);
     });
   });
@@ -285,16 +291,176 @@ describe("GamePage", () => {
     );
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = wrapperer();
+    const wrapper = renderGameWrapper();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`white-card-${cardsToSelect[0].id}`));
+      userEvent.click(
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+      );
     });
 
     await waitFor(() => {
       expect(
-        wrapper.getByTestId(`white-card-${cardsToSelect[1].id}`)
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
       ).toHaveClass(cannotSelectCardClass);
+    });
+  });
+});
+
+describe("Submitting cards", () => {
+  beforeEach(() => {
+    mockedAxios.get.mockResolvedValue(gameStateExampleResponse);
+    mockedAxios.post.mockResolvedValue({});
+  });
+
+  it("can submit white card selection", async () => {
+    const wrapper = renderGameWrapper();
+    const [cardToSelect] = gameStateExampleResponse.data.hand;
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
+    });
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        `/api/game/${gameStateExampleResponse.data.id}/submit`,
+        {
+          submitAmount: gameStateExampleResponse.data.current_black_card.pick,
+          whiteCardIds: [cardToSelect.id],
+        }
+      );
+    });
+  });
+
+  it("will console error when submit white cards api call fails", async () => {
+    const apiFailedResponse = { message: "500 error" };
+    mockedAxios.post.mockRejectedValueOnce(apiFailedResponse);
+    const wrapper = renderGameWrapper();
+    const [cardToSelect] = gameStateExampleResponse.data.hand;
+    const consoleSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
+    });
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(apiFailedResponse);
+    });
+  });
+
+  it("will not allow api to be called when no cards are selected", async () => {
+    const wrapper = renderGameWrapper();
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(mockedAxios.post).not.toHaveBeenCalled();
+    });
+  });
+
+  it("will make submit white card button disabled when user has submitted their cards", async () => {
+    const wrapper = renderGameWrapper();
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      gameStateExampleResponse.data.current_black_card.pick
+    );
+
+    await selectWhiteCards(cardsToSelect);
+
+    const submitButton = wrapper.getByTestId("white-card-submit-btn");
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+      expect(submitButton).toHaveClass(
+        "shadow-inner opacity-70 cursor-not-allowed"
+      );
+      expect(submitButton).not.toHaveClass("hover:bg-gray-200");
+    });
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockedAxios.post).not.toBeCalledTimes(2);
+    });
+  });
+
+  it("will not allow user to toggle white cards after they have submitted their cards", async () => {
+    const wrapper = renderGameWrapper();
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      gameStateExampleResponse.data.current_black_card.pick
+    );
+    const notSelectedCards = gameStateExampleResponse.data.hand.slice(
+      gameStateExampleResponse.data.current_black_card.pick,
+      gameStateExampleResponse.data.hand.length - 1
+    );
+
+    await selectWhiteCards(cardsToSelect);
+
+    await waitFor(() => {
+      const submitButton = wrapper.getByTestId("white-card-submit-btn");
+      userEvent.click(submitButton);
+    });
+
+    await selectWhiteCards(cardsToSelect);
+
+    cardsToSelect.forEach((item) => {
+      expect(wrapper.getByTestId(whiteCardTestId(item.id))).toHaveClass(
+        selectedCardClass
+      );
+    });
+
+    await selectWhiteCards(notSelectedCards);
+
+    notSelectedCards.forEach((item) => {
+      expect(wrapper.getByTestId(whiteCardTestId(item.id))).toHaveClass(
+        cannotSelectCardClass
+      );
+    });
+  });
+
+  it("will not allow user to submit white cards when they are already submitted before refresh", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateSubmittedWhiteCardsExampleResponse
+    );
+
+    const wrapper = renderGameWrapper();
+
+    const submitButton = wrapper.getByTestId("white-card-submit-btn");
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+    });
+
+    userEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(mockedAxios.post).not.toHaveBeenCalled();
+    });
+  });
+
+  it("will toggle already submitted white cards after user refresh", async () => {
+    mockedAxios.get.mockResolvedValue(
+      gameStateSubmittedWhiteCardsExampleResponse
+    );
+    const alreadySubmittedCardIds =
+      gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds;
+
+    const wrapper = renderGameWrapper();
+
+    await waitFor(() => {
+      alreadySubmittedCardIds.forEach((cardId) => {
+        expect(wrapper.getByTestId(whiteCardTestId(cardId))).toHaveClass(
+          selectedCardClass
+        );
+      });
     });
   });
 });
