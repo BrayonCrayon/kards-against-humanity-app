@@ -6,6 +6,8 @@ interface ExpansionCardProps extends Pick<Expansion, "id" | "name"> {
   onToggle: (id: number, checked: boolean) => void;
 }
 
+export const SELECTED_CARD_BACKGROUND = "bg-blue-100";
+
 const ExpansionCard: React.FC<ExpansionCardProps> = ({
   id,
   name,
@@ -22,7 +24,7 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({
   return (
     <div
       className={`bg-white py-2 mt-4 rounded border my-2 px-2 hover:font-bold hover:shadow-md cursor-pointer my-2 text-center border-gray-500 border-2 ${
-        isChecked ? " bg-blue-100" : ""
+        isChecked ? ` ${SELECTED_CARD_BACKGROUND}` : ""
       }`}
       data-testid={`expansion-${id}`}
       onClick={onChange}

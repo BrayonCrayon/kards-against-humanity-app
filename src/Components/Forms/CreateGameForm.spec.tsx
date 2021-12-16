@@ -8,6 +8,7 @@ import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleRes
 import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
+import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
 
 jest.mock("../../Api/apiClient");
 
@@ -48,11 +49,6 @@ describe("CreateGameForm", () => {
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
   });
 
-  it("renders expansion cards", async () => {
-    renderer();
-    await screen.findByText(getExpansionsExampleResponse.data[0].name);
-  });
-
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
     renderer();
 
@@ -62,7 +58,7 @@ describe("CreateGameForm", () => {
       `expansion-${expansion.id}`
     );
 
-    expect(expansionCard).toHaveClass("bg-blue-100");
+    expect(expansionCard).toHaveClass(SELECTED_CARD_BACKGROUND);
   });
 
   it("handles form submit", async () => {
@@ -94,7 +90,7 @@ describe("CreateGameForm", () => {
     );
     userEvent.click(expansionCard);
 
-    expect(expansionCard).not.toHaveClass("bg-blue-100");
+    expect(expansionCard).not.toHaveClass(SELECTED_CARD_BACKGROUND);
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, name);
