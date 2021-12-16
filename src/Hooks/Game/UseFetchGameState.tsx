@@ -12,7 +12,8 @@ function useFetchGameState(
   setGame: setState<Game>,
   setHand: setState<WhiteCard[]>,
   setBlackCard: setState<BlackCard>,
-  setHasSubmittedWhiteCards: setState<boolean>
+  setHasSubmittedWhiteCards: setState<boolean>,
+  setJudge: setState<User>
 ) {
   const fetchGameState = useCallback(
     async (gameId: string) => {
@@ -35,6 +36,7 @@ function useFetchGameState(
           )
         );
         setBlackCard(data.current_black_card);
+        setJudge(data.judge);
       } catch (error) {
         console.error(error);
       }

@@ -15,6 +15,7 @@ const setGame = jest.fn();
 const setHand = jest.fn();
 const setBlackCard = jest.fn();
 const setHasSubmittedWhiteCards = jest.fn();
+const setJudge = jest.fn();
 
 describe("UseFetchGameState", () => {
   beforeEach(() => {
@@ -31,7 +32,8 @@ describe("UseFetchGameState", () => {
         setGame,
         setHand,
         setBlackCard,
-        setHasSubmittedWhiteCards
+        setHasSubmittedWhiteCards,
+        setJudge
       )
     );
     const gameId = "123";
@@ -61,5 +63,6 @@ describe("UseFetchGameState", () => {
     expect(setHasSubmittedWhiteCards).toHaveBeenCalledWith(
       data.hasSubmittedWhiteCards
     );
+    expect(setJudge).toHaveBeenCalledWith(data.judge);
   });
 });
