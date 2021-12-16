@@ -20,6 +20,7 @@ export interface IGameContext {
   setHand: setState<WhiteCard[]>;
   setBlackCard: setState<BlackCard>;
   setHasSubmittedCards: setState<boolean>;
+  setJudge: setState<User>;
 
   userJoinedGameCallback: (data: UserJoinedGameData) => void;
 }
@@ -52,6 +53,7 @@ export const initialState: IGameContext = {
   setHand: (hand) => {},
   setBlackCard: () => {},
   setHasSubmittedCards: () => {},
+  setJudge: () => {},
 
   userJoinedGameCallback: () => {},
 };
