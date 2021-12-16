@@ -22,6 +22,7 @@ export const CreateGameForm: React.FC = () => {
     setHand,
     setBlackCard,
     setHasSubmittedCards,
+    setJudge,
   } = useContext(GameContext);
 
   const fetchExpansions = useCallback(async () => {
@@ -74,6 +75,7 @@ export const CreateGameForm: React.FC = () => {
         setHand(hand);
         setBlackCard(data.current_black_card);
         setHasSubmittedCards(data.hasSubmittedWhiteCards);
+        setJudge(data.judge);
         history.push("/game/" + data.id);
       } catch (error) {
         console.error(error);

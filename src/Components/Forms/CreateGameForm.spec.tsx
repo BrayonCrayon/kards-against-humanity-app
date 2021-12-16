@@ -22,6 +22,7 @@ const setUsers = jest.fn();
 const setHand = jest.fn();
 const setBlackCard = jest.fn();
 const setHasSubmittedCards = jest.fn();
+const setJudge = jest.fn();
 
 const renderer = () => {
   return render(
@@ -35,6 +36,7 @@ const renderer = () => {
           setHand,
           setBlackCard,
           setHasSubmittedCards,
+          setJudge,
         }}
       >
         <CreateGameForm />
@@ -145,6 +147,9 @@ describe("CreateGameForm", () => {
       );
       expect(setHasSubmittedCards).toHaveBeenCalledWith(
         gameStateExampleResponse.data.hasSubmittedWhiteCards
+      );
+      expect(setJudge).toHaveBeenCalledWith(
+        gameStateExampleResponse.data.judge
       );
     });
   });
