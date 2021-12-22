@@ -17,6 +17,7 @@ const JoinGameForm: React.FC = () => {
     setHand,
     setBlackCard,
     setHasSubmittedCards,
+    setJudge,
   } = useContext(GameContext);
 
   const submitToApi = useCallback(
@@ -40,6 +41,7 @@ const JoinGameForm: React.FC = () => {
         setBlackCard(data.current_black_card);
         setUsers(data.users);
         setHasSubmittedCards(data.hasSubmittedWhiteCards);
+        setJudge(data.judge);
 
         history.push(`/game/${data.id}`);
       } catch (e) {

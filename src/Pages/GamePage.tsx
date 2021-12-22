@@ -23,6 +23,7 @@ const GamePage = () => {
     setHand,
     setBlackCard,
     setHasSubmittedCards,
+    setJudge,
   } = useContext(GameContext);
 
   const fetchGameState = useFetchGameState(
@@ -31,7 +32,8 @@ const GamePage = () => {
     setGame,
     setHand,
     setBlackCard,
-    setHasSubmittedCards
+    setHasSubmittedCards,
+    setJudge
   );
 
   const canSubmitCards = useMemo(() => {
