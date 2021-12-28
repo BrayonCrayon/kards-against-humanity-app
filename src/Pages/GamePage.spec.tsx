@@ -23,6 +23,7 @@ import {
   whiteCardTestId,
 } from "../Tests/selectors";
 import { selectWhiteCards } from "../Tests/actions";
+import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -305,6 +306,31 @@ describe("GamePage", () => {
         expect(
           wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
         ).toHaveClass(cannotSelectCardClass);
+      });
+    });
+  });
+
+  describe("Judging", () => {
+    it("will not display white cards when current user is judge", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateJudgeExampleResponse);
+      const cards = gameStateJudgeExampleResponse.data.hand;
+
+      const wrapper = renderGameWrapper();
+
+      await waitFor(() => {
+        cards.forEach((item) => {
+          expect(wrapper.queryByTestId(whiteCardTestId(item.id))).toBeNull();
+        });
+      });
+    });
+
+    it("will not display submit white cards button when current user is judge", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateJudgeExampleResponse);
+
+      const wrapper = renderGameWrapper();
+
+      await waitFor(() => {
+        expect(wrapper.queryByTestId("white-card-submit-btn")).toBeNull();
       });
     });
   });

@@ -16,6 +16,7 @@ const GamePage = () => {
     users,
     blackCard,
     hasSubmittedCards,
+    judge,
     userJoinedGameCallback,
     setUsers,
     setUser,
@@ -123,25 +124,29 @@ const GamePage = () => {
       <div className="mx-auto my-2 w-1/3">
         <BlackKard card={blackCard} />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
-        {hand.map((card) => (
-          <WhiteKard card={card} key={card.id} />
-        ))}
-      </div>
-      <div className="flex justify-center">
-        <button
-          onClick={onSubmit}
-          data-testid="white-card-submit-btn"
-          className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 ${
-            !canSubmitCards
-              ? "shadow-inner opacity-70 cursor-not-allowed"
-              : "hover:bg-gray-200"
-          }`}
-          disabled={!canSubmitCards}
-        >
-          Submit
-        </button>
-      </div>
+      {judge.id !== user.id && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
+          {hand.map((card) => (
+            <WhiteKard card={card} key={card.id} />
+          ))}
+        </div>
+      )}
+      {judge.id !== user.id && (
+        <div className="flex justify-center">
+          <button
+            onClick={onSubmit}
+            data-testid="white-card-submit-btn"
+            className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 ${
+              !canSubmitCards
+                ? "shadow-inner opacity-70 cursor-not-allowed"
+                : "hover:bg-gray-200"
+            }`}
+            disabled={!canSubmitCards}
+          >
+            Submit
+          </button>
+        </div>
+      )}
     </div>
   );
 };
