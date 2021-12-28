@@ -119,7 +119,12 @@ describe("GamePage", () => {
       ) as HTMLElement;
       gameIdDisplayElement.click();
 
-      expect(happyToast).toHaveBeenCalledWith("Game code copied!", "top-start");
+      await waitFor(() => {
+        expect(happyToast).toHaveBeenCalledWith(
+          "Game code copied!",
+          "top-start"
+        );
+      });
     });
 
     it("displays the user's name", async () => {
@@ -386,7 +391,9 @@ describe("Submitting cards", () => {
   it("will not allow api to be called when no cards are selected", async () => {
     const wrapper = renderGameWrapper();
 
-    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+    });
 
     await waitFor(() => {
       expect(mockedAxios.post).not.toHaveBeenCalled();
@@ -462,7 +469,9 @@ describe("Submitting cards", () => {
 
     const wrapper = renderGameWrapper();
 
-    const submitButton = wrapper.getByTestId("white-card-submit-btn");
+    const submitButton = await waitFor(() => {
+      return wrapper.getByTestId("white-card-submit-btn");
+    });
 
     await waitFor(() => {
       expect(submitButton).toBeDisabled();

@@ -6,8 +6,8 @@ export const gameStateExampleResponse = {
     hasSubmittedWhiteCards: false,
     submittedWhiteCardIds: [],
     judge: {
-      id: 2,
-      name: "brady",
+      id: 4,
+      name: "Tommis",
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
     },
@@ -35,7 +35,7 @@ export const gameStateExampleResponse = {
       },
     ],
     current_user: {
-      id: 2,
+      id: 1,
       name: "brady",
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
