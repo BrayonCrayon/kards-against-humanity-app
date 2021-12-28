@@ -27,6 +27,8 @@ const GamePage = () => {
     setJudge,
   } = useContext(GameContext);
 
+  const { id } = useParams<{ id: string }>();
+
   const fetchGameState = useFetchGameState(
     setUsers,
     setUser,
@@ -58,8 +60,6 @@ const GamePage = () => {
       console.error(e);
     }
   }, [blackCard, hand, game, setHasSubmittedCards, hasSubmittedCards]);
-
-  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     if (!game.id) {
