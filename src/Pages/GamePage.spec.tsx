@@ -38,6 +38,8 @@ Object.assign(navigator, {
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
+const setUsers = jest.fn();
+const userJoinedGameCallback = jest.fn();
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return render(
@@ -46,6 +48,8 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
         ...initialState,
         setHand,
         setHasSubmittedCards,
+        setUsers,
+        userJoinedGameCallback,
         game: gameFixture,
         user: userFixture,
         users: gameStateExampleResponse.data.users as User[],
@@ -72,28 +76,58 @@ describe("GamePage", () => {
     jest.resetAllMocks();
   });
 
-  it("shows users hand of seven white cards", async () => {
-    const wrapper = renderer();
+  describe("Displaying game features", () => {
+    it("shows users hand of seven white cards", async () => {
+      const wrapper = renderer();
 
-    await waitFor(() => {
-      cardsInHand.forEach((card) => {
-        const whiteCardElement = wrapper.queryByTestId(
-          whiteCardTestId(card.id)
-        );
-        expect(whiteCardElement).not.toBeNull();
+      await waitFor(() => {
+        cardsInHand.forEach((card) => {
+          const whiteCardElement = wrapper.queryByTestId(
+            whiteCardTestId(card.id)
+          );
+          expect(whiteCardElement).not.toBeNull();
+        });
       });
     });
-  });
 
-  it("shows game code", async () => {
-    const wrapper = renderer();
+    it("shows game code", async () => {
+      const wrapper = renderer();
 
-    await waitFor(() => {
-      const gameCodeDisplayElement = wrapper.queryByTestId(
+      await waitFor(() => {
+        const gameCodeDisplayElement = wrapper.queryByTestId(
+          `game-${gameFixture.id}`
+        ) as HTMLElement;
+        expect(gameCodeDisplayElement).not.toBeNull();
+        expect(gameCodeDisplayElement).toHaveTextContent(gameFixture.code);
+      });
+    });
+
+    it("displays notification when game code is clicked", async () => {
+      const wrapper = renderer();
+
+      const gameIdDisplayElement = wrapper.queryByTestId(
         `game-${gameFixture.id}`
       ) as HTMLElement;
-      expect(gameCodeDisplayElement).not.toBeNull();
-      expect(gameCodeDisplayElement).toHaveTextContent(gameFixture.code);
+      gameIdDisplayElement.click();
+
+      expect(happyToast).toHaveBeenCalledWith("Game code copied!", "top-start");
+    });
+
+    it("displays the user's name", async () => {
+      const wrapper = renderer();
+
+      expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
+    });
+
+    it("displays the black card", () => {
+      const wrapper = renderer();
+
+      expect(
+        wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
+      ).toBeInTheDocument();
+      expect(
+        wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
+      ).toHaveTextContent(blackCardFixture.text);
     });
   });
 
@@ -111,39 +145,13 @@ describe("GamePage", () => {
     });
   });
 
-  it("displays notification when game code is clicked", async () => {
-    const wrapper = renderer();
-
-    const gameIdDisplayElement = wrapper.queryByTestId(
-      `game-${gameFixture.id}`
-    ) as HTMLElement;
-    gameIdDisplayElement.click();
-
-    expect(happyToast).toHaveBeenCalledWith("Game code copied!", "top-start");
-  });
-
-  it("displays the user's name", async () => {
-    const wrapper = renderer();
-
-    expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
-  });
-
   it("performs an api call to get game state data to be loaded on refresh", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-    const setUsers = jest.fn();
-    const userJoinedGameCallback = jest.fn();
-
     const consoleSpy = jest
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    render(
-      <GameContext.Provider
-        value={{ ...initialState, setUsers, userJoinedGameCallback }}
-      >
-        <GamePage />
-      </GameContext.Provider>
-    );
+    renderer({ ...initialState, setUsers, userJoinedGameCallback });
 
     await waitFor(() => {
       expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
@@ -158,17 +166,6 @@ describe("GamePage", () => {
     });
   });
 
-  it("displays the black card", () => {
-    const wrapper = renderer();
-
-    expect(
-      wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
-    ).toBeInTheDocument();
-    expect(
-      wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
-    ).toHaveTextContent(blackCardFixture.text);
-  });
-
   it("catches error if api call to fetch game state fails", async () => {
     const errorResponse = { message: "No Api" };
     mockedAxios.get.mockRejectedValueOnce(errorResponse);
@@ -177,11 +174,7 @@ describe("GamePage", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    render(
-      <GameContext.Provider value={initialState}>
-        <GamePage />
-      </GameContext.Provider>
-    );
+    renderer(initialState);
 
     await waitFor(() => {
       expect(consoleSpy).toBeCalledWith(errorResponse);
@@ -203,106 +196,108 @@ describe("GamePage", () => {
 
     expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
       gameFixture.id,
-      initialState.userJoinedGameCallback
+      userJoinedGameCallback
     );
   });
 
-  it("calls set hand when a user selects a card", async () => {
-    const wrapper = renderer();
+  describe("Selecting Cards", () => {
+    it("calls set hand when a user selects a card", async () => {
+      const wrapper = renderer();
 
-    const [cardToSelect] = cardsInHand;
+      const [cardToSelect] = cardsInHand;
 
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
+      });
+
+      expect(setHand).toHaveBeenCalled();
     });
 
-    expect(setHand).toHaveBeenCalled();
-  });
+    it("can toggle white card twice when black card pick amount is already reached", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-  it("can toggle white card twice when black card pick amount is already reached", async () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+      const wrapper = renderGameWrapper();
 
-    const wrapper = renderGameWrapper();
+      const [cardToSelect] = gameStateExampleResponse.data.hand;
 
-    const [cardToSelect] = gameStateExampleResponse.data.hand;
+      let selectedCard: HTMLElement | undefined = undefined;
+      await waitFor(() => {
+        selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
+      });
 
-    let selectedCard: HTMLElement | undefined = undefined;
-    await waitFor(() => {
-      selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
+      await waitFor(() => {
+        userEvent.click(selectedCard!);
+      });
+
+      expect(selectedCard).toHaveClass(selectedCardClass);
+
+      await waitFor(() => {
+        userEvent.click(selectedCard!);
+      });
+
+      expect(selectedCard).not.toHaveClass(selectedCardClass);
     });
 
-    await waitFor(() => {
-      userEvent.click(selectedCard!);
-    });
+    it("does not allow user to select more white cards than the black card pick amount", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    expect(selectedCard).toHaveClass(selectedCardClass);
+      const wrapper = renderGameWrapper();
 
-    await waitFor(() => {
-      userEvent.click(selectedCard!);
-    });
-
-    expect(selectedCard).not.toHaveClass(selectedCardClass);
-  });
-
-  it("does not allow user to select more white cards than the black card pick amount", async () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
-    const wrapper = renderGameWrapper();
-
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-      0,
-      gameStateExampleResponse.data.current_black_card.pick + 1
-    );
-
-    await selectWhiteCards(cardsToSelect);
-
-    const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
-    expect(
-      wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
-    ).not.toHaveClass(selectedCardClass);
-  });
-
-  it("applies correct class when a white card is selected", async () => {
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-      0,
-      blackCardFixture.pick
-    );
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
-    const wrapper = renderGameWrapper();
-
-    await waitFor(() => {
-      userEvent.click(
-        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+        0,
+        gameStateExampleResponse.data.current_black_card.pick + 1
       );
-    });
 
-    await waitFor(() => {
+      await selectWhiteCards(cardsToSelect);
+
+      const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
       expect(
-        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
-      ).toHaveClass(selectedCardClass);
+        wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
+      ).not.toHaveClass(selectedCardClass);
     });
-  });
 
-  it("visually disables cards after select limit was reached", async () => {
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-      0,
-      blackCardFixture.pick
-    );
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
-    const wrapper = renderGameWrapper();
-
-    await waitFor(() => {
-      userEvent.click(
-        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+    it("applies correct class when a white card is selected", async () => {
+      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+        0,
+        blackCardFixture.pick
       );
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+      const wrapper = renderGameWrapper();
+
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+        );
+      });
+
+      await waitFor(() => {
+        expect(
+          wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+        ).toHaveClass(selectedCardClass);
+      });
     });
 
-    await waitFor(() => {
-      expect(
-        wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
-      ).toHaveClass(cannotSelectCardClass);
+    it("visually disables cards after select limit was reached", async () => {
+      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+        0,
+        blackCardFixture.pick
+      );
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+      const wrapper = renderGameWrapper();
+
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+        );
+      });
+
+      await waitFor(() => {
+        expect(
+          wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
+        ).toHaveClass(cannotSelectCardClass);
+      });
     });
   });
 });
