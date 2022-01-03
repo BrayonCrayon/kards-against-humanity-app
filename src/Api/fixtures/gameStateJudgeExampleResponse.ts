@@ -44,6 +44,7 @@ export const gameStateJudgeExampleResponse = {
       id: 4624,
       pick: 1,
       text: "_ is the key to recovery.",
+      expansion_id: 1,
     },
     hand: [
       {

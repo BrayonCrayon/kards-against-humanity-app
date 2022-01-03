@@ -4,7 +4,7 @@ import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
 
 const GameInfo: FC = () => {
-  const { game, user, users, blackCard } = useContext(GameContext);
+  const { game, user, users, blackCard, judge } = useContext(GameContext);
 
   const copyGameCode = useCallback(async () => {
     try {
@@ -49,7 +49,10 @@ const GameInfo: FC = () => {
           </h1>
           {users.map((user) => (
             <div className="py-2 text-center font-semibold" key={user.id}>
-              <p>{user.name}</p>
+              {judge.id === user.id && (
+                <div data-testid={`user-${user.id}-judge`}>;)</div>
+              )}
+              <p data-testid={`user-${user.id}`}>{user.name}</p>
             </div>
           ))}
         </div>
