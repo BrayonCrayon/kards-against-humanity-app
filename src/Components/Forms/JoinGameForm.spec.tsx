@@ -9,6 +9,7 @@ import { Router } from "react-router-dom";
 import JoinGameForm from "./JoinGameForm";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
+import { transformUser, transformUsers } from "../../Types/User";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
@@ -145,20 +146,20 @@ describe("JoinGameForm", () => {
         code: gameStateExampleResponse.data.code,
       } as Game);
       expect(setUser).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.current_user
+        transformUser(gameStateExampleResponse.data.current_user)
       );
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
       );
       expect(setUsers).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.users
+        transformUsers(gameStateExampleResponse.data.users)
       );
       expect(setHasSubmittedCards).toHaveBeenCalledWith(
         gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
       expect(setJudge).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.judge
+        transformUser(gameStateExampleResponse.data.judge)
       );
     });
   });

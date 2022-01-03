@@ -1,5 +1,9 @@
 import React from "react";
-import { GameContext, IGameContext, initialState } from "../State/Game/GameContext";
+import {
+  GameContext,
+  IGameContext,
+  initialState,
+} from "../State/Game/GameContext";
 import { render, RenderResult } from "@testing-library/react";
 import GameInfo from "./GameInfo";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
@@ -52,6 +56,21 @@ describe("GameInfo", () => {
 
       expect(await findByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
     });
-    it.todo("Shows the users name in green when they have submitted the cards");
+    it("does not show the judge icon next to the player who is not the judge", async () => {
+      const nonJudge = data.users[1];
+
+      const { queryByTestId } = renderer({ user: nonJudge });
+
+      expect(await queryByTestId(`user-${nonJudge.id}-judge`)).toBeNull();
+    });
+
+    it("Shows the users name in green when they have submitted the cards", () => {
+      data.users[1].hasSubmittedWhiteCards = true;
+      const wrapper = renderer();
+
+      expect(wrapper.queryByTestId(`user-${data.users[1].id}`)).toHaveClass(
+        "text-green-500"
+      );
+    });
   });
 });

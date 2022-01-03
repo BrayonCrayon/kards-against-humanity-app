@@ -4,7 +4,7 @@ import { apiClient } from "../../Api/apiClient";
 import { setState } from "../../State/GeneralTypes";
 import { constructWhiteCardArray, WhiteCard } from "../../Types/WhiteCard";
 import { BlackCard } from "../../Types/BlackCard";
-import { User } from "../../Types/User";
+import { transformUser, transformUsers, User } from "../../Types/User";
 
 function useFetchGameState(
   setUsers: setState<User[]>,
@@ -19,8 +19,8 @@ function useFetchGameState(
     async (gameId: string) => {
       try {
         const { data } = await apiClient.get(`/api/game/${gameId}`);
-        setUser(data.current_user);
-        setUsers(data.users);
+        setUser(transformUser(data.current_user));
+        setUsers(transformUsers(data.users));
         setGame({
           id: data.id,
           judge_id: data.judge.id,
@@ -36,7 +36,7 @@ function useFetchGameState(
           )
         );
         setBlackCard(data.current_black_card);
-        setJudge(data.judge);
+        setJudge(transformUser(data.judge));
       } catch (error) {
         console.error(error);
       }

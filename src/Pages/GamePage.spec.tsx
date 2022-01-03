@@ -11,7 +11,7 @@ import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixtur
 import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
-import { User } from "../Types/User";
+import { transformUser, transformUsers, User } from "../Types/User";
 import { listenWhenUserJoinsGame } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
@@ -61,7 +61,7 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
         userJoinedGameCallback,
         game: gameFixture,
         user: userFixture,
-        users: gameStateExampleResponse.data.users as User[],
+        users: transformUsers(gameStateExampleResponse.data.users),
         hand: cardsInHand,
         blackCard: blackCardFixture,
         ...value,
@@ -171,7 +171,7 @@ describe("GamePage", () => {
       expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
       expect(consoleSpy).not.toHaveBeenCalled();
       expect(setUsers).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.users
+        transformUsers(gameStateExampleResponse.data.users)
       );
       expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
         gameId,

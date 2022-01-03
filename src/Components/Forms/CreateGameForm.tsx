@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { apiClient } from "../../Api/apiClient";
 import { GameContext } from "../../State/Game/GameContext";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
+import { transformUser, transformUsers } from "../../Types/User";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -67,15 +68,15 @@ export const CreateGameForm: React.FC = () => {
           code: data.code,
           judge_id: data.judge.id,
         });
-        setUser(data.current_user);
-        setUsers(data.users);
+        setUser(transformUser(data.current_user));
+        setUsers(transformUsers(data.users));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         setHand(hand);
         setBlackCard(data.current_black_card);
         setHasSubmittedCards(data.hasSubmittedWhiteCards);
-        setJudge(data.judge);
+        setJudge(transformUser(data.judge));
         history.push("/game/" + data.id);
       } catch (error) {
         console.error(error);

@@ -9,6 +9,7 @@ import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsEx
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
 import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
+import { transformUser, transformUsers } from "../../Types/User";
 
 jest.mock("../../Api/apiClient");
 
@@ -137,10 +138,10 @@ describe("CreateGameForm", () => {
       expect(setGame).toHaveBeenCalledWith(receivedGame);
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setUser).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.current_user
+        transformUser(gameStateExampleResponse.data.current_user)
       );
       expect(setUsers).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.users
+        transformUsers(gameStateExampleResponse.data.users)
       );
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
@@ -149,7 +150,7 @@ describe("CreateGameForm", () => {
         gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
       expect(setJudge).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.judge
+        transformUser(gameStateExampleResponse.data.judge)
       );
     });
   });

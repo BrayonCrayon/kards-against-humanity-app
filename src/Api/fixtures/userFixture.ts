@@ -5,4 +5,5 @@ export const userFixture: User = {
   id: 1,
   name: "Rick Sanchez",
   whiteCards: cardsInHand,
+  hasSubmittedWhiteCards: false,
 };

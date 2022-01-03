@@ -48,11 +48,20 @@ const GameInfo: FC = () => {
             Users
           </h1>
           {users.map((user) => (
-            <div className="py-2 text-center font-semibold" key={user.id}>
+            <div className="py-2 font-semibold flex" key={user.id}>
               {judge.id === user.id && (
-                <div data-testid={`user-${user.id}-judge`}>;)</div>
+                <div data-testid={`user-${user.id}-judge`} className="mr-2">
+                  ;)
+                </div>
               )}
-              <p data-testid={`user-${user.id}`}>{user.name}</p>
+              <p
+                data-testid={`user-${user.id}`}
+                className={` ${
+                  user.hasSubmittedWhiteCards ? "text-green-500" : ""
+                }`}
+              >
+                {user.name}
+              </p>
             </div>
           ))}
         </div>
