@@ -1,14 +1,13 @@
-export const gameStateSubmittedWhiteCardsExampleResponse = {
+export const gameStateJudgeExampleResponse = {
   data: {
     id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
     code: "1234",
     name: "Puzzled Penguin",
-    hasSubmittedWhiteCards: true,
-    submittedWhiteCardIds: [76],
+    hasSubmittedWhiteCards: false,
+    submittedWhiteCardIds: [],
     judge: {
-      id: 4,
-      name: "Tommis",
-      whiteCards: [],
+      id: 1,
+      name: "brady",
       has_submitted_white_cards: false,
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
@@ -50,6 +49,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
       id: 4624,
       pick: 1,
       text: "_ is the key to recovery.",
+      expansion_id: 1,
     },
     hand: [
       {

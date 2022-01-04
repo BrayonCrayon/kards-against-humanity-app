@@ -5,6 +5,7 @@ import { GameContext } from "../../State/Game/GameContext";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
+import { transformUser, transformUsers } from "../../Types/User";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -33,15 +34,15 @@ const JoinGameForm: React.FC = () => {
           judge_id: data.judge.id,
           code: data.code,
         } as Game);
-        setUser(data.current_user);
+        setUser(transformUser(data.current_user));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         setHand(hand);
         setBlackCard(data.current_black_card);
-        setUsers(data.users);
+        setUsers(transformUsers(data.users));
         setHasSubmittedCards(data.hasSubmittedWhiteCards);
-        setJudge(data.judge);
+        setJudge(transformUser(data.judge));
 
         history.push(`/game/${data.id}`);
       } catch (e) {

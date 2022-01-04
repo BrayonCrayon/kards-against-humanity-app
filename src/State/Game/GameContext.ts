@@ -33,11 +33,13 @@ export const initialState: IGameContext = {
     id: 0,
     name: "",
     whiteCards: [],
+    hasSubmittedWhiteCards: false,
   },
   judge: {
     id: 0,
     name: "",
     whiteCards: [],
+    hasSubmittedWhiteCards: false,
   },
   game: {
     id: "",
