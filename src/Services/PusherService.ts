@@ -25,3 +25,15 @@ export const listenWhenUserJoinsGame = (
 ) => {
   echo.channel(`game-${gameId}`).listen(".game.joined", callback);
 };
+
+export interface UserSubmittedCardsData {
+  gameId: string;
+  userId: number;
+}
+
+export const listenWhenUserSubmittedCards = (
+  gameId: string,
+  callback: (data: UserJoinedGameData) => void
+) => {
+  echo.channel(`game-${gameId}`).listen(".cards.submitted", callback);
+};

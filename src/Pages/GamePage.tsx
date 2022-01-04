@@ -2,10 +2,8 @@ import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
-import { BlackKard } from "../Components/BlackKard";
-import { listenWhenUserJoinsGame } from "../Services/PusherService";
+import { listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
-import { happyToast } from "../Utilities/toasts";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
 
@@ -18,6 +16,7 @@ const GamePage = () => {
     hasSubmittedCards,
     judge,
     userJoinedGameCallback,
+    userSubmittedCardsCallback,
     setUsers,
     setUser,
     setGame,
@@ -68,6 +67,7 @@ const GamePage = () => {
       );
     } else {
       listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
+      listenWhenUserSubmittedCards(game.id, userSubmittedCardsCallback);
     }
   }, [game, fetchGameState, id, userJoinedGameCallback]);
 

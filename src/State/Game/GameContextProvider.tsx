@@ -31,6 +31,8 @@ const GameContextProvider: React.FC = ({ children }) => {
     [fetchGameState]
   );
 
+  const userSubmittedCardsCallback = () => {};
+
   return (
     <GameContext.Provider
       value={{
@@ -49,6 +51,7 @@ const GameContextProvider: React.FC = ({ children }) => {
         setBlackCard,
         setHasSubmittedCards,
         userJoinedGameCallback,
+        userSubmittedCardsCallback,
       }}
     >
       {children}
