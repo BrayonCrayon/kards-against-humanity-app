@@ -6,6 +6,7 @@ import { apiClient } from "../../Api/apiClient";
 import { GameContext } from "../../State/Game/GameContext";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
+import { useHappyLittleHook } from "../../State/Game/HappyLittleGameContext";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -25,6 +26,11 @@ export const CreateGameForm: React.FC = () => {
     setHasSubmittedCards,
     setJudge,
   } = useContext(GameContext);
+
+  const {
+    state: { name },
+    dispatch,
+  } = useHappyLittleHook();
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -109,6 +115,11 @@ export const CreateGameForm: React.FC = () => {
         onSubmit={submitToApi}
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
+        <p>{name}</p>
+        <button onClick={() => dispatch({ type: "changeName" })}>
+          change name
+        </button>
+
         <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
         <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
           {expansions.map(({ expansion, isSelected }) => {
