@@ -217,7 +217,17 @@ describe("GamePage", () => {
     );
   });
 
-  it("changes user name colour when we receive submitted cards event from pusher", () => {});
+  it("changes user name colour when we receive submitted cards event from pusher", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    renderer({ ...initialState, userSubmittedCardsCallback });
+
+    await waitFor(() => {
+      expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
+        gameId,
+        userSubmittedCardsCallback
+      );
+    });
+  });
 
   describe("Selecting Cards", () => {
     it("calls set hand when a user selects a card", async () => {

@@ -62,9 +62,10 @@ const GamePage = () => {
 
   useEffect(() => {
     if (!game.id) {
-      fetchGameState(id).then(() =>
-        listenWhenUserJoinsGame(id, userJoinedGameCallback)
-      );
+      fetchGameState(id).then(() => {
+        listenWhenUserJoinsGame(id, userJoinedGameCallback);
+        listenWhenUserSubmittedCards(id, userSubmittedCardsCallback);
+      });
     } else {
       listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
       listenWhenUserSubmittedCards(game.id, userSubmittedCardsCallback);
