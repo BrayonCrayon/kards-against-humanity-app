@@ -68,6 +68,16 @@ export const CreateGameForm: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
+        dispatch({
+          type: "createGame",
+          payload: {
+            id: data.id,
+            name: data.name,
+            code: data.code,
+            judge_id: data.judge.id,
+          },
+        });
+
         setGame({
           id: data.id,
           name: data.name,
@@ -116,7 +126,7 @@ export const CreateGameForm: React.FC = () => {
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <p>{name}</p>
-        <button onClick={() => dispatch({ type: "changeName" })}>
+        <button onClick={() => dispatch({ type: "changeName", payload: "" })}>
           change name
         </button>
 

@@ -4,11 +4,14 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GameContextProvider from "./State/Game/GameContextProvider";
+import { HappyLittleGameProvider } from "./State/Game/HappyLittleGameContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <GameContextProvider>
-      <App />
+      <HappyLittleGameProvider>
+        <App />
+      </HappyLittleGameProvider>
     </GameContextProvider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -2,9 +2,12 @@ import React, { FC, useCallback, useContext } from "react";
 import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
+import { useHappyLittleHook } from "../State/Game/HappyLittleGameContext";
 
 const GameInfo: FC = () => {
   const { game, user, users, blackCard, judge } = useContext(GameContext);
+
+  const { state } = useHappyLittleHook();
 
   const copyGameCode = useCallback(async () => {
     try {
@@ -23,7 +26,8 @@ const GameInfo: FC = () => {
           onClick={() => copyGameCode()}
           className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold cursor-pointer flex"
         >
-          <span className="text-gray-700 px-1">Game Code:</span> {game.code}
+          <span className="text-gray-700 px-1">Game Code:</span>{" "}
+          {state.game.code}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 ml-1"
