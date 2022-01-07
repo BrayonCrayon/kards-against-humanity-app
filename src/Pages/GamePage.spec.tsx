@@ -199,13 +199,25 @@ describe("GamePage", () => {
     });
   });
 
-  it("listens on pusher event when loading game page", () => {
+  it("listens on user joins pusher event when loading game page", () => {
     renderer();
 
     expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
       gameFixture.id,
       userJoinedGameCallback
     );
+  });
+
+  it("listens on user joins pusher event when user refreshes game page", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    renderer({ ...initialState, userJoinedGameCallback });
+
+    await waitFor(() => {
+      expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
+        gameId,
+        userJoinedGameCallback
+      );
+    });
   });
 
   it("listens on submitted cards pusher event when game page is loaded", () => {
