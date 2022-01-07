@@ -19,7 +19,6 @@ function useFetchGameState(
     async (gameId: string) => {
       try {
         const { data } = await apiClient.get(`/api/game/${gameId}`);
-        console.log("fetchGameState", data);
         setUser(transformUser(data.current_user));
         setUsers(transformUsers(data.users));
         setGame({
