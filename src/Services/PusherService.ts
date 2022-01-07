@@ -14,26 +14,21 @@ window.Echo = new Echo({
 // @ts-ignore
 export const echo = window.Echo;
 
-export interface UserJoinedGameData {
+export interface UpdateGameState {
   gameId: string;
   userId: number;
 }
 
 export const listenWhenUserJoinsGame = (
   gameId: string,
-  callback: (data: UserJoinedGameData) => void
+  callback: (data: UpdateGameState) => void
 ) => {
   echo.channel(`game-${gameId}`).listen(".game.joined", callback);
 };
 
-export interface UserSubmittedCardsData {
-  gameId: string;
-  userId: number;
-}
-
 export const listenWhenUserSubmittedCards = (
   gameId: string,
-  callback: (data: UserJoinedGameData) => void
+  callback: (data: UpdateGameState) => void
 ) => {
   echo.channel(`game-${gameId}`).listen(".cards.submitted", callback);
 };
