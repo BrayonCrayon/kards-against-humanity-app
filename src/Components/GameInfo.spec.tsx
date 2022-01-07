@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  GameContext,
-  IGameContext,
-  initialState,
-} from "../State/Game/GameContext";
+import { GameContext, IGameContext, initialState } from "../State/Game/GameContext";
 import { render, RenderResult } from "@testing-library/react";
 import GameInfo from "./GameInfo";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
@@ -11,7 +7,7 @@ import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExa
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
 const setUsers = jest.fn();
-const userJoinedGameCallback = jest.fn();
+const updateGameStateCallback = jest.fn();
 
 const { data } = gameStateJudgeExampleResponse;
 
@@ -23,7 +19,7 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
         setHand,
         setHasSubmittedCards,
         setUsers,
-        userJoinedGameCallback,
+        updateGameStateCallback,
         game: {
           id: data.id,
           name: data.name,
@@ -32,10 +28,12 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
         },
         judge: {
           ...data.judge,
+          hasSubmittedWhiteCards: false,
           whiteCards: data.hand,
         },
         user: {
           ...data.current_user,
+          hasSubmittedWhiteCards: false,
           whiteCards: data.hand,
         },
         users: data.users,
@@ -70,6 +68,17 @@ describe("GameInfo", () => {
 
       expect(wrapper.queryByTestId(`user-${data.users[1].id}`)).toHaveClass(
         "text-green-500"
+      );
+    });
+  });
+
+  describe("Game box", () => {
+    it("shows game name", () => {
+      const wrapper = renderer();
+
+      expect(wrapper.queryByTestId(`game-${data.id}-name`)).not.toBeNull();
+      expect(wrapper.queryByTestId(`game-${data.id}-name`)).toHaveTextContent(
+        data.name
       );
     });
   });

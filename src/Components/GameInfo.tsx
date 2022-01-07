@@ -40,6 +40,13 @@ const GameInfo: FC = () => {
           </svg>
         </div>
 
+        <div
+          data-testid={`game-${game.id}-name`}
+          className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold cursor-pointer flex"
+        >
+          {game.name}
+        </div>
+
         <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold">
           <span className="text-gray-700">You:</span> {user.name}
         </div>
