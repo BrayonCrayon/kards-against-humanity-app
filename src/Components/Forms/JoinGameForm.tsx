@@ -71,8 +71,8 @@ const JoinGameForm: React.FC = () => {
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
-        <label className="mb-4 pl-2 mt-4">
-          Name:
+        <label className="mb-4 pl-2 mt-4 flex justify-between">
+          Player Name:
           <input
             type="text"
             data-testid="join-game-name-input"
@@ -82,7 +82,7 @@ const JoinGameForm: React.FC = () => {
             onChange={(e) => setUserName(e.target.value)}
           />
         </label>
-        <label className="mb-4 pl-2 mt-4">
+        <label className="mb-4 pl-2 mt-4 flex justify-between">
           Code:
           <input
             type="text"
@@ -98,7 +98,7 @@ const JoinGameForm: React.FC = () => {
           data-testid="join-game-form-submit"
           className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
         >
-          Join game
+          Join
         </button>
       </form>
     </div>
