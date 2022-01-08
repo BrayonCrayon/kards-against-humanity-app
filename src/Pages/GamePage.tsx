@@ -15,8 +15,7 @@ const GamePage = () => {
     blackCard,
     hasSubmittedCards,
     judge,
-    userJoinedGameCallback,
-    userSubmittedCardsCallback,
+    updateGameStateCallback,
     setUsers,
     setUser,
     setGame,
@@ -62,14 +61,15 @@ const GamePage = () => {
 
   useEffect(() => {
     if (!game.id) {
-      fetchGameState(id).then(() =>
-        listenWhenUserJoinsGame(id, userJoinedGameCallback)
-      );
+      fetchGameState(id).then(() => {
+        listenWhenUserJoinsGame(id, updateGameStateCallback);
+        listenWhenUserSubmittedCards(id, updateGameStateCallback);
+      });
     } else {
-      listenWhenUserJoinsGame(game.id, userJoinedGameCallback);
-      listenWhenUserSubmittedCards(game.id, userSubmittedCardsCallback);
+      listenWhenUserJoinsGame(game.id, updateGameStateCallback);
+      listenWhenUserSubmittedCards(game.id, updateGameStateCallback);
     }
-  }, [game, fetchGameState, id, userJoinedGameCallback]);
+  }, [fetchGameState, id]);
 
   return (
     <div>

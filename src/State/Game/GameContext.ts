@@ -4,7 +4,7 @@ import { Game } from "../../Types/Game";
 import { User } from "../../Types/User";
 import { BlackCard } from "../../Types/BlackCard";
 import { setState } from "../GeneralTypes";
-import { UserJoinedGameData, UserSubmittedCardsData } from "../../Services/PusherService";
+import { UpdateGameState } from "../../Services/PusherService";
 
 export interface IGameContext {
   hand: WhiteCard[];
@@ -23,8 +23,7 @@ export interface IGameContext {
   setHasSubmittedCards: setState<boolean>;
   setJudge: setState<User>;
 
-  userJoinedGameCallback: (data: UserJoinedGameData) => void;
-  userSubmittedCardsCallback: (data: UserSubmittedCardsData) => void;
+  updateGameStateCallback: (data: UpdateGameState) => void;
 }
 
 export const initialState: IGameContext = {
@@ -64,8 +63,7 @@ export const initialState: IGameContext = {
   setHasSubmittedCards: () => {},
   setJudge: () => {},
 
-  userJoinedGameCallback: () => {},
-  userSubmittedCardsCallback: () => {},
+  updateGameStateCallback: () => {},
 };
 
 export const GameContext = createContext<IGameContext>(initialState);

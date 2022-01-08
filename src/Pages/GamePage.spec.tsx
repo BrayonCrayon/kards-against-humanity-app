@@ -40,8 +40,7 @@ Object.assign(navigator, {
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
 const setUsers = jest.fn();
-const userJoinedGameCallback = jest.fn();
-const userSubmittedCardsCallback = jest.fn();
+const updateGameStateCallback = jest.fn();
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return render(
@@ -51,8 +50,7 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
         setHand,
         setHasSubmittedCards,
         setUsers,
-        userJoinedGameCallback,
-        userSubmittedCardsCallback,
+        updateGameStateCallback,
         game: gameFixture,
         user: userFixture,
         users: transformUsers(gameStateExampleResponse.data.users),
@@ -159,7 +157,7 @@ describe("GamePage", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    renderer({ ...initialState, setUsers, userJoinedGameCallback });
+    renderer({ ...initialState, setUsers, updateGameStateCallback });
 
     await waitFor(() => {
       expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
@@ -169,7 +167,7 @@ describe("GamePage", () => {
       );
       expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
         gameId,
-        userJoinedGameCallback
+        updateGameStateCallback
       );
     });
   });
@@ -199,13 +197,25 @@ describe("GamePage", () => {
     });
   });
 
-  it("listens on pusher event when loading game page", () => {
+  it("listens on user joins pusher event when loading game page", () => {
     renderer();
 
     expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
       gameFixture.id,
-      userJoinedGameCallback
+      updateGameStateCallback
     );
+  });
+
+  it("listens on user joins pusher event when user refreshes game page", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    renderer({ ...initialState, updateGameStateCallback });
+
+    await waitFor(() => {
+      expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
+        gameId,
+        updateGameStateCallback
+      );
+    });
   });
 
   it("listens on submitted cards pusher event when game page is loaded", () => {
@@ -213,11 +223,21 @@ describe("GamePage", () => {
 
     expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
       gameFixture.id,
-      userSubmittedCardsCallback
+      updateGameStateCallback
     );
   });
 
-  it("changes user name colour when we receive submitted cards event from pusher", () => {});
+  it("changes user name colour when we receive submitted cards event from pusher", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    renderer({ ...initialState, updateGameStateCallback });
+
+    await waitFor(() => {
+      expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
+        gameId,
+        updateGameStateCallback
+      );
+    });
+  });
 
   describe("Selecting Cards", () => {
     it("calls set hand when a user selects a card", async () => {
