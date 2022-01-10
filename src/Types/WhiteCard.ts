@@ -3,6 +3,7 @@ export interface IWhiteCard {
   text: string;
   expansion_id: number;
   selected: boolean;
+  order: number;
   created_at?: Date;
   deleted_at?: Date;
 }
@@ -12,6 +13,7 @@ export class WhiteCard implements IWhiteCard {
   text: string;
   expansion_id: number;
   selected: boolean;
+  order: number;
   created_at?: Date;
   deleted_at?: Date;
 
@@ -19,12 +21,14 @@ export class WhiteCard implements IWhiteCard {
     id: number = 0,
     text: string = "",
     expansion_id: number = 0,
-    selected = false
+    selected = false,
+    order = 0
   ) {
     this.id = id;
     this.text = text;
     this.expansion_id = expansion_id;
     this.selected = selected;
+    this.order = order;
   }
 }
 
@@ -43,7 +47,8 @@ export const constructWhiteCardArray = (
       item.id,
       item.text,
       item.expansion_id,
-      alreadySubmitted
+      alreadySubmitted,
+      item.order
     );
   });
 };

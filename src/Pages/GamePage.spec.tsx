@@ -1,6 +1,16 @@
-import { render, RenderResult, waitFor } from "@testing-library/react";
+import {
+  act,
+  render,
+  RenderResult,
+  wait,
+  waitFor
+} from "@testing-library/react";
 import GamePage from "./GamePage";
-import { GameContext, IGameContext, initialState } from "../State/Game/GameContext";
+import {
+  GameContext,
+  IGameContext,
+  initialState
+} from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
@@ -8,12 +18,19 @@ import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
 import { transformUsers } from "../Types/User";
-import { listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "../Services/PusherService";
+import {
+  listenWhenUserJoinsGame,
+  listenWhenUserSubmittedCards
+} from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
 import { happyToast } from "../Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { cannotSelectCardClass, selectedCardClass, whiteCardTestId } from "../Tests/selectors";
+import {
+  cannotSelectCardClass,
+  selectedCardClass,
+  whiteCardTestId
+} from "../Tests/selectors";
 import { selectWhiteCards } from "../Tests/actions";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
 
@@ -524,6 +541,27 @@ describe("Submitting cards", () => {
           selectedCardClass
         );
       });
+    });
+  });
+
+  it("when submitting two white cards the order is maintained", async () => {
+    const wrapper = renderGameWrapper();
+
+    gameStateExampleResponse.data.current_black_card.pick = 2;
+    const cardsToSelect = gameStateExampleResponse.data.hand
+      .slice(0, 2)
+      .reverse();
+    await selectWhiteCards(cardsToSelect);
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        `/api/game/${gameStateExampleResponse.data.id}/submit`,
+        expect.objectContaining({
+          whiteCardIds: cardsToSelect.map((card) => card.id)
+        })
+      );
     });
   });
 });
