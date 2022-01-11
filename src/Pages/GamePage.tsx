@@ -4,7 +4,7 @@ import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
 import {
   listenWhenUserJoinsGame,
-  listenWhenUserSubmittedCards
+  listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { apiClient } from "../Api/apiClient";

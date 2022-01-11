@@ -32,8 +32,15 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
         ++latestOrderValue;
       }
     });
-    cardToSelect.selected = !card.selected;
-    cardToSelect.order = latestOrderValue + 1;
+    if (cardToSelect.selected) {
+      clone.forEach((item) => {
+        item.selected = false;
+        item.order = 0;
+      });
+    } else {
+      cardToSelect.selected = !card.selected;
+      cardToSelect.order = latestOrderValue + 1;
+    }
 
     setHand(() => clone);
   }, [card, setHand, canSelect, hand, hasSubmittedCards]);
@@ -46,6 +53,12 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
       onClick={toggle}
       data-testid={`white-card-${card.id}`}
     >
+      <div
+        data-testid={`white-card-${card.id}-order-${card.order}`}
+        className=""
+      >
+        {card.order}
+      </div>
       <span>{card.text}</span>
       <div className="text-xs self-end hidden md:block">
         Kards Against Humanity

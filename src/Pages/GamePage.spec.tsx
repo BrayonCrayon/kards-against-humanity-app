@@ -3,13 +3,13 @@ import {
   render,
   RenderResult,
   wait,
-  waitFor
+  waitFor,
 } from "@testing-library/react";
 import GamePage from "./GamePage";
 import {
   GameContext,
   IGameContext,
-  initialState
+  initialState,
 } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
@@ -20,7 +20,7 @@ import { gameFixture } from "../Api/fixtures/gameFixture";
 import { transformUsers } from "../Types/User";
 import {
   listenWhenUserJoinsGame,
-  listenWhenUserSubmittedCards
+  listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import GameContextProvider from "../State/Game/GameContextProvider";
@@ -29,10 +29,11 @@ import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gam
 import {
   cannotSelectCardClass,
   selectedCardClass,
-  whiteCardTestId
+  whiteCardTestId,
 } from "../Tests/selectors";
 import { selectWhiteCards } from "../Tests/actions";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
+import { WhiteCard } from "../Types/WhiteCard";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -559,9 +560,68 @@ describe("Submitting cards", () => {
       expect(mockedAxios.post).toHaveBeenCalledWith(
         `/api/game/${gameStateExampleResponse.data.id}/submit`,
         expect.objectContaining({
-          whiteCardIds: cardsToSelect.map((card) => card.id)
+          whiteCardIds: cardsToSelect.map((card) => card.id),
         })
       );
+    });
+  });
+
+  it("unselects all selected cards when one card is unselected", async () => {
+    const wrapper = renderGameWrapper();
+
+    gameStateExampleResponse.data.current_black_card.pick = 2;
+    const cardsToSelect = gameStateExampleResponse.data.hand
+      .slice(0, 2)
+      .reverse();
+    await selectWhiteCards(cardsToSelect);
+    const [deselectCard] = cardsToSelect;
+
+    userEvent.click(wrapper.getByTestId(whiteCardTestId(deselectCard.id)));
+
+    await waitFor(() => {
+      cardsToSelect.forEach((cardId) => {
+        expect(wrapper.getByTestId(whiteCardTestId(cardId.id))).not.toHaveClass(
+          selectedCardClass
+        );
+      });
+    });
+  });
+  it("when selecting and deselecting cards, order is properly updated", async () => {
+    const wrapper = renderGameWrapper();
+
+    gameStateExampleResponse.data.current_black_card.pick = 2;
+    const cardsToSelect = gameStateExampleResponse.data.hand
+      .slice(0, 2)
+      .reverse();
+    await selectWhiteCards(cardsToSelect);
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalledWith(
+        `/api/game/${gameStateExampleResponse.data.id}/submit`,
+        expect.objectContaining({
+          whiteCardIds: cardsToSelect.map((card) => card.id),
+        })
+      );
+    });
+  });
+  it("indicator of card matches card order", async () => {
+    const wrapper = renderGameWrapper();
+
+    gameStateExampleResponse.data.current_black_card.pick = 2;
+    const cardsToSelect: WhiteCard[] = gameStateExampleResponse.data.hand
+      .slice(0, 2)
+      .reverse();
+    await selectWhiteCards(cardsToSelect);
+
+    let order = 1;
+    cardsToSelect.forEach((card) => {
+      const orderContent = wrapper.getByTestId(
+        `white-card-${card.id}-order-${order}`
+      ).textContent;
+      expect(parseInt(orderContent ?? "")).toBe(order);
+      ++order;
     });
   });
 });
