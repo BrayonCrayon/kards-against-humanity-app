@@ -13,4 +13,5 @@ describe("Kards", function () {
     const { getByText } = selectableWhiteKardRender();
     getByText(card.text);
   });
+  it.todo("does not show the order indicator when 0");
 });

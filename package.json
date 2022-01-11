@@ -30,6 +30,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
+    "compile-ts": "tsc --project tsconfig.json",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

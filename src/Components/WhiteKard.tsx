@@ -53,12 +53,14 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
       onClick={toggle}
       data-testid={`white-card-${card.id}`}
     >
-      <div
-        data-testid={`white-card-${card.id}-order-${card.order}`}
-        className=""
-      >
-        {card.order}
-      </div>
+      {card.order > 0 && (
+        <div
+          data-testid={`white-card-${card.id}-order-${card.order}`}
+          className=""
+        >
+          {card.order}
+        </div>
+      )}
       <span>{card.text}</span>
       <div className="text-xs self-end hidden md:block">
         Kards Against Humanity
