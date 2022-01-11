@@ -26,7 +26,14 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
 
     if (!cardToSelect) return;
 
+    let latestOrderValue = 0;
+    clone.forEach((item) => {
+      if (item.order > latestOrderValue) {
+        ++latestOrderValue;
+      }
+    });
     cardToSelect.selected = !card.selected;
+    cardToSelect.order = latestOrderValue + 1;
 
     setHand(() => clone);
   }, [card, setHand, canSelect, hand, hasSubmittedCards]);

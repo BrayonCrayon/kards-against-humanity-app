@@ -2,7 +2,10 @@ import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
-import { listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "../Services/PusherService";
+import {
+  listenWhenUserJoinsGame,
+  listenWhenUserSubmittedCards
+} from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
@@ -51,6 +54,7 @@ const GamePage = () => {
         submitAmount: blackCard.pick,
         whiteCardIds: hand
           .filter((card) => card.selected)
+          .sort((leftCard, rightCard) => leftCard.order - rightCard.order)
           .map((card) => card.id),
       });
       setHasSubmittedCards(true);
