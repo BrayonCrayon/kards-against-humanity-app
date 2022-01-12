@@ -26,7 +26,6 @@ import {
 } from "../Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards } from "../Tests/actions";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
-import { WhiteCard } from "../Types/WhiteCard";
 import {
   customGameWrapperRender,
   gameWrapperRender,
