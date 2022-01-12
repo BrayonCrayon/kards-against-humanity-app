@@ -1,10 +1,4 @@
-import {
-  act,
-  render,
-  RenderResult,
-  wait,
-  waitFor,
-} from "@testing-library/react";
+import { render, RenderResult, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import {
   GameContext,
