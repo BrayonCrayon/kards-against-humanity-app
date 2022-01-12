@@ -10,6 +10,10 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
   const { setHand, hand, blackCard, hasSubmittedCards } =
     useContext(GameContext);
 
+  const nextOrder = useMemo(() => {
+    return Math.max(...hand.map((item) => item.order)) + 1;
+  }, [hand]);
+
   const canSelect = useMemo(() => {
     return (
       hand.filter((item) => item.selected).length < blackCard.pick ||
@@ -26,12 +30,6 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
 
     if (!cardToSelect) return;
 
-    let latestOrderValue = 0;
-    clone.forEach((item) => {
-      if (item.order > latestOrderValue) {
-        ++latestOrderValue;
-      }
-    });
     if (cardToSelect.selected) {
       clone.forEach((item) => {
         item.selected = false;
@@ -39,11 +37,11 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
       });
     } else {
       cardToSelect.selected = !card.selected;
-      cardToSelect.order = latestOrderValue + 1;
+      cardToSelect.order = nextOrder;
     }
 
     setHand(() => clone);
-  }, [card, setHand, canSelect, hand, hasSubmittedCards]);
+  }, [card, setHand, canSelect, hand, hasSubmittedCards, nextOrder]);
 
   return (
     <div
