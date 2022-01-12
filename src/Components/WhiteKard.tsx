@@ -54,10 +54,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
       data-testid={`white-card-${card.id}`}
     >
       {card.order > 0 && (
-        <div
-          data-testid={`white-card-${card.id}-order-${card.order}`}
-          className=""
-        >
+        <div data-testid={`white-card-${card.id}-order`} className="">
           {card.order}
         </div>
       )}
