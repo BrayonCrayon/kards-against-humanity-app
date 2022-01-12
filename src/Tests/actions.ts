@@ -10,3 +10,8 @@ export const selectWhiteCards = async (cards: WhiteCard[]) => {
     });
   });
 };
+
+export const selectAndSubmitWhiteCards = async (cards: WhiteCard[]) => {
+  await selectWhiteCards(cards);
+  userEvent.click(screen.getByTestId("white-card-submit-btn"));
+};

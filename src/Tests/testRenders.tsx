@@ -4,8 +4,6 @@ import {
   IGameContext,
   initialState,
 } from "../State/Game/GameContext";
-import GameInfo from "../Components/GameInfo";
-import React, { ReactChildren } from "react";
 import GameContextProvider from "../State/Game/GameContextProvider";
 
 export const customGameWrapperRender = (
@@ -24,6 +22,6 @@ export const customGameWrapperRender = (
   );
 };
 
-export const gameWrapperRender = (children: ReactChildren): RenderResult => {
+export const gameWrapperRender = (children: JSX.Element): RenderResult => {
   return render(<GameContextProvider>{children}</GameContextProvider>);
 };
