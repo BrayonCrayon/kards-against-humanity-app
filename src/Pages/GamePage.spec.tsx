@@ -617,10 +617,9 @@ describe("Submitting cards", () => {
 
     let order = 1;
     cardsToSelect.forEach((card) => {
-      const orderContent = wrapper.getByTestId(
-        `white-card-${card.id}-order`
-      ).textContent;
-      expect(parseInt(orderContent ?? "")).toBe(order);
+      expect(
+        wrapper.queryByTestId(`white-card-${card.id}-order`)
+      ).toHaveTextContent(order.toString());
       ++order;
     });
   });
