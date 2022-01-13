@@ -21,7 +21,9 @@ import { happyToast } from "../Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import {
   cannotSelectCardClass,
+  getWhiteCardElement,
   selectedCardClass,
+  whiteCardOrderTestId,
   whiteCardTestId,
 } from "../Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards } from "../Tests/actions";
@@ -240,6 +242,10 @@ describe("GamePage", () => {
   });
 
   describe("Selecting Cards", () => {
+    beforeEach(() => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    });
+
     it("calls set hand when a user selects a card", async () => {
       const wrapper = renderer();
 
@@ -252,56 +258,50 @@ describe("GamePage", () => {
       expect(setHand).toHaveBeenCalled();
     });
 
-    it("can toggle white card twice when black card pick amount is already reached", async () => {
-      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    // it("can toggle white card twice when black card pick amount is already reached", async () => {
+    //   const wrapper = gameWrapperRender(<GamePage />);
+    //
+    //   const [cardToSelect] = gameStateExampleResponse.data.hand;
+    //
+    //   let selectedCard: HTMLElement | undefined = undefined;
+    //   await waitFor(() => {
+    //     selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
+    //   });
+    //
+    //   await waitFor(() => {
+    //     userEvent.click(selectedCard!);
+    //   });
+    //
+    //   expect(selectedCard).toHaveClass(selectedCardClass);
+    //
+    //   await waitFor(() => {
+    //     userEvent.click(selectedCard!);
+    //   });
+    //
+    //   expect(selectedCard).not.toHaveClass(selectedCardClass);
+    // });
 
-      const wrapper = gameWrapperRender(<GamePage />);
-
-      const [cardToSelect] = gameStateExampleResponse.data.hand;
-
-      let selectedCard: HTMLElement | undefined = undefined;
-      await waitFor(() => {
-        selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
-      });
-
-      await waitFor(() => {
-        userEvent.click(selectedCard!);
-      });
-
-      expect(selectedCard).toHaveClass(selectedCardClass);
-
-      await waitFor(() => {
-        userEvent.click(selectedCard!);
-      });
-
-      expect(selectedCard).not.toHaveClass(selectedCardClass);
-    });
-
-    it("does not allow user to select more white cards than the black card pick amount", async () => {
-      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
-      const wrapper = gameWrapperRender(<GamePage />);
-
-      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-        0,
-        gameStateExampleResponse.data.current_black_card.pick + 1
-      );
-
-      await selectWhiteCards(cardsToSelect);
-
-      const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
-      expect(
-        wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
-      ).not.toHaveClass(selectedCardClass);
-    });
+    // it("does not allow user to select more white cards than the black card pick amount", async () => {
+    //   const wrapper = gameWrapperRender(<GamePage />);
+    //
+    //   const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+    //     0,
+    //     gameStateExampleResponse.data.current_black_card.pick + 1
+    //   );
+    //
+    //   await selectWhiteCards(cardsToSelect);
+    //
+    //   const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
+    //   expect(
+    //     wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
+    //   ).not.toHaveClass(selectedCardClass);
+    // });
 
     it("applies correct class when a white card is selected", async () => {
       const cardsToSelect = gameStateExampleResponse.data.hand.slice(
         0,
         blackCardFixture.pick
       );
-      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
       const wrapper = gameWrapperRender(<GamePage />);
 
       await waitFor(() => {
@@ -322,8 +322,6 @@ describe("GamePage", () => {
         0,
         blackCardFixture.pick
       );
-      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
       const wrapper = gameWrapperRender(<GamePage />);
 
       await waitFor(() => {
@@ -336,6 +334,50 @@ describe("GamePage", () => {
         expect(
           wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
         ).toHaveClass(cannotSelectCardClass);
+      });
+    });
+
+    it("sets next selected card to the last pick order when select limit is reached", async () => {
+      gameStateExampleResponse.data.current_black_card.pick = 2;
+      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+        0,
+        gameStateExampleResponse.data.current_black_card.pick
+      );
+      const nextCardToSelect =
+        gameStateExampleResponse.data.hand[
+          gameStateExampleResponse.data.current_black_card.pick
+        ];
+      const wrapper = gameWrapperRender(<GamePage />);
+
+      await selectWhiteCards(cardsToSelect);
+
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(whiteCardTestId(nextCardToSelect.id))
+        );
+      });
+
+      await waitFor(() => {
+        expect(getWhiteCardElement(cardsToSelect[0].id)).not.toHaveClass(
+          selectedCardClass
+        );
+        expect(
+          wrapper.queryByTestId(whiteCardOrderTestId(cardsToSelect[0].id))
+        ).toBeNull();
+
+        expect(getWhiteCardElement(cardsToSelect[1].id)).toHaveClass(
+          selectedCardClass
+        );
+        expect(
+          wrapper.getByTestId(whiteCardOrderTestId(cardsToSelect[1].id))
+        ).toHaveTextContent("1");
+
+        expect(getWhiteCardElement(nextCardToSelect.id)).toHaveClass(
+          selectedCardClass
+        );
+        expect(
+          wrapper.getByTestId(whiteCardOrderTestId(nextCardToSelect.id))
+        ).toHaveTextContent("2");
       });
     });
   });
@@ -551,22 +593,22 @@ describe("Submitting cards", () => {
       });
     });
 
-    it("unselects all selected cards when one card is unselected", async () => {
-      const wrapper = gameWrapperRender(<GamePage />);
-
-      await selectWhiteCards(cardsToSelect);
-      const [deselectCard] = cardsToSelect;
-
-      userEvent.click(wrapper.getByTestId(whiteCardTestId(deselectCard.id)));
-
-      await waitFor(() => {
-        cardsToSelect.forEach((cardId) => {
-          expect(
-            wrapper.getByTestId(whiteCardTestId(cardId.id))
-          ).not.toHaveClass(selectedCardClass);
-        });
-      });
-    });
+    // it("unselects all selected cards when one card is unselected", async () => {
+    //   const wrapper = gameWrapperRender(<GamePage />);
+    //
+    //   await selectWhiteCards(cardsToSelect);
+    //   const [deselectCard] = cardsToSelect;
+    //
+    //   userEvent.click(wrapper.getByTestId(whiteCardTestId(deselectCard.id)));
+    //
+    //   await waitFor(() => {
+    //     cardsToSelect.forEach((cardId) => {
+    //       expect(
+    //         wrapper.getByTestId(whiteCardTestId(cardId.id))
+    //       ).not.toHaveClass(selectedCardClass);
+    //     });
+    //   });
+    // });
     it("when selecting and deselecting cards, order is properly updated", async () => {
       gameWrapperRender(<GamePage />);
 
@@ -589,7 +631,7 @@ describe("Submitting cards", () => {
       let order = 1;
       cardsToSelect.forEach((card) => {
         expect(
-          wrapper.queryByTestId(`white-card-${card.id}-order`)
+          wrapper.queryByTestId(whiteCardOrderTestId(card.id))
         ).toHaveTextContent(order.toString());
         ++order;
       });

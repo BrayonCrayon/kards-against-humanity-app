@@ -10,8 +10,8 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
   const { setHand, hand, blackCard, hasSubmittedCards } =
     useContext(GameContext);
 
-  const nextOrder = useMemo(() => {
-    return Math.max(...hand.map((item) => item.order)) + 1;
+  const highestOrder = useMemo(() => {
+    return Math.max(...hand.map((item) => item.order));
   }, [hand]);
 
   const canSelect = useMemo(() => {
@@ -22,7 +22,6 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
   }, [hand, blackCard, card]);
 
   const toggle = useCallback(() => {
-    if (!canSelect) return;
     if (hasSubmittedCards) return;
 
     const clone = [...hand];
@@ -30,29 +29,43 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
 
     if (!cardToSelect) return;
 
-    if (cardToSelect.selected) {
+    if (blackCard.pick < highestOrder + 1) {
       clone.forEach((item) => {
-        item.selected = false;
-        item.order = 0;
+        if (item.order > 0) {
+          item.order -= 1;
+        }
+        item.selected = item.order !== 0;
       });
+      cardToSelect.order = highestOrder;
     } else {
-      cardToSelect.selected = !card.selected;
-      cardToSelect.order = nextOrder;
+      cardToSelect.order = highestOrder + 1;
     }
+    cardToSelect.selected = !card.selected;
 
     setHand(() => clone);
-  }, [card, setHand, canSelect, hand, hasSubmittedCards, nextOrder]);
+  }, [
+    card,
+    setHand,
+    canSelect,
+    hand,
+    hasSubmittedCards,
+    highestOrder,
+    blackCard,
+  ]);
 
   return (
     <div
-      className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-col justify-between cursor-pointer hover:bg-gray-100 ${
+      className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-wrap cursor-pointer hover:bg-gray-100 ${
         card.selected ? "border-4 border-blue-400" : "border border-black"
       } ${canSelect ? "" : "opacity-25 cursor-not-allowed"} `}
       onClick={toggle}
       data-testid={`white-card-${card.id}`}
     >
       {card.order > 0 && (
-        <div data-testid={`white-card-${card.id}-order`} className="">
+        <div
+          data-testid={`white-card-${card.id}-order`}
+          className=" text-sm w-full text-right"
+        >
           {card.order}
         </div>
       )}
