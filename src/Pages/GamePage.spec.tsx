@@ -317,26 +317,6 @@ describe("GamePage", () => {
       });
     });
 
-    it("visually disables cards after select limit was reached", async () => {
-      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-        0,
-        blackCardFixture.pick
-      );
-      const wrapper = gameWrapperRender(<GamePage />);
-
-      await waitFor(() => {
-        userEvent.click(
-          wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
-        );
-      });
-
-      await waitFor(() => {
-        expect(
-          wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
-        ).toHaveClass(cannotSelectCardClass);
-      });
-    });
-
     it("sets next selected card to the last pick order when select limit is reached", async () => {
       gameStateExampleResponse.data.current_black_card.pick = 2;
       const cardsToSelect = gameStateExampleResponse.data.hand.slice(
@@ -432,6 +412,28 @@ describe("Submitting cards", () => {
           whiteCardIds: [cardToSelect.id],
         }
       );
+    });
+  });
+
+  it("visually disables cards when selected cards are submitted", async () => {
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
+      0,
+      blackCardFixture.pick
+    );
+    const wrapper = gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      userEvent.click(
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
+      );
+    });
+
+    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+
+    await waitFor(() => {
+      expect(
+        wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
+      ).toHaveClass(cannotSelectCardClass);
     });
   });
 
@@ -569,6 +571,55 @@ describe("Submitting cards", () => {
     });
   });
 
+  it("shows selected cards as not selectable when cards are submitted", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateSubmittedWhiteCardsExampleResponse
+    );
+    const cards = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
+
+    gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      cards.forEach((item) => {
+        expect(getWhiteCardElement(item.id)).toHaveClass("cursor-not-allowed");
+      });
+    });
+  });
+
+  it("fades unselected cards when cards are submitted", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateSubmittedWhiteCardsExampleResponse
+    );
+    const cards = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
+
+    gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      cards
+        .filter((card) =>
+          gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds.includes(
+            card.id
+          )
+        )
+        .forEach((card) =>
+          expect(getWhiteCardElement(card.id)).toHaveClass(selectedCardClass)
+        );
+
+      cards
+        .filter(
+          (card) =>
+            !gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds.includes(
+              card.id
+            )
+        )
+        .forEach((card) =>
+          expect(getWhiteCardElement(card.id)).toHaveClass(
+            cannotSelectCardClass
+          )
+        );
+    });
+  });
+
   describe("Selecting cards", () => {
     const cardsToSelect = gameStateExampleResponse.data.hand
       .slice(0, 2)
@@ -592,23 +643,6 @@ describe("Submitting cards", () => {
         );
       });
     });
-
-    // it("unselects all selected cards when one card is unselected", async () => {
-    //   const wrapper = gameWrapperRender(<GamePage />);
-    //
-    //   await selectWhiteCards(cardsToSelect);
-    //   const [deselectCard] = cardsToSelect;
-    //
-    //   userEvent.click(wrapper.getByTestId(whiteCardTestId(deselectCard.id)));
-    //
-    //   await waitFor(() => {
-    //     cardsToSelect.forEach((cardId) => {
-    //       expect(
-    //         wrapper.getByTestId(whiteCardTestId(cardId.id))
-    //       ).not.toHaveClass(selectedCardClass);
-    //     });
-    //   });
-    // });
     it("when selecting and deselecting cards, order is properly updated", async () => {
       gameWrapperRender(<GamePage />);
 
