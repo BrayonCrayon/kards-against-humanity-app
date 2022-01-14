@@ -686,4 +686,14 @@ describe("Voting section", () => {
       expect(wrapper.getByTestId("voting-section")).toBeInTheDocument();
     });
   });
+
+  it("does not show voting section when not all players have submitted their cards", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      expect(wrapper.queryByTestId("voting-section")).not.toBeInTheDocument();
+    });
+  });
 });

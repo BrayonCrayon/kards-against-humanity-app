@@ -15,6 +15,7 @@ const GamePage = () => {
   const {
     hand,
     game,
+    users,
     user,
     blackCard,
     hasSubmittedCards,
@@ -40,6 +41,13 @@ const GamePage = () => {
     setHasSubmittedCards,
     setJudge
   );
+
+  const showVotingSection = useMemo(() => {
+    return (
+      users.filter((item) => item.hasSubmittedWhiteCards).length ===
+      users.length
+    );
+  }, [users]);
 
   const canSubmitCards = useMemo(() => {
     return (
@@ -102,7 +110,7 @@ const GamePage = () => {
           </button>
         </div>
       )}
-      <VotingSection />
+      {showVotingSection && <VotingSection />}
     </div>
   );
 };
