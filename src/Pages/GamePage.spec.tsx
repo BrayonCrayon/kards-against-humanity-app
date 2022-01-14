@@ -33,6 +33,7 @@ import {
   gameWrapperRender,
 } from "../Tests/testRenders";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
