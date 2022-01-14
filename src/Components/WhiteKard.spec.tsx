@@ -18,7 +18,9 @@ describe("Kards", function () {
     expect(wrapper.queryByTestId(`white-card-${card.id}-order`)).toBeNull();
   });
   it("shows order indicator when greater then 0", () => {
+    card.selected = true;
+    card.order = 1;
     const wrapper = selectableWhiteKardRender();
-    expect(wrapper.queryByTestId(`white-card-${card.id}-order`)).toBeNull();
+    expect(wrapper.queryByTestId(`white-card-${card.id}-order`)).not.toBeNull();
   });
 });
