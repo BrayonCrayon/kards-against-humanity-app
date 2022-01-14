@@ -32,6 +32,7 @@ import {
   customGameWrapperRender,
   gameWrapperRender,
 } from "../Tests/testRenders";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -669,6 +670,20 @@ describe("Submitting cards", () => {
         ).toHaveTextContent(order.toString());
         ++order;
       });
+    });
+  });
+});
+
+describe("Voting section", () => {
+  it("is shown when all players have submitted their cards", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateAllPlayerSubmittedCardsExampleResponse
+    );
+
+    const wrapper = gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      expect(wrapper.getByTestId("voting-section")).toBeInTheDocument();
     });
   });
 });

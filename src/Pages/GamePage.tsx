@@ -9,6 +9,7 @@ import {
 import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
+import { VotingSection } from "../Components/VotingSection";
 
 const GamePage = () => {
   const {
@@ -101,6 +102,7 @@ const GamePage = () => {
           </button>
         </div>
       )}
+      <VotingSection />
     </div>
   );
 };
