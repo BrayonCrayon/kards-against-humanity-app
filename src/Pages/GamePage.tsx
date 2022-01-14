@@ -45,7 +45,7 @@ const GamePage = () => {
   const showVotingSection = useMemo(() => {
     return (
       users.filter((item) => item.hasSubmittedWhiteCards).length ===
-      users.length
+      users.length - 1
     );
   }, [users]);
 
