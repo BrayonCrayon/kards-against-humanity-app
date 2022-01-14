@@ -124,7 +124,7 @@ export const CreateGameForm: React.FC = () => {
           })}
         </div>
         <label className="mb-4 pl-2 mt-4">
-          Name:
+          Player Name:
           <input
             type="text"
             data-testid="user-name"
@@ -138,7 +138,7 @@ export const CreateGameForm: React.FC = () => {
           data-testid="create-game-submit-button"
           className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
         >
-          Enter game
+          Create
         </button>
       </form>
     </div>

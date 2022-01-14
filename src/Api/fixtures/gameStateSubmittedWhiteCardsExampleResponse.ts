@@ -18,7 +18,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
         id: 1,
         name: "brady",
         whiteCards: [],
-        has_submitted_white_cards: false,
+        has_submitted_white_cards: true,
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },
@@ -42,7 +42,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
     current_user: {
       id: 1,
       name: "brady",
-      has_submitted_white_cards: false,
+      has_submitted_white_cards: true,
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
     },

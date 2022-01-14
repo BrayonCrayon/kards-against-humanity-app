@@ -1,8 +1,14 @@
 import React from "react";
-import { GameContext, IGameContext, initialState } from "../State/Game/GameContext";
+import {
+  GameContext,
+  IGameContext,
+  initialState,
+} from "../State/Game/GameContext";
 import { render, RenderResult } from "@testing-library/react";
 import GameInfo from "./GameInfo";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
+import { customGameWrapperRender } from "../Tests/testRenders";
+import { constructWhiteCardArray } from "../Types/WhiteCard";
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
@@ -12,39 +18,32 @@ const updateGameStateCallback = jest.fn();
 const { data } = gameStateJudgeExampleResponse;
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return render(
-    <GameContext.Provider
-      value={{
-        ...initialState,
-        setHand,
-        setHasSubmittedCards,
-        setUsers,
-        updateGameStateCallback,
-        game: {
-          id: data.id,
-          name: data.name,
-          code: data.code,
-          judge_id: data.judge.id,
-        },
-        judge: {
-          ...data.judge,
-          hasSubmittedWhiteCards: false,
-          whiteCards: data.hand,
-        },
-        user: {
-          ...data.current_user,
-          hasSubmittedWhiteCards: false,
-          whiteCards: data.hand,
-        },
-        users: data.users,
-        hand: data.hand,
-        blackCard: data.current_black_card,
-        ...value,
-      }}
-    >
-      <GameInfo />
-    </GameContext.Provider>
-  );
+  return customGameWrapperRender(<GameInfo />, {
+    setHand,
+    setHasSubmittedCards,
+    setUsers,
+    updateGameStateCallback,
+    game: {
+      id: data.id,
+      name: data.name,
+      code: data.code,
+      judge_id: data.judge.id,
+    },
+    judge: {
+      ...data.judge,
+      hasSubmittedWhiteCards: false,
+      whiteCards: data.hand,
+    },
+    user: {
+      ...data.current_user,
+      hasSubmittedWhiteCards: false,
+      whiteCards: data.hand,
+    },
+    users: data.users,
+    hand: data.hand,
+    blackCard: data.current_black_card,
+    ...value,
+  });
 };
 
 describe("GameInfo", () => {

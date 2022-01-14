@@ -13,4 +13,14 @@ describe("Kards", function () {
     const { getByText } = selectableWhiteKardRender();
     getByText(card.text);
   });
+  it("does not show the order indicator when 0", () => {
+    const wrapper = selectableWhiteKardRender();
+    expect(wrapper.queryByTestId(`white-card-${card.id}-order`)).toBeNull();
+  });
+  it("shows order indicator when greater then 0", () => {
+    card.selected = true;
+    card.order = 1;
+    const wrapper = selectableWhiteKardRender();
+    expect(wrapper.queryByTestId(`white-card-${card.id}-order`)).not.toBeNull();
+  });
 });

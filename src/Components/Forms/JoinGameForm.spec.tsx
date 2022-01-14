@@ -1,15 +1,14 @@
-import { render, RenderResult, waitFor } from "@testing-library/react";
-import { GameContext, initialState } from "../../State/Game/GameContext";
+import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { apiClient } from "../../Api/apiClient";
 import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
 import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
-import { createMemoryHistory } from "history";
-import { Router } from "react-router-dom";
 import JoinGameForm from "./JoinGameForm";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { transformUser, transformUsers } from "../../Types/User";
+import { customGameWrapperRender, history } from "../../Tests/testRenders";
+import { setupAndSubmitForm } from "../../Tests/actions";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
@@ -18,8 +17,6 @@ const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const userName = "Joe";
 const code = "1234";
 
-const history = createMemoryHistory();
-history.push = jest.fn();
 const setGame = jest.fn();
 const setUser = jest.fn();
 const setHand = jest.fn();
@@ -29,43 +26,15 @@ const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
-  return render(
-    <Router history={history}>
-      <GameContext.Provider
-        value={{
-          ...initialState,
-          setGame,
-          setUser,
-          setHand,
-          setBlackCard,
-          setUsers,
-          setHasSubmittedCards,
-          setJudge,
-        }}
-      >
-        <JoinGameForm />
-      </GameContext.Provider>
-    </Router>
-  );
-};
-
-const setupAndSubmitForm = (): RenderResult => {
-  const wrapper = renderer();
-
-  expect(wrapper.queryByTestId("join-game-form")).not.toBeNull();
-
-  const nameInput = wrapper.queryByTestId("join-game-name-input");
-  expect(nameInput).not.toBeNull();
-  userEvent.type(nameInput!, userName);
-
-  const codeInput = wrapper.queryByTestId("join-game-code-input");
-  expect(codeInput).not.toBeNull();
-  userEvent.type(codeInput!, code);
-
-  const submit = wrapper.getByTestId("join-game-form-submit");
-  userEvent.click(submit);
-
-  return wrapper;
+  return customGameWrapperRender(<JoinGameForm />, {
+    setGame,
+    setUser,
+    setHand,
+    setBlackCard,
+    setUsers,
+    setHasSubmittedCards,
+    setJudge,
+  });
 };
 
 describe("JoinGameForm", () => {
@@ -87,7 +56,8 @@ describe("JoinGameForm", () => {
   });
 
   it("submits form with username and game code", async () => {
-    setupAndSubmitForm();
+    renderer();
+    setupAndSubmitForm(userName, code);
 
     await waitFor(() => {
       expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${code}/join`, {
@@ -97,7 +67,8 @@ describe("JoinGameForm", () => {
   });
 
   it("navigates to game page after join form has been submitted", async () => {
-    setupAndSubmitForm();
+    renderer();
+    setupAndSubmitForm(userName, code);
 
     await waitFor(() => {
       expect(history.push).toHaveBeenCalledWith(
@@ -114,7 +85,8 @@ describe("JoinGameForm", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    setupAndSubmitForm();
+    renderer();
+    setupAndSubmitForm(userName, code);
 
     await waitFor(() => {
       expect(consoleSpy).toHaveBeenCalledWith(errorMessage);

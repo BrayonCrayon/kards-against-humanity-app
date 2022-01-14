@@ -1,22 +1,18 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { CreateGameForm } from "./CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import { Router } from "react-router-dom";
-import { createMemoryHistory } from "history";
-import { GameContext, initialState } from "../../State/Game/GameContext";
 import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
 import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
 import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
 import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
 import { transformUser, transformUsers } from "../../Types/User";
+import { customGameWrapperRender, history } from "../../Tests/testRenders";
 
 jest.mock("../../Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-const history = createMemoryHistory();
-history.push = jest.fn();
 const setGame = jest.fn();
 const setUser = jest.fn();
 const setUsers = jest.fn();
@@ -26,24 +22,15 @@ const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
-  return render(
-    <Router history={history}>
-      <GameContext.Provider
-        value={{
-          ...initialState,
-          setGame,
-          setUsers,
-          setUser,
-          setHand,
-          setBlackCard,
-          setHasSubmittedCards,
-          setJudge,
-        }}
-      >
-        <CreateGameForm />
-      </GameContext.Provider>
-    </Router>
-  );
+  return customGameWrapperRender(<CreateGameForm />, {
+    setGame,
+    setUsers,
+    setUser,
+    setHand,
+    setBlackCard,
+    setHasSubmittedCards,
+    setJudge,
+  });
 };
 
 describe("CreateGameForm", () => {
