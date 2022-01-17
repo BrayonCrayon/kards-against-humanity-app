@@ -14,7 +14,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
     return Math.max(...hand.map((item) => item.order));
   }, [hand]);
 
-  const submittedCard = useMemo(() => {
+  const submittedCards = useMemo(() => {
     return card.selected && hasSubmittedCards;
   }, [card, hasSubmittedCards]);
 
@@ -47,7 +47,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
       className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-wrap cursor-pointer hover:bg-gray-100 
         ${card.selected ? "border-4 border-blue-400" : "border border-black"} 
         ${hasSubmittedCards ? "cursor-not-allowed" : ""} 
-        ${submittedCard ? "" : "opacity-25"}
+        ${submittedCards ? "opacity-25" : ""}
       `}
       onClick={toggle}
       data-testid={`white-card-${card.id}`}

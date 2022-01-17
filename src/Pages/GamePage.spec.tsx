@@ -248,6 +248,16 @@ describe("GamePage", () => {
       mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
     });
 
+    it("shows all cards visibly", async () => {
+      gameWrapperRender(<GamePage />);
+
+      await waitFor(() => {
+        gameStateExampleResponse.data.hand.forEach((item) => {
+          expect(getWhiteCardElement(item.id)).not.toHaveClass("opacity-25");
+        });
+      });
+    });
+
     it("calls set hand when a user selects a card", async () => {
       const wrapper = renderer();
 
@@ -677,6 +687,7 @@ describe("Submitting cards", () => {
 
 describe("Voting section", () => {
   it("is shown when all players have submitted their cards", async () => {
+    mockedAxios.get.mockResolvedValue(submittedCardsResponse);
     mockedAxios.get.mockResolvedValueOnce(
       gameStateAllPlayerSubmittedCardsExampleResponse
     );

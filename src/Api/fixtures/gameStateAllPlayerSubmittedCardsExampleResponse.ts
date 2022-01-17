@@ -42,7 +42,7 @@ export const gameStateAllPlayerSubmittedCardsExampleResponse = {
         id: 4,
         name: "Tommis",
         whiteCards: [],
-        has_submitted_white_cards: true,
+        has_submitted_white_cards: false,
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
       },
