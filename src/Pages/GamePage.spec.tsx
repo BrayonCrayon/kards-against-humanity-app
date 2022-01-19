@@ -1,4 +1,4 @@
-import { render, RenderResult, waitFor } from "@testing-library/react";
+import { act, RenderResult, waitFor, screen } from "@testing-library/react";
 import GamePage from "./GamePage";
 import {
   GameContext,
@@ -34,6 +34,9 @@ import {
 } from "../Tests/testRenders";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
+import { gameStateOnePlayerInGameExampleResponse } from "../Api/fixtures/gameStateOnePlayerInGameExampleResponse";
+import { findRenderedComponentWithType } from "react-dom/test-utils";
+import { VotingSection } from "../Components/VotingSection";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -686,6 +689,20 @@ describe("Submitting cards", () => {
 });
 
 describe("Voting section", () => {
+  it("should not be visible if judge player is the only player in game", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateOnePlayerInGameExampleResponse
+    );
+
+    await act(async () => {
+      await gameWrapperRender(<GamePage />);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("voting-section")).not.toBeInTheDocument();
+    });
+  });
+
   it("is shown when all players have submitted their cards", async () => {
     mockedAxios.get.mockResolvedValue(submittedCardsResponse);
     mockedAxios.get.mockResolvedValueOnce(

@@ -43,11 +43,13 @@ const GamePage = () => {
   );
 
   const showVotingSection = useMemo(() => {
+    const players = users.filter((item) => item.id !== judge.id);
     return (
-      users.filter((item) => item.hasSubmittedWhiteCards).length ===
-      users.length - 1
+      players.length > 0 &&
+      players.filter((item) => item.hasSubmittedWhiteCards).length ===
+        players.length
     );
-  }, [users]);
+  }, [users, judge]);
 
   const canSubmitCards = useMemo(() => {
     return (

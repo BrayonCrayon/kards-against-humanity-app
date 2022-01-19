@@ -19,5 +19,5 @@ export const VotingSection: FC = () => {
     getSubmittedCards();
   });
 
-  return <div data-testid={"voting-section"}>Voting</div>;
+  return <div data-testid="voting-section">Voting</div>;
 };
