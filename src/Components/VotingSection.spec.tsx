@@ -78,16 +78,24 @@ describe("VotingSection", () => {
     });
 
     it("will display players submitted card", async () => {
-      const wrapper = renderer();
+      const wrapper = await renderer();
 
       await waitFor(() => {
-        submittedCardsResponse.data.forEach((submittedData) =>
+        submittedCardsResponse.data.forEach((submittedData) => {
           expect(
             wrapper.queryByTestId(
               `player-submitted-response-${submittedData.user_id}`
             )
-          ).toBeInTheDocument()
-        );
+          ).toBeInTheDocument();
+
+          submittedData.submitted_cards.forEach((card) =>
+            expect(
+              wrapper.queryByTestId(
+                `player-card-response-${submittedData.user_id}`
+              )?.textContent
+            ).toEqual(expect.stringContaining(card.text))
+          );
+        });
       });
     });
   });

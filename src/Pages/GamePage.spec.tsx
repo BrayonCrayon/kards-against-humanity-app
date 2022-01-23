@@ -1,10 +1,6 @@
 import { act, RenderResult, waitFor, screen } from "@testing-library/react";
 import GamePage from "./GamePage";
-import {
-  GameContext,
-  IGameContext,
-  initialState,
-} from "../State/Game/GameContext";
+import { IGameContext, initialState } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
@@ -272,45 +268,6 @@ describe("GamePage", () => {
 
       expect(setHand).toHaveBeenCalled();
     });
-
-    // it("can toggle white card twice when black card pick amount is already reached", async () => {
-    //   const wrapper = gameWrapperRender(<GamePage />);
-    //
-    //   const [cardToSelect] = gameStateExampleResponse.data.hand;
-    //
-    //   let selectedCard: HTMLElement | undefined = undefined;
-    //   await waitFor(() => {
-    //     selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
-    //   });
-    //
-    //   await waitFor(() => {
-    //     userEvent.click(selectedCard!);
-    //   });
-    //
-    //   expect(selectedCard).toHaveClass(selectedCardClass);
-    //
-    //   await waitFor(() => {
-    //     userEvent.click(selectedCard!);
-    //   });
-    //
-    //   expect(selectedCard).not.toHaveClass(selectedCardClass);
-    // });
-
-    // it("does not allow user to select more white cards than the black card pick amount", async () => {
-    //   const wrapper = gameWrapperRender(<GamePage />);
-    //
-    //   const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-    //     0,
-    //     gameStateExampleResponse.data.current_black_card.pick + 1
-    //   );
-    //
-    //   await selectWhiteCards(cardsToSelect);
-    //
-    //   const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
-    //   expect(
-    //     wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
-    //   ).not.toHaveClass(selectedCardClass);
-    // });
 
     it("applies correct class when a white card is selected", async () => {
       const cardsToSelect = gameStateExampleResponse.data.hand.slice(
