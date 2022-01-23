@@ -1,4 +1,6 @@
-export const submittedCardsResponse = {
+import { SubmittedCardsResponse } from "../../Types/ResponseTypes";
+
+export const submittedCardsResponse: SubmittedCardsResponse = {
   data: [
     {
       submitted_cards: [

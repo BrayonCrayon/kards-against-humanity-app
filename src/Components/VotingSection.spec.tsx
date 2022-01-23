@@ -1,7 +1,7 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { customGameWrapperRender } from "../Tests/testRenders";
-import { RenderResult, waitFor } from "@testing-library/react";
+import { act, RenderResult, waitFor } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
 import { IGameContext, initialState } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
@@ -43,11 +43,14 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
 describe("VotingSection", () => {
   describe("Api call", () => {
     it("calls backend api for submitted cards", async () => {
-      mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
 
-      renderer();
+      await act(async () => {
+        await renderer();
+      });
 
       await waitFor(() => {
+        expect(mockedAxios.get).toHaveBeenCalledTimes(1);
         expect(mockedAxios.get).toHaveBeenCalledWith(
           `/api/game/${gameStateAllPlayerSubmittedCardsExampleResponse.data.id}/submitted-cards`
         );
@@ -65,6 +68,26 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(consoleSpy).toBeCalledWith(errorMessage);
+      });
+    });
+  });
+
+  describe("displaying players submitted card", () => {
+    beforeEach(() => {
+      mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+    });
+
+    it("will display players submitted card", async () => {
+      const wrapper = renderer();
+
+      await waitFor(() => {
+        submittedCardsResponse.data.forEach((submittedData) =>
+          expect(
+            wrapper.queryByTestId(
+              `player-submitted-response-${submittedData.user_id}`
+            )
+          ).toBeInTheDocument()
+        );
       });
     });
   });
