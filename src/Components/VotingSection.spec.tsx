@@ -1,18 +1,10 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import {
-  customGameWrapperRender,
-  gameWrapperRender,
-} from "../Tests/testRenders";
-import GamePage from "../Pages/GamePage";
+import { customGameWrapperRender } from "../Tests/testRenders";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
 import { IGameContext, initialState } from "../State/Game/GameContext";
-import { userFixture } from "../Api/fixtures/userFixture";
 import { transformUser, transformUsers } from "../Types/User";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
-import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "../Types/WhiteCard";
 
@@ -49,15 +41,31 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
 };
 
 describe("VotingSection", () => {
-  it("calls backend api for submitted cards", async () => {
-    mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+  describe("Api call", () => {
+    it("calls backend api for submitted cards", async () => {
+      mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
 
-    renderer();
+      renderer();
 
-    await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(
-        `/api/game/${gameStateAllPlayerSubmittedCardsExampleResponse.data.id}/submitted/cards`
-      );
+      await waitFor(() => {
+        expect(mockedAxios.get).toHaveBeenCalledWith(
+          `/api/game/${gameStateAllPlayerSubmittedCardsExampleResponse.data.id}/submitted-cards`
+        );
+      });
+    });
+
+    it("catches axios error if api call fails", async () => {
+      const errorMessage = { message: "failed api call" };
+      mockedAxios.get.mockRejectedValueOnce(errorMessage);
+      const consoleSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      renderer();
+
+      await waitFor(() => {
+        expect(consoleSpy).toBeCalledWith(errorMessage);
+      });
     });
   });
 });

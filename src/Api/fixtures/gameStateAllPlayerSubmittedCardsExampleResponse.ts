@@ -56,8 +56,8 @@ export const gameStateAllPlayerSubmittedCardsExampleResponse = {
     },
     current_black_card: {
       id: 4624,
-      pick: 1,
-      text: "_ is the key to recovery.",
+      pick: 2,
+      text: "_ is the key to recovery and _ is the key to my heart.",
       expansion_id: 0,
     },
     hand: [

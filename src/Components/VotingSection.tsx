@@ -8,10 +8,10 @@ export const VotingSection: FC = () => {
   const getSubmittedCards = async () => {
     try {
       const { data } = await apiClient.get(
-        `/api/game/${game.id}/submitted/cards`
+        `/api/game/${game.id}/submitted-cards`
       );
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   };
 
