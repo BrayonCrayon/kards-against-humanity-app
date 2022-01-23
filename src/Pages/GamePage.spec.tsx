@@ -725,4 +725,29 @@ describe("Voting section", () => {
       expect(wrapper.queryByTestId("voting-section")).not.toBeInTheDocument();
     });
   });
+
+  it("hides card selection when all players have submitted their cards", async () => {
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user =
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0];
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateAllPlayerSubmittedCardsExampleResponse
+    );
+    mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+    const {
+      data: { hand },
+    } = gameStateAllPlayerSubmittedCardsExampleResponse;
+
+    await act(async () => {
+      await gameWrapperRender(<GamePage />);
+    });
+
+    await waitFor(() => {
+      hand.forEach((card) =>
+        expect(getWhiteCardElement(card.id)).not.toBeInTheDocument()
+      );
+      expect(
+        screen.queryByTestId("white-card-submit-btn")
+      ).not.toBeInTheDocument();
+    });
+  });
 });

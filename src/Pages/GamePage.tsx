@@ -89,14 +89,14 @@ const GamePage = () => {
   return (
     <div>
       <GameInfo />
-      {judge.id !== user.id && (
+      {judge.id !== user.id && !showVotingSection && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
           {hand.map((card) => (
             <WhiteKard card={card} key={card.id} />
           ))}
         </div>
       )}
-      {judge.id !== user.id && (
+      {judge.id !== user.id && !showVotingSection && (
         <div className="flex justify-center">
           <button
             onClick={onSubmit}

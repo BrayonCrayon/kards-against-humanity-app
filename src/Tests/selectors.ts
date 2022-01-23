@@ -7,4 +7,4 @@ export const selectedCardClass = "border-4 border-blue-400";
 export const cannotSelectCardClass = "opacity-25 cursor-not-allowed";
 
 export const getWhiteCardElement = (id: number) =>
-  screen.getByTestId(whiteCardTestId(id));
+  screen.queryByTestId(whiteCardTestId(id));
