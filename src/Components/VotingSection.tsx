@@ -48,11 +48,15 @@ export const VotingSection: FC = () => {
     <div data-testid="voting-section">
       {submittedCards.map((submittedCard) => (
         <div
+          className="bg-black text-white rounded shadow-md border border-black p-8"
           key={submittedCard.user_id}
           data-testid={`player-submitted-response-${submittedCard.user_id}`}
         >
-          <div data-testid={`player-card-response-${submittedCard.user_id}`}>
-            {formPlayerResponse(submittedCard.submitted_cards)}
+          <div
+            className="text-xl md:text-3xl font-weight-800"
+            data-testid={`player-card-response-${submittedCard.user_id}`}
+          >
+            <span>{formPlayerResponse(submittedCard.submitted_cards)}</span>
           </div>
         </div>
       ))}
