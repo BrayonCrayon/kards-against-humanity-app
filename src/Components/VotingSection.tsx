@@ -32,7 +32,7 @@ export const VotingSection: FC = () => {
     (cards: Array<IWhiteCard>) => {
       let blackCardText = blackCard.text;
       cards
-        .filter((card) => card.order)
+        .sort((left, right) => left.order - right.order)
         .forEach((card) => {
           if (blackCardText.indexOf("_", 0) < 0) return;
 

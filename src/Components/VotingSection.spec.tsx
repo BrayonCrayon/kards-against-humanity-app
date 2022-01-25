@@ -107,8 +107,8 @@ describe("VotingSection", () => {
         gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card;
 
       const expectedCardText = blackCardText
-        .replace("_", submitted_cards[0].text)
-        .replace("_", submitted_cards[1].text);
+        .replace("_", submitted_cards[1].text)
+        .replace("_", submitted_cards[0].text);
 
       await waitFor(() => {
         expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();
