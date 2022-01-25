@@ -46,20 +46,25 @@ export const VotingSection: FC = () => {
 
   return (
     <div data-testid="voting-section">
-      {submittedCards.map((submittedCard) => (
-        <div
-          className="bg-black text-white rounded shadow-md border border-black p-8"
-          key={submittedCard.user_id}
-          data-testid={`player-submitted-response-${submittedCard.user_id}`}
-        >
+      <div className="mt-6 border-b-2  border-gray-500 mx-2 text-xl font-semibold text-center">
+        Submitted cards
+      </div>
+      <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-flow-col">
+        {submittedCards.map((submittedCard) => (
           <div
-            className="text-xl md:text-3xl font-weight-800"
-            data-testid={`player-card-response-${submittedCard.user_id}`}
+            className="bg-black text-white rounded shadow-md border border-black p-8"
+            key={submittedCard.user_id}
+            data-testid={`player-submitted-response-${submittedCard.user_id}`}
           >
-            <span>{formPlayerResponse(submittedCard.submitted_cards)}</span>
+            <div
+              className="text-xl md:text-3xl font-weight-800"
+              data-testid={`player-card-response-${submittedCard.user_id}`}
+            >
+              <span>{formPlayerResponse(submittedCard.submitted_cards)}</span>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
