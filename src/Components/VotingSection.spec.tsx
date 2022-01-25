@@ -98,5 +98,21 @@ describe("VotingSection", () => {
         });
       });
     });
+
+    it("will display players submitted cards in order", async () => {
+      const wrapper = await renderer();
+      const { submitted_cards } = submittedCardsResponse.data[0];
+
+      const { text: blackCardText } =
+        gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card;
+
+      const expectedCardText = blackCardText
+        .replace("_", submitted_cards[0].text)
+        .replace("_", submitted_cards[1].text);
+
+      await waitFor(() => {
+        expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();
+      });
+    });
   });
 });
