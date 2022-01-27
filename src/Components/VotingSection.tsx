@@ -2,7 +2,6 @@ import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { apiClient } from "../Api/apiClient";
 import { GameContext } from "../State/Game/GameContext";
 import { PlayerSubmittedCard, SubmittedCard } from "../Types/ResponseTypes";
-import { IWhiteCard } from "../Types/WhiteCard";
 
 export const VotingSection: FC = () => {
   const { game, blackCard } = useContext(GameContext);

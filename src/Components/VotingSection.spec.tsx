@@ -1,6 +1,9 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { customGameWrapperRender } from "../Tests/testRenders";
+import {
+  customGameVoteRender,
+  customGameWrapperRender,
+} from "../Tests/testRenders";
 import { act, RenderResult, waitFor } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
 import { IGameContext, initialState } from "../State/Game/GameContext";
@@ -21,7 +24,7 @@ const gameFixture = {
 };
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customGameWrapperRender(<VotingSection />, {
+  return customGameVoteRender(<VotingSection />, {
     ...initialState,
     game: gameFixture,
     user: transformUser(

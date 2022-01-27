@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { FC, useReducer } from "react";
 import { SubmittedCard } from "../../Types/ResponseTypes";
 import { SELECT_WINNER, VoteActionTypes } from "./VoteActions";
 
@@ -34,15 +34,12 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
   }
 }
 
-function VoteProvider(children: React.ReactNode) {
+const VoteProvider: FC = ({ children }) => {
   const [state, dispatch] = useReducer(voteReducer, initialState);
 
-  return (
-    <VoteContext.Provider value={{ state, dispatch }}>
-      {children}
-    </VoteContext.Provider>
-  );
-}
+  const value = { state, dispatch };
+  return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;
+};
 
 function useVote() {
   const context = React.useContext(VoteContext);
