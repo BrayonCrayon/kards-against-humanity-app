@@ -7,6 +7,7 @@ import { IGameContext, initialState } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "../Types/WhiteCard";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("../Api/apiClient");
 
@@ -68,6 +69,26 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(consoleSpy).toBeCalledWith(errorMessage);
+      });
+    });
+  });
+
+  describe("select a player submitted card", () => {
+    beforeEach(() => {
+      mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+    });
+
+    it("allows user to select a player submitted card", async () => {
+      const wrapper = await renderer();
+      const { user_id } = submittedCardsResponse.data[0];
+
+      const submittedCardElement = await waitFor(() => {
+        return wrapper.getByTestId(`player-submitted-response-${user_id}`);
+      });
+      userEvent.click(submittedCardElement);
+
+      await waitFor(() => {
+        expect(submittedCardElement).toHaveClass("border border-blue-400");
       });
     });
   });

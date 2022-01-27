@@ -1,7 +1,7 @@
 import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { apiClient } from "../Api/apiClient";
 import { GameContext } from "../State/Game/GameContext";
-import { PlayerSubmittedCard } from "../Types/ResponseTypes";
+import { PlayerSubmittedCard, SubmittedCard } from "../Types/ResponseTypes";
 import { IWhiteCard } from "../Types/WhiteCard";
 
 export const VotingSection: FC = () => {
@@ -29,7 +29,7 @@ export const VotingSection: FC = () => {
   }, [submittedCards]);
 
   const formPlayerResponse = useCallback(
-    (cards: Array<IWhiteCard>) => {
+    (cards: Array<SubmittedCard>) => {
       let blackCardText = blackCard.text;
       cards
         .sort((left, right) => left.order - right.order)
