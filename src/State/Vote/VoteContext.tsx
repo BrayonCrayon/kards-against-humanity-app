@@ -1,12 +1,11 @@
 import React, { FC, useReducer } from "react";
-import { SubmittedCard } from "../../Types/ResponseTypes";
 import { SELECT_WINNER, VoteActionTypes } from "./VoteActions";
 
 export interface IVoteState {
   selectedPlayerId: number;
 }
 
-export const initialState: IVoteState = {
+export const initialVoteState: IVoteState = {
   selectedPlayerId: 0,
 };
 
@@ -30,7 +29,7 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
 }
 
 const VoteProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(voteReducer, initialState);
+  const [state, dispatch] = useReducer(voteReducer, initialVoteState);
 
   const value = { state, dispatch };
   return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;

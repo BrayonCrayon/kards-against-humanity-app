@@ -1,16 +1,15 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import {
-  customGameVoteRender,
-  customGameWrapperRender,
-} from "../Tests/testRenders";
-import { act, RenderResult, waitFor } from "@testing-library/react";
+import { customGameVoteRender } from "../Tests/testRenders";
+import { act, RenderResult, waitFor, screen } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
 import { IGameContext, initialState } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "../Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
+import { SELECT_WINNER } from "../State/Vote/VoteActions";
+import * as Vote from "../State/Vote/VoteContext";
 
 jest.mock("../Api/apiClient");
 
@@ -23,7 +22,9 @@ const gameFixture = {
   judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
 };
 
-const renderer = (value?: Partial<IGameContext>): RenderResult => {
+const renderer = async (
+  value?: Partial<IGameContext>
+): Promise<RenderResult> => {
   return customGameVoteRender(<VotingSection />, {
     ...initialState,
     game: gameFixture,
@@ -94,6 +95,33 @@ describe("VotingSection", () => {
         expect(submittedCardElement).toHaveClass("border border-blue-400");
       });
     });
+
+    it("calls dispatch with correct action and payload when a user is selected", async () => {
+      const mockDispatch = jest.fn();
+      const voteSpy = jest.spyOn(Vote, "useVote").mockReturnValue({
+        dispatch: mockDispatch,
+        state: {
+          selectedPlayerId: -1,
+        },
+      });
+      const wrapper = await renderer();
+      const { user_id } = submittedCardsResponse.data[0];
+
+      const submittedCardElement = await waitFor(() => {
+        return wrapper.getByTestId(`player-submitted-response-${user_id}`);
+      });
+      userEvent.click(submittedCardElement);
+
+      await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalledWith({
+          type: SELECT_WINNER,
+          payload: { userId: user_id },
+        });
+      });
+
+      voteSpy.mockReset();
+      voteSpy.mockRestore();
+    });
   });
 
   describe("displaying players submitted card", () => {
@@ -117,25 +145,29 @@ describe("VotingSection", () => {
               wrapper.queryByTestId(
                 `player-card-response-${submittedData.user_id}`
               )?.textContent
-            ).toEqual(expect.stringContaining(card.text))
+            ).toEqual(expect.stringContaining(card.text.replace(".", "")))
           );
         });
       });
     });
 
     it("will display players submitted cards in order", async () => {
-      const wrapper = await renderer();
-      const { submitted_cards } = submittedCardsResponse.data[0];
+      act(() => {
+        renderer();
+      });
+      const sortedCards = submittedCardsResponse.data[0].submitted_cards.sort(
+        (left, right) => left.order - right.order
+      );
 
       const { text: blackCardText } =
         gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card;
 
       const expectedCardText = blackCardText
-        .replace("_", submitted_cards[1].text.replace(/\.$/, ""))
-        .replace("_", submitted_cards[0].text.replace(/\.$/, ""));
+        .replace("_", sortedCards[0].text.replace(/\.$/, ""))
+        .replace("_", sortedCards[1].text.replace(/\.$/, ""));
 
       await waitFor(() => {
-        expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();
+        expect(screen.queryByText(expectedCardText)).toBeInTheDocument();
       });
     });
   });

@@ -31,8 +31,6 @@ import {
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "../Api/fixtures/gameStateOnePlayerInGameExampleResponse";
-import { findRenderedComponentWithType } from "react-dom/test-utils";
-import { VotingSection } from "../Components/VotingSection";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
