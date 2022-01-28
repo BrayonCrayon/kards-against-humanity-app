@@ -2,9 +2,15 @@ import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { apiClient } from "../Api/apiClient";
 import { GameContext } from "../State/Game/GameContext";
 import { PlayerSubmittedCard, SubmittedCard } from "../Types/ResponseTypes";
+import { useVote } from "../State/Vote/VoteContext";
+import { SELECT_WINNER } from "../State/Vote/VoteActions";
 
 export const VotingSection: FC = () => {
   const { game, blackCard } = useContext(GameContext);
+  const {
+    state: { selectedPlayerId },
+    dispatch,
+  } = useVote();
 
   const [submittedCards, setSubmittedCards] = useState<
     Array<PlayerSubmittedCard>
@@ -15,7 +21,6 @@ export const VotingSection: FC = () => {
       const { data } = await apiClient.get<Array<PlayerSubmittedCard>>(
         `/api/game/${game.id}/submitted-cards`
       );
-      console.log(data);
       setSubmittedCards(data);
     } catch (error) {
       console.error(error);
@@ -46,6 +51,10 @@ export const VotingSection: FC = () => {
     [blackCard]
   );
 
+  const selectCard = useCallback((userId: number) => {
+    dispatch({ type: SELECT_WINNER, payload: { userId } });
+  }, []);
+
   return (
     <div data-testid="voting-section">
       <div className="mt-6 border-b-2  border-gray-500 mx-2 text-xl font-semibold text-center">
@@ -54,9 +63,16 @@ export const VotingSection: FC = () => {
       <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-flow-col">
         {submittedCards.map((submittedCard) => (
           <div
-            className="bg-black text-white rounded shadow-md border border-black p-8"
+            className={`bg-black text-white rounded shadow-md border p-8 
+              ${
+                submittedCard.user_id === selectedPlayerId
+                  ? "border-blue-400"
+                  : "border-black"
+              }
+            `}
             key={submittedCard.user_id}
             data-testid={`player-submitted-response-${submittedCard.user_id}`}
+            onClick={() => selectCard(submittedCard.user_id)}
           >
             <div
               className="text-xl md:text-3xl font-weight-800"

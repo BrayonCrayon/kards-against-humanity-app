@@ -9,7 +9,7 @@ export interface Action {
 
 export interface SelectWinnerAction extends Action {
   type: typeof SELECT_WINNER;
-  payload: SubmittedCard;
+  payload: { userId: number };
 }
 
 export type VoteActionTypes = SelectWinnerAction;

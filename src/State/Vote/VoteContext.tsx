@@ -3,16 +3,11 @@ import { SubmittedCard } from "../../Types/ResponseTypes";
 import { SELECT_WINNER, VoteActionTypes } from "./VoteActions";
 
 export interface IVoteState {
-  selectedSubmittedCard: SubmittedCard;
+  selectedPlayerId: number;
 }
 
 export const initialState: IVoteState = {
-  selectedSubmittedCard: {
-    id: 0,
-    text: "",
-    expansion_id: 0,
-    order: 0,
-  },
+  selectedPlayerId: 0,
 };
 
 type Dispatch = (action: VoteActionTypes) => void;
@@ -26,7 +21,7 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
     case SELECT_WINNER: {
       return {
         ...state,
-        selectedSubmittedCard: action.payload,
+        selectedPlayerId: action.payload.userId,
       };
     }
     default:
