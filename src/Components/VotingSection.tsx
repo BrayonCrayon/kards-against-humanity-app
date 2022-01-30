@@ -58,9 +58,9 @@ export const VotingSection: FC = () => {
       <div>
         <button
           onClick={submitWinner}
-          className={` ${
-            selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed"
-          }`}
+          className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 
+            ${selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed"}
+          `}
           data-testid="submit-selected-winner"
         >
           Submit Winner
