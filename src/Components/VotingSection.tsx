@@ -55,6 +55,17 @@ export const VotingSection: FC = () => {
     dispatch({ type: SELECT_WINNER, payload: { userId } });
   }, []);
 
+  const submitWinner = useCallback(async () => {
+    if (selectedPlayerId <= 0) return;
+    try {
+      await apiClient.post(`/api/game/${game.id}/winner`, {
+        user_id: selectedPlayerId,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }, [selectedPlayerId, game]);
+
   return (
     <div data-testid="voting-section">
       <div className="mt-6 border-b-2  border-gray-500 mx-2 text-xl font-semibold text-center">
@@ -82,6 +93,17 @@ export const VotingSection: FC = () => {
             </div>
           </div>
         ))}
+      </div>
+      <div>
+        <button
+          onClick={submitWinner}
+          className={` ${
+            selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed"
+          }`}
+          data-testid="submit-selected-winner"
+        >
+          Submit Winner
+        </button>
       </div>
     </div>
   );

@@ -22,9 +22,7 @@ const gameFixture = {
   judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
 };
 
-const renderer = async (
-  value?: Partial<IGameContext>
-): Promise<RenderResult> => {
+const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return customGameVoteRender(<VotingSection />, {
     ...initialState,
     game: gameFixture,
@@ -47,9 +45,11 @@ const renderer = async (
 
 describe("VotingSection", () => {
   describe("Api call", () => {
-    it("calls backend api for submitted cards", async () => {
+    beforeEach(() => {
       mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+    });
 
+    it("calls backend api for submitted cards", async () => {
       await act(async () => {
         await renderer();
       });
@@ -73,6 +73,68 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(consoleSpy).toBeCalledWith(errorMessage);
+      });
+      consoleSpy.mockRestore();
+    });
+
+    it("submits selected winner to api", async () => {
+      const { id } = gameStateAllPlayerSubmittedCardsExampleResponse.data;
+      const { user_id } = submittedCardsResponse.data[0];
+
+      const wrapper = renderer();
+
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(`player-submitted-response-${user_id}`)
+        );
+      });
+
+      userEvent.click(wrapper.getByTestId("submit-selected-winner"));
+
+      await waitFor(() => {
+        expect(mockedAxios.post).toHaveBeenCalledWith(
+          `/api/game/${id}/winner`,
+          { user_id }
+        );
+      });
+    });
+
+    it("catches error if submitting winner api call fails", async () => {
+      const apiPostError = { message: "api failed" };
+      const consoleSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => apiPostError);
+      mockedAxios.post.mockRejectedValueOnce(apiPostError);
+      const { user_id } = submittedCardsResponse.data[0];
+
+      const wrapper = renderer();
+
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(`player-submitted-response-${user_id}`)
+        );
+      });
+
+      userEvent.click(wrapper.getByTestId("submit-selected-winner"));
+
+      await waitFor(() => {
+        expect(consoleSpy).toHaveBeenCalledWith(apiPostError);
+      });
+      consoleSpy.mockRestore();
+    });
+
+    it("will not allow user to submit winner without selecting a winner first", async () => {
+      const wrapper = renderer();
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId("submit-selected-winner"));
+      });
+
+      await waitFor(() => {
+        expect(wrapper.queryByTestId(`submit-selected-winner`)).toHaveClass(
+          "disabled cursor-not-allowed"
+        );
+        expect(mockedAxios.post).not.toHaveBeenCalled();
       });
     });
   });
