@@ -1,10 +1,6 @@
-import { render, RenderResult, waitFor } from "@testing-library/react";
+import { act, RenderResult, waitFor, screen } from "@testing-library/react";
 import GamePage from "./GamePage";
-import {
-  GameContext,
-  IGameContext,
-  initialState,
-} from "../State/Game/GameContext";
+import { IGameContext, initialState } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
@@ -32,6 +28,9 @@ import {
   customGameWrapperRender,
   gameWrapperRender,
 } from "../Tests/testRenders";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
+import { gameStateOnePlayerInGameExampleResponse } from "../Api/fixtures/gameStateOnePlayerInGameExampleResponse";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -246,6 +245,16 @@ describe("GamePage", () => {
       mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
     });
 
+    it("shows all cards visibly", async () => {
+      gameWrapperRender(<GamePage />);
+
+      await waitFor(() => {
+        gameStateExampleResponse.data.hand.forEach((item) => {
+          expect(getWhiteCardElement(item.id)).not.toHaveClass("opacity-25");
+        });
+      });
+    });
+
     it("calls set hand when a user selects a card", async () => {
       const wrapper = renderer();
 
@@ -257,45 +266,6 @@ describe("GamePage", () => {
 
       expect(setHand).toHaveBeenCalled();
     });
-
-    // it("can toggle white card twice when black card pick amount is already reached", async () => {
-    //   const wrapper = gameWrapperRender(<GamePage />);
-    //
-    //   const [cardToSelect] = gameStateExampleResponse.data.hand;
-    //
-    //   let selectedCard: HTMLElement | undefined = undefined;
-    //   await waitFor(() => {
-    //     selectedCard = wrapper.getByTestId(whiteCardTestId(cardToSelect.id));
-    //   });
-    //
-    //   await waitFor(() => {
-    //     userEvent.click(selectedCard!);
-    //   });
-    //
-    //   expect(selectedCard).toHaveClass(selectedCardClass);
-    //
-    //   await waitFor(() => {
-    //     userEvent.click(selectedCard!);
-    //   });
-    //
-    //   expect(selectedCard).not.toHaveClass(selectedCardClass);
-    // });
-
-    // it("does not allow user to select more white cards than the black card pick amount", async () => {
-    //   const wrapper = gameWrapperRender(<GamePage />);
-    //
-    //   const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-    //     0,
-    //     gameStateExampleResponse.data.current_black_card.pick + 1
-    //   );
-    //
-    //   await selectWhiteCards(cardsToSelect);
-    //
-    //   const cardNotSelected = cardsToSelect[cardsToSelect.length - 1];
-    //   expect(
-    //     wrapper.getByTestId(whiteCardTestId(cardNotSelected.id))
-    //   ).not.toHaveClass(selectedCardClass);
-    // });
 
     it("applies correct class when a white card is selected", async () => {
       const cardsToSelect = gameStateExampleResponse.data.hand.slice(
@@ -669,6 +639,70 @@ describe("Submitting cards", () => {
         ).toHaveTextContent(order.toString());
         ++order;
       });
+    });
+  });
+});
+
+describe("Voting section", () => {
+  it("should not be visible if judge player is the only player in game", async () => {
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateOnePlayerInGameExampleResponse
+    );
+
+    await act(async () => {
+      await gameWrapperRender(<GamePage />);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByTestId("voting-section")).not.toBeInTheDocument();
+    });
+  });
+
+  it("is shown when all players have submitted their cards", async () => {
+    mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateAllPlayerSubmittedCardsExampleResponse
+    );
+
+    const wrapper = gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      expect(wrapper.getByTestId("voting-section")).toBeInTheDocument();
+    });
+  });
+
+  it("does not show voting section when not all players have submitted their cards", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+
+    const wrapper = gameWrapperRender(<GamePage />);
+
+    await waitFor(() => {
+      expect(wrapper.queryByTestId("voting-section")).not.toBeInTheDocument();
+    });
+  });
+
+  it("hides card selection when all players have submitted their cards", async () => {
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user =
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0];
+    mockedAxios.get.mockResolvedValueOnce(
+      gameStateAllPlayerSubmittedCardsExampleResponse
+    );
+    mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+    const {
+      data: { hand },
+    } = gameStateAllPlayerSubmittedCardsExampleResponse;
+
+    await act(async () => {
+      await gameWrapperRender(<GamePage />);
+    });
+
+    await waitFor(() => {
+      hand.forEach((card) =>
+        expect(getWhiteCardElement(card.id)).not.toBeInTheDocument()
+      );
+      expect(
+        screen.queryByTestId("white-card-submit-btn")
+      ).not.toBeInTheDocument();
     });
   });
 });

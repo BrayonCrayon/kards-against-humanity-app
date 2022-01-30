@@ -1,4 +1,4 @@
-export const gameStateExampleResponse = {
+export const gameStateOnePlayerInGameExampleResponse = {
   data: {
     id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
     code: "1234",
@@ -6,8 +6,8 @@ export const gameStateExampleResponse = {
     hasSubmittedWhiteCards: false,
     submittedWhiteCardIds: [],
     judge: {
-      id: 4,
-      name: "Tommis",
+      id: 1,
+      name: "brady",
       has_submitted_white_cards: false,
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
@@ -16,30 +16,6 @@ export const gameStateExampleResponse = {
       {
         id: 1,
         name: "brady",
-        whiteCards: [],
-        has_submitted_white_cards: false,
-        created_at: "2021-10-27T19:33:43.000000Z",
-        updated_at: "2021-10-27T19:33:43.000000Z",
-      },
-      {
-        id: 2,
-        name: "Rick",
-        whiteCards: [],
-        has_submitted_white_cards: false,
-        created_at: "2021-10-27T19:33:43.000000Z",
-        updated_at: "2021-10-27T19:33:43.000000Z",
-      },
-      {
-        id: 3,
-        name: "Morty",
-        whiteCards: [],
-        has_submitted_white_cards: false,
-        created_at: "2021-10-27T19:33:43.000000Z",
-        updated_at: "2021-10-27T19:33:43.000000Z",
-      },
-      {
-        id: 4,
-        name: "Tommis",
         has_submitted_white_cards: false,
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
