@@ -6,7 +6,7 @@ import { useVote } from "../State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 
 export const VotingSection: FC = () => {
-  const { game } = useContext(GameContext);
+  const { game, judge, user } = useContext(GameContext);
   const {
     state: { selectedPlayerId },
   } = useVote();
@@ -56,15 +56,17 @@ export const VotingSection: FC = () => {
         ))}
       </div>
       <div>
-        <button
-          onClick={submitWinner}
-          className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 
-            ${selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed"}
-          `}
-          data-testid="submit-selected-winner"
-        >
-          Submit Winner
-        </button>
+        {user.id === judge.id && (
+          <button
+            onClick={submitWinner}
+            className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 
+              ${selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed"}
+            `}
+            data-testid="submit-selected-winner"
+          >
+            Submit Winner
+          </button>
+        )}
       </div>
     </div>
   );

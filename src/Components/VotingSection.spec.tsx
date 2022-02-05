@@ -158,6 +158,20 @@ describe("VotingSection", () => {
       });
     });
 
+    it("will not show submit winner button when user is not the judge", async () => {
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.judge =
+        gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0];
+      gameFixture.judge_id =
+        gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id;
+      const wrapper = await renderer();
+
+      await waitFor(() => {
+        expect(
+          wrapper.queryByTestId("submit-selected-winner")
+        ).not.toBeInTheDocument();
+      });
+    });
+
     it("calls dispatch with correct action and payload when a user is selected", async () => {
       const mockDispatch = jest.fn();
       const voteSpy = jest.spyOn(Vote, "useVote").mockReturnValue({
