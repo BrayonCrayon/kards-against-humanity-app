@@ -10,8 +10,10 @@ import { constructWhiteCardArray } from "../Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { SELECT_WINNER } from "../State/Vote/VoteActions";
 import * as Vote from "../State/Vote/VoteContext";
+import { happyToast } from "../Utilities/toasts";
 
 jest.mock("../Api/apiClient");
+jest.mock("../Utilities/toasts");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
@@ -99,6 +101,7 @@ describe("VotingSection", () => {
           `/api/game/${id}/winner`,
           { user_id }
         );
+        expect(happyToast).toHaveBeenCalledWith("Winner Selected!", "top");
       });
     });
 

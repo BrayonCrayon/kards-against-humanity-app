@@ -4,6 +4,7 @@ import { GameContext } from "../State/Game/GameContext";
 import { PlayerSubmittedCard } from "../Types/ResponseTypes";
 import { useVote } from "../State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
+import { happyToast } from "../Utilities/toasts";
 
 export const VotingSection: FC = () => {
   const { game, judge, user } = useContext(GameContext);
@@ -37,6 +38,7 @@ export const VotingSection: FC = () => {
       await apiClient.post(`/api/game/${game.id}/winner`, {
         user_id: selectedPlayerId,
       });
+      happyToast("Winner Selected!", "top");
     } catch (error) {
       console.error(error);
     }
