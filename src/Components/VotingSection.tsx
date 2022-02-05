@@ -55,11 +55,11 @@ export const VotingSection: FC = () => {
           />
         ))}
       </div>
-      <div>
+      <div className="flex justify-center">
         {user.id === judge.id && (
           <button
             onClick={submitWinner}
-            className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 
+            className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 mb-4 text-xl
               ${selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed"}
             `}
             data-testid="submit-selected-winner"
