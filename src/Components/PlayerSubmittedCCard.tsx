@@ -39,8 +39,8 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
 
   return (
     <div
-      className={`bg-black text-white rounded shadow-md border p-8 
-          ${user_id === selectedPlayerId ? "border-blue-400" : "border-black"}
+      className={`bg-black text-white rounded shadow-md p-8 cursor-pointer 
+          ${user_id === selectedPlayerId ? "opacity-75" : ""}
       `}
       data-testid={`player-submitted-response-${user_id}`}
       onClick={selectCard}

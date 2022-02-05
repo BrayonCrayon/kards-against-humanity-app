@@ -26,6 +26,9 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return customGameVoteRender(<VotingSection />, {
     ...initialState,
     game: gameFixture,
+    judge: transformUser(
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
+    ),
     user: transformUser(
       gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
     ),
@@ -132,7 +135,7 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(wrapper.queryByTestId(`submit-selected-winner`)).toHaveClass(
-          "disabled cursor-not-allowed"
+          "disabled cursor-not-allowed opacity-75"
         );
         expect(mockedAxios.post).not.toHaveBeenCalled();
       });
@@ -154,7 +157,7 @@ describe("VotingSection", () => {
       userEvent.click(submittedCardElement);
 
       await waitFor(() => {
-        expect(submittedCardElement).toHaveClass("border border-blue-400");
+        expect(submittedCardElement).toHaveClass("opacity-75");
       });
     });
 
