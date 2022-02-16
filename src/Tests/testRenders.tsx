@@ -31,7 +31,11 @@ export const customGameWrapperRender = (
 };
 
 export const gameWrapperRender = (children: JSX.Element): RenderResult => {
-  return render(<GameContextProvider>{children}</GameContextProvider>);
+  return render(
+    <GameContextProvider>
+      <VoteProvider>{children}</VoteProvider>
+    </GameContextProvider>
+  );
 };
 
 export const customGameVoteRender = (
