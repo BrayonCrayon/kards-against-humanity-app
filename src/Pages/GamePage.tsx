@@ -10,6 +10,7 @@ import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
 import { VotingSection } from "../Components/VotingSection";
+import { useVote } from "../State/Vote/VoteContext";
 
 const GamePage = () => {
   const {
@@ -29,6 +30,10 @@ const GamePage = () => {
     setHasSubmittedCards,
     setJudge,
   } = useContext(GameContext);
+
+  const {
+    state: { selectedRoundWinner },
+  } = useVote();
 
   const { id } = useParams<{ id: string }>();
 
@@ -113,6 +118,7 @@ const GamePage = () => {
         </div>
       )}
       {showVotingSection && <VotingSection />}
+      {selectedRoundWinner && <div data-testid="round-winner-modal"></div>}
     </div>
   );
 };
