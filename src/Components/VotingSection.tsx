@@ -5,6 +5,8 @@ import { PlayerSubmittedCard } from "../Types/ResponseTypes";
 import { useVote } from "../State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import { happyToast } from "../Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
 
 export const VotingSection: FC = () => {
   const { game, judge, user } = useContext(GameContext);
@@ -26,6 +28,11 @@ export const VotingSection: FC = () => {
       console.error(error);
     }
   }, [setSubmittedCards]);
+
+  const fetchRoundWinner = UseFetchRoundWinner();
+  useEffect(() => {
+    listenWhenWinnerIsSelected(game.id, fetchRoundWinner);
+  }, []);
 
   useEffect(() => {
     if (submittedCards.length > 0) return;

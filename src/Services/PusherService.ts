@@ -32,3 +32,10 @@ export const listenWhenUserSubmittedCards = (
 ) => {
   echo.channel(`game-${gameId}`).listen(".cards.submitted", callback);
 };
+
+export const listenWhenWinnerIsSelected = (
+  gameId: string,
+  callback: (data: UpdateGameState) => void
+) => {
+  echo.channel(`game-${gameId}`).listen(".winner.selected", callback);
+};

@@ -11,9 +11,16 @@ import userEvent from "@testing-library/user-event";
 import { SELECT_WINNER } from "../State/Vote/VoteActions";
 import * as Vote from "../State/Vote/VoteContext";
 import { happyToast } from "../Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+
+const mockFetchRoundWinner = jest.fn();
 
 jest.mock("../Api/apiClient");
 jest.mock("../Utilities/toasts");
+jest.mock("../Services/PusherService");
+jest.mock("../Hooks/Game/UseFetchRoundWinner", () => {
+  return () => mockFetchRoundWinner;
+});
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
@@ -142,6 +149,17 @@ describe("VotingSection", () => {
         );
         expect(mockedAxios.post).not.toHaveBeenCalled();
       });
+    });
+  });
+
+  describe("pusher events", () => {
+    it("listens on winner selected pusher event when loading game page", () => {
+      renderer();
+
+      expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(
+        gameFixture.id,
+        mockFetchRoundWinner
+      );
     });
   });
 
