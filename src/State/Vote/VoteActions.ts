@@ -1,6 +1,7 @@
-import { SubmittedCard } from "../../Types/ResponseTypes";
+import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
 
 export const SELECT_WINNER = "SELECT_WINNER";
+export const WINNER_SELECTED = "WINNER_SELECTED";
 
 export interface Action {
   type: string;
@@ -12,4 +13,9 @@ export interface SelectWinnerAction extends Action {
   payload: { userId: number };
 }
 
-export type VoteActionTypes = SelectWinnerAction;
+export interface WinnerSelectedAction extends Action {
+  type: typeof WINNER_SELECTED;
+  payload: PlayerSubmittedCard;
+}
+
+export type VoteActionTypes = SelectWinnerAction | WinnerSelectedAction;
