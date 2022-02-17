@@ -11,6 +11,7 @@ import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
 import { VotingSection } from "../Components/VotingSection";
 import { useVote } from "../State/Vote/VoteContext";
+import { PlayerSubmittedCCard } from "../Components/PlayerSubmittedCCard";
 
 const GamePage = () => {
   const {
@@ -118,7 +119,13 @@ const GamePage = () => {
         </div>
       )}
       {showVotingSection && <VotingSection />}
-      {selectedRoundWinner && <div data-testid="round-winner-modal"></div>}
+      {selectedRoundWinner && (
+        <div data-testid="round-winner-modal">
+          <PlayerSubmittedCCard
+            playerSubmission={selectedRoundWinner}
+          ></PlayerSubmittedCCard>
+        </div>
+      )}
     </div>
   );
 };

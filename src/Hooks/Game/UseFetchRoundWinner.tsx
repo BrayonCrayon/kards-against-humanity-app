@@ -6,10 +6,11 @@ import { WINNER_SELECTED } from "../../State/Vote/VoteActions";
 function UseFetchRoundWinner() {
   const { dispatch } = useVote();
   const fetchRoundWinner = useCallback(async (data) => {
+    console.log(data);
     const response = await apiClient.get(
-      `/api/game/${data.gameId}/round/winner`
+      `/api/game/${data.game_id}/round/winner`
     );
-    dispatch({ type: WINNER_SELECTED, payload: response.data.data });
+    dispatch({ type: WINNER_SELECTED, payload: response.data });
   }, []);
 
   return fetchRoundWinner;

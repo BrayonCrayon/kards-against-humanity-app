@@ -26,7 +26,7 @@ describe("UseFetchRoundWinner", () => {
     };
     const getSpy = jest
       .spyOn(apiClient, "get")
-      .mockResolvedValue({ data: { data: mockApiData } });
+      .mockResolvedValue({ data: mockApiData });
     const gameId = "abcd";
     await result.current({ gameId });
     expect(getSpy).toHaveBeenCalledWith(`/api/game/${gameId}/round/winner`);
