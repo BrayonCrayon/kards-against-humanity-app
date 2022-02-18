@@ -18,6 +18,9 @@ export function RoundWinnerModal() {
         <PlayerSubmittedCCard
           playerSubmission={selectedRoundWinner}
         ></PlayerSubmittedCCard>
+        <button data-testid="round-winner-modal-close-button" className="">
+          Close
+        </button>
       </div>
     </div>
   );
