@@ -153,6 +153,9 @@ describe("VotingSection", () => {
   });
 
   describe("pusher events", () => {
+    beforeEach(() => {
+      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+    });
     it("listens on winner selected pusher event when loading game page", () => {
       renderer();
 
