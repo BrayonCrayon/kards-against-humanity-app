@@ -24,7 +24,7 @@ export const customGameWrapperRender = (
           ...value,
         }}
       >
-        {children}
+        <VoteProvider>{children}</VoteProvider>
       </GameContext.Provider>
     </Router>
   );

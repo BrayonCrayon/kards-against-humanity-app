@@ -46,7 +46,7 @@ const VoteProvider: FC = ({ children }) => {
 function useVote() {
   const context = React.useContext(VoteContext);
   if (context === undefined) {
-    throw new Error("useVote must be used within a CountProvider");
+    throw new Error("useVote must be used within a VoteProvider");
   }
   return context;
 }
