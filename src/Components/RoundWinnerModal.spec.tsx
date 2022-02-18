@@ -58,4 +58,6 @@ describe("RoundWinnerModal", () => {
       wrapper.queryByTestId("round-winner-modal-close-button")
     ).toBeInTheDocument();
   });
+
+  it.todo("will call round rotation hook");
 });
