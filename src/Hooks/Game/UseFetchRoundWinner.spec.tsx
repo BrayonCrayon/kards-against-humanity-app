@@ -28,7 +28,7 @@ describe("UseFetchRoundWinner", () => {
       .spyOn(apiClient, "get")
       .mockResolvedValue({ data: mockApiData });
     const gameId = "abcd";
-    await result.current({ gameId });
+    await result.current({ game_id: gameId, user_id: 2 });
     expect(getSpy).toHaveBeenCalledWith(`/api/game/${gameId}/round/winner`);
     expect(mockDispatch).toHaveBeenCalledWith({
       type: WINNER_SELECTED,
