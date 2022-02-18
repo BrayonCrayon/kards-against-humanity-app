@@ -10,7 +10,7 @@ const renderComponent = () => {
 };
 
 describe("RoundWinnerModal", () => {
-  it("will render the modal", async () => {
+  beforeEach(() => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: jest.fn(),
       state: {
@@ -18,6 +18,9 @@ describe("RoundWinnerModal", () => {
         selectedPlayerId: 1,
       },
     }));
+  });
+
+  it("will render the modal", async () => {
     const wrapper = renderComponent();
     expect(
       await wrapper.findByTestId("round-winner-modal")
@@ -25,14 +28,6 @@ describe("RoundWinnerModal", () => {
   });
 
   it("will render a button to close modal", () => {
-    jest.spyOn(Vote, "useVote").mockImplementation(() => ({
-      dispatch: jest.fn(),
-      state: {
-        selectedRoundWinner: submittedCardsResponse.data[0],
-        selectedPlayerId: 1,
-      },
-    }));
-
     const wrapper = renderComponent();
     expect(
       wrapper.queryByTestId("round-winner-modal-close-button")
