@@ -1,5 +1,10 @@
 import React, { FC, useReducer } from "react";
-import { SELECT_WINNER, VoteActionTypes, WINNER_SELECTED } from "./VoteActions";
+import {
+  CLEAR_STATE,
+  SELECT_WINNER,
+  VoteActionTypes,
+  WINNER_SELECTED,
+} from "./VoteActions";
 import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
 
 export interface IVoteState {
@@ -30,6 +35,9 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
         ...state,
         selectedRoundWinner: action.payload,
       };
+    }
+    case CLEAR_STATE: {
+      return { ...initialVoteState };
     }
     default:
       return state;
