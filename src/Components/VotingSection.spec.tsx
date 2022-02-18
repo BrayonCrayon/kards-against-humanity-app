@@ -225,6 +225,26 @@ describe("VotingSection", () => {
       voteSpy.mockReset();
       voteSpy.mockRestore();
     });
+
+    it("does not show submit winner button when a winner is in state", async () => {
+      const voteSpy = jest.spyOn(Vote, "useVote").mockReturnValue({
+        dispatch: jest.fn(),
+        state: {
+          selectedPlayerId: -1,
+          selectedRoundWinner: submittedCardsResponse.data[0],
+        },
+      });
+      const wrapper = await renderer();
+
+      await waitFor(() => {
+        expect(
+          wrapper.queryByTestId("submit-selected-winner")
+        ).not.toBeInTheDocument();
+      });
+
+      voteSpy.mockReset();
+      voteSpy.mockRestore();
+    });
   });
 
   describe("displaying players submitted card", () => {

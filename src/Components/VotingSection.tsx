@@ -12,7 +12,7 @@ import { Button } from "./Button";
 export const VotingSection: FC = () => {
   const { game, judge, user } = useContext(GameContext);
   const {
-    state: { selectedPlayerId },
+    state: { selectedPlayerId, selectedRoundWinner },
   } = useVote();
 
   const [submittedCards, setSubmittedCards] = useState<
@@ -66,7 +66,7 @@ export const VotingSection: FC = () => {
         ))}
       </div>
       <div className="flex justify-center">
-        {user.id === judge.id && (
+        {user.id === judge.id && !selectedRoundWinner && (
           <Button
             text="Submit Winner"
             onClick={submitWinner}
