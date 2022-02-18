@@ -7,6 +7,7 @@ import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
 import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
+import { Button } from "./Button";
 
 export const VotingSection: FC = () => {
   const { game, judge, user } = useContext(GameContext);
@@ -66,19 +67,16 @@ export const VotingSection: FC = () => {
       </div>
       <div className="flex justify-center">
         {user.id === judge.id && (
-          <button
+          <Button
+            text="Submit Winner"
             onClick={submitWinner}
-            className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 mb-4 text-xl
-              ${
-                selectedPlayerId > 0
-                  ? ""
-                  : "disabled cursor-not-allowed opacity-75"
-              }
-            `}
-            data-testid="submit-selected-winner"
-          >
-            Submit Winner
-          </button>
+            className={
+              selectedPlayerId > 0
+                ? ""
+                : "disabled cursor-not-allowed opacity-75"
+            }
+            dataTestid="submit-selected-winner"
+          />
         )}
       </div>
     </div>
