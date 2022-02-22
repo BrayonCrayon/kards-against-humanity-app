@@ -8,11 +8,14 @@ import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
 import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
 import { Button } from "./Button";
+import { Selectable } from "./Selectable";
+import { SELECT_WINNER } from "../State/Vote/VoteActions";
 
 export const VotingSection: FC = () => {
   const { game, judge, user } = useContext(GameContext);
   const {
     state: { selectedPlayerId, selectedRoundWinner },
+    dispatch,
   } = useVote();
 
   const [submittedCards, setSubmittedCards] = useState<
@@ -52,6 +55,13 @@ export const VotingSection: FC = () => {
     }
   }, [selectedPlayerId, game]);
 
+  const selectCard = useCallback(
+    (user_id) => {
+      dispatch({ type: SELECT_WINNER, payload: { userId: user_id } });
+    },
+    [dispatch]
+  );
+
   return (
     <div data-testid="voting-section">
       <div className="mt-6 border-b-2  border-gray-500 mx-2 text-xl font-semibold text-center">
@@ -59,10 +69,15 @@ export const VotingSection: FC = () => {
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-flow-col">
         {submittedCards.map((submission) => (
-          <PlayerSubmittedCCard
-            key={submission.user_id}
-            playerSubmission={submission}
-          />
+          <Selectable
+            isSelected={submission.user_id === selectedPlayerId}
+            onClick={() => selectCard(submission.user_id)}
+          >
+            <PlayerSubmittedCCard
+              key={submission.user_id}
+              playerSubmission={submission}
+            />
+          </Selectable>
         ))}
       </div>
       <div className="flex justify-center">
