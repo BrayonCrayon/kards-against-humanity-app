@@ -11,7 +11,7 @@ function UseFetchRoundWinner() {
     async (data: IWinnerIsSelectedEventData) => {
       try {
         const response = await apiClient.get<PlayerSubmittedCard>(
-          `/api/game/${data.game_id}/round/winner`
+          `/api/game/${data.gameId}/round/winner/${data.blackCardId}`
         );
         dispatch({ type: WINNER_SELECTED, payload: response.data });
       } catch (e) {

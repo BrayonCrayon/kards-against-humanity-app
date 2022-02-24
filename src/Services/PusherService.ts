@@ -34,8 +34,9 @@ export const listenWhenUserSubmittedCards = (
 };
 
 export interface IWinnerIsSelectedEventData {
-  game_id: string;
-  user_id: number;
+  gameId: string;
+  userId: number;
+  blackCardId: number;
 }
 
 export const listenWhenWinnerIsSelected = (

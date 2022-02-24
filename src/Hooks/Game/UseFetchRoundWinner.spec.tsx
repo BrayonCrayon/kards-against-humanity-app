@@ -5,6 +5,7 @@ import { WINNER_SELECTED } from "../../State/Vote/VoteActions";
 import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
 import { VoteProvider } from "../../State/Vote/VoteContext";
 import { gameFixture } from "../../Api/fixtures/gameFixture";
+import { blackCardFixture } from "../../Api/fixtures/blackcardFixture";
 
 const renderUseFetchRoundWinner = () => {
   return renderHook(UseFetchRoundWinner, {
@@ -50,9 +51,13 @@ describe("UseFetchRoundWinner", () => {
     const gameId = gameFixture.id;
     const { result } = renderUseFetchRoundWinner();
 
-    await result.current({ game_id: gameId, user_id: 2 });
+    await result.current({
+      gameId,
+      userId: 2,
+      blackCardId: blackCardFixture.id,
+    });
     expect(mockedAxios.get).toHaveBeenCalledWith(
-      `/api/game/${gameId}/round/winner`
+      `/api/game/${gameId}/round/winner/${blackCardFixture.id}`
     );
     expect(mockDispatch).toHaveBeenCalledWith({
       type: WINNER_SELECTED,
@@ -72,7 +77,11 @@ describe("UseFetchRoundWinner", () => {
     const gameId = gameFixture.id;
     const { result } = renderUseFetchRoundWinner();
 
-    await result.current({ game_id: gameId, user_id: 2 });
+    await result.current({
+      gameId,
+      userId: 2,
+      blackCardId: blackCardFixture.id,
+    });
 
     expect(spyConsole).toHaveBeenCalledWith(mockErrorMessage);
 
