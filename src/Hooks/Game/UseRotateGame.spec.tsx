@@ -17,5 +17,26 @@ describe("UseRotateGame", () => {
       blackCardId,
     });
   });
-  it.todo("will catch api call error");
+  it("will catch api call error", async () => {
+    const mockErrorMessage = {
+      code: 500,
+      message: "server error",
+    };
+    const spyConsole = jest
+      .spyOn(console, "error")
+      .mockImplementation(jest.fn());
+    const spyApiClient = jest
+      .spyOn(apiClient, "post")
+      .mockRejectedValue(mockErrorMessage);
+    const gameId = gameFixture.id;
+    const blackCardId = blackCardFixture.id;
+    const { result } = renderHook(() => UseRotateGame());
+
+    await result.current(gameId, blackCardId);
+
+    expect(spyApiClient).toHaveBeenCalledWith(`/api/game/${gameId}/rotate`, {
+      blackCardId,
+    });
+    expect(spyConsole).toHaveBeenCalledWith(mockErrorMessage);
+  });
 });
