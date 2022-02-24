@@ -1,7 +1,6 @@
 import { apiClient } from "../../Api/apiClient";
 import { gameFixture } from "../../Api/fixtures/gameFixture";
 import { renderHook } from "@testing-library/react-hooks";
-import { blackCardFixture } from "../../Api/fixtures/blackcardFixture";
 import { UseRotateGame } from "./UseRotateGame";
 
 jest.mock("../../Api/apiClient");
@@ -14,17 +13,11 @@ describe("UseRotateGame", () => {
 
   it("will call round rotation api endpoint", async () => {
     const gameId = gameFixture.id;
-    const blackCardId = blackCardFixture.id;
     const { result } = renderHook(() => UseRotateGame());
 
-    await result.current(gameId, blackCardId);
+    await result.current(gameId);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(
-      `/api/game/${gameId}/rotate`,
-      {
-        blackCardId,
-      }
-    );
+    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${gameId}/rotate`);
   });
 
   it("will catch api call error", async () => {
@@ -37,17 +30,11 @@ describe("UseRotateGame", () => {
       .spyOn(console, "error")
       .mockImplementation(jest.fn());
     const gameId = gameFixture.id;
-    const blackCardId = blackCardFixture.id;
     const { result } = renderHook(() => UseRotateGame());
 
-    await result.current(gameId, blackCardId);
+    await result.current(gameId);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(
-      `/api/game/${gameId}/rotate`,
-      {
-        blackCardId,
-      }
-    );
+    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${gameId}/rotate`);
     expect(spyConsole).toHaveBeenCalledWith(mockErrorMessage);
     spyConsole.mockRestore();
   });
