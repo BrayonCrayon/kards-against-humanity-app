@@ -176,7 +176,7 @@ describe("VotingSection", () => {
       const { user_id } = submittedCardsResponse.data[0];
 
       const submittedCardElement = await waitFor(() => {
-        return wrapper.getByTestId(`player-submitted-response-${user_id}`);
+        return wrapper.getByTestId(`selectable-${user_id}`);
       });
       userEvent.click(submittedCardElement);
 

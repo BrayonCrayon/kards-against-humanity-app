@@ -70,13 +70,12 @@ export const VotingSection: FC = () => {
       <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-flow-col">
         {submittedCards.map((submission) => (
           <Selectable
+            key={submission.user_id}
+            dataTestid={`selectable-${submission.user_id}`}
             isSelected={submission.user_id === selectedPlayerId}
             onClick={() => selectCard(submission.user_id)}
           >
-            <PlayerSubmittedCCard
-              key={submission.user_id}
-              playerSubmission={submission}
-            />
+            <PlayerSubmittedCCard playerSubmission={submission} />
           </Selectable>
         ))}
       </div>
