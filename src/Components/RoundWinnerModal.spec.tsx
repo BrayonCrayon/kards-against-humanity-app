@@ -7,11 +7,19 @@ import { CLEAR_STATE } from "../State/Vote/VoteActions";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { Game } from "../Types/Game";
 import { transformUser, transformUsers } from "../Types/User";
+import { waitFor } from "@testing-library/react";
 
-const mockRotateGame = jest.fn();
+const mockRotateGame = jest.fn(async () => {});
 jest.mock("../Hooks/Game/useRotateGame", () => {
   return () => {
     return mockRotateGame;
+  };
+});
+
+const mockFetchGameState = jest.fn();
+jest.mock("../Hooks/Game/useFetchGameState", () => {
+  return () => {
+    return mockFetchGameState;
   };
 });
 
@@ -21,6 +29,13 @@ const game: Game = {
   code: gameStateAllPlayerSubmittedCardsExampleResponse.data.code,
   judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
 };
+const mockSetUsers = jest.fn();
+const mockSetUser = jest.fn();
+const mockSetHand = jest.fn();
+const mockSetGame = jest.fn();
+const mockSetBlackCard = jest.fn();
+const mockSetHasSubmittedWhiteCards = jest.fn();
+const mockSetJudge = jest.fn();
 const props = {
   game,
   user: transformUser(
@@ -35,6 +50,13 @@ const props = {
   blackCard:
     gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
   hand: gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
+  setUsers: mockSetUsers,
+  setUser: mockSetUser,
+  setHand: mockSetHand,
+  setGame: mockSetGame,
+  setBlackCard: mockSetBlackCard,
+  setHasSubmittedWhiteCards: mockSetHasSubmittedWhiteCards,
+  setJudge: mockSetJudge,
 };
 const renderComponent = () => {
   return customGameVoteRender(<RoundWinnerModal />, props);
@@ -129,5 +151,14 @@ describe("RoundWinnerModal", () => {
 
     expect(mockRotateGame).toHaveBeenCalledTimes(0);
     expect(mockRotateGame).not.toHaveBeenCalledWith(props.game.id);
+  });
+
+  it("refreshes the game state when the round is rotated", async () => {
+    renderComponent();
+
+    await waitFor(() => {
+      expect(mockFetchGameState).toHaveBeenCalledTimes(1);
+      expect(mockFetchGameState).toHaveBeenCalledWith(props.game.id);
+    });
   });
 });

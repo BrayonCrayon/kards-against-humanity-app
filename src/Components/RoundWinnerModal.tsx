@@ -5,16 +5,36 @@ import { CLEAR_STATE } from "../State/Vote/VoteActions";
 import { Button } from "./Button";
 import { GameContext } from "../State/Game/GameContext";
 import useRotateGame from "../Hooks/Game/useRotateGame";
+import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 
 export function RoundWinnerModal() {
   const {
     dispatch,
     state: { selectedRoundWinner },
   } = useVote();
+  const {
+    users,
+    game,
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard,
+    setJudge,
+    setHasSubmittedCards,
+  } = useContext(GameContext);
 
   const rotateGame = useRotateGame();
+  const fetchGameState = useFetchGameState(
+    setUsers,
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard,
+    setHasSubmittedCards,
+    setJudge
+  );
 
-  const { users, game } = useContext(GameContext);
   const name = useMemo(() => {
     const user = users.find((user) => {
       return user.id === selectedRoundWinner?.user_id;
@@ -31,9 +51,14 @@ export function RoundWinnerModal() {
     dispatch({ type: CLEAR_STATE });
   }, []);
 
+  const rotate = useCallback(async () => {
+    await rotateGame(game.id);
+    await fetchGameState(game.id);
+  }, [game]);
+
   useEffect(() => {
-    if (selectedRoundWinner) rotateGame(game.id);
-  }, [rotateGame, game]);
+    if (selectedRoundWinner) rotate();
+  }, [rotate, selectedRoundWinner]);
 
   if (!selectedRoundWinner) return null;
 
