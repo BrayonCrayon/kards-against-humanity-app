@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { apiClient } from "../../Api/apiClient";
 
-export function UseRotateGame() {
+function useRotateGame() {
   const rotateGame = useCallback(async (gameId: string) => {
     try {
       await apiClient.post(`/api/game/${gameId}/rotate`);
@@ -12,3 +12,5 @@ export function UseRotateGame() {
 
   return rotateGame;
 }
+
+export default useRotateGame;

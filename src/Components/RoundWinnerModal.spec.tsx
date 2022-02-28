@@ -8,6 +8,13 @@ import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures
 import { Game } from "../Types/Game";
 import { transformUser, transformUsers } from "../Types/User";
 
+const mockRotateGame = jest.fn();
+jest.mock("../Hooks/Game/useRotateGame", () => {
+  return () => {
+    return mockRotateGame;
+  };
+});
+
 const game: Game = {
   id: gameStateAllPlayerSubmittedCardsExampleResponse.data.id,
   name: gameStateAllPlayerSubmittedCardsExampleResponse.data.name,
@@ -102,5 +109,25 @@ describe("RoundWinnerModal", () => {
     ).toBeInTheDocument();
   });
 
-  it.todo("will call round rotation hook");
+  it("will call round rotation hook", () => {
+    renderComponent();
+
+    expect(mockRotateGame).toHaveBeenCalledTimes(1);
+    expect(mockRotateGame).toHaveBeenCalledWith(props.game.id);
+  });
+
+  it("will only call round rotation hook when a winner is selected", () => {
+    const spyer = jest.spyOn(Vote, "useVote").mockImplementation(() => ({
+      dispatch: jest.fn,
+      state: {
+        selectedRoundWinner: undefined,
+        selectedPlayerId: 1,
+      },
+    }));
+
+    renderComponent();
+
+    expect(mockRotateGame).toHaveBeenCalledTimes(0);
+    expect(mockRotateGame).not.toHaveBeenCalledWith(props.game.id);
+  });
 });

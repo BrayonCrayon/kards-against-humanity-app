@@ -1,19 +1,19 @@
 import { apiClient } from "../../Api/apiClient";
 import { gameFixture } from "../../Api/fixtures/gameFixture";
 import { renderHook } from "@testing-library/react-hooks";
-import { UseRotateGame } from "./UseRotateGame";
+import { useRotateGame } from "./useRotateGame";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-describe("UseRotateGame", () => {
+describe("useRotateGame", () => {
   beforeEach(() => {
     mockedAxios.post.mockResolvedValue({});
   });
 
   it("will call round rotation api endpoint", async () => {
     const gameId = gameFixture.id;
-    const { result } = renderHook(() => UseRotateGame());
+    const { result } = renderHook(() => useRotateGame());
 
     await result.current(gameId);
 
@@ -30,7 +30,7 @@ describe("UseRotateGame", () => {
       .spyOn(console, "error")
       .mockImplementation(jest.fn());
     const gameId = gameFixture.id;
-    const { result } = renderHook(() => UseRotateGame());
+    const { result } = renderHook(() => useRotateGame());
 
     await result.current(gameId);
 
