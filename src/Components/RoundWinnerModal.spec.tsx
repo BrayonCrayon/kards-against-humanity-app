@@ -161,4 +161,13 @@ describe("RoundWinnerModal", () => {
       expect(mockFetchGameState).toHaveBeenCalledWith(props.game.id);
     });
   });
+
+  it("does not call game rotate when user is not a judge", async () => {
+    props.user = props.users[0];
+    renderComponent();
+
+    await waitFor(() => {
+      expect(mockRotateGame).toHaveBeenCalledTimes(0);
+    });
+  });
 });

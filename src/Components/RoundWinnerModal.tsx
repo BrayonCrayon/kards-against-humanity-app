@@ -13,6 +13,7 @@ export function RoundWinnerModal() {
     state: { selectedRoundWinner },
   } = useVote();
   const {
+    user,
     users,
     game,
     setUsers,
@@ -57,7 +58,7 @@ export function RoundWinnerModal() {
   }, [game]);
 
   useEffect(() => {
-    if (selectedRoundWinner) rotate();
+    if (selectedRoundWinner && user.id === game.judge_id) rotate();
   }, [rotate, selectedRoundWinner]);
 
   if (!selectedRoundWinner) return null;
