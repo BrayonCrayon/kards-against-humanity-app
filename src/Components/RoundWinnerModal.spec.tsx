@@ -153,15 +153,6 @@ describe("RoundWinnerModal", () => {
     expect(mockRotateGame).not.toHaveBeenCalledWith(props.game.id);
   });
 
-  it("refreshes the game state when the round is rotated", async () => {
-    renderComponent();
-
-    await waitFor(() => {
-      expect(mockFetchGameState).toHaveBeenCalledTimes(1);
-      expect(mockFetchGameState).toHaveBeenCalledWith(props.game.id);
-    });
-  });
-
   it("does not call game rotate when user is not a judge", async () => {
     props.user = props.users[0];
     renderComponent();

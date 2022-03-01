@@ -9,6 +9,7 @@ import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
 import { transformUsers } from "../Types/User";
 import {
+  listenWhenGameRotates,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
@@ -220,10 +221,31 @@ describe("GamePage", () => {
     });
   });
 
+  it("listens on game rotate pusher event when user refreshes game page", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    renderer({ ...initialState, updateGameStateCallback });
+
+    await waitFor(() => {
+      expect(listenWhenGameRotates).toHaveBeenCalledWith(
+        gameId,
+        updateGameStateCallback
+      );
+    });
+  });
+
   it("listens on submitted cards pusher event when game page is loaded", () => {
     renderer();
 
     expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
+      gameFixture.id,
+      updateGameStateCallback
+    );
+  });
+
+  it("listens on rotate game pusher event when game page is loaded", () => {
+    renderer();
+
+    expect(listenWhenGameRotates).toHaveBeenCalledWith(
       gameFixture.id,
       updateGameStateCallback
     );

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
 import {
+  listenWhenGameRotates,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
@@ -85,8 +86,10 @@ const GamePage = () => {
       fetchGameState(id).then(() => {
         listenWhenUserJoinsGame(id, updateGameStateCallback);
         listenWhenUserSubmittedCards(id, updateGameStateCallback);
+        listenWhenGameRotates(id, updateGameStateCallback);
       });
     } else {
+      listenWhenGameRotates(game.id, updateGameStateCallback);
       listenWhenUserJoinsGame(game.id, updateGameStateCallback);
       listenWhenUserSubmittedCards(game.id, updateGameStateCallback);
     }

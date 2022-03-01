@@ -45,3 +45,10 @@ export const listenWhenWinnerIsSelected = (
 ) => {
   echo.channel(`game-${gameId}`).listen(".winner.selected", callback);
 };
+
+export const listenWhenGameRotates = (
+  gameId: string,
+  callback: (data: UpdateGameState) => void
+) => {
+  echo.channel(`game-${gameId}`).listen(".game.rotate", callback);
+};

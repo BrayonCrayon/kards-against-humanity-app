@@ -1,7 +1,7 @@
 import { apiClient } from "../../Api/apiClient";
 import { gameFixture } from "../../Api/fixtures/gameFixture";
 import { renderHook } from "@testing-library/react-hooks";
-import { useRotateGame } from "./useRotateGame";
+import useRotateGame from "./useRotateGame";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
