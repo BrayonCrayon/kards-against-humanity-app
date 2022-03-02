@@ -139,7 +139,7 @@ describe("RoundWinnerModal", () => {
   });
 
   it("will only call round rotation hook when a winner is selected", () => {
-    const spyer = jest.spyOn(Vote, "useVote").mockImplementation(() => ({
+    jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: jest.fn,
       state: {
         selectedRoundWinner: undefined,

@@ -37,7 +37,7 @@ export function RoundWinnerModal() {
 
   useEffect(() => {
     if (selectedRoundWinner && user.id === game.judge_id) rotate();
-  }, [rotate, selectedRoundWinner]);
+  }, [selectedRoundWinner]);
 
   if (!selectedRoundWinner) return null;
 
