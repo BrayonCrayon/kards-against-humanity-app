@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
 import {
+  listenWhenGameRotates,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
@@ -10,6 +11,8 @@ import useFetchGameState from "../Hooks/Game/UseFetchGameState";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
 import { VotingSection } from "../Components/VotingSection";
+import { useVote } from "../State/Vote/VoteContext";
+import { RoundWinnerModal } from "../Components/RoundWinnerModal";
 
 const GamePage = () => {
   const {
@@ -29,6 +32,10 @@ const GamePage = () => {
     setHasSubmittedCards,
     setJudge,
   } = useContext(GameContext);
+
+  const {
+    state: { selectedRoundWinner },
+  } = useVote();
 
   const { id } = useParams<{ id: string }>();
 
@@ -79,8 +86,10 @@ const GamePage = () => {
       fetchGameState(id).then(() => {
         listenWhenUserJoinsGame(id, updateGameStateCallback);
         listenWhenUserSubmittedCards(id, updateGameStateCallback);
+        listenWhenGameRotates(id, updateGameStateCallback);
       });
     } else {
+      listenWhenGameRotates(game.id, updateGameStateCallback);
       listenWhenUserJoinsGame(game.id, updateGameStateCallback);
       listenWhenUserSubmittedCards(game.id, updateGameStateCallback);
     }
@@ -113,6 +122,7 @@ const GamePage = () => {
         </div>
       )}
       {showVotingSection && <VotingSection />}
+      <RoundWinnerModal />
     </div>
   );
 };

@@ -9,6 +9,7 @@ import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
 import { transformUsers } from "../Types/User";
 import {
+  listenWhenGameRotates,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
@@ -31,6 +32,7 @@ import {
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "../Api/fixtures/gameStateOnePlayerInGameExampleResponse";
+import * as Vote from "../State/Vote/VoteContext";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -219,10 +221,31 @@ describe("GamePage", () => {
     });
   });
 
+  it("listens on game rotate pusher event when user refreshes game page", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    renderer({ ...initialState, updateGameStateCallback });
+
+    await waitFor(() => {
+      expect(listenWhenGameRotates).toHaveBeenCalledWith(
+        gameId,
+        updateGameStateCallback
+      );
+    });
+  });
+
   it("listens on submitted cards pusher event when game page is loaded", () => {
     renderer();
 
     expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
+      gameFixture.id,
+      updateGameStateCallback
+    );
+  });
+
+  it("listens on rotate game pusher event when game page is loaded", () => {
+    renderer();
+
+    expect(listenWhenGameRotates).toHaveBeenCalledWith(
       gameFixture.id,
       updateGameStateCallback
     );
@@ -704,5 +727,26 @@ describe("Voting section", () => {
         screen.queryByTestId("white-card-submit-btn")
       ).not.toBeInTheDocument();
     });
+  });
+
+  it("can display round winner", async () => {
+    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    const { data } = submittedCardsResponse;
+    jest.spyOn(Vote, "useVote").mockReturnValue({
+      dispatch: jest.fn(),
+      state: {
+        selectedPlayerId: -1,
+        selectedRoundWinner: {
+          user_id: 1,
+          submitted_cards: data[0].submitted_cards,
+        },
+      },
+    });
+
+    const wrapper = gameWrapperRender(<GamePage />);
+
+    expect(
+      await wrapper.findByTestId("round-winner-modal")
+    ).toBeInTheDocument();
   });
 });

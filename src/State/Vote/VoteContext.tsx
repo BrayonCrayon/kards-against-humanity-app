@@ -1,8 +1,15 @@
 import React, { FC, useReducer } from "react";
-import { SELECT_WINNER, VoteActionTypes } from "./VoteActions";
+import {
+  CLEAR_STATE,
+  SELECT_WINNER,
+  VoteActionTypes,
+  WINNER_SELECTED,
+} from "./VoteActions";
+import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
 
 export interface IVoteState {
   selectedPlayerId: number;
+  selectedRoundWinner?: PlayerSubmittedCard;
 }
 
 export const initialVoteState: IVoteState = {
@@ -23,6 +30,15 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
         selectedPlayerId: action.payload.userId,
       };
     }
+    case WINNER_SELECTED: {
+      return {
+        ...state,
+        selectedRoundWinner: action.payload,
+      };
+    }
+    case CLEAR_STATE: {
+      return { ...initialVoteState };
+    }
     default:
       return state;
   }
@@ -38,7 +54,7 @@ const VoteProvider: FC = ({ children }) => {
 function useVote() {
   const context = React.useContext(VoteContext);
   if (context === undefined) {
-    throw new Error("useCount must be used within a CountProvider");
+    throw new Error("useVote must be used within a VoteProvider");
   }
   return context;
 }

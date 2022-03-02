@@ -32,3 +32,23 @@ export const listenWhenUserSubmittedCards = (
 ) => {
   echo.channel(`game-${gameId}`).listen(".cards.submitted", callback);
 };
+
+export interface IWinnerIsSelectedEventData {
+  gameId: string;
+  userId: number;
+  blackCardId: number;
+}
+
+export const listenWhenWinnerIsSelected = (
+  gameId: string,
+  callback: (data: IWinnerIsSelectedEventData) => void
+) => {
+  echo.channel(`game-${gameId}`).listen(".winner.selected", callback);
+};
+
+export const listenWhenGameRotates = (
+  gameId: string,
+  callback: (data: UpdateGameState) => void
+) => {
+  echo.channel(`game-${gameId}`).listen(".game.rotate", callback);
+};

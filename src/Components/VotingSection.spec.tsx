@@ -11,9 +11,16 @@ import userEvent from "@testing-library/user-event";
 import { SELECT_WINNER } from "../State/Vote/VoteActions";
 import * as Vote from "../State/Vote/VoteContext";
 import { happyToast } from "../Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+
+const mockFetchRoundWinner = jest.fn();
 
 jest.mock("../Api/apiClient");
 jest.mock("../Utilities/toasts");
+jest.mock("../Services/PusherService");
+jest.mock("../Hooks/Game/UseFetchRoundWinner", () => {
+  return () => mockFetchRoundWinner;
+});
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
@@ -145,6 +152,20 @@ describe("VotingSection", () => {
     });
   });
 
+  describe("pusher events", () => {
+    beforeEach(() => {
+      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+    });
+    it("listens on winner selected pusher event when loading game page", () => {
+      renderer();
+
+      expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(
+        gameFixture.id,
+        mockFetchRoundWinner
+      );
+    });
+  });
+
   describe("select a player submitted card", () => {
     beforeEach(() => {
       mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
@@ -155,7 +176,7 @@ describe("VotingSection", () => {
       const { user_id } = submittedCardsResponse.data[0];
 
       const submittedCardElement = await waitFor(() => {
-        return wrapper.getByTestId(`player-submitted-response-${user_id}`);
+        return wrapper.getByTestId(`selectable-${user_id}`);
       });
       userEvent.click(submittedCardElement);
 
@@ -199,6 +220,26 @@ describe("VotingSection", () => {
           type: SELECT_WINNER,
           payload: { userId: user_id },
         });
+      });
+
+      voteSpy.mockReset();
+      voteSpy.mockRestore();
+    });
+
+    it("does not show submit winner button when a winner is in state", async () => {
+      const voteSpy = jest.spyOn(Vote, "useVote").mockReturnValue({
+        dispatch: jest.fn(),
+        state: {
+          selectedPlayerId: -1,
+          selectedRoundWinner: submittedCardsResponse.data[0],
+        },
+      });
+      const wrapper = await renderer();
+
+      await waitFor(() => {
+        expect(
+          wrapper.queryByTestId("submit-selected-winner")
+        ).not.toBeInTheDocument();
       });
 
       voteSpy.mockReset();

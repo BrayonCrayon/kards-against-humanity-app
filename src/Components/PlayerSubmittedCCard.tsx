@@ -1,8 +1,6 @@
-import { FC, useCallback, useContext, useMemo } from "react";
+import { FC, useContext, useMemo } from "react";
 import { PlayerSubmittedCard } from "../Types/ResponseTypes";
 import { GameContext } from "../State/Game/GameContext";
-import { useVote } from "../State/Vote/VoteContext";
-import { SELECT_WINNER } from "../State/Vote/VoteActions";
 
 interface PlayerSubmittedCCardProps {
   playerSubmission: PlayerSubmittedCard;
@@ -12,10 +10,6 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
   playerSubmission: { user_id, submitted_cards },
 }) => {
   const { blackCard } = useContext(GameContext);
-  const {
-    state: { selectedPlayerId },
-    dispatch,
-  } = useVote();
 
   const playerResponse = useMemo(() => {
     let blackCardText = blackCard.text;
@@ -33,17 +27,10 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
     return blackCardText;
   }, [blackCard, submitted_cards]);
 
-  const selectCard = useCallback(() => {
-    dispatch({ type: SELECT_WINNER, payload: { userId: user_id } });
-  }, [user_id, dispatch]);
-
   return (
     <div
-      className={`bg-black text-white rounded shadow-md p-8 cursor-pointer 
-          ${user_id === selectedPlayerId ? "opacity-75" : ""}
-      `}
+      className={`bg-black text-white rounded shadow-md p-8`}
       data-testid={`player-submitted-response-${user_id}`}
-      onClick={selectCard}
     >
       <div
         className="text-xl md:text-3xl font-weight-800"
