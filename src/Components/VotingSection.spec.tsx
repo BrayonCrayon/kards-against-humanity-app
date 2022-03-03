@@ -231,7 +231,12 @@ describe("VotingSection", () => {
         dispatch: jest.fn(),
         state: {
           selectedPlayerId: -1,
-          selectedRoundWinner: submittedCardsResponse.data[0],
+          selectedRoundWinner: {
+            ...submittedCardsResponse.data[0],
+            blackCard:
+              gameStateAllPlayerSubmittedCardsExampleResponse.data
+                .current_black_card,
+          },
         },
       });
       const wrapper = await renderer();

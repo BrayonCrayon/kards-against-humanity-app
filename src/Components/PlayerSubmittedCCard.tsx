@@ -1,16 +1,16 @@
-import { FC, useContext, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { PlayerSubmittedCard } from "../Types/ResponseTypes";
-import { GameContext } from "../State/Game/GameContext";
+import { BlackCard } from "../Types/BlackCard";
 
 interface PlayerSubmittedCCardProps {
   playerSubmission: PlayerSubmittedCard;
+  blackCard: BlackCard;
 }
 
 export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
   playerSubmission: { user_id, submitted_cards },
+  blackCard,
 }) => {
-  const { blackCard } = useContext(GameContext);
-
   const playerResponse = useMemo(() => {
     let blackCardText = blackCard.text;
     submitted_cards

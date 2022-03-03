@@ -7,8 +7,9 @@ import { CLEAR_STATE } from "../State/Vote/VoteActions";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { Game } from "../Types/Game";
 import { transformUser, transformUsers } from "../Types/User";
-import { waitFor } from "@testing-library/react";
+import { wait, waitFor } from "@testing-library/react";
 import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
+import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 
 const mockRotateGame = jest.fn(async () => {});
 jest.mock("../Hooks/Game/useRotateGame", () => {
@@ -170,6 +171,31 @@ describe("RoundWinnerModal", () => {
 
     await waitFor(() => {
       expect(mockRotateGame).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  it("will continue to show previous black card after game rotate", async () => {
+    jest.spyOn(Vote, "useVote").mockImplementation(() => ({
+      dispatch: jest.fn(),
+      state: {
+        selectedRoundWinner: roundWinnerExampleResponse.data,
+        selectedPlayerId: 1,
+      },
+    }));
+    const {
+      data: { blackCard, submitted_cards },
+    } = roundWinnerExampleResponse;
+    const sortedCards = submitted_cards.sort(
+      (left, right) => left.order - right.order
+    );
+    const wrapper = renderComponent();
+
+    const expectedCardText = blackCard.text
+      .replace("_", sortedCards[0].text.replace(/\.$/, ""))
+      .replace("_", sortedCards[1].text.replace(/\.$/, ""));
+
+    await waitFor(() => {
+      expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();
     });
   });
 });

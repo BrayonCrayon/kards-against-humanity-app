@@ -48,7 +48,10 @@ export function RoundWinnerModal() {
     >
       <div className="bg-white p-2 shadow-md border-2 rounded flex flex-col">
         <h1 className="text-4xl text-center pb-1">The winner is: {name}</h1>
-        <PlayerSubmittedCCard playerSubmission={selectedRoundWinner} />
+        <PlayerSubmittedCCard
+          playerSubmission={selectedRoundWinner}
+          blackCard={selectedRoundWinner.blackCard}
+        />
         <Button
           text="Close"
           onClick={close}

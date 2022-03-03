@@ -739,6 +739,7 @@ describe("Voting section", () => {
         selectedRoundWinner: {
           user_id: 1,
           submitted_cards: data[0].submitted_cards,
+          blackCard: gameStateExampleResponse.data.current_black_card,
         },
       },
     });

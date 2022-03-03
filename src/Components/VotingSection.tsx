@@ -12,7 +12,7 @@ import { Selectable } from "./Selectable";
 import { SELECT_WINNER } from "../State/Vote/VoteActions";
 
 export const VotingSection: FC = () => {
-  const { game, judge, user } = useContext(GameContext);
+  const { game, judge, user, blackCard } = useContext(GameContext);
   const {
     state: { selectedPlayerId, selectedRoundWinner },
     dispatch,
@@ -75,7 +75,10 @@ export const VotingSection: FC = () => {
             isSelected={submission.user_id === selectedPlayerId}
             onClick={() => selectCard(submission.user_id)}
           >
-            <PlayerSubmittedCCard playerSubmission={submission} />
+            <PlayerSubmittedCCard
+              playerSubmission={submission}
+              blackCard={blackCard}
+            />
           </Selectable>
         ))}
       </div>
