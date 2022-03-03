@@ -731,14 +731,15 @@ describe("Voting section", () => {
 
   it("can display round winner", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-    const { data } = submittedCardsResponse;
+    const [submittedCard] = submittedCardsResponse.data[0].submitted_cards;
     jest.spyOn(Vote, "useVote").mockReturnValue({
       dispatch: jest.fn(),
       state: {
         selectedPlayerId: -1,
         selectedRoundWinner: {
           user_id: 1,
-          submitted_cards: data[0].submitted_cards,
+          submitted_cards: [submittedCard],
+          black_card: gameStateExampleResponse.data.current_black_card,
         },
       },
     });

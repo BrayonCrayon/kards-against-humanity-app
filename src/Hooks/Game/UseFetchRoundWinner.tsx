@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { apiClient } from "../../Api/apiClient";
 import { useVote } from "../../State/Vote/VoteContext";
 import { WINNER_SELECTED } from "../../State/Vote/VoteActions";
-import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
+import { RoundWinner } from "../../Types/ResponseTypes";
 import { IWinnerIsSelectedEventData } from "../../Services/PusherService";
 
 function UseFetchRoundWinner() {
@@ -10,7 +10,7 @@ function UseFetchRoundWinner() {
   const fetchRoundWinner = useCallback(
     async (data: IWinnerIsSelectedEventData) => {
       try {
-        const response = await apiClient.get<PlayerSubmittedCard>(
+        const response = await apiClient.get<RoundWinner>(
           `/api/game/${data.gameId}/round/winner/${data.blackCardId}`
         );
         dispatch({ type: WINNER_SELECTED, payload: response.data });

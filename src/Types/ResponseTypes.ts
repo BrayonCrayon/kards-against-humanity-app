@@ -1,4 +1,5 @@
 import { IWhiteCard } from "./WhiteCard";
+import { BlackCard } from "./BlackCard";
 
 export interface SubmittedCard extends Partial<IWhiteCard> {
   id: number;
@@ -12,6 +13,14 @@ export interface PlayerSubmittedCard {
   submitted_cards: Array<SubmittedCard>;
 }
 
+export interface RoundWinner extends PlayerSubmittedCard {
+  black_card: BlackCard;
+}
+
 export interface SubmittedCardsResponse {
   data: Array<PlayerSubmittedCard>;
+}
+
+export interface RoundWinnerResponse {
+  data: RoundWinner;
 }

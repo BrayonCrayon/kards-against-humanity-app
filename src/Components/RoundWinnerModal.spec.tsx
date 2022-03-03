@@ -7,7 +7,10 @@ import { CLEAR_STATE } from "../State/Vote/VoteActions";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { Game } from "../Types/Game";
 import { transformUser, transformUsers } from "../Types/User";
-import { waitFor } from "@testing-library/react";
+import { wait, waitFor } from "@testing-library/react";
+import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
+import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
+import { fillOutBlackCard } from "../Utilities/helpers";
 
 const mockRotateGame = jest.fn(async () => {});
 jest.mock("../Hooks/Game/useRotateGame", () => {
@@ -67,7 +70,12 @@ describe("RoundWinnerModal", () => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: jest.fn(),
       state: {
-        selectedRoundWinner: submittedCardsResponse.data[0],
+        selectedRoundWinner: {
+          ...submittedCardsResponse.data[0],
+          black_card:
+            gameStateAllPlayerSubmittedCardsExampleResponse.data
+              .current_black_card,
+        },
         selectedPlayerId: 1,
       },
     }));
@@ -92,7 +100,7 @@ describe("RoundWinnerModal", () => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: dispatchSpy,
       state: {
-        selectedRoundWinner: submittedCardsResponse.data[0],
+        selectedRoundWinner: roundWinnerExampleResponse.data,
         selectedPlayerId: 1,
       },
     }));
@@ -120,7 +128,12 @@ describe("RoundWinnerModal", () => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: jest.fn,
       state: {
-        selectedRoundWinner: winner,
+        selectedRoundWinner: {
+          ...winner,
+          black_card:
+            gameStateAllPlayerSubmittedCardsExampleResponse.data
+              .current_black_card,
+        },
         selectedPlayerId: 1,
       },
     }));
@@ -159,6 +172,26 @@ describe("RoundWinnerModal", () => {
 
     await waitFor(() => {
       expect(mockRotateGame).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  it("will continue to show previous black card after game rotate", async () => {
+    jest.spyOn(Vote, "useVote").mockImplementation(() => ({
+      dispatch: jest.fn(),
+      state: {
+        selectedRoundWinner: roundWinnerExampleResponse.data,
+        selectedPlayerId: 1,
+      },
+    }));
+    const {
+      data: { black_card, submitted_cards },
+    } = roundWinnerExampleResponse;
+    const expectedCardText = fillOutBlackCard(black_card.text, submitted_cards);
+
+    const wrapper = renderComponent();
+
+    await waitFor(() => {
+      expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();
     });
   });
 });

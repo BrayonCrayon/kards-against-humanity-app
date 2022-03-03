@@ -5,11 +5,11 @@ import {
   VoteActionTypes,
   WINNER_SELECTED,
 } from "./VoteActions";
-import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
+import { RoundWinner } from "../../Types/ResponseTypes";
 
 export interface IVoteState {
   selectedPlayerId: number;
-  selectedRoundWinner?: PlayerSubmittedCard;
+  selectedRoundWinner?: RoundWinner;
 }
 
 export const initialVoteState: IVoteState = {
