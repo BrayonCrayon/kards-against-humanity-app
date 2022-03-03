@@ -1,4 +1,4 @@
-import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
+import { PlayerSubmittedCard, RoundWinner } from "../../Types/ResponseTypes";
 
 export const SELECT_WINNER = "SELECT_WINNER";
 export const WINNER_SELECTED = "WINNER_SELECTED";
@@ -16,7 +16,7 @@ export interface SelectWinnerAction extends Action {
 
 export interface WinnerSelectedAction extends Action {
   type: typeof WINNER_SELECTED;
-  payload: PlayerSubmittedCard;
+  payload: RoundWinner;
 }
 
 export interface ClearStateAction extends Omit<Action, "payload"> {

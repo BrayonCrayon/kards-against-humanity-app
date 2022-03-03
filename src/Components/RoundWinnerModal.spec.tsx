@@ -8,6 +8,7 @@ import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures
 import { Game } from "../Types/Game";
 import { transformUser, transformUsers } from "../Types/User";
 import { waitFor } from "@testing-library/react";
+import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
 
 const mockRotateGame = jest.fn(async () => {});
 jest.mock("../Hooks/Game/useRotateGame", () => {
@@ -67,7 +68,12 @@ describe("RoundWinnerModal", () => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: jest.fn(),
       state: {
-        selectedRoundWinner: submittedCardsResponse.data[0],
+        selectedRoundWinner: {
+          ...submittedCardsResponse.data[0],
+          blackCard:
+            gameStateAllPlayerSubmittedCardsExampleResponse.data
+              .current_black_card,
+        },
         selectedPlayerId: 1,
       },
     }));
@@ -92,7 +98,7 @@ describe("RoundWinnerModal", () => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: dispatchSpy,
       state: {
-        selectedRoundWinner: submittedCardsResponse.data[0],
+        selectedRoundWinner: roundWinnerExampleResponse.data,
         selectedPlayerId: 1,
       },
     }));
@@ -120,7 +126,12 @@ describe("RoundWinnerModal", () => {
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: jest.fn,
       state: {
-        selectedRoundWinner: winner,
+        selectedRoundWinner: {
+          ...winner,
+          blackCard:
+            gameStateAllPlayerSubmittedCardsExampleResponse.data
+              .current_black_card,
+        },
         selectedPlayerId: 1,
       },
     }));
