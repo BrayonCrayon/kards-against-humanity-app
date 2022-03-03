@@ -17,7 +17,7 @@ const GameInfo: FC = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-start">
+      <div className="flex flex-wrap md:justify-between md:items-start md:flex-row">
         <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold ">
           <div
             data-testid={`game-${game.id}`}
