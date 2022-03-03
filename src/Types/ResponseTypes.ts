@@ -14,7 +14,7 @@ export interface PlayerSubmittedCard {
 }
 
 export interface RoundWinner extends PlayerSubmittedCard {
-  blackCard: BlackCard;
+  black_card: BlackCard;
 }
 
 export interface SubmittedCardsResponse {

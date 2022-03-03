@@ -50,7 +50,7 @@ export function RoundWinnerModal() {
         <h1 className="text-4xl text-center pb-1">The winner is: {name}</h1>
         <PlayerSubmittedCCard
           playerSubmission={selectedRoundWinner}
-          blackCard={selectedRoundWinner.blackCard}
+          blackCard={selectedRoundWinner.black_card}
         />
         <Button
           text="Close"

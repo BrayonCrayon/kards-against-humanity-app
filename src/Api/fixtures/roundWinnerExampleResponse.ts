@@ -17,7 +17,7 @@ export const roundWinnerExampleResponse: RoundWinnerResponse = {
         order: 1,
       },
     ],
-    blackCard: {
+    black_card: {
       id: 1234,
       pick: 2,
       text: "_ is what you tell cheap hookers when they leave _.",

@@ -12,6 +12,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
   blackCard,
 }) => {
   const playerResponse = useMemo(() => {
+    console.log(blackCard);
     let blackCardText = blackCard.text;
     submitted_cards
       .sort((left, right) => left.order - right.order)

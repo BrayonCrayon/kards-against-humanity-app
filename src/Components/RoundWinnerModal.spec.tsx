@@ -71,7 +71,7 @@ describe("RoundWinnerModal", () => {
       state: {
         selectedRoundWinner: {
           ...submittedCardsResponse.data[0],
-          blackCard:
+          black_card:
             gameStateAllPlayerSubmittedCardsExampleResponse.data
               .current_black_card,
         },
@@ -129,7 +129,7 @@ describe("RoundWinnerModal", () => {
       state: {
         selectedRoundWinner: {
           ...winner,
-          blackCard:
+          black_card:
             gameStateAllPlayerSubmittedCardsExampleResponse.data
               .current_black_card,
         },
@@ -183,14 +183,14 @@ describe("RoundWinnerModal", () => {
       },
     }));
     const {
-      data: { blackCard, submitted_cards },
+      data: { black_card, submitted_cards },
     } = roundWinnerExampleResponse;
     const sortedCards = submitted_cards.sort(
       (left, right) => left.order - right.order
     );
     const wrapper = renderComponent();
 
-    const expectedCardText = blackCard.text
+    const expectedCardText = black_card.text
       .replace("_", sortedCards[0].text.replace(/\.$/, ""))
       .replace("_", sortedCards[1].text.replace(/\.$/, ""));
 
