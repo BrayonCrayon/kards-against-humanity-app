@@ -7,9 +7,8 @@ import { CLEAR_STATE } from "../State/Vote/VoteActions";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { Game } from "../Types/Game";
 import { transformUser, transformUsers } from "../Types/User";
-import { wait, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
-import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { fillOutBlackCard } from "../Utilities/helpers";
 
 const mockRotateGame = jest.fn(async () => {});

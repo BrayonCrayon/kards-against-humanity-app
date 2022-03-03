@@ -8,7 +8,7 @@ interface BlackCardProps {
 export const BlackKard: React.FC<BlackCardProps> = ({ card }) => {
   return (
     <div
-      className="border border-black bg-black text-white rounded shadow-md text-xl md:text-3xl font-weight-800 flex flex-col justify-between  p-8"
+      className="border border-black bg-black text-white rounded shadow-md font-weight-800 flex flex-col justify-between p-8 text-2xl md:text-3xl"
       data-testid={`black-card-${card.id}`}
     >
       <span>{card.text}</span>
