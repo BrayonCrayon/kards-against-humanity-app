@@ -17,8 +17,8 @@ const GameInfo: FC = () => {
 
   return (
     <div>
-      <div className="flex flex-wrap md:justify-between md:items-start md:flex-row">
-        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold ">
+      <div className="flex flex-wrap justify-between md:items-start md:flex-row">
+        <div className="border-2 w-full border-gray-300 shadow-md p-2 m-2 rounded font-semibold md:w-auto">
           <div
             data-testid={`game-${game.id}`}
             onClick={() => copyGameCode()}
@@ -47,10 +47,10 @@ const GameInfo: FC = () => {
           </div>
         </div>
 
-        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold">
+        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold w-1/3 md:w-auto">
           <span className="text-gray-700">You:</span> {user.name}
         </div>
-        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded flex-col">
+        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded w-1/3 md:w-auto">
           <h1 className="text-gray-700 text-xl border-b-2 border-gray-500">
             Users
           </h1>
