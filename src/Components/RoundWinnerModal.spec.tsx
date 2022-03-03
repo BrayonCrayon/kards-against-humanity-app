@@ -10,6 +10,7 @@ import { transformUser, transformUsers } from "../Types/User";
 import { wait, waitFor } from "@testing-library/react";
 import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
+import { fillOutBlackCard } from "../Utilities/helpers";
 
 const mockRotateGame = jest.fn(async () => {});
 jest.mock("../Hooks/Game/useRotateGame", () => {
@@ -185,14 +186,9 @@ describe("RoundWinnerModal", () => {
     const {
       data: { black_card, submitted_cards },
     } = roundWinnerExampleResponse;
-    const sortedCards = submitted_cards.sort(
-      (left, right) => left.order - right.order
-    );
-    const wrapper = renderComponent();
+    const expectedCardText = fillOutBlackCard(black_card.text, submitted_cards);
 
-    const expectedCardText = black_card.text
-      .replace("_", sortedCards[0].text.replace(/\.$/, ""))
-      .replace("_", sortedCards[1].text.replace(/\.$/, ""));
+    const wrapper = renderComponent();
 
     await waitFor(() => {
       expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();

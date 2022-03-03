@@ -233,7 +233,7 @@ describe("VotingSection", () => {
           selectedPlayerId: -1,
           selectedRoundWinner: {
             ...submittedCardsResponse.data[0],
-            blackCard:
+            black_card:
               gameStateAllPlayerSubmittedCardsExampleResponse.data
                 .current_black_card,
           },

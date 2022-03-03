@@ -1,6 +1,7 @@
 import { FC, useMemo } from "react";
 import { PlayerSubmittedCard } from "../Types/ResponseTypes";
 import { BlackCard } from "../Types/BlackCard";
+import { fillOutBlackCard } from "../Utilities/helpers";
 
 interface PlayerSubmittedCCardProps {
   playerSubmission: PlayerSubmittedCard;
@@ -12,20 +13,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
   blackCard,
 }) => {
   const playerResponse = useMemo(() => {
-    console.log(blackCard);
-    let blackCardText = blackCard.text;
-    submitted_cards
-      .sort((left, right) => left.order - right.order)
-      .forEach((card) => {
-        if (blackCardText.indexOf("_", 0) < 0) return;
-
-        blackCardText = blackCardText.replace(
-          "_",
-          card.text.replace(/\.$/, "")
-        );
-      });
-
-    return blackCardText;
+    return fillOutBlackCard(blackCard.text, submitted_cards);
   }, [blackCard, submitted_cards]);
 
   return (
