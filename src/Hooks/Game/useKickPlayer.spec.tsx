@@ -13,5 +13,6 @@ jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 describe("useKickPlayer", () => {
-  it("will call api to kick player", () => {});
+  it.todo("will call api to kick player", () => {});
+  it.todo("will catch error if call to api fails");
 });

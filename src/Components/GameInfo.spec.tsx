@@ -48,6 +48,7 @@ describe("GameInfo", () => {
 
       expect(await findByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
     });
+
     it("does not show the judge icon next to the player who is not the judge", async () => {
       const nonJudge = data.users[1];
 
@@ -64,6 +65,10 @@ describe("GameInfo", () => {
         "text-green-500"
       );
     });
+
+    it.todo("shows a button to kick players on users list");
+    it.todo("only show kick player buttons when user is the judge");
+    it.todo("will call kick player hook when button is clicked");
   });
 
   describe("Game box", () => {
