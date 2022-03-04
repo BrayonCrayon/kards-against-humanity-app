@@ -1,9 +1,9 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { customGameVoteRender } from "../Tests/testRenders";
-import { act, RenderResult, waitFor, screen } from "@testing-library/react";
+import { RenderResult, waitFor, screen } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
-import { IGameContext, initialState } from "../State/Game/GameContext";
+import { IGameContext } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "../Types/WhiteCard";
@@ -14,6 +14,7 @@ import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
 
 const mockFetchRoundWinner = jest.fn();
+const mockDispatch = jest.fn();
 
 jest.mock("../Api/apiClient");
 jest.mock("../Utilities/toasts");
@@ -31,26 +32,29 @@ const gameFixture = {
   judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
 };
 
+const props = {
+  game: gameFixture,
+  judge: transformUser(
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
+  ),
+  user: transformUser(
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
+  ),
+  users: transformUsers(
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.users
+  ),
+  hand: constructWhiteCardArray(
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
+    false,
+    []
+  ),
+  blackCard:
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
+};
+
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return customGameVoteRender(<VotingSection />, {
-    ...initialState,
-    game: gameFixture,
-    judge: transformUser(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
-    ),
-    user: transformUser(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
-    ),
-    users: transformUsers(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.users
-    ),
-    hand: constructWhiteCardArray(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
-      false,
-      []
-    ),
-    blackCard:
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
+    ...props,
     ...value,
   });
 };
@@ -62,14 +66,12 @@ describe("VotingSection", () => {
     });
 
     it("calls backend api for submitted cards", async () => {
-      await act(async () => {
-        await renderer();
-      });
+      await renderer();
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledTimes(1);
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          `/api/game/${gameStateAllPlayerSubmittedCardsExampleResponse.data.id}/submitted-cards`
+          `/api/game/${props.game.id}/submitted-cards`
         );
       });
     });
@@ -90,7 +92,6 @@ describe("VotingSection", () => {
     });
 
     it("submits selected winner to api", async () => {
-      const { id } = gameStateAllPlayerSubmittedCardsExampleResponse.data;
       const { user_id } = submittedCardsResponse.data[0];
 
       const wrapper = renderer();
@@ -105,7 +106,7 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledWith(
-          `/api/game/${id}/winner`,
+          `/api/game/${props.game.id}/winner`,
           { user_id }
         );
         expect(happyToast).toHaveBeenCalledWith("Winner Selected!", "top");
@@ -168,7 +169,11 @@ describe("VotingSection", () => {
 
   describe("select a player submitted card", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
     it("allows user to select a player submitted card", async () => {
@@ -186,10 +191,8 @@ describe("VotingSection", () => {
     });
 
     it("will not show submit winner button when user is not the judge", async () => {
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.judge =
-        gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0];
-      gameFixture.judge_id =
-        gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id;
+      props.judge = props.users[0];
+      props.game.judge_id = props.judge.id;
       const wrapper = await renderer();
 
       await waitFor(() => {
@@ -200,20 +203,24 @@ describe("VotingSection", () => {
     });
 
     it("calls dispatch with correct action and payload when a user is selected", async () => {
-      const mockDispatch = jest.fn();
-      const voteSpy = jest.spyOn(Vote, "useVote").mockReturnValue({
+      jest.spyOn(Vote, "useVote").mockImplementation(() => ({
         dispatch: mockDispatch,
         state: {
           selectedPlayerId: -1,
+          selectedRoundWinner: undefined,
         },
+      }));
+      const wrapper = await renderer({
+        user: props.users[0],
+        judge: props.users[0],
       });
-      const wrapper = await renderer();
       const { user_id } = submittedCardsResponse.data[0];
 
-      const submittedCardElement = await waitFor(() => {
-        return wrapper.getByTestId(`player-submitted-response-${user_id}`);
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(`player-submitted-response-${user_id}`)
+        );
       });
-      userEvent.click(submittedCardElement);
 
       await waitFor(() => {
         expect(mockDispatch).toHaveBeenCalledWith({
@@ -221,24 +228,19 @@ describe("VotingSection", () => {
           payload: { userId: user_id },
         });
       });
-
-      voteSpy.mockReset();
-      voteSpy.mockRestore();
     });
 
     it("does not show submit winner button when a winner is in state", async () => {
-      const voteSpy = jest.spyOn(Vote, "useVote").mockReturnValue({
+      jest.spyOn(Vote, "useVote").mockImplementation(() => ({
         dispatch: jest.fn(),
         state: {
           selectedPlayerId: -1,
           selectedRoundWinner: {
             ...submittedCardsResponse.data[0],
-            black_card:
-              gameStateAllPlayerSubmittedCardsExampleResponse.data
-                .current_black_card,
+            black_card: props.blackCard,
           },
         },
-      });
+      }));
       const wrapper = await renderer();
 
       await waitFor(() => {
@@ -246,15 +248,23 @@ describe("VotingSection", () => {
           wrapper.queryByTestId("submit-selected-winner")
         ).not.toBeInTheDocument();
       });
-
-      voteSpy.mockReset();
-      voteSpy.mockRestore();
     });
   });
 
   describe("displaying players submitted card", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
+      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+      jest.spyOn(Vote, "useVote").mockImplementation(() => ({
+        dispatch: mockDispatch,
+        state: {
+          selectedPlayerId: -1,
+          selectedRoundWinner: undefined,
+        },
+      }));
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
     });
 
     it("will display players submitted card", async () => {
@@ -280,9 +290,7 @@ describe("VotingSection", () => {
     });
 
     it("will display players submitted cards in order", async () => {
-      act(() => {
-        renderer();
-      });
+      await renderer();
       const sortedCards = submittedCardsResponse.data[0].submitted_cards.sort(
         (left, right) => left.order - right.order
       );
@@ -296,6 +304,24 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(screen.queryByText(expectedCardText)).toBeInTheDocument();
+      });
+    });
+
+    it("will not allow non judge users to select submitted cards", async () => {
+      const wrapper = await renderer({
+        user: props.users[0],
+        judge: props.users[1],
+      });
+
+      const [submittedCard] = submittedCardsResponse.data;
+
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(`player-card-response-${submittedCard.user_id}`)
+        );
+      });
+      await waitFor(() => {
+        expect(mockDispatch).not.toHaveBeenCalled();
       });
     });
   });

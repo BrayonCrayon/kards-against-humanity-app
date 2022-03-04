@@ -57,9 +57,11 @@ export const VotingSection: FC = () => {
 
   const selectCard = useCallback(
     (user_id) => {
+      if (judge.id !== user.id) return;
+
       dispatch({ type: SELECT_WINNER, payload: { userId: user_id } });
     },
-    [dispatch]
+    [dispatch, judge, user]
   );
 
   return (
