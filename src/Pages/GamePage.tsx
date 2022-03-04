@@ -115,7 +115,7 @@ const GamePage = () => {
             className={
               !canSubmitCards
                 ? "shadow-inner opacity-70 cursor-not-allowed"
-                : "hover:bg-gray-200"
+                : ""
             }
             disabled={!canSubmitCards}
           />
