@@ -13,6 +13,7 @@ import GameInfo from "../Components/GameInfo";
 import { VotingSection } from "../Components/VotingSection";
 import { useVote } from "../State/Vote/VoteContext";
 import { RoundWinnerModal } from "../Components/RoundWinnerModal";
+import { Button } from "../Components/Button";
 
 const GamePage = () => {
   const {
@@ -107,18 +108,17 @@ const GamePage = () => {
       )}
       {judge.id !== user.id && !showVotingSection && (
         <div className="flex justify-center">
-          <button
+          <Button
+            text="Submit"
             onClick={onSubmit}
-            data-testid="white-card-submit-btn"
-            className={`bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 ${
+            dataTestid="white-card-submit-btn"
+            className={
               !canSubmitCards
                 ? "shadow-inner opacity-70 cursor-not-allowed"
                 : "hover:bg-gray-200"
-            }`}
+            }
             disabled={!canSubmitCards}
-          >
-            Submit
-          </button>
+          />
         </div>
       )}
       {showVotingSection && <VotingSection />}

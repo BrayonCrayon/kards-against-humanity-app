@@ -6,6 +6,7 @@ import { apiClient } from "../../Api/apiClient";
 import { GameContext } from "../../State/Game/GameContext";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
+import { Button } from "../Button";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -134,12 +135,7 @@ export const CreateGameForm: React.FC = () => {
             onChange={(event) => setUserName(event.target.value)}
           />
         </label>
-        <button
-          data-testid="create-game-submit-button"
-          className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
-        >
-          Create
-        </button>
+        <Button text="Create" dataTestid="create-game-submit-button" />
       </form>
     </div>
   );

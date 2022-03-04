@@ -6,6 +6,7 @@ import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
+import { Button } from "../Button";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -94,12 +95,7 @@ const JoinGameForm: React.FC = () => {
           />
         </label>
 
-        <button
-          data-testid="join-game-form-submit"
-          className="bg-gray-300 p-2 text-gray-900 font-semibold rounded shadow mt-4 hover:bg-gray-200 "
-        >
-          Join
-        </button>
+        <Button text="Join" dataTestid="join-game-form-submit" />
       </form>
     </div>
   );
