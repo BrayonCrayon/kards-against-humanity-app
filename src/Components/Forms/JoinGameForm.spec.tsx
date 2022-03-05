@@ -1,14 +1,14 @@
-import { waitFor } from "@testing-library/react";
+import {waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { apiClient } from "../../Api/apiClient";
-import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
+import {apiClient} from "../../Api/apiClient";
+import {gameStateExampleResponse} from "../../Api/fixtures/gameStateExampleResponse";
+import {getExpansionsExampleResponse} from "../../Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import { Game } from "../../Types/Game";
-import { errorToast } from "../../Utilities/toasts";
-import { transformUser, transformUsers } from "../../Types/User";
-import { customGameWrapperRender, history } from "../../Tests/testRenders";
-import { setupAndSubmitForm } from "../../Tests/actions";
+import {Game} from "../../Types/Game";
+import {errorToast} from "../../Utilities/toasts";
+import {transformUser, transformUsers} from "../../Types/User";
+import {customKardsRender, history} from "../../Tests/testRenders";
+import {setupAndSubmitForm} from "../../Tests/actions";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
@@ -26,7 +26,7 @@ const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
-  return customGameWrapperRender(<JoinGameForm />, {
+  return customKardsRender(<JoinGameForm/>, {
     setGame,
     setUser,
     setHand,

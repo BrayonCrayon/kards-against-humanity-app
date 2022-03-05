@@ -1,22 +1,21 @@
 import React from "react";
-import { IGameContext } from "../State/Game/GameContext";
-import { RenderResult } from "@testing-library/react";
+import {IGameContext} from "../State/Game/GameContext";
+import {RenderResult} from "@testing-library/react";
 import GameInfo from "./GameInfo";
-import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
-import { customGameWrapperRender } from "../Tests/testRenders";
+import {gameStateJudgeExampleResponse} from "../Api/fixtures/gameStateJudgeExampleResponse";
+import {customKardsRender} from "../Tests/testRenders";
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
-const setUsers = jest.fn();
 const updateGameStateCallback = jest.fn();
 
-const { data } = gameStateJudgeExampleResponse;
+const {data} = gameStateJudgeExampleResponse;
+let mockUsers = data.users;
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customGameWrapperRender(<GameInfo />, {
+  return customKardsRender(<GameInfo/>, {
     setHand,
     setHasSubmittedCards,
-    setUsers,
     updateGameStateCallback,
     game: {
       id: data.id,
@@ -34,17 +33,27 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
       hasSubmittedWhiteCards: false,
       whiteCards: data.hand,
     },
-    users: data.users,
     hand: data.hand,
     blackCard: data.current_black_card,
     ...value,
   });
 };
 
+jest.mock("../State/Users/UsersContext", () => ({
+  ...(jest.requireActual("../State/Users/UsersContext")),
+  useUsers: () => ({
+    state: {
+      users: mockUsers
+    },
+    dispatch: jest.fn()
+  }),
+}));
+
+
 describe("GameInfo", () => {
   describe("Users Box", () => {
     it("shows the judge icon next to the player who is the judge", async () => {
-      const { findByTestId } = renderer();
+      const {findByTestId} = renderer();
 
       expect(await findByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
     });

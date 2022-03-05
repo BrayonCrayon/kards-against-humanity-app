@@ -1,10 +1,12 @@
-import React, { FC, useCallback, useContext } from "react";
-import { happyToast } from "../Utilities/toasts";
-import { BlackKard } from "./BlackKard";
-import { GameContext } from "../State/Game/GameContext";
+import React, {FC, useCallback, useContext} from "react";
+import {happyToast} from "../Utilities/toasts";
+import {BlackKard} from "./BlackKard";
+import {GameContext} from "../State/Game/GameContext";
+import {useUsers} from "../State/Users/UsersContext";
 
 const GameInfo: FC = () => {
-  const { game, user, users, blackCard, judge } = useContext(GameContext);
+  const {game, user, blackCard, judge} = useContext(GameContext);
+  const {state: {users}} = useUsers();
 
   const copyGameCode = useCallback(async () => {
     try {

@@ -1,10 +1,10 @@
-import { createContext } from "react";
-import { WhiteCard } from "../../Types/WhiteCard";
-import { Game } from "../../Types/Game";
-import { User } from "../../Types/User";
-import { BlackCard } from "../../Types/BlackCard";
-import { setState } from "../GeneralTypes";
-import { UpdateGameState } from "../../Services/PusherService";
+import {createContext} from "react";
+import {WhiteCard} from "../../Types/WhiteCard";
+import {Game} from "../../Types/Game";
+import {User} from "../../Types/User";
+import {BlackCard} from "../../Types/BlackCard";
+import {setState} from "../GeneralTypes";
+import {UpdateGameState} from "../../Services/PusherService";
 
 export interface IGameContext {
   hand: WhiteCard[];
@@ -12,12 +12,10 @@ export interface IGameContext {
   user: User;
   judge: User;
   blackCard: BlackCard;
-  users: User[];
   hasSubmittedCards: boolean;
 
   setGame: setState<Game>;
   setUser: setState<User>;
-  setUsers: setState<User[]>;
   setHand: setState<WhiteCard[]>;
   setBlackCard: setState<BlackCard>;
   setHasSubmittedCards: setState<boolean>;
@@ -28,7 +26,6 @@ export interface IGameContext {
 
 export const initialState: IGameContext = {
   hand: [],
-  users: [],
   user: {
     id: 0,
     name: "",
@@ -57,7 +54,6 @@ export const initialState: IGameContext = {
 
   setGame: (game) => {},
   setUser: (user) => {},
-  setUsers: (user) => {},
   setHand: (hand) => {},
   setBlackCard: () => {},
   setHasSubmittedCards: () => {},

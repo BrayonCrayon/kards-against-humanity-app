@@ -1,13 +1,13 @@
-import { screen, waitFor } from "@testing-library/react";
-import { CreateGameForm } from "./CreateGameForm";
+import {screen, waitFor} from "@testing-library/react";
+import {CreateGameForm} from "./CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
-import { Game } from "../../Types/Game";
-import { apiClient } from "../../Api/apiClient";
-import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
-import { transformUser, transformUsers } from "../../Types/User";
-import { customGameWrapperRender, history } from "../../Tests/testRenders";
+import {gameStateExampleResponse} from "../../Api/fixtures/gameStateExampleResponse";
+import {getExpansionsExampleResponse} from "../../Api/fixtures/getExpansionsExampleResponse";
+import {Game} from "../../Types/Game";
+import {apiClient} from "../../Api/apiClient";
+import {SELECTED_CARD_BACKGROUND} from "../ExpansionCard";
+import {transformUser, transformUsers} from "../../Types/User";
+import {customKardsRender, history} from "../../Tests/testRenders";
 
 jest.mock("../../Api/apiClient");
 
@@ -22,7 +22,7 @@ const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
-  return customGameWrapperRender(<CreateGameForm />, {
+  return customKardsRender(<CreateGameForm/>, {
     setGame,
     setUsers,
     setUser,

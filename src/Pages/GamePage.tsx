@@ -1,31 +1,26 @@
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { GameContext } from "../State/Game/GameContext";
-import { WhiteKard } from "../Components/WhiteKard";
-import {
-  listenWhenGameRotates,
-  listenWhenUserJoinsGame,
-  listenWhenUserSubmittedCards,
-} from "../Services/PusherService";
-import useFetchGameState from "../Hooks/Game/UseFetchGameState";
-import { apiClient } from "../Api/apiClient";
+import React, {useCallback, useContext, useEffect, useMemo} from "react";
+import {useParams} from "react-router-dom";
+import {GameContext} from "../State/Game/GameContext";
+import {WhiteKard} from "../Components/WhiteKard";
+import {listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards,} from "../Services/PusherService";
+import useFetchGameState from "../Hooks/Game/useFetchGameState";
+import {apiClient} from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
-import { VotingSection } from "../Components/VotingSection";
-import { useVote } from "../State/Vote/VoteContext";
-import { RoundWinnerModal } from "../Components/RoundWinnerModal";
-import { Button } from "../Components/Button";
+import {VotingSection} from "../Components/VotingSection";
+import {useVote} from "../State/Vote/VoteContext";
+import {RoundWinnerModal} from "../Components/RoundWinnerModal";
+import {Button} from "../Components/Button";
+import {useUsers} from "../State/Users/UsersContext";
 
 const GamePage = () => {
   const {
     hand,
     game,
-    users,
     user,
     blackCard,
     hasSubmittedCards,
     judge,
     updateGameStateCallback,
-    setUsers,
     setUser,
     setGame,
     setHand,
@@ -35,19 +30,22 @@ const GamePage = () => {
   } = useContext(GameContext);
 
   const {
-    state: { selectedRoundWinner },
+    state: {selectedRoundWinner},
   } = useVote();
 
-  const { id } = useParams<{ id: string }>();
+  const {
+    state: {users}
+  } = useUsers();
+
+  const {id} = useParams<{ id: string }>();
 
   const fetchGameState = useFetchGameState(
-    setUsers,
-    setUser,
-    setGame,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge
+      setUser,
+      setGame,
+      setHand,
+      setBlackCard,
+      setHasSubmittedCards,
+      setJudge
   );
 
   const showVotingSection = useMemo(() => {

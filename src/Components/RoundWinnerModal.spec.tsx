@@ -1,17 +1,20 @@
-import { customGameVoteRender } from "../Tests/testRenders";
-import { RoundWinnerModal } from "./RoundWinnerModal";
+import {customKardsRender} from "../Tests/testRenders";
+import {RoundWinnerModal} from "./RoundWinnerModal";
 import * as Vote from "../State/Vote/VoteContext";
-import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
+import {submittedCardsResponse} from "../Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
-import { CLEAR_STATE } from "../State/Vote/VoteActions";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { Game } from "../Types/Game";
-import { transformUser, transformUsers } from "../Types/User";
-import { waitFor } from "@testing-library/react";
-import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
-import { fillOutBlackCard } from "../Utilities/helpers";
+import {CLEAR_STATE} from "../State/Vote/VoteActions";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {Game} from "../Types/Game";
+import {transformUser, transformUsers} from "../Types/User";
+import {waitFor} from "@testing-library/react";
+import {roundWinnerExampleResponse} from "../Api/fixtures/roundWinnerExampleResponse";
+import {fillOutBlackCard} from "../Utilities/helpers";
 
-const mockRotateGame = jest.fn(async () => {});
+const mockRotateGame = jest.fn(async () => {
+});
 jest.mock("../Hooks/Game/useRotateGame", () => {
   return () => {
     return mockRotateGame;
@@ -31,37 +34,35 @@ const game: Game = {
   code: gameStateAllPlayerSubmittedCardsExampleResponse.data.code,
   judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
 };
-const mockSetUsers = jest.fn();
-const mockSetUser = jest.fn();
-const mockSetHand = jest.fn();
-const mockSetGame = jest.fn();
-const mockSetBlackCard = jest.fn();
-const mockSetHasSubmittedWhiteCards = jest.fn();
-const mockSetJudge = jest.fn();
+
 const props = {
   game,
   user: transformUser(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
-  ),
-  users: transformUsers(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.users
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
   ),
   judge: transformUser(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
   ),
   blackCard:
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
+  gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
   hand: gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
-  setUsers: mockSetUsers,
-  setUser: mockSetUser,
-  setHand: mockSetHand,
-  setGame: mockSetGame,
-  setBlackCard: mockSetBlackCard,
-  setHasSubmittedWhiteCards: mockSetHasSubmittedWhiteCards,
-  setJudge: mockSetJudge,
 };
+
+let mockUsers = transformUsers(
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.users
+);
+jest.mock("../State/Users/UsersContext", () => ({
+  ...jest.requireActual("../State/Users/UsersContext"),
+  useUsers: () => ({
+    state: {
+      users: mockUsers
+    },
+    dispatch: jest.fn()
+  })
+}));
+
 const renderComponent = () => {
-  return customGameVoteRender(<RoundWinnerModal />, props);
+  return customKardsRender(<RoundWinnerModal/>, props);
 };
 
 describe("RoundWinnerModal", () => {
@@ -121,7 +122,7 @@ describe("RoundWinnerModal", () => {
 
   it("will display round winners name", () => {
     const winner = submittedCardsResponse.data[0];
-    const winnerName = props.users.find((user) => {
+    const winnerName = mockUsers.find((user) => {
       return user.id === winner.user_id;
     })!.name;
     jest.spyOn(Vote, "useVote").mockImplementation(() => ({
@@ -166,7 +167,7 @@ describe("RoundWinnerModal", () => {
   });
 
   it("does not call game rotate when user is not a judge", async () => {
-    props.user = props.users[0];
+    props.user = mockUsers[0];
     renderComponent();
 
     await waitFor(() => {

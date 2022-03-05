@@ -1,6 +1,6 @@
 import {User} from "../../Types/User";
 import React, {FC, useReducer} from "react";
-import {UsersActionTypes} from "./UsersActions";
+import {SET_PLAYERS, UsersActionTypes} from "./UsersActions";
 
 export interface IUsersState {
     users: Array<User>
@@ -15,8 +15,15 @@ type Dispatch = (action: UsersActionTypes) => void;
 export const UsersContext = React.createContext<{ state: IUsersState, dispatch: Dispatch } | undefined>(undefined);
 
 function usersReducer(state: IUsersState, action: UsersActionTypes): IUsersState {
-    return state;
     switch (action.type) {
+        case SET_PLAYERS:
+            return {
+                ...state,
+                users: action.payload.users
+            };
+        case "KICK_PLAYER":
+        default:
+            return state;
     }
 }
 
@@ -29,7 +36,7 @@ const UsersProvider: FC = ({children}) => {
 
 function useUsers() {
     const context = React.useContext(UsersContext);
-    if (!context) {
+    if (context === undefined) {
         throw new Error("useUsers must be used within a UsersProvider");
     }
     return context;

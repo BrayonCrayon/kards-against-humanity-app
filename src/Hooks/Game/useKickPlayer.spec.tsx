@@ -7,10 +7,16 @@ import {gameStateExampleResponse} from "../../Api/fixtures/gameStateExampleRespo
 import {transformUsers} from "../../Types/User";
 import {KICK_PLAYER} from "../../State/Users/UsersActions";
 import * as Users from "../../State/Users/UsersContext";
+import {UsersProvider} from "../../State/Users/UsersContext";
 
 const renderUseKickPlayer = () => {
   return renderHook(useKickPlayer, {
-    wrapper: ({children}) => <VoteProvider>{children}</VoteProvider>,
+    wrapper: ({children}) =>
+        <VoteProvider>
+          <UsersProvider>
+            {children}
+          </UsersProvider>
+        </VoteProvider>,
   });
 };
 
@@ -59,6 +65,6 @@ describe("useKickPlayer", () => {
       payload: {
         userId
       }
-    })
-  })
+    });
+  });
 });
