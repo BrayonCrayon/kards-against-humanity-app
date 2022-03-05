@@ -9,9 +9,21 @@ import {errorToast} from "../../Utilities/toasts";
 import {transformUser, transformUsers} from "../../Types/User";
 import {customKardsRender, history} from "../../Tests/testRenders";
 import {setupAndSubmitForm} from "../../Tests/actions";
+import {SET_PLAYERS} from "../../State/Users/UsersActions";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
+
+let mockDispatch = jest.fn();
+jest.mock("../../State/Users/UsersContext", () => ({
+  ...jest.requireActual("../../State/Users/UsersContext"),
+  useUsers: () => ({
+    state: {
+      users: []
+    },
+    dispatch: mockDispatch
+  })
+}))
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const userName = "Joe";
@@ -21,7 +33,6 @@ const setGame = jest.fn();
 const setUser = jest.fn();
 const setHand = jest.fn();
 const setBlackCard = jest.fn();
-const setUsers = jest.fn();
 const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
@@ -31,7 +42,6 @@ const renderer = () => {
     setUser,
     setHand,
     setBlackCard,
-    setUsers,
     setHasSubmittedCards,
     setJudge,
   });
@@ -118,20 +128,24 @@ describe("JoinGameForm", () => {
         code: gameStateExampleResponse.data.code,
       } as Game);
       expect(setUser).toHaveBeenCalledWith(
-        transformUser(gameStateExampleResponse.data.current_user)
+          transformUser(gameStateExampleResponse.data.current_user)
       );
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setBlackCard).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.current_black_card
+          gameStateExampleResponse.data.current_black_card
       );
-      expect(setUsers).toHaveBeenCalledWith(
-        transformUsers(gameStateExampleResponse.data.users)
+      expect(mockDispatch).toHaveBeenCalledWith({
+            type: SET_PLAYERS,
+            payload: {
+              users: transformUsers(gameStateExampleResponse.data.users)
+            }
+          }
       );
       expect(setHasSubmittedCards).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.hasSubmittedWhiteCards
+          gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
       expect(setJudge).toHaveBeenCalledWith(
-        transformUser(gameStateExampleResponse.data.judge)
+          transformUser(gameStateExampleResponse.data.judge)
       );
     });
   });
