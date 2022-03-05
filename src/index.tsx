@@ -9,15 +9,15 @@ import {UsersProvider} from "./State/Users/UsersContext";
 
 ReactDOM.render(
     <React.StrictMode>
-        <GameContextProvider>
-            <VoteProvider>
-                <UsersProvider>
+        <UsersProvider>
+            <GameContextProvider>
+                <VoteProvider>
                     <App/>
-                </UsersProvider>
-            </VoteProvider>
-        </GameContextProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+                </VoteProvider>
+            </GameContextProvider>
+        </UsersProvider>
+    </React.StrictMode>,
+    document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
