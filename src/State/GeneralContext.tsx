@@ -1,5 +1,4 @@
 import React, { Context, useReducer } from "react";
-import { VoteContext } from "./Vote/VoteContext";
 
 export interface BaseAction {
   type: string;

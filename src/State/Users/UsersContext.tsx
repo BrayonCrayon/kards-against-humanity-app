@@ -1,7 +1,7 @@
 import { User } from "../../Types/User";
-import React, { FC, useReducer } from "react";
+import React, { FC } from "react";
 import { SET_PLAYERS, UsersActionTypes } from "./UsersActions";
-import { getContext, getReducer } from "../GeneralContext";
+import { BaseContext, getContext, getReducer } from "../GeneralContext";
 
 export interface IUsersState {
   users: Array<User>;
@@ -11,11 +11,8 @@ export const initialUsersState: IUsersState = {
   users: [],
 };
 
-type Dispatch = (action: UsersActionTypes) => void;
-
-export const UsersContext = React.createContext<
-  { state: IUsersState; dispatch: Dispatch } | undefined
->(undefined);
+export const UsersContext =
+  React.createContext<BaseContext<IUsersState, UsersActionTypes>>(undefined);
 
 function usersReducer(
   state: IUsersState,
@@ -34,9 +31,10 @@ function usersReducer(
 }
 
 const UsersProvider: FC = ({ children }) => {
-  const value = getReducer(usersReducer, initialUsersState);
   return (
-    <UsersContext.Provider value={value}>{children}</UsersContext.Provider>
+    <UsersContext.Provider value={getReducer(usersReducer, initialUsersState)}>
+      {children}
+    </UsersContext.Provider>
   );
 };
 

@@ -43,11 +43,16 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
 }
 
 const VoteProvider: FC = ({ children }) => {
-  const value = getReducer<IVoteState, VoteActionTypes>(
-    voteReducer,
-    initialVoteState
+  return (
+    <VoteContext.Provider
+      value={getReducer<IVoteState, VoteActionTypes>(
+        voteReducer,
+        initialVoteState
+      )}
+    >
+      {children}
+    </VoteContext.Provider>
   );
-  return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;
 };
 
 function useVote() {
