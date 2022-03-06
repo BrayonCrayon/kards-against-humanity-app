@@ -21,10 +21,7 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
 const VoteProvider: FC = ({ children }) => {
   return (
     <VoteContext.Provider
-      value={useGenericReducer<IVoteState, VoteActionTypes>(
-        voteReducer,
-        initialVoteState
-      )}
+      value={useGenericReducer(voteReducer, initialVoteState)}
     >
       {children}
     </VoteContext.Provider>
