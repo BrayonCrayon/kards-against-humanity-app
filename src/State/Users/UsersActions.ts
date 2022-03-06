@@ -2,9 +2,6 @@ import { User } from "../../Types/User";
 import { BaseAction } from "../GeneralContext";
 import { IUsersState } from "./UsersState";
 
-// export const KICK_PLAYER = "KICK_PLAYER";
-// export const SET_PLAYERS = "SET_PLAYERS";
-
 export class KickPlayerAction implements BaseAction<IUsersState> {
   userId: number;
   constructor(userId: number) {

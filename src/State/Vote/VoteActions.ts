@@ -2,10 +2,6 @@ import { RoundWinner } from "../../Types/ResponseTypes";
 import { BaseAction } from "../GeneralContext";
 import { initialVoteState, IVoteState } from "./VoteState";
 
-// export const SELECT_WINNER = "SELECT_WINNER";
-// export const WINNER_SELECTED = "WINNER_SELECTED";
-// export const CLEAR_STATE = "CLEAR_STATE";
-
 export class SelectWinnerAction implements BaseAction<IVoteState> {
   userId: number;
 
@@ -19,8 +15,6 @@ export class SelectWinnerAction implements BaseAction<IVoteState> {
       selectedPlayerId: this.userId,
     };
   }
-  // type: typeof SELECT_WINNER;
-  // payload: { userId: number };
 }
 
 export class WinnerSelectedAction implements BaseAction<IVoteState> {
@@ -36,15 +30,12 @@ export class WinnerSelectedAction implements BaseAction<IVoteState> {
       selectedRoundWinner: this.winner,
     };
   }
-  // type: typeof WINNER_SELECTED;
-  // payload: RoundWinner;
 }
 
 export class ClearStateAction implements BaseAction<IVoteState> {
   execute(state: IVoteState): IVoteState {
     return initialVoteState;
   }
-  // type: typeof CLEAR_STATE;
 }
 
 export type VoteActionTypes =
