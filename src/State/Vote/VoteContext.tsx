@@ -1,4 +1,4 @@
-import React, { FC, useReducer } from "react";
+import React, { FC } from "react";
 import {
   CLEAR_STATE,
   SELECT_WINNER,
@@ -6,6 +6,7 @@ import {
   WINNER_SELECTED,
 } from "./VoteActions";
 import { RoundWinner } from "../../Types/ResponseTypes";
+import { BaseContext, getReducer } from "../GeneralContext";
 
 export interface IVoteState {
   selectedPlayerId: number;
@@ -16,11 +17,8 @@ export const initialVoteState: IVoteState = {
   selectedPlayerId: 0,
 };
 
-type Dispatch = (action: VoteActionTypes) => void;
-
-export const VoteContext = React.createContext<
-  { state: IVoteState; dispatch: Dispatch } | undefined
->(undefined);
+export const VoteContext =
+  React.createContext<BaseContext<IVoteState, VoteActionTypes>>(undefined);
 
 function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
   switch (action.type) {
@@ -45,9 +43,10 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
 }
 
 const VoteProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(voteReducer, initialVoteState);
-
-  const value = { state, dispatch };
+  const value = getReducer<IVoteState, VoteActionTypes>(
+    voteReducer,
+    initialVoteState
+  );
   return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;
 };
 
