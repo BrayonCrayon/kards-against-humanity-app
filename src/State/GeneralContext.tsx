@@ -11,7 +11,7 @@ export type BaseContext<T, ActionType> = {
   dispatch: Dispatch<ActionType>;
 };
 
-export function getReducer<T, R>(
+export function useGenericReducer<T, R>(
   reducer: (state: T, action: R) => T,
   initialState: T
 ) {
@@ -19,7 +19,7 @@ export function getReducer<T, R>(
   return { state, dispatch };
 }
 
-export function getContext<T>(value: Context<T>) {
+export function useGenericContext<T>(value: Context<T>) {
   const context = React.useContext(value);
   if (context === undefined) {
     throw new Error("getContext must be used within the context Provider");

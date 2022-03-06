@@ -1,20 +1,20 @@
-import React, {useCallback, useContext, useState} from "react";
-import {apiClient} from "../../Api/apiClient";
-import {useHistory} from "react-router-dom";
-import {GameContext} from "../../State/Game/GameContext";
-import {Game} from "../../Types/Game";
-import {errorToast} from "../../Utilities/toasts";
-import {IWhiteCard, WhiteCard} from "../../Types/WhiteCard";
-import {transformUser, transformUsers} from "../../Types/User";
-import {Button} from "../Button";
-import {useUsers} from "../../State/Users/UsersContext";
-import {SET_PLAYERS} from "../../State/Users/UsersActions";
+import React, { useCallback, useContext, useState } from "react";
+import { apiClient } from "../../Api/apiClient";
+import { useHistory } from "react-router-dom";
+import { GameContext } from "../../State/Game/GameContext";
+import { Game } from "../../Types/Game";
+import { errorToast } from "../../Utilities/toasts";
+import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
+import { transformUser, transformUsers } from "../../Types/User";
+import { Button } from "../Button";
+import { useUsers } from "../../State/Users/UsersContext";
+import { SetPlayersAction } from "../../State/Users/UsersActions";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
-  const {dispatch} = useUsers();
+  const { dispatch } = useUsers();
   const {
     setGame,
     setUser,
@@ -29,7 +29,7 @@ const JoinGameForm: React.FC = () => {
       event.preventDefault();
 
       try {
-        const {data} = await apiClient.post(`/api/game/${code}/join`, {
+        const { data } = await apiClient.post(`/api/game/${code}/join`, {
           name: userName,
         });
         setGame({
@@ -38,12 +38,7 @@ const JoinGameForm: React.FC = () => {
           code: data.code,
         } as Game);
         setUser(transformUser(data.current_user));
-        dispatch({
-          type: SET_PLAYERS,
-          payload: {
-            users: transformUsers(data.users)
-          }
-        })
+        dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });

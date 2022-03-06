@@ -1,15 +1,14 @@
-import {waitFor} from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {apiClient} from "../../Api/apiClient";
-import {gameStateExampleResponse} from "../../Api/fixtures/gameStateExampleResponse";
-import {getExpansionsExampleResponse} from "../../Api/fixtures/getExpansionsExampleResponse";
+import { apiClient } from "../../Api/apiClient";
+import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import {Game} from "../../Types/Game";
-import {errorToast} from "../../Utilities/toasts";
-import {transformUser, transformUsers} from "../../Types/User";
-import {customKardsRender, history} from "../../Tests/testRenders";
-import {setupAndSubmitForm} from "../../Tests/actions";
-import {SET_PLAYERS} from "../../State/Users/UsersActions";
+import { Game } from "../../Types/Game";
+import { errorToast } from "../../Utilities/toasts";
+import { transformUser, transformUsers } from "../../Types/User";
+import { customKardsRender, history } from "../../Tests/testRenders";
+import { setupAndSubmitForm } from "../../Tests/actions";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
@@ -19,11 +18,11 @@ jest.mock("../../State/Users/UsersContext", () => ({
   ...jest.requireActual("../../State/Users/UsersContext"),
   useUsers: () => ({
     state: {
-      users: []
+      users: [],
     },
-    dispatch: mockDispatch
-  })
-}))
+    dispatch: mockDispatch,
+  }),
+}));
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const userName = "Joe";
@@ -37,7 +36,7 @@ const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
-  return customKardsRender(<JoinGameForm/>, {
+  return customKardsRender(<JoinGameForm />, {
     setGame,
     setUser,
     setHand,
@@ -128,24 +127,20 @@ describe("JoinGameForm", () => {
         code: gameStateExampleResponse.data.code,
       } as Game);
       expect(setUser).toHaveBeenCalledWith(
-          transformUser(gameStateExampleResponse.data.current_user)
+        transformUser(gameStateExampleResponse.data.current_user)
       );
       expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setBlackCard).toHaveBeenCalledWith(
-          gameStateExampleResponse.data.current_black_card
+        gameStateExampleResponse.data.current_black_card
       );
       expect(mockDispatch).toHaveBeenCalledWith({
-            type: SET_PLAYERS,
-            payload: {
-              users: transformUsers(gameStateExampleResponse.data.users)
-            }
-          }
-      );
+        users: transformUsers(gameStateExampleResponse.data.users),
+      });
       expect(setHasSubmittedCards).toHaveBeenCalledWith(
-          gameStateExampleResponse.data.hasSubmittedWhiteCards
+        gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
       expect(setJudge).toHaveBeenCalledWith(
-          transformUser(gameStateExampleResponse.data.judge)
+        transformUser(gameStateExampleResponse.data.judge)
       );
     });
   });

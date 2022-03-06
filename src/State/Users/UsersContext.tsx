@@ -1,6 +1,10 @@
 import React, { FC } from "react";
 import { UsersActionTypes } from "./UsersActions";
-import { BaseContext, getContext, getReducer } from "../GeneralContext";
+import {
+  BaseContext,
+  useGenericContext,
+  useGenericReducer,
+} from "../GeneralContext";
 import { initialUsersState, IUsersState } from "./UsersState";
 
 export const UsersContext = React.createContext<
@@ -19,14 +23,16 @@ function usersReducer(
 
 const UsersProvider: FC = ({ children }) => {
   return (
-    <UsersContext.Provider value={getReducer(usersReducer, initialUsersState)}>
+    <UsersContext.Provider
+      value={useGenericReducer(usersReducer, initialUsersState)}
+    >
       {children}
     </UsersContext.Provider>
   );
 };
 
 function useUsers() {
-  return getContext(UsersContext);
+  return useGenericContext(UsersContext);
 }
 
 export { useUsers, UsersProvider };

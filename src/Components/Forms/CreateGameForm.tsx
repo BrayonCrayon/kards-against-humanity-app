@@ -1,14 +1,14 @@
-import React, {useCallback, useContext, useEffect, useState} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import ExpansionCard from "../ExpansionCard";
-import {Expansion} from "../../Types/Expansion";
-import {useHistory} from "react-router-dom";
-import {apiClient} from "../../Api/apiClient";
-import {GameContext} from "../../State/Game/GameContext";
-import {IWhiteCard, WhiteCard} from "../../Types/WhiteCard";
-import {transformUser, transformUsers} from "../../Types/User";
-import {Button} from "../Button";
-import {useUsers} from "../../State/Users/UsersContext";
-import {SET_PLAYERS} from "../../State/Users/UsersActions";
+import { Expansion } from "../../Types/Expansion";
+import { useHistory } from "react-router-dom";
+import { apiClient } from "../../Api/apiClient";
+import { GameContext } from "../../State/Game/GameContext";
+import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
+import { transformUser, transformUsers } from "../../Types/User";
+import { Button } from "../Button";
+import { useUsers } from "../../State/Users/UsersContext";
+import { SetPlayersAction } from "../../State/Users/UsersActions";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -19,7 +19,7 @@ export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const {dispatch} = useUsers();
+  const { dispatch } = useUsers();
   const {
     setGame,
     setUser,
@@ -72,7 +72,7 @@ export const CreateGameForm: React.FC = () => {
           judge_id: data.judge.id,
         });
         setUser(transformUser(data.current_user));
-        dispatch({type: SET_PLAYERS, payload: {users: transformUsers(data.users)}});
+        dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
@@ -94,7 +94,7 @@ export const CreateGameForm: React.FC = () => {
       setHand,
       setBlackCard,
       setHasSubmittedCards,
-      dispatch
+      dispatch,
     ]
   );
 
