@@ -6,7 +6,7 @@ import {
   WINNER_SELECTED,
 } from "./VoteActions";
 import { RoundWinner } from "../../Types/ResponseTypes";
-import { BaseContext, getReducer } from "../GeneralContext";
+import { BaseContext, getContext, getReducer } from "../GeneralContext";
 
 export interface IVoteState {
   selectedPlayerId: number;
@@ -51,11 +51,7 @@ const VoteProvider: FC = ({ children }) => {
 };
 
 function useVote() {
-  const context = React.useContext(VoteContext);
-  if (context === undefined) {
-    throw new Error("useVote must be used within a VoteProvider");
-  }
-  return context;
+  return getContext(VoteContext);
 }
 
 export { VoteProvider, useVote };

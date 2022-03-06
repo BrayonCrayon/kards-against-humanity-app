@@ -1,4 +1,5 @@
-import React, { useReducer } from "react";
+import React, { Context, useReducer } from "react";
+import { VoteContext } from "./Vote/VoteContext";
 
 export interface BaseAction {
   type: string;
@@ -20,4 +21,12 @@ export function getReducer<T, R>(
 ) {
   const [state, dispatch] = useReducer(reducer, initialState);
   return { state, dispatch };
+}
+
+export function getContext<T>(value: Context<T>) {
+  const context = React.useContext(value);
+  if (context === undefined) {
+    throw new Error("getContext must be used within the context Provider");
+  }
+  return context;
 }

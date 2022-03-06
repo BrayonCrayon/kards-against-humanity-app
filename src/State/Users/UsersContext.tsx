@@ -1,7 +1,7 @@
 import { User } from "../../Types/User";
 import React, { FC, useReducer } from "react";
 import { SET_PLAYERS, UsersActionTypes } from "./UsersActions";
-import { getReducer } from "../GeneralContext";
+import { getContext, getReducer } from "../GeneralContext";
 
 export interface IUsersState {
   users: Array<User>;
@@ -41,11 +41,7 @@ const UsersProvider: FC = ({ children }) => {
 };
 
 function useUsers() {
-  const context = React.useContext(UsersContext);
-  if (context === undefined) {
-    throw new Error("useUsers must be used within a UsersProvider");
-  }
-  return context;
+  return getContext(UsersContext);
 }
 
 export { useUsers, UsersProvider };
