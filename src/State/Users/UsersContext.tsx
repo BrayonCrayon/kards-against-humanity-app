@@ -1,33 +1,20 @@
-import { User } from "../../Types/User";
 import React, { FC } from "react";
-import { SET_PLAYERS, UsersActionTypes } from "./UsersActions";
+import { UsersActionTypes } from "./UsersActions";
 import { BaseContext, getContext, getReducer } from "../GeneralContext";
+import { initialUsersState, IUsersState } from "./UsersState";
 
-export interface IUsersState {
-  users: Array<User>;
-}
-
-export const initialUsersState: IUsersState = {
-  users: [],
-};
-
-export const UsersContext =
-  React.createContext<BaseContext<IUsersState, UsersActionTypes>>(undefined);
+export const UsersContext = React.createContext<
+  BaseContext<IUsersState, UsersActionTypes>
+>({
+  state: initialUsersState,
+  dispatch: () => {},
+});
 
 function usersReducer(
   state: IUsersState,
   action: UsersActionTypes
 ): IUsersState {
-  switch (action.type) {
-    case SET_PLAYERS:
-      return {
-        ...state,
-        users: action.payload.users,
-      };
-    case "KICK_PLAYER":
-    default:
-      return state;
-  }
+  return action.execute(state);
 }
 
 const UsersProvider: FC = ({ children }) => {

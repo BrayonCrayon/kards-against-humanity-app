@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { apiClient } from "../../Api/apiClient";
 import { useVote } from "../../State/Vote/VoteContext";
-import { WINNER_SELECTED } from "../../State/Vote/VoteActions";
+import { WinnerSelectedAction } from "../../State/Vote/VoteActions";
 import { RoundWinner } from "../../Types/ResponseTypes";
 import { IWinnerIsSelectedEventData } from "../../Services/PusherService";
 
@@ -13,7 +13,7 @@ function UseFetchRoundWinner() {
         const response = await apiClient.get<RoundWinner>(
           `/api/game/${data.gameId}/round/winner/${data.blackCardId}`
         );
-        dispatch({ type: WINNER_SELECTED, payload: response.data });
+        dispatch(new WinnerSelectedAction(response.data));
       } catch (e) {
         console.error(e);
       }

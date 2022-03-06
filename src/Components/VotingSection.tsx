@@ -9,7 +9,7 @@ import { listenWhenWinnerIsSelected } from "../Services/PusherService";
 import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
-import { SELECT_WINNER } from "../State/Vote/VoteActions";
+import { SelectWinnerAction } from "../State/Vote/VoteActions";
 
 export const VotingSection: FC = () => {
   const { game, judge, user, blackCard } = useContext(GameContext);
@@ -59,7 +59,7 @@ export const VotingSection: FC = () => {
     (user_id) => {
       if (judge.id !== user.id) return;
 
-      dispatch({ type: SELECT_WINNER, payload: { userId: user_id } });
+      dispatch(new SelectWinnerAction(user_id));
     },
     [dispatch, judge, user]
   );

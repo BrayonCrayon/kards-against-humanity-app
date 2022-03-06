@@ -1,45 +1,17 @@
 import React, { FC } from "react";
-import {
-  CLEAR_STATE,
-  SELECT_WINNER,
-  VoteActionTypes,
-  WINNER_SELECTED,
-} from "./VoteActions";
-import { RoundWinner } from "../../Types/ResponseTypes";
+import { VoteActionTypes } from "./VoteActions";
 import { BaseContext, getContext, getReducer } from "../GeneralContext";
+import { initialVoteState, IVoteState } from "./VoteState";
 
-export interface IVoteState {
-  selectedPlayerId: number;
-  selectedRoundWinner?: RoundWinner;
-}
-
-export const initialVoteState: IVoteState = {
-  selectedPlayerId: 0,
-};
-
-export const VoteContext =
-  React.createContext<BaseContext<IVoteState, VoteActionTypes>>(undefined);
+export const VoteContext = React.createContext<
+  BaseContext<IVoteState, VoteActionTypes>
+>({
+  state: initialVoteState,
+  dispatch: () => {},
+});
 
 function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
-  switch (action.type) {
-    case SELECT_WINNER: {
-      return {
-        ...state,
-        selectedPlayerId: action.payload.userId,
-      };
-    }
-    case WINNER_SELECTED: {
-      return {
-        ...state,
-        selectedRoundWinner: action.payload,
-      };
-    }
-    case CLEAR_STATE: {
-      return { ...initialVoteState };
-    }
-    default:
-      return state;
-  }
+  return action.execute(state);
 }
 
 const VoteProvider: FC = ({ children }) => {

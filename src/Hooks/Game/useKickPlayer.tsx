@@ -1,15 +1,15 @@
-import {useCallback} from "react";
-import {apiClient} from "../../Api/apiClient";
-import {useUsers} from "../../State/Users/UsersContext";
-import {KICK_PLAYER} from "../../State/Users/UsersActions";
+import { useCallback } from "react";
+import { apiClient } from "../../Api/apiClient";
+import { useUsers } from "../../State/Users/UsersContext";
+import { KickPlayerAction } from "../../State/Users/UsersActions";
 
 function useKickPlayer() {
-  const {dispatch} = useUsers();
+  const { dispatch } = useUsers();
 
   const kickPlayer = useCallback(async (gameId: string, userId: number) => {
     try {
       await apiClient.post(`/api/game/${gameId}/player/${userId}/kick`);
-      dispatch({type: KICK_PLAYER, payload: {userId}});
+      dispatch(new KickPlayerAction(userId));
     } catch (error) {
       console.error(error);
     }

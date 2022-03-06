@@ -1,22 +1,50 @@
 import { RoundWinner } from "../../Types/ResponseTypes";
 import { BaseAction } from "../GeneralContext";
+import { initialVoteState, IVoteState } from "./VoteState";
 
-export const SELECT_WINNER = "SELECT_WINNER";
-export const WINNER_SELECTED = "WINNER_SELECTED";
-export const CLEAR_STATE = "CLEAR_STATE";
+// export const SELECT_WINNER = "SELECT_WINNER";
+// export const WINNER_SELECTED = "WINNER_SELECTED";
+// export const CLEAR_STATE = "CLEAR_STATE";
 
-export interface SelectWinnerAction extends BaseAction {
-  type: typeof SELECT_WINNER;
-  payload: { userId: number };
+export class SelectWinnerAction implements BaseAction<IVoteState> {
+  userId: number;
+
+  constructor(userId: number) {
+    this.userId = userId;
+  }
+
+  execute(state: IVoteState): IVoteState {
+    return {
+      ...state,
+      selectedPlayerId: this.userId,
+    };
+  }
+  // type: typeof SELECT_WINNER;
+  // payload: { userId: number };
 }
 
-export interface WinnerSelectedAction extends BaseAction {
-  type: typeof WINNER_SELECTED;
-  payload: RoundWinner;
+export class WinnerSelectedAction implements BaseAction<IVoteState> {
+  winner: RoundWinner;
+
+  constructor(winner: RoundWinner) {
+    this.winner = winner;
+  }
+
+  execute(state: IVoteState): IVoteState {
+    return {
+      ...state,
+      selectedRoundWinner: this.winner,
+    };
+  }
+  // type: typeof WINNER_SELECTED;
+  // payload: RoundWinner;
 }
 
-export interface ClearStateAction extends Omit<BaseAction, "payload"> {
-  type: typeof CLEAR_STATE;
+export class ClearStateAction implements BaseAction<IVoteState> {
+  execute(state: IVoteState): IVoteState {
+    return initialVoteState;
+  }
+  // type: typeof CLEAR_STATE;
 }
 
 export type VoteActionTypes =

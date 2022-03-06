@@ -1,7 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks";
 import UseFetchRoundWinner from "./UseFetchRoundWinner";
 import { apiClient } from "../../Api/apiClient";
-import { WINNER_SELECTED } from "../../State/Vote/VoteActions";
 import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
 import { VoteProvider } from "../../State/Vote/VoteContext";
 import { gameFixture } from "../../Api/fixtures/gameFixture";
@@ -59,10 +58,7 @@ describe("UseFetchRoundWinner", () => {
     expect(mockedAxios.get).toHaveBeenCalledWith(
       `/api/game/${gameId}/round/winner/${blackCardFixture.id}`
     );
-    expect(mockDispatch).toHaveBeenCalledWith({
-      type: WINNER_SELECTED,
-      payload: mockApiData,
-    });
+    expect(mockDispatch).toHaveBeenCalledWith({ winner: mockApiData });
   });
 
   it("will catch error if api call fails", async () => {

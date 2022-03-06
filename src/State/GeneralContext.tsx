@@ -1,18 +1,15 @@
 import React, { Context, useReducer } from "react";
 
-export interface BaseAction {
-  type: string;
-  payload: object;
+export interface BaseAction<T> {
+  execute: (state: T) => T;
 }
 
 export type Dispatch<T> = (action: T) => void;
 
-export type BaseContext<T, ActionType> =
-  | {
-      state: T;
-      dispatch: Dispatch<ActionType>;
-    }
-  | undefined;
+export type BaseContext<T, ActionType> = {
+  state: T;
+  dispatch: Dispatch<ActionType>;
+};
 
 export function getReducer<T, R>(
   reducer: (state: T, action: R) => T,
