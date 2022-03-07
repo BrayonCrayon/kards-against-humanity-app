@@ -16,7 +16,11 @@ export class WinnerSelectedAction extends BaseAction<IVoteState, RoundWinner> {
   });
 }
 
-export class ClearStateAction extends BaseAction<IVoteState, null> {
+export class ClearStateAction extends BaseAction<IVoteState, undefined> {
+  constructor() {
+    super(undefined);
+  }
+
   execute = (state: IVoteState): IVoteState => initialVoteState;
 }
 
