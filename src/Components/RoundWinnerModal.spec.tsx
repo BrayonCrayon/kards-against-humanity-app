@@ -1,20 +1,16 @@
-import {customKardsRender} from "../Tests/testRenders";
-import {RoundWinnerModal} from "./RoundWinnerModal";
+import { customKardsRender } from "../Tests/testRenders";
+import { RoundWinnerModal } from "./RoundWinnerModal";
 import * as Vote from "../State/Vote/VoteContext";
-import {submittedCardsResponse} from "../Api/fixtures/submittedCardsResponse";
+import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
-import {CLEAR_STATE} from "../State/Vote/VoteActions";
-import {
-  gameStateAllPlayerSubmittedCardsExampleResponse
-} from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import {Game} from "../Types/Game";
-import {transformUser, transformUsers} from "../Types/User";
-import {waitFor} from "@testing-library/react";
-import {roundWinnerExampleResponse} from "../Api/fixtures/roundWinnerExampleResponse";
-import {fillOutBlackCard} from "../Utilities/helpers";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { Game } from "../Types/Game";
+import { transformUser, transformUsers } from "../Types/User";
+import { waitFor } from "@testing-library/react";
+import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
+import { fillOutBlackCard } from "../Utilities/helpers";
 
-const mockRotateGame = jest.fn(async () => {
-});
+const mockRotateGame = jest.fn(async () => {});
 jest.mock("../Hooks/Game/useRotateGame", () => {
   return () => {
     return mockRotateGame;
@@ -38,31 +34,31 @@ const game: Game = {
 const props = {
   game,
   user: transformUser(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
   ),
   judge: transformUser(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
   ),
   blackCard:
-  gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
+    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
   hand: gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
 };
 
 let mockUsers = transformUsers(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.users
+  gameStateAllPlayerSubmittedCardsExampleResponse.data.users
 );
 jest.mock("../State/Users/UsersContext", () => ({
   ...jest.requireActual("../State/Users/UsersContext"),
   useUsers: () => ({
     state: {
-      users: mockUsers
+      users: mockUsers,
     },
-    dispatch: jest.fn()
-  })
+    dispatch: jest.fn(),
+  }),
 }));
 
 const renderComponent = () => {
-  return customKardsRender(<RoundWinnerModal/>, props);
+  return customKardsRender(<RoundWinnerModal />, props);
 };
 
 describe("RoundWinnerModal", () => {
@@ -111,9 +107,12 @@ describe("RoundWinnerModal", () => {
       await wrapper.findByTestId("round-winner-modal-close-button")
     );
 
-    expect(dispatchSpy).toHaveBeenCalledWith({
-      type: CLEAR_STATE,
-    });
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: undefined,
+      })
+    );
 
     expect(
       wrapper.queryByTestId("round-winner-modal-close-button")

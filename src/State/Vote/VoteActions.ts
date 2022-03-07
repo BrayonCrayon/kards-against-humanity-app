@@ -2,40 +2,22 @@ import { RoundWinner } from "../../Types/ResponseTypes";
 import { BaseAction } from "../GeneralContext";
 import { initialVoteState, IVoteState } from "./VoteState";
 
-export class SelectWinnerAction implements BaseAction<IVoteState> {
-  userId: number;
-
-  constructor(userId: number) {
-    this.userId = userId;
-  }
-
-  execute(state: IVoteState): IVoteState {
-    return {
-      ...state,
-      selectedPlayerId: this.userId,
-    };
-  }
+export class SelectWinnerAction extends BaseAction<IVoteState, number> {
+  execute = (state: IVoteState): IVoteState => ({
+    ...state,
+    selectedPlayerId: this.payload,
+  });
 }
 
-export class WinnerSelectedAction implements BaseAction<IVoteState> {
-  winner: RoundWinner;
-
-  constructor(winner: RoundWinner) {
-    this.winner = winner;
-  }
-
-  execute(state: IVoteState): IVoteState {
-    return {
-      ...state,
-      selectedRoundWinner: this.winner,
-    };
-  }
+export class WinnerSelectedAction extends BaseAction<IVoteState, RoundWinner> {
+  execute = (state: IVoteState): IVoteState => ({
+    ...state,
+    selectedRoundWinner: this.payload,
+  });
 }
 
-export class ClearStateAction implements BaseAction<IVoteState> {
-  execute(state: IVoteState): IVoteState {
-    return initialVoteState;
-  }
+export class ClearStateAction extends BaseAction<IVoteState, null> {
+  execute = (state: IVoteState): IVoteState => initialVoteState;
 }
 
 export type VoteActionTypes =

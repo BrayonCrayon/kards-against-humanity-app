@@ -58,7 +58,12 @@ describe("UseFetchRoundWinner", () => {
     expect(mockedAxios.get).toHaveBeenCalledWith(
       `/api/game/${gameId}/round/winner/${blackCardFixture.id}`
     );
-    expect(mockDispatch).toHaveBeenCalledWith({ winner: mockApiData });
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: mockApiData,
+      })
+    );
   });
 
   it("will catch error if api call fails", async () => {

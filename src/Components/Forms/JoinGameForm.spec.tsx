@@ -133,9 +133,12 @@ describe("JoinGameForm", () => {
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
       );
-      expect(mockDispatch).toHaveBeenCalledWith({
-        users: transformUsers(gameStateExampleResponse.data.users),
-      });
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          execute: expect.any(Function),
+          payload: transformUsers(gameStateExampleResponse.data.users),
+        })
+      );
       expect(setHasSubmittedCards).toHaveBeenCalledWith(
         gameStateExampleResponse.data.hasSubmittedWhiteCards
       );

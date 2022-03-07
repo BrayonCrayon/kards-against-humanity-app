@@ -51,9 +51,12 @@ describe("useFetchGameState", () => {
     expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
 
     expect(setUser).toHaveBeenCalledWith(transformUser(data.current_user));
-    expect(mockedDispatch).toHaveBeenCalledWith({
-      users: transformUsers(data.users),
-    });
+    expect(mockedDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: transformUsers(data.users),
+      })
+    );
     expect(setGame).toHaveBeenCalledWith({
       id: data.id,
       judge_id: data.judge.id,

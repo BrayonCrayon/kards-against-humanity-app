@@ -136,9 +136,12 @@ describe("CreateGameForm", () => {
       expect(setUser).toHaveBeenCalledWith(
         transformUser(gameStateExampleResponse.data.current_user)
       );
-      expect(mockDispatch).toHaveBeenCalledWith({
-        users: transformUsers(gameStateExampleResponse.data.users),
-      });
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          execute: expect.any(Function),
+          payload: transformUsers(gameStateExampleResponse.data.users),
+        })
+      );
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
       );

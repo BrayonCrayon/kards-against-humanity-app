@@ -1,7 +1,13 @@
 import React, { Context, useReducer } from "react";
 
-export interface BaseAction<T> {
-  execute: (state: T) => T;
+export abstract class BaseAction<T, PayloadType> {
+  payload: PayloadType;
+
+  public constructor(payload: PayloadType) {
+    this.payload = payload;
+  }
+
+  abstract execute: (state: T) => T;
 }
 
 export type Dispatch<T> = (action: T) => void;

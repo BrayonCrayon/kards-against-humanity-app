@@ -11,6 +11,7 @@ import userEvent from "@testing-library/user-event";
 import * as Vote from "../State/Vote/VoteContext";
 import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+import { SelectWinnerAction } from "../State/Vote/VoteActions";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
@@ -222,7 +223,12 @@ describe("VotingSection", () => {
       });
 
       await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalledWith({ userId: user_id });
+        expect(mockDispatch).toHaveBeenCalledWith(
+          expect.objectContaining({
+            execute: expect.any(Function),
+            payload: user_id,
+          })
+        );
       });
     });
 

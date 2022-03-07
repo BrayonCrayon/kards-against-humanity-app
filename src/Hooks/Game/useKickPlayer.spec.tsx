@@ -60,6 +60,11 @@ describe("useKickPlayer", () => {
 
     await result.current(gameId, userId);
 
-    expect(mockDispatch).toHaveBeenCalledWith({ userId });
+    expect(mockDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: userId,
+      })
+    );
   });
 });
