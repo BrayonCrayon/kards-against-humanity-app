@@ -1,16 +1,19 @@
-import React, {useCallback, useContext, useEffect, useMemo} from "react";
-import {useParams} from "react-router-dom";
-import {GameContext} from "../State/Game/GameContext";
-import {WhiteKard} from "../Components/WhiteKard";
-import {listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards,} from "../Services/PusherService";
+import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { GameContext } from "../State/Game/GameContext";
+import { WhiteKard } from "../Components/WhiteKard";
+import {
+  listenWhenGameRotates,
+  listenWhenUserJoinsGame,
+  listenWhenUserSubmittedCards,
+} from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/useFetchGameState";
-import {apiClient} from "../Api/apiClient";
+import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
-import {VotingSection} from "../Components/VotingSection";
-import {useVote} from "../State/Vote/VoteContext";
-import {RoundWinnerModal} from "../Components/RoundWinnerModal";
-import {Button} from "../Components/Button";
-import {useUsers} from "../State/Users/UsersContext";
+import { VotingSection } from "../Components/VotingSection";
+import { RoundWinnerModal } from "../Components/RoundWinnerModal";
+import { Button } from "../Components/Button";
+import { useUsers } from "../State/Users/UsersContext";
 
 const GamePage = () => {
   const {
@@ -30,22 +33,18 @@ const GamePage = () => {
   } = useContext(GameContext);
 
   const {
-    state: {selectedRoundWinner},
-  } = useVote();
-
-  const {
-    state: {users}
+    state: { users },
   } = useUsers();
 
-  const {id} = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
 
   const fetchGameState = useFetchGameState(
-      setUser,
-      setGame,
-      setHand,
-      setBlackCard,
-      setHasSubmittedCards,
-      setJudge
+    setUser,
+    setGame,
+    setHand,
+    setBlackCard,
+    setHasSubmittedCards,
+    setJudge
   );
 
   const showVotingSection = useMemo(() => {

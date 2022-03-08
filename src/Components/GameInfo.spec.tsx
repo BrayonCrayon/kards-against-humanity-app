@@ -88,6 +88,7 @@ describe("GameInfo", () => {
         ).toBeInTheDocument();
       });
     });
+
     it("only show kick player buttons when user is the judge", async () => {
       const wrapper = renderer({
         user: data.users.filter((item) => item.id !== data.judge.id)[0],
@@ -101,6 +102,7 @@ describe("GameInfo", () => {
         });
       });
     });
+
     it("will call kick player hook when button is clicked", async () => {
       const wrapper = renderer();
       const playerToKick = data.users.filter(
