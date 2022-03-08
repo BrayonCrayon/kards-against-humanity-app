@@ -4,6 +4,7 @@ import { RenderResult, waitFor } from "@testing-library/react";
 import GameInfo from "./GameInfo";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
 import { customKardsRender } from "../Tests/testRenders";
+import userEvent from "@testing-library/user-event";
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
@@ -11,6 +12,7 @@ const updateGameStateCallback = jest.fn();
 
 const { data } = gameStateJudgeExampleResponse;
 let mockUsers = data.users;
+let mockUsersDispatch = jest.fn();
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return customKardsRender(<GameInfo />, {
@@ -45,7 +47,7 @@ jest.mock("../State/Users/UsersContext", () => ({
     state: {
       users: mockUsers,
     },
-    dispatch: jest.fn(),
+    dispatch: mockUsersDispatch,
   }),
 }));
 
@@ -99,7 +101,23 @@ describe("GameInfo", () => {
         });
       });
     });
-    it.todo("will call kick player hook when button is clicked");
+    it("will call kick player hook when button is clicked", async () => {
+      const wrapper = renderer();
+      const playerToKick = data.users.filter(
+        (item) => item.id !== data.current_user.id
+      )[0];
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
+      });
+
+      expect(mockUsersDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          execute: expect.any(Function),
+          payload: playerToKick.id,
+        })
+      );
+    });
   });
 
   describe("Game box", () => {

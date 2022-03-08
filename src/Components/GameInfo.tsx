@@ -3,11 +3,13 @@ import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
+import { KickPlayerAction } from "../State/Users/UsersActions";
 
 const GameInfo: FC = () => {
   const { game, user, blackCard, judge } = useContext(GameContext);
   const {
     state: { users },
+    dispatch,
   } = useUsers();
 
   const copyGameCode = useCallback(async () => {
@@ -22,6 +24,13 @@ const GameInfo: FC = () => {
   const isJudge = useMemo(() => {
     return user.id === judge.id;
   }, [user, judge]);
+
+  const kickPlayer = useCallback(
+    (userId) => {
+      dispatch(new KickPlayerAction(userId));
+    },
+    [dispatch]
+  );
 
   return (
     <div>
@@ -79,6 +88,7 @@ const GameInfo: FC = () => {
               </p>
               {isJudge && (
                 <i
+                  onClick={() => kickPlayer(user.id)}
                   data-testid={`kick-player-${user.id}`}
                   className="fa-solid fa-boot"
                 />
