@@ -86,7 +86,19 @@ describe("GameInfo", () => {
         ).toBeInTheDocument();
       });
     });
-    it.todo("only show kick player buttons when user is the judge");
+    it("only show kick player buttons when user is the judge", async () => {
+      const wrapper = renderer({
+        user: data.users.filter((item) => item.id !== data.judge.id)[0],
+      });
+
+      await waitFor(() => {
+        data.users.forEach((user) => {
+          expect(
+            wrapper.queryByTestId(`kick-player-${user.id}`)
+          ).not.toBeInTheDocument();
+        });
+      });
+    });
     it.todo("will call kick player hook when button is clicked");
   });
 

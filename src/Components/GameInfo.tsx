@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext } from "react";
+import React, { FC, useCallback, useContext, useMemo } from "react";
 import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
@@ -18,6 +18,10 @@ const GameInfo: FC = () => {
       console.error(error);
     }
   }, [game]);
+
+  const isJudge = useMemo(() => {
+    return user.id === judge.id;
+  }, [user, judge]);
 
   return (
     <div>
@@ -73,10 +77,12 @@ const GameInfo: FC = () => {
               >
                 {user.name}
               </p>
-              <i
-                data-testid={`kick-player-${user.id}`}
-                className="fa-solid fa-boot"
-              />
+              {isJudge && (
+                <i
+                  data-testid={`kick-player-${user.id}`}
+                  className="fa-solid fa-boot"
+                />
+              )}
             </div>
           ))}
         </div>
