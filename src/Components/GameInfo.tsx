@@ -1,12 +1,14 @@
-import React, {FC, useCallback, useContext} from "react";
-import {happyToast} from "../Utilities/toasts";
-import {BlackKard} from "./BlackKard";
-import {GameContext} from "../State/Game/GameContext";
-import {useUsers} from "../State/Users/UsersContext";
+import React, { FC, useCallback, useContext } from "react";
+import { happyToast } from "../Utilities/toasts";
+import { BlackKard } from "./BlackKard";
+import { GameContext } from "../State/Game/GameContext";
+import { useUsers } from "../State/Users/UsersContext";
 
 const GameInfo: FC = () => {
-  const {game, user, blackCard, judge} = useContext(GameContext);
-  const {state: {users}} = useUsers();
+  const { game, user, blackCard, judge } = useContext(GameContext);
+  const {
+    state: { users },
+  } = useUsers();
 
   const copyGameCode = useCallback(async () => {
     try {
@@ -71,6 +73,10 @@ const GameInfo: FC = () => {
               >
                 {user.name}
               </p>
+              <i
+                data-testid={`kick-player-${user.id}`}
+                className="fa-solid fa-boot"
+              />
             </div>
           ))}
         </div>

@@ -1,19 +1,19 @@
 import React from "react";
-import {IGameContext} from "../State/Game/GameContext";
-import {RenderResult} from "@testing-library/react";
+import { IGameContext } from "../State/Game/GameContext";
+import { RenderResult, waitFor } from "@testing-library/react";
 import GameInfo from "./GameInfo";
-import {gameStateJudgeExampleResponse} from "../Api/fixtures/gameStateJudgeExampleResponse";
-import {customKardsRender} from "../Tests/testRenders";
+import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
+import { customKardsRender } from "../Tests/testRenders";
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
 const updateGameStateCallback = jest.fn();
 
-const {data} = gameStateJudgeExampleResponse;
+const { data } = gameStateJudgeExampleResponse;
 let mockUsers = data.users;
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customKardsRender(<GameInfo/>, {
+  return customKardsRender(<GameInfo />, {
     setHand,
     setHasSubmittedCards,
     updateGameStateCallback,
@@ -40,20 +40,19 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
 };
 
 jest.mock("../State/Users/UsersContext", () => ({
-  ...(jest.requireActual("../State/Users/UsersContext")),
+  ...jest.requireActual("../State/Users/UsersContext"),
   useUsers: () => ({
     state: {
-      users: mockUsers
+      users: mockUsers,
     },
-    dispatch: jest.fn()
+    dispatch: jest.fn(),
   }),
 }));
-
 
 describe("GameInfo", () => {
   describe("Users Box", () => {
     it("shows the judge icon next to the player who is the judge", async () => {
-      const {findByTestId} = renderer();
+      const { findByTestId } = renderer();
 
       expect(await findByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
     });
@@ -75,7 +74,18 @@ describe("GameInfo", () => {
       );
     });
 
-    it.todo("shows a button to kick players on users list");
+    it("shows a button to kick players on users list", async () => {
+      const wrapper = renderer();
+      const playerToKickId = data.users.filter(
+        (item) => item.id !== data.current_user.id
+      )[0].id;
+
+      await waitFor(() => {
+        expect(
+          wrapper.queryByTestId(`kick-player-${playerToKickId}`)
+        ).toBeInTheDocument();
+      });
+    });
     it.todo("only show kick player buttons when user is the judge");
     it.todo("will call kick player hook when button is clicked");
   });
