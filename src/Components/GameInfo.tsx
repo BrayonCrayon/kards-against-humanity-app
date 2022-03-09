@@ -4,6 +4,7 @@ import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
 import { KickPlayerAction } from "../State/Users/UsersActions";
+import useKickPlayer from "../Hooks/Game/useKickPlayer";
 
 const GameInfo: FC = () => {
   const { game, user, blackCard, judge } = useContext(GameContext);
@@ -25,11 +26,17 @@ const GameInfo: FC = () => {
     return user.id === judge.id;
   }, [user, judge]);
 
+  const isNotCurrentUser = useCallback((userId: number) => {
+    return user.id !== userId;
+  }, []);
+
+  const executeKickPlayer = useKickPlayer();
   const kickPlayer = useCallback(
-    (userId) => {
+    async (userId) => {
+      await executeKickPlayer(game.id, userId);
       dispatch(new KickPlayerAction(userId));
     },
-    [dispatch]
+    [dispatch, game]
   );
 
   return (
@@ -86,7 +93,7 @@ const GameInfo: FC = () => {
               >
                 {user.name}
               </p>
-              {isJudge && (
+              {isJudge && isNotCurrentUser(user.id) && (
                 <i
                   onClick={() => kickPlayer(user.id)}
                   data-testid={`kick-player-${user.id}`}

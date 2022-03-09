@@ -41,6 +41,13 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
   });
 };
 
+const mockKickPlayer = jest.fn();
+jest.mock("../Hooks/Game/useKickPlayer", () => {
+  return () => {
+    return mockKickPlayer;
+  };
+});
+
 jest.mock("../State/Users/UsersContext", () => ({
   ...jest.requireActual("../State/Users/UsersContext"),
   useUsers: () => ({
@@ -103,12 +110,30 @@ describe("GameInfo", () => {
       });
     });
 
-    it.todo(
-      "will not show kick player on player that is the judge",
-      async () => {}
-    );
+    it("will not show kick player on player that is the judge", async () => {
+      const wrapper = renderer();
 
-    it.todo("will call api endpoint to kick player from game");
+      await waitFor(() => {
+        expect(
+          wrapper.queryByTestId(`kick-player-${data.current_user.id}`)
+        ).not.toBeInTheDocument();
+      });
+    });
+
+    it("will call api endpoint to kick player from game", async () => {
+      const wrapper = renderer();
+      const playerToKick = data.users.filter(
+        (item) => item.id !== data.current_user.id
+      )[0];
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
+      });
+
+      await waitFor(() => {
+        expect(mockKickPlayer).toHaveBeenCalledWith(data.id, playerToKick.id);
+      });
+    });
 
     it("will call kick player hook when button is clicked", async () => {
       const wrapper = renderer();
