@@ -90,7 +90,7 @@ const GameInfo: FC = () => {
                 <i
                   onClick={() => kickPlayer(user.id)}
                   data-testid={`kick-player-${user.id}`}
-                  className="fa-solid fa-boot"
+                  className="fas fa-minus cursor-pointer px-2 self-center text-lg"
                 />
               )}
             </div>

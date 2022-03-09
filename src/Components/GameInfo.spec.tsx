@@ -103,6 +103,13 @@ describe("GameInfo", () => {
       });
     });
 
+    it.todo(
+      "will not show kick player on player that is the judge",
+      async () => {}
+    );
+
+    it.todo("will call api endpoint to kick player from game");
+
     it("will call kick player hook when button is clicked", async () => {
       const wrapper = renderer();
       const playerToKick = data.users.filter(
