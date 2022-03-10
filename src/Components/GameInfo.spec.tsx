@@ -134,24 +134,6 @@ describe("GameInfo", () => {
         expect(mockKickPlayer).toHaveBeenCalledWith(data.id, playerToKick.id);
       });
     });
-
-    it("will call kick player hook when button is clicked", async () => {
-      const wrapper = renderer();
-      const playerToKick = data.users.filter(
-        (item) => item.id !== data.current_user.id
-      )[0];
-
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
-      });
-
-      expect(mockUsersDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          execute: expect.any(Function),
-          payload: playerToKick.id,
-        })
-      );
-    });
   });
 
   describe("Game box", () => {

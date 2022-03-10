@@ -30,7 +30,6 @@ const GameInfo: FC = () => {
   const kickPlayer = useCallback(
     async (userId) => {
       await executeKickPlayer(game.id, userId);
-      dispatch(new KickPlayerAction(userId));
     },
     [dispatch, game]
   );
