@@ -26,10 +26,6 @@ const GameInfo: FC = () => {
     return user.id === judge.id;
   }, [user, judge]);
 
-  const isNotCurrentUser = useCallback((userId: number) => {
-    return user.id !== userId;
-  }, []);
-
   const executeKickPlayer = useKickPlayer();
   const kickPlayer = useCallback(
     async (userId) => {
@@ -78,26 +74,26 @@ const GameInfo: FC = () => {
           <h1 className="text-gray-700 text-xl border-b-2 border-gray-500">
             Users
           </h1>
-          {users.map((user) => (
-            <div className="py-2 font-semibold flex" key={user.id}>
-              {judge.id === user.id && (
-                <div data-testid={`user-${user.id}-judge`} className="mr-2">
+          {users.map((player) => (
+            <div className="py-2 font-semibold flex" key={player.id}>
+              {judge.id === player.id && (
+                <div data-testid={`user-${player.id}-judge`} className="mr-2">
                   <i className="fas fa-gavel" />
                 </div>
               )}
               <p
-                data-testid={`user-${user.id}`}
+                data-testid={`user-${player.id}`}
                 className={` ${
-                  user.hasSubmittedWhiteCards ? "text-green-500" : ""
+                  player.hasSubmittedWhiteCards ? "text-green-500" : ""
                 }`}
               >
-                {user.name}
+                {player.name}
               </p>
-              {isJudge && isNotCurrentUser(user.id) && (
+              {isJudge && user.id !== player.id && (
                 <i
-                  onClick={() => kickPlayer(user.id)}
-                  data-testid={`kick-player-${user.id}`}
-                  className="fas fa-minus cursor-pointer px-2 self-center text-lg"
+                  onClick={() => kickPlayer(player.id)}
+                  data-testid={`kick-player-${player.id}`}
+                  className="fas fa-minus cursor-pointer px-2 self-center text-lg hover:text-red-500"
                 />
               )}
             </div>
