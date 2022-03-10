@@ -7,25 +7,23 @@ import {
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards,
 } from "../Services/PusherService";
-import useFetchGameState from "../Hooks/Game/UseFetchGameState";
+import useFetchGameState from "../Hooks/Game/useFetchGameState";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
 import { VotingSection } from "../Components/VotingSection";
-import { useVote } from "../State/Vote/VoteContext";
 import { RoundWinnerModal } from "../Components/RoundWinnerModal";
 import { Button } from "../Components/Button";
+import { useUsers } from "../State/Users/UsersContext";
 
 const GamePage = () => {
   const {
     hand,
     game,
-    users,
     user,
     blackCard,
     hasSubmittedCards,
     judge,
     updateGameStateCallback,
-    setUsers,
     setUser,
     setGame,
     setHand,
@@ -35,13 +33,12 @@ const GamePage = () => {
   } = useContext(GameContext);
 
   const {
-    state: { selectedRoundWinner },
-  } = useVote();
+    state: { users },
+  } = useUsers();
 
   const { id } = useParams<{ id: string }>();
 
   const fetchGameState = useFetchGameState(
-    setUsers,
     setUser,
     setGame,
     setHand,

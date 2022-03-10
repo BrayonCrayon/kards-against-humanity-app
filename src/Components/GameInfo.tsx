@@ -1,10 +1,17 @@
-import React, { FC, useCallback, useContext } from "react";
+import React, { FC, useCallback, useContext, useMemo } from "react";
 import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
+import { useUsers } from "../State/Users/UsersContext";
+import { KickPlayerAction } from "../State/Users/UsersActions";
+import useKickPlayer from "../Hooks/Game/useKickPlayer";
 
 const GameInfo: FC = () => {
-  const { game, user, users, blackCard, judge } = useContext(GameContext);
+  const { game, user, blackCard, judge } = useContext(GameContext);
+  const {
+    state: { users },
+    dispatch,
+  } = useUsers();
 
   const copyGameCode = useCallback(async () => {
     try {
@@ -14,6 +21,12 @@ const GameInfo: FC = () => {
       console.error(error);
     }
   }, [game]);
+
+  const isJudge = useMemo(() => {
+    return user.id === judge.id;
+  }, [user, judge]);
+
+  const kickPlayer = useKickPlayer();
 
   return (
     <div>
@@ -54,21 +67,28 @@ const GameInfo: FC = () => {
           <h1 className="text-gray-700 text-xl border-b-2 border-gray-500">
             Users
           </h1>
-          {users.map((user) => (
-            <div className="py-2 font-semibold flex" key={user.id}>
-              {judge.id === user.id && (
-                <div data-testid={`user-${user.id}-judge`} className="mr-2">
+          {users.map((player) => (
+            <div className="py-2 font-semibold flex" key={player.id}>
+              {judge.id === player.id && (
+                <div data-testid={`user-${player.id}-judge`} className="mr-2">
                   <i className="fas fa-gavel" />
                 </div>
               )}
               <p
-                data-testid={`user-${user.id}`}
+                data-testid={`user-${player.id}`}
                 className={` ${
-                  user.hasSubmittedWhiteCards ? "text-green-500" : ""
+                  player.hasSubmittedWhiteCards ? "text-green-500" : ""
                 }`}
               >
-                {user.name}
+                {player.name}
               </p>
+              {isJudge && user.id !== player.id && (
+                <i
+                  onClick={() => kickPlayer(game.id, player.id)}
+                  data-testid={`kick-player-${player.id}`}
+                  className="fas fa-minus cursor-pointer px-2 self-center text-lg hover:text-red-500"
+                />
+              )}
             </div>
           ))}
         </div>

@@ -1,62 +1,35 @@
-import React, { FC, useReducer } from "react";
+import React, { FC } from "react";
+import { VoteActionTypes } from "./VoteActions";
 import {
-  CLEAR_STATE,
-  SELECT_WINNER,
-  VoteActionTypes,
-  WINNER_SELECTED,
-} from "./VoteActions";
-import { RoundWinner } from "../../Types/ResponseTypes";
-
-export interface IVoteState {
-  selectedPlayerId: number;
-  selectedRoundWinner?: RoundWinner;
-}
-
-export const initialVoteState: IVoteState = {
-  selectedPlayerId: 0,
-};
-
-type Dispatch = (action: VoteActionTypes) => void;
+  BaseContext,
+  useGenericContext,
+  useGenericReducer,
+} from "../GeneralContext";
+import { initialVoteState, IVoteState } from "./VoteState";
 
 export const VoteContext = React.createContext<
-  { state: IVoteState; dispatch: Dispatch } | undefined
->(undefined);
+  BaseContext<IVoteState, VoteActionTypes>
+>({
+  state: initialVoteState,
+  dispatch: () => {},
+});
 
 function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
-  switch (action.type) {
-    case SELECT_WINNER: {
-      return {
-        ...state,
-        selectedPlayerId: action.payload.userId,
-      };
-    }
-    case WINNER_SELECTED: {
-      return {
-        ...state,
-        selectedRoundWinner: action.payload,
-      };
-    }
-    case CLEAR_STATE: {
-      return { ...initialVoteState };
-    }
-    default:
-      return state;
-  }
+  return action.execute(state);
 }
 
 const VoteProvider: FC = ({ children }) => {
-  const [state, dispatch] = useReducer(voteReducer, initialVoteState);
-
-  const value = { state, dispatch };
-  return <VoteContext.Provider value={value}>{children}</VoteContext.Provider>;
+  return (
+    <VoteContext.Provider
+      value={useGenericReducer(voteReducer, initialVoteState)}
+    >
+      {children}
+    </VoteContext.Provider>
+  );
 };
 
 function useVote() {
-  const context = React.useContext(VoteContext);
-  if (context === undefined) {
-    throw new Error("useVote must be used within a VoteProvider");
-  }
-  return context;
+  return useGenericContext(VoteContext);
 }
 
 export { VoteProvider, useVote };

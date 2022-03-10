@@ -1,17 +1,21 @@
 import { useVote } from "../State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
-import { CLEAR_STATE } from "../State/Vote/VoteActions";
+import { ClearStateAction } from "../State/Vote/VoteActions";
 import { Button } from "./Button";
 import { GameContext } from "../State/Game/GameContext";
 import useRotateGame from "../Hooks/Game/useRotateGame";
+import { useUsers } from "../State/Users/UsersContext";
 
 export function RoundWinnerModal() {
   const {
     dispatch,
     state: { selectedRoundWinner },
   } = useVote();
-  const { user, users, game } = useContext(GameContext);
+  const { user, game } = useContext(GameContext);
+  const {
+    state: { users },
+  } = useUsers();
 
   const rotateGame = useRotateGame();
 
@@ -28,7 +32,7 @@ export function RoundWinnerModal() {
   }, [users, selectedRoundWinner]);
 
   const close = useCallback(() => {
-    dispatch({ type: CLEAR_STATE });
+    dispatch(new ClearStateAction());
   }, []);
 
   const rotate = useCallback(async () => {

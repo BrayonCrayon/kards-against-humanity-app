@@ -7,11 +7,22 @@ import JoinGameForm from "./JoinGameForm";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { transformUser, transformUsers } from "../../Types/User";
-import { customGameWrapperRender, history } from "../../Tests/testRenders";
+import { customKardsRender, history } from "../../Tests/testRenders";
 import { setupAndSubmitForm } from "../../Tests/actions";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
+
+let mockDispatch = jest.fn();
+jest.mock("../../State/Users/UsersContext", () => ({
+  ...jest.requireActual("../../State/Users/UsersContext"),
+  useUsers: () => ({
+    state: {
+      users: [],
+    },
+    dispatch: mockDispatch,
+  }),
+}));
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const userName = "Joe";
@@ -21,17 +32,15 @@ const setGame = jest.fn();
 const setUser = jest.fn();
 const setHand = jest.fn();
 const setBlackCard = jest.fn();
-const setUsers = jest.fn();
 const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
-  return customGameWrapperRender(<JoinGameForm />, {
+  return customKardsRender(<JoinGameForm />, {
     setGame,
     setUser,
     setHand,
     setBlackCard,
-    setUsers,
     setHasSubmittedCards,
     setJudge,
   });
@@ -124,8 +133,11 @@ describe("JoinGameForm", () => {
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
       );
-      expect(setUsers).toHaveBeenCalledWith(
-        transformUsers(gameStateExampleResponse.data.users)
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          execute: expect.any(Function),
+          payload: transformUsers(gameStateExampleResponse.data.users),
+        })
       );
       expect(setHasSubmittedCards).toHaveBeenCalledWith(
         gameStateExampleResponse.data.hasSubmittedWhiteCards

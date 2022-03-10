@@ -1,4 +1,4 @@
-import { act, RenderResult, waitFor, screen } from "@testing-library/react";
+import { act, RenderResult, screen, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import { IGameContext, initialState } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
@@ -7,7 +7,6 @@ import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixtur
 import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
-import { transformUsers } from "../Types/User";
 import {
   listenWhenGameRotates,
   listenWhenUserJoinsGame,
@@ -25,14 +24,12 @@ import {
 } from "../Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards } from "../Tests/actions";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
-import {
-  customGameWrapperRender,
-  gameWrapperRender,
-} from "../Tests/testRenders";
+import { customKardsRender, kardsRender } from "../Tests/testRenders";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "../Api/fixtures/gameStateOnePlayerInGameExampleResponse";
 import * as Vote from "../State/Vote/VoteContext";
+import { transformUsers, User } from "../Types/User";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -56,19 +53,17 @@ Object.assign(navigator, {
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
-const setUsers = jest.fn();
 const updateGameStateCallback = jest.fn();
+let mockUsers: User[] = [];
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customGameWrapperRender(<GamePage />, {
+  return customKardsRender(<GamePage />, {
     ...initialState,
     setHand,
     setHasSubmittedCards,
-    setUsers,
     updateGameStateCallback,
     game: gameFixture,
     user: userFixture,
-    users: transformUsers(gameStateExampleResponse.data.users),
     hand: cardsInHand,
     blackCard: blackCardFixture,
     ...value,
@@ -76,6 +71,18 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
 };
 
 describe("GamePage", () => {
+  beforeAll(() => {
+    jest.mock("../State/Users/UsersContext", () => ({
+      ...jest.requireActual("../State/Users/UsersContext"),
+      useUsers: () => ({
+        state: {
+          users: mockUsers,
+        },
+        dispatch: jest.fn(),
+      }),
+    }));
+  });
+
   afterAll(() => {
     jest.resetAllMocks();
   });
@@ -140,6 +147,58 @@ describe("GamePage", () => {
     });
   });
 
+  describe("Api call", () => {
+    beforeAll(() => {
+      jest.unmock("../State/Users/UsersContext");
+    });
+
+    it("performs an api call to get game state data to be loaded on refresh", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+      const consoleSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      renderer({ ...initialState, updateGameStateCallback });
+
+      await waitFor(() => {
+        expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
+        expect(consoleSpy).not.toHaveBeenCalled();
+        expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
+          gameId,
+          updateGameStateCallback
+        );
+      });
+    });
+
+    it("catches error if api call to fetch game state fails", async () => {
+      const errorResponse = { message: "No Api" };
+      mockedAxios.get.mockRejectedValueOnce(errorResponse);
+      console.error = jest.fn();
+      const consoleSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      renderer(initialState);
+
+      await waitFor(() => {
+        expect(consoleSpy).toBeCalledWith(errorResponse);
+      });
+    });
+
+    it("shows names of users after api call", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+      const wrapper = await kardsRender(<GamePage />);
+
+      await waitFor(() => {
+        gameStateExampleResponse.data.users.forEach((user) => {
+          const userElement = wrapper.getByTestId(`user-${user.id}`);
+          expect(userElement).toBeInTheDocument();
+          expect(userElement.textContent).toContain(user.name);
+        });
+      });
+    });
+  });
+
   it("copies game code to clipboard when clicked", async () => {
     jest.spyOn(navigator.clipboard, "writeText");
 
@@ -151,52 +210,6 @@ describe("GamePage", () => {
     gameIdDisplayElement.click();
     await waitFor(() => {
       expect(navigator.clipboard.writeText).toBeCalledWith(gameFixture.code);
-    });
-  });
-
-  it("performs an api call to get game state data to be loaded on refresh", async () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-    const consoleSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-
-    renderer({ ...initialState, setUsers, updateGameStateCallback });
-
-    await waitFor(() => {
-      expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
-      expect(consoleSpy).not.toHaveBeenCalled();
-      expect(setUsers).toHaveBeenCalledWith(
-        transformUsers(gameStateExampleResponse.data.users)
-      );
-      expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
-        gameId,
-        updateGameStateCallback
-      );
-    });
-  });
-
-  it("catches error if api call to fetch game state fails", async () => {
-    const errorResponse = { message: "No Api" };
-    mockedAxios.get.mockRejectedValueOnce(errorResponse);
-    console.error = jest.fn();
-    const consoleSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-
-    renderer(initialState);
-
-    await waitFor(() => {
-      expect(consoleSpy).toBeCalledWith(errorResponse);
-    });
-  });
-
-  it("shows names of users after api call", () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-
-    const wrapper = renderer();
-
-    gameStateExampleResponse.data.users.forEach((user) => {
-      expect(wrapper.getByText(user.name)).toBeInTheDocument();
     });
   });
 
@@ -269,7 +282,7 @@ describe("GamePage", () => {
     });
 
     it("shows all cards visibly", async () => {
-      gameWrapperRender(<GamePage />);
+      kardsRender(<GamePage />);
 
       await waitFor(() => {
         gameStateExampleResponse.data.hand.forEach((item) => {
@@ -295,7 +308,7 @@ describe("GamePage", () => {
         0,
         blackCardFixture.pick
       );
-      const wrapper = gameWrapperRender(<GamePage />);
+      const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         userEvent.click(
@@ -320,7 +333,7 @@ describe("GamePage", () => {
         gameStateExampleResponse.data.hand[
           gameStateExampleResponse.data.current_black_card.pick
         ];
-      const wrapper = gameWrapperRender(<GamePage />);
+      const wrapper = kardsRender(<GamePage />);
 
       await selectWhiteCards(cardsToSelect);
 
@@ -356,11 +369,33 @@ describe("GamePage", () => {
   });
 
   describe("Judging", () => {
+    beforeAll(() => {
+      jest.unmock("../State/Users/UsersContext");
+    });
+
+    it("will remove player from users list when player is kicked", async () => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateJudgeExampleResponse);
+      const { users, current_user } = gameStateJudgeExampleResponse.data;
+      const wrapper = await kardsRender(<GamePage />);
+
+      const playerToKick = users.filter(
+        (item) => item.id !== current_user.id
+      )[0];
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
+      });
+
+      expect(
+        wrapper.queryByTestId(`user-${playerToKick.id}`)
+      ).not.toBeInTheDocument();
+    });
+
     it("will not display white cards when current user is judge", async () => {
       mockedAxios.get.mockResolvedValueOnce(gameStateJudgeExampleResponse);
       const cards = gameStateJudgeExampleResponse.data.hand;
 
-      const wrapper = gameWrapperRender(<GamePage />);
+      const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         cards.forEach((item) => {
@@ -372,7 +407,7 @@ describe("GamePage", () => {
     it("will not display submit white cards button when current user is judge", async () => {
       mockedAxios.get.mockResolvedValueOnce(gameStateJudgeExampleResponse);
 
-      const wrapper = gameWrapperRender(<GamePage />);
+      const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         expect(wrapper.queryByTestId("white-card-submit-btn")).toBeNull();
@@ -388,7 +423,7 @@ describe("Submitting cards", () => {
   });
 
   it("can submit white card selection", async () => {
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
     const [cardToSelect] = gameStateExampleResponse.data.hand;
 
     await waitFor(() => {
@@ -413,7 +448,7 @@ describe("Submitting cards", () => {
       0,
       blackCardFixture.pick
     );
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     await waitFor(() => {
       userEvent.click(
@@ -433,7 +468,7 @@ describe("Submitting cards", () => {
   it("will console error when submit white cards api call fails", async () => {
     const apiFailedResponse = { message: "500 error" };
     mockedAxios.post.mockRejectedValueOnce(apiFailedResponse);
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
     const [cardToSelect] = gameStateExampleResponse.data.hand;
     const consoleSpy = jest
       .spyOn(console, "error")
@@ -451,7 +486,7 @@ describe("Submitting cards", () => {
   });
 
   it("will not allow api to be called when no cards are selected", async () => {
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     await waitFor(() => {
       userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
@@ -463,7 +498,7 @@ describe("Submitting cards", () => {
   });
 
   it("will make submit white card button disabled when user has submitted their cards", async () => {
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
     const cardsToSelect = gameStateExampleResponse.data.hand.slice(
       0,
       gameStateExampleResponse.data.current_black_card.pick
@@ -489,7 +524,7 @@ describe("Submitting cards", () => {
   });
 
   it("will not allow user to toggle white cards after they have submitted their cards", async () => {
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
     const cardsToSelect = gameStateExampleResponse.data.hand.slice(
       0,
       gameStateExampleResponse.data.current_black_card.pick
@@ -528,7 +563,7 @@ describe("Submitting cards", () => {
       gameStateSubmittedWhiteCardsExampleResponse
     );
 
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     const submitButton = await waitFor(() => {
       return wrapper.getByTestId("white-card-submit-btn");
@@ -552,7 +587,7 @@ describe("Submitting cards", () => {
     const alreadySubmittedCardIds =
       gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds;
 
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     await waitFor(() => {
       alreadySubmittedCardIds.forEach((cardId) => {
@@ -569,7 +604,7 @@ describe("Submitting cards", () => {
     );
     const cards = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
 
-    gameWrapperRender(<GamePage />);
+    kardsRender(<GamePage />);
 
     await waitFor(() => {
       cards.forEach((item) => {
@@ -584,7 +619,7 @@ describe("Submitting cards", () => {
     );
     const cards = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
 
-    gameWrapperRender(<GamePage />);
+    kardsRender(<GamePage />);
 
     await waitFor(() => {
       cards
@@ -622,7 +657,7 @@ describe("Submitting cards", () => {
     });
 
     it("when submitting two white cards the order is maintained", async () => {
-      gameWrapperRender(<GamePage />);
+      kardsRender(<GamePage />);
 
       await selectAndSubmitWhiteCards(cardsToSelect);
 
@@ -636,7 +671,7 @@ describe("Submitting cards", () => {
       });
     });
     it("when selecting and deselecting cards, order is properly updated", async () => {
-      gameWrapperRender(<GamePage />);
+      kardsRender(<GamePage />);
 
       await selectAndSubmitWhiteCards(cardsToSelect);
 
@@ -650,7 +685,7 @@ describe("Submitting cards", () => {
       });
     });
     it("indicator of card matches card order", async () => {
-      const wrapper = gameWrapperRender(<GamePage />);
+      const wrapper = kardsRender(<GamePage />);
 
       await selectWhiteCards(cardsToSelect);
 
@@ -672,7 +707,7 @@ describe("Voting section", () => {
     );
 
     await act(async () => {
-      await gameWrapperRender(<GamePage />);
+      await kardsRender(<GamePage />);
     });
 
     await waitFor(() => {
@@ -685,8 +720,11 @@ describe("Voting section", () => {
     mockedAxios.get.mockResolvedValueOnce(
       gameStateAllPlayerSubmittedCardsExampleResponse
     );
+    mockUsers = transformUsers(
+      gameStateAllPlayerSubmittedCardsExampleResponse.data.users
+    );
 
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     await waitFor(() => {
       expect(wrapper.getByTestId("voting-section")).toBeInTheDocument();
@@ -696,7 +734,7 @@ describe("Voting section", () => {
   it("does not show voting section when not all players have submitted their cards", async () => {
     mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
 
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     await waitFor(() => {
       expect(wrapper.queryByTestId("voting-section")).not.toBeInTheDocument();
@@ -704,22 +742,18 @@ describe("Voting section", () => {
   });
 
   it("hides card selection when all players have submitted their cards", async () => {
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user =
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0];
-    mockedAxios.get.mockResolvedValueOnce(
-      gameStateAllPlayerSubmittedCardsExampleResponse
-    );
+    const { data } = gameStateAllPlayerSubmittedCardsExampleResponse;
+    data.current_user = data.users[0];
+    mockedAxios.get.mockResolvedValueOnce({ data });
+    mockUsers = transformUsers(data.users);
     mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
-    const {
-      data: { hand },
-    } = gameStateAllPlayerSubmittedCardsExampleResponse;
 
     await act(async () => {
-      await gameWrapperRender(<GamePage />);
+      await kardsRender(<GamePage />);
     });
 
     await waitFor(() => {
-      hand.forEach((card) =>
+      data.hand.forEach((card) =>
         expect(getWhiteCardElement(card.id)).not.toBeInTheDocument()
       );
       expect(
@@ -743,7 +777,7 @@ describe("Voting section", () => {
       },
     });
 
-    const wrapper = gameWrapperRender(<GamePage />);
+    const wrapper = kardsRender(<GamePage />);
 
     expect(
       await wrapper.findByTestId("round-winner-modal")

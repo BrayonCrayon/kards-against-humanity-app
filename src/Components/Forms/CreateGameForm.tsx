@@ -7,6 +7,8 @@ import { GameContext } from "../../State/Game/GameContext";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
 import { Button } from "../Button";
+import { useUsers } from "../../State/Users/UsersContext";
+import { SetPlayersAction } from "../../State/Users/UsersActions";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -17,10 +19,10 @@ export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
+  const { dispatch } = useUsers();
   const {
     setGame,
     setUser,
-    setUsers,
     setHand,
     setBlackCard,
     setHasSubmittedCards,
@@ -70,7 +72,7 @@ export const CreateGameForm: React.FC = () => {
           judge_id: data.judge.id,
         });
         setUser(transformUser(data.current_user));
-        setUsers(transformUsers(data.users));
+        dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
@@ -89,10 +91,10 @@ export const CreateGameForm: React.FC = () => {
       history,
       setGame,
       setUser,
-      setUsers,
       setHand,
       setBlackCard,
       setHasSubmittedCards,
+      dispatch,
     ]
   );
 

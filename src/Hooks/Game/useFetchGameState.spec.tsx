@@ -1,16 +1,16 @@
 import React from "react";
 import { renderHook } from "@testing-library/react-hooks";
-import useFetchGameState from "./UseFetchGameState";
+import useFetchGameState from "./useFetchGameState";
 import { apiClient } from "../../Api/apiClient";
 import { Game } from "../../Types/Game";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { constructWhiteCardArray } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
+import * as Users from "../../State/Users/UsersContext";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-const setUsers = jest.fn();
 const setUser = jest.fn();
 const setGame = jest.fn();
 const setHand = jest.fn();
@@ -18,7 +18,7 @@ const setBlackCard = jest.fn();
 const setHasSubmittedWhiteCards = jest.fn();
 const setJudge = jest.fn();
 
-describe("UseFetchGameState", () => {
+describe("useFetchGameState", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValueOnce(
       gameStateSubmittedWhiteCardsExampleResponse
@@ -26,9 +26,15 @@ describe("UseFetchGameState", () => {
   });
 
   it("returns correct data", async () => {
+    const mockedDispatch = jest.fn();
+    jest.spyOn(Users, "useUsers").mockImplementation(() => ({
+      dispatch: mockedDispatch,
+      state: {
+        users: [],
+      },
+    }));
     const { result } = renderHook(() =>
       useFetchGameState(
-        setUsers,
         setUser,
         setGame,
         setHand,
@@ -45,7 +51,12 @@ describe("UseFetchGameState", () => {
     expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
 
     expect(setUser).toHaveBeenCalledWith(transformUser(data.current_user));
-    expect(setUsers).toHaveBeenCalledWith(transformUsers(data.users));
+    expect(mockedDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: transformUsers(data.users),
+      })
+    );
     expect(setGame).toHaveBeenCalledWith({
       id: data.id,
       judge_id: data.judge.id,

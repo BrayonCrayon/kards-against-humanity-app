@@ -1,17 +1,17 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { customGameVoteRender } from "../Tests/testRenders";
-import { RenderResult, waitFor, screen } from "@testing-library/react";
+import { customKardsRender } from "../Tests/testRenders";
+import { RenderResult, screen, waitFor } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
 import { IGameContext } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "../Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
-import { SELECT_WINNER } from "../State/Vote/VoteActions";
 import * as Vote from "../State/Vote/VoteContext";
 import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+import { SelectWinnerAction } from "../State/Vote/VoteActions";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
@@ -53,7 +53,7 @@ const props = {
 };
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customGameVoteRender(<VotingSection />, {
+  return customKardsRender(<VotingSection />, {
     ...props,
     ...value,
   });
@@ -223,10 +223,12 @@ describe("VotingSection", () => {
       });
 
       await waitFor(() => {
-        expect(mockDispatch).toHaveBeenCalledWith({
-          type: SELECT_WINNER,
-          payload: { userId: user_id },
-        });
+        expect(mockDispatch).toHaveBeenCalledWith(
+          expect.objectContaining({
+            execute: expect.any(Function),
+            payload: user_id,
+          })
+        );
       });
     });
 

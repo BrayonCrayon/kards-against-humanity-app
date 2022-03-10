@@ -7,15 +7,17 @@ import { errorToast } from "../../Utilities/toasts";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
 import { Button } from "../Button";
+import { useUsers } from "../../State/Users/UsersContext";
+import { SetPlayersAction } from "../../State/Users/UsersActions";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
+  const { dispatch } = useUsers();
   const {
     setGame,
     setUser,
-    setUsers,
     setHand,
     setBlackCard,
     setHasSubmittedCards,
@@ -36,12 +38,12 @@ const JoinGameForm: React.FC = () => {
           code: data.code,
         } as Game);
         setUser(transformUser(data.current_user));
+        dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         setHand(hand);
         setBlackCard(data.current_black_card);
-        setUsers(transformUsers(data.users));
         setHasSubmittedCards(data.hasSubmittedWhiteCards);
         setJudge(transformUser(data.judge));
 
@@ -55,7 +57,6 @@ const JoinGameForm: React.FC = () => {
       userName,
       code,
       setGame,
-      setUsers,
       setUser,
       setBlackCard,
       setHasSubmittedCards,
