@@ -26,13 +26,7 @@ const GameInfo: FC = () => {
     return user.id === judge.id;
   }, [user, judge]);
 
-  const executeKickPlayer = useKickPlayer();
-  const kickPlayer = useCallback(
-    async (userId) => {
-      await executeKickPlayer(game.id, userId);
-    },
-    [dispatch, game]
-  );
+  const kickPlayer = useKickPlayer();
 
   return (
     <div>
@@ -90,7 +84,7 @@ const GameInfo: FC = () => {
               </p>
               {isJudge && user.id !== player.id && (
                 <i
-                  onClick={() => kickPlayer(player.id)}
+                  onClick={() => kickPlayer(game.id, player.id)}
                   data-testid={`kick-player-${player.id}`}
                   className="fas fa-minus cursor-pointer px-2 self-center text-lg hover:text-red-500"
                 />
