@@ -2,7 +2,6 @@ import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleR
 import { kardsRender } from "Tests/testRenders";
 import { ExpansionSelector } from "Components/Sidebars/ExpansionSelector";
 import { ExpansionsToExpansionOptions } from "Utilities/helpers";
-import userEvent from "@testing-library/user-event";
 
 const {data: expansions} = getExpansionsExampleResponse;
 const expansionOptions = ExpansionsToExpansionOptions(expansions);
@@ -15,12 +14,5 @@ const renderComponent = () => {
 }
 
 describe("ExpansionSelector", () => {
-  it("will display total white card count for all selected expansion", () => {
-    const totalWhiteCardSum = expansions.reduce((sum, item) => sum + item.whiteCardCount, 0);
-    const wrapper = renderComponent();
-
-    userEvent.click(wrapper.getByRole('expansion-menu-button'));
-
-    expect(wrapper.getByRole("total-white-card-count").textContent).toContain(totalWhiteCardSum);
-  });
+  it.todo("make a test for stuff");
 });
