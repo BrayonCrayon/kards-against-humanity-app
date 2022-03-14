@@ -34,9 +34,9 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
           <div
             onClick={() => setShow(!show)}
             data-testid="sidebar-background"
-            className="w-1/4 h-screen md:w-1/2"
+            className="h-screen flex-1"
           />
-          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative md:w-1/2 ${sideBarStyles}`}>
+          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative max-w-xs ${sideBarStyles}`}>
             <button
               className="absolute top-1 left-2 text-black hover:text-gray-500 cursor-pointer"
               data-testid="close-button"
