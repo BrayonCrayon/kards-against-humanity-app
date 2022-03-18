@@ -13,7 +13,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
   blackCard,
 }) => {
   const playerResponse = useMemo(() => {
-    return fillOutBlackCard(blackCard.text, submitted_cards);
+    return fillOutBlackCard(blackCard, submitted_cards);
   }, [blackCard, submitted_cards]);
 
   return (

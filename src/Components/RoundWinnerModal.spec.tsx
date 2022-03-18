@@ -185,7 +185,7 @@ describe("RoundWinnerModal", () => {
     const {
       data: { black_card, submitted_cards },
     } = roundWinnerExampleResponse;
-    const expectedCardText = fillOutBlackCard(black_card.text, submitted_cards);
+    const expectedCardText = fillOutBlackCard(black_card, submitted_cards);
 
     const wrapper = renderComponent();
 
