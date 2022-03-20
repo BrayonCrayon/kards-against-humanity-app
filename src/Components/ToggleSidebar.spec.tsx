@@ -4,7 +4,7 @@ import ToggleSidebar from "./ToggleSidebar";
 
 const renderToggle = ({
   className = "",
-  buttonText = "",
+  buttonText = "Pressme",
   children = <div />,
 } = {}) => {
   return render(
@@ -53,5 +53,18 @@ describe("ToggleSidebar", () => {
     userEvent.click(wrapper.getByTestId("toggle-button"));
 
     expect(wrapper.getByTestId("sidebar").textContent).toContain(text);
+  });
+
+  it("can close sidebar when it is open", () => {
+    const wrapper = renderToggle({
+      buttonText: "Press",
+      children: <p>heelow</p>,
+    });
+
+    userEvent.click(wrapper.getByTestId("toggle-button"));
+
+    userEvent.click(wrapper.getByTestId("close-button"));
+
+    expect(wrapper.queryByTestId("sidebar")).not.toBeInTheDocument();
   });
 });

@@ -3,14 +3,13 @@ import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
-import { KickPlayerAction } from "../State/Users/UsersActions";
 import useKickPlayer from "../Hooks/Game/useKickPlayer";
+import ToggleSidebar from "./ToggleSidebar";
 
 const GameInfo: FC = () => {
   const { game, user, blackCard, judge } = useContext(GameContext);
   const {
     state: { users },
-    dispatch,
   } = useUsers();
 
   const copyGameCode = useCallback(async () => {
@@ -93,6 +92,9 @@ const GameInfo: FC = () => {
           ))}
         </div>
       </div>
+      <ToggleSidebar buttonText="toggle">
+        <div>Hello</div>
+      </ToggleSidebar>
       <div className="mx-auto my-2 w-full px-2 md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />
       </div>

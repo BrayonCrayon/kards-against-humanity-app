@@ -1,4 +1,5 @@
 import { FC, Fragment, useState } from "react";
+import { Button } from "./Button";
 
 interface ToggleSidebarProps {
   buttonClass?: string;
@@ -14,14 +15,23 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
 
   return (
     <Fragment>
-      <button
+      <Button
         onClick={() => setShow(!show)}
-        data-testid="toggle-button"
+        dataTestid="toggle-button"
         className={buttonClass}
-      >
-        {buttonText}
-      </button>
-      {show && <div data-testid="sidebar">{children}</div>}
+        text={buttonText}
+      />
+      {show && (
+        <div
+          className="w-1/2 h-screen fixed top-0 left-0 bg-white transition ease-in duration-700"
+          data-testid="sidebar"
+        >
+          <button data-testid="close-button" onClick={() => setShow(!show)}>
+            <i className="far fa-times-circle" />
+          </button>
+          {children}
+        </div>
+      )}
     </Fragment>
   );
 };
