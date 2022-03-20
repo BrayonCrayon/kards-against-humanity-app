@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import { PlayerSubmittedCard } from "../Types/ResponseTypes";
 import { BlackCard } from "../Types/BlackCard";
 import { fillOutBlackCard } from "../Utilities/helpers";
+import parser from "html-react-parser";
 
 interface PlayerSubmittedCCardProps {
   playerSubmission: PlayerSubmittedCard;
@@ -25,7 +26,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
         className="text-xl md:text-3xl font-weight-800"
         data-testid={`player-card-response-${user_id}`}
       >
-        <span>{playerResponse}</span>
+        <p>{parser(playerResponse)}</p>
       </div>
     </div>
   );
