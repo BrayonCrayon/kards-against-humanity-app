@@ -8,7 +8,7 @@ export const fillOutBlackCard = (
   let blackCardText = blackCard.text;
 
   if (!blackCard.text.includes("_")) {
-    return `${blackCardText}\n\n${cards[0].text}`;
+    return `${blackCardText}\n\n<strong>${cards[0].text}</strong>`;
   }
 
   cards

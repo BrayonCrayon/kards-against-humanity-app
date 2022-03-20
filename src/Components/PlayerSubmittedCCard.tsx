@@ -25,7 +25,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
         className="text-xl md:text-3xl font-weight-800"
         data-testid={`player-card-response-${user_id}`}
       >
-        <span>{playerResponse}</span>
+        <p>{playerResponse}</p>
       </div>
     </div>
   );

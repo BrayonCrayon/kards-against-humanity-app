@@ -22,4 +22,10 @@ describe("Helpers", () => {
 
     expect(expectedCardText).toContain(cardWinner.text);
   });
+
+  it("will bold players selected card text", () => {
+    const expectedCardText = fillOutBlackCard(blackCard, [cardWinner]);
+
+    expect(expectedCardText).toContain(`<strong>${cardWinner.text}</strong>`);
+  });
 });
