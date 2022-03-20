@@ -2,9 +2,15 @@ import userEvent from "@testing-library/user-event";
 import { render } from "@testing-library/react";
 import ToggleSidebar from "./ToggleSidebar";
 
-const renderToggle = ({ className = "", buttonText = "" } = {}) => {
+const renderToggle = ({
+  className = "",
+  buttonText = "",
+  children = <div />,
+} = {}) => {
   return render(
-    <ToggleSidebar buttonClass={className} buttonText={buttonText} />
+    <ToggleSidebar buttonClass={className} buttonText={buttonText}>
+      {children}
+    </ToggleSidebar>
   );
 };
 
@@ -12,7 +18,7 @@ describe("ToggleSidebar", () => {
   it("side nav is hidden when component is loaded", () => {
     const wrapper = renderToggle();
 
-    expect(wrapper.queryByTestId("side-nav")).not.toBeInTheDocument();
+    expect(wrapper.queryByTestId("sidebar")).not.toBeInTheDocument();
   });
 
   it("will toggle side panel", () => {
@@ -21,7 +27,7 @@ describe("ToggleSidebar", () => {
     const toggleButton = wrapper.getByTestId("toggle-button");
     userEvent.click(toggleButton);
 
-    expect(wrapper.queryByTestId("side-nav")).toBeInTheDocument();
+    expect(wrapper.queryByTestId("sidebar")).toBeInTheDocument();
   });
 
   it("will allow custom classes on button", () => {
@@ -38,5 +44,14 @@ describe("ToggleSidebar", () => {
     expect(wrapper.queryByTestId("toggle-button")).toHaveTextContent(
       buttonText
     );
+  });
+
+  it("supports passing children into the sidebar", () => {
+    const text = "People";
+    const wrapper = renderToggle({ children: <p>{text}</p> });
+
+    userEvent.click(wrapper.getByTestId("toggle-button"));
+
+    expect(wrapper.getByTestId("sidebar").textContent).toContain(text);
   });
 });

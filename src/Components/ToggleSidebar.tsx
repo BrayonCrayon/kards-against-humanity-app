@@ -8,6 +8,7 @@ interface ToggleSidebarProps {
 const ToggleSidebar: FC<ToggleSidebarProps> = ({
   buttonClass = "",
   buttonText = "",
+  children,
 }) => {
   const [show, setShow] = useState(false);
 
@@ -20,7 +21,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
       >
         {buttonText}
       </button>
-      {show && <div data-testid="side-nav">no way</div>}
+      {show && <div data-testid="sidebar">{children}</div>}
     </Fragment>
   );
 };
