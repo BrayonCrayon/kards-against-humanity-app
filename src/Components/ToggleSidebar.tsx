@@ -1,11 +1,19 @@
 import { FC, Fragment, useState } from "react";
 
-const ToggleSidebar: FC = () => {
+interface ToggleSidebarProps {
+  buttonClass?: string;
+}
+
+const ToggleSidebar: FC<ToggleSidebarProps> = ({ buttonClass = "" }) => {
   const [show, setShow] = useState(false);
 
   return (
     <Fragment>
-      <button onClick={() => setShow(!show)} data-testid="toggle-button">
+      <button
+        onClick={() => setShow(!show)}
+        data-testid="toggle-button"
+        className={buttonClass}
+      >
         hello
       </button>
       {show && <div data-testid="side-nav">no way</div>}
