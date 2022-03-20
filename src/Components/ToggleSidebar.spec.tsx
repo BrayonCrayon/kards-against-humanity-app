@@ -2,8 +2,10 @@ import userEvent from "@testing-library/user-event";
 import { render } from "@testing-library/react";
 import ToggleSidebar from "./ToggleSidebar";
 
-const renderToggle = ({ className = "" } = {}) => {
-  return render(<ToggleSidebar buttonClass={className} />);
+const renderToggle = ({ className = "", buttonText = "" } = {}) => {
+  return render(
+    <ToggleSidebar buttonClass={className} buttonText={buttonText} />
+  );
 };
 
 describe("ToggleSidebar", () => {
@@ -27,5 +29,14 @@ describe("ToggleSidebar", () => {
     const wrapper = renderToggle({ className });
 
     expect(wrapper.queryByTestId("toggle-button")).toHaveClass(className);
+  });
+
+  it("will allow custom text on button", () => {
+    const buttonText = "I am a button";
+    const wrapper = renderToggle({ buttonText });
+
+    expect(wrapper.queryByTestId("toggle-button")).toHaveTextContent(
+      buttonText
+    );
   });
 });
