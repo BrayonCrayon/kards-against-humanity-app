@@ -67,4 +67,17 @@ describe("ToggleSidebar", () => {
 
     expect(wrapper.queryByTestId("sidebar")).not.toBeInTheDocument();
   });
+
+  it("can close sidebar by clicking outside the sidebar", () => {
+    const wrapper = renderToggle({
+      buttonText: "press",
+      children: <p>heelow</p>,
+    });
+
+    userEvent.click(wrapper.getByTestId("toggle-button"));
+
+    userEvent.click(wrapper.getByTestId("sidebar-background"));
+
+    expect(wrapper.queryByTestId("sidebar")).not.toBeInTheDocument();
+  });
 });
