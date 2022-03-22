@@ -23,6 +23,7 @@ export const listenWhenUserJoinsGame = (
   gameId: string,
   callback: (data: UpdateGameState) => void
 ) => {
+  echo.channel(`game-${gameId}`).stopListening(".game.joined");
   echo.channel(`game-${gameId}`).listen(".game.joined", callback);
 };
 
@@ -30,6 +31,7 @@ export const listenWhenUserSubmittedCards = (
   gameId: string,
   callback: (data: UpdateGameState) => void
 ) => {
+  echo.channel(`game-${gameId}`).stopListening(".cards.submitted");
   echo.channel(`game-${gameId}`).listen(".cards.submitted", callback);
 };
 
@@ -43,6 +45,7 @@ export const listenWhenWinnerIsSelected = (
   gameId: string,
   callback: (data: IWinnerIsSelectedEventData) => void
 ) => {
+  echo.channel(`game-${gameId}`).stopListening(".winner.selected");
   echo.channel(`game-${gameId}`).listen(".winner.selected", callback);
 };
 
@@ -50,5 +53,6 @@ export const listenWhenGameRotates = (
   gameId: string,
   callback: (data: UpdateGameState) => void
 ) => {
+  echo.channel(`game-${gameId}`).stopListening(".game.rotate");
   echo.channel(`game-${gameId}`).listen(".game.rotate", callback);
 };
