@@ -1,10 +1,11 @@
-import React, { FC, useCallback, useContext, useMemo } from "react";
+import React, { FC, useCallback, useContext } from "react";
 import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
-import useKickPlayer from "../Hooks/Game/useKickPlayer";
 import ToggleSidebar from "./ToggleSidebar";
+import { Button } from "./Button";
+import PlayerList from "./PlayerList";
 
 const GameInfo: FC = () => {
   const { game, user, blackCard, judge } = useContext(GameContext);
@@ -21,16 +22,10 @@ const GameInfo: FC = () => {
     }
   }, [game]);
 
-  const isJudge = useMemo(() => {
-    return user.id === judge.id;
-  }, [user, judge]);
-
-  const kickPlayer = useKickPlayer();
-
   return (
     <div>
       <div className="flex flex-wrap justify-between md:items-start md:flex-row">
-        <div className="border-2 w-full border-gray-300 shadow-md p-2 m-2 rounded font-semibold md:w-auto">
+        <div className="border-2 w-3/5 border-gray-300 shadow-md p-2 m-2 rounded font-semibold md:w-auto">
           <div
             data-testid={`game-${game.id}`}
             onClick={() => copyGameCode()}
@@ -58,43 +53,13 @@ const GameInfo: FC = () => {
             {game.name}
           </div>
         </div>
-
-        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded font-semibold w-1/3 md:w-auto">
-          <span className="text-gray-700">You:</span> {user.name}
-        </div>
-        <div className="border-2 border-gray-300 shadow-md p-2 m-2 rounded w-1/3 md:w-auto">
-          <h1 className="text-gray-700 text-xl border-b-2 border-gray-500">
-            Users
-          </h1>
-          {users.map((player) => (
-            <div className="py-2 font-semibold flex" key={player.id}>
-              {judge.id === player.id && (
-                <div data-testid={`user-${player.id}-judge`} className="mr-2">
-                  <i className="fas fa-gavel" />
-                </div>
-              )}
-              <p
-                data-testid={`user-${player.id}`}
-                className={` ${
-                  player.hasSubmittedWhiteCards ? "text-green-500" : ""
-                }`}
-              >
-                {player.name}
-              </p>
-              {isJudge && user.id !== player.id && (
-                <i
-                  onClick={() => kickPlayer(game.id, player.id)}
-                  data-testid={`kick-player-${player.id}`}
-                  className="fas fa-minus cursor-pointer px-2 self-center text-lg hover:text-red-500"
-                />
-              )}
-            </div>
-          ))}
-        </div>
+        <ToggleSidebar
+          className="w-auto mr-2"
+          toggleElement={<Button text="Players" />}
+        >
+          <PlayerList users={users} />
+        </ToggleSidebar>
       </div>
-      <ToggleSidebar buttonText="toggle">
-        <div>Hello</div>
-      </ToggleSidebar>
       <div className="mx-auto my-2 w-full px-2 md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />
       </div>

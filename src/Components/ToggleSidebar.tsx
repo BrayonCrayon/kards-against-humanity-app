@@ -1,26 +1,27 @@
-import { FC, Fragment, useState } from "react";
+import { FC, useState } from "react";
 import { Button } from "./Button";
 
 interface ToggleSidebarProps {
-  buttonClass?: string;
-  buttonText?: string;
+  toggleElement?: JSX.Element;
+  className?: string;
 }
 
 const ToggleSidebar: FC<ToggleSidebarProps> = ({
-  buttonClass = "",
-  buttonText = "",
+  toggleElement = <Button text="toggle" />,
+  className = "",
   children,
 }) => {
   const [show, setShow] = useState(false);
 
   return (
-    <Fragment>
-      <Button
+    <>
+      <div
+        className={className}
         onClick={() => setShow(!show)}
-        dataTestid="toggle-button"
-        className={buttonClass}
-        text={buttonText}
-      />
+        data-testid="toggle-button"
+      >
+        {toggleElement}
+      </div>
       {show && (
         <div
           className="w-screen h-screen fixed top-0 left-0 bg-white bg-opacity-75 flex"
@@ -43,7 +44,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
           />
         </div>
       )}
-    </Fragment>
+    </>
   );
 };
 

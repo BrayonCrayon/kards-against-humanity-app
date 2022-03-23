@@ -2,16 +2,8 @@ import userEvent from "@testing-library/user-event";
 import { render } from "@testing-library/react";
 import ToggleSidebar from "./ToggleSidebar";
 
-const renderToggle = ({
-  className = "",
-  buttonText = "Pressme",
-  children = <div />,
-} = {}) => {
-  return render(
-    <ToggleSidebar buttonClass={className} buttonText={buttonText}>
-      {children}
-    </ToggleSidebar>
-  );
+const renderToggle = (children = <div />) => {
+  return render(<ToggleSidebar>{children}</ToggleSidebar>);
 };
 
 describe("ToggleSidebar", () => {
@@ -30,25 +22,9 @@ describe("ToggleSidebar", () => {
     expect(wrapper.queryByTestId("sidebar")).toBeInTheDocument();
   });
 
-  it("will allow custom classes on button", () => {
-    const className = "custom-class";
-    const wrapper = renderToggle({ className });
-
-    expect(wrapper.queryByTestId("toggle-button")).toHaveClass(className);
-  });
-
-  it("will allow custom text on button", () => {
-    const buttonText = "I am a button";
-    const wrapper = renderToggle({ buttonText });
-
-    expect(wrapper.queryByTestId("toggle-button")).toHaveTextContent(
-      buttonText
-    );
-  });
-
   it("supports passing children into the sidebar", () => {
     const text = "People";
-    const wrapper = renderToggle({ children: <p>{text}</p> });
+    const wrapper = renderToggle(<p>{text}</p>);
 
     userEvent.click(wrapper.getByTestId("toggle-button"));
 
@@ -56,10 +32,7 @@ describe("ToggleSidebar", () => {
   });
 
   it("can close sidebar when it is open", () => {
-    const wrapper = renderToggle({
-      buttonText: "Press",
-      children: <p>heelow</p>,
-    });
+    const wrapper = renderToggle(<p>heelow</p>);
 
     userEvent.click(wrapper.getByTestId("toggle-button"));
 
@@ -69,10 +42,7 @@ describe("ToggleSidebar", () => {
   });
 
   it("can close sidebar by clicking outside the sidebar", () => {
-    const wrapper = renderToggle({
-      buttonText: "press",
-      children: <p>heelow</p>,
-    });
+    const wrapper = renderToggle(<p>heelow</p>);
 
     userEvent.click(wrapper.getByTestId("toggle-button"));
 
