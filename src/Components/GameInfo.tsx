@@ -55,6 +55,7 @@ const GameInfo: FC = () => {
         </div>
         <ToggleSidebar
           className="w-auto mr-2"
+          dataTestId="players-sidebar"
           toggleElement={<Button text="Players" />}
         >
           <PlayerList users={users} />

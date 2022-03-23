@@ -7,22 +7,12 @@ import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixtur
 import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { gameFixture } from "../Api/fixtures/gameFixture";
-import {
-  listenWhenGameRotates,
-  listenWhenUserJoinsGame,
-  listenWhenUserSubmittedCards,
-} from "../Services/PusherService";
+import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import { happyToast } from "../Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import {
-  cannotSelectCardClass,
-  getWhiteCardElement,
-  selectedCardClass,
-  whiteCardOrderTestId,
-  whiteCardTestId,
-} from "../Tests/selectors";
-import { selectAndSubmitWhiteCards, selectWhiteCards } from "../Tests/actions";
+import { cannotSelectCardClass, getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "../Tests/selectors";
+import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "../Tests/actions";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
 import { customKardsRender, kardsRender } from "../Tests/testRenders";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
@@ -132,7 +122,11 @@ describe("GamePage", () => {
     it("displays the user's name", async () => {
       const wrapper = renderer();
 
-      expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
+      await togglePlayerList();
+
+      await waitFor(() => {
+        expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
+      });
     });
 
     it("displays the black card", () => {
@@ -188,6 +182,8 @@ describe("GamePage", () => {
     it("shows names of users after api call", async () => {
       mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
       const wrapper = await kardsRender(<GamePage />);
+
+      await togglePlayerList();
 
       await waitFor(() => {
         gameStateExampleResponse.data.users.forEach((user) => {
@@ -381,6 +377,8 @@ describe("GamePage", () => {
       const playerToKick = users.filter(
         (item) => item.id !== current_user.id
       )[0];
+
+      await togglePlayerList();
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));

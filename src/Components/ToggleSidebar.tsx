@@ -3,11 +3,13 @@ import { Button } from "./Button";
 
 interface ToggleSidebarProps {
   toggleElement?: JSX.Element;
+  dataTestId?: string;
   className?: string;
 }
 
 const ToggleSidebar: FC<ToggleSidebarProps> = ({
   toggleElement = <Button text="toggle" />,
+  dataTestId = "",
   className = "",
   children,
 }) => {
@@ -18,7 +20,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
       <div
         className={className}
         onClick={() => setShow(!show)}
-        data-testid="toggle-button"
+        data-testid={dataTestId}
       >
         {toggleElement}
       </div>

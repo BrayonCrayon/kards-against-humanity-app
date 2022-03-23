@@ -14,7 +14,7 @@ const PlayerList: FC<PlayerListProps> = ({ users = [] }) => {
       </div>
       {users.map((player) => (
         <div
-          className="font-semibold flex pt-2 pl-2 border-dashed border-b flex justify-between"
+          className="font-semibold flex py-1 pl-2 border-dashed border-b flex justify-between"
           key={player.id}
         >
           <PlayerListItem player={player} />
