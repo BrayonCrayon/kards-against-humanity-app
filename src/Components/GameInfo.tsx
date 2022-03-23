@@ -4,11 +4,10 @@ import { BlackKard } from "./BlackKard";
 import { GameContext } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
 import ToggleSidebar from "./ToggleSidebar";
-import { Button } from "./Button";
 import PlayerList from "./PlayerList";
 
 const GameInfo: FC = () => {
-  const { game, user, blackCard, judge } = useContext(GameContext);
+  const { game, blackCard } = useContext(GameContext);
   const {
     state: { users },
   } = useUsers();
@@ -54,9 +53,14 @@ const GameInfo: FC = () => {
           </div>
         </div>
         <ToggleSidebar
-          className="w-auto mr-2"
+          className="w-2/6 mr-2 flex flex-col items-center justify-center cursor-pointer hover:text-gray-600 md:w-auto"
           dataTestId="players-sidebar"
-          toggleElement={<Button text="Players" />}
+          toggleElement={
+            <>
+              <i className="fas fa-users text-4xl" />
+              <p className="text-sm text-gray-700">Players</p>
+            </>
+          }
         >
           <PlayerList users={users} />
         </ToggleSidebar>
