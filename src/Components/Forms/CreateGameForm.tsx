@@ -134,6 +134,8 @@ export const CreateGameForm: React.FC = () => {
             name="name"
             className="border-2 rounded shadow ml-2 px-2"
             required
+            minLength={3}
+            maxLength={17}
             onChange={(event) => setUserName(event.target.value)}
           />
         </label>
