@@ -5,6 +5,7 @@ import GameInfo from "./GameInfo";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
 import { customKardsRender } from "../Tests/testRenders";
 import userEvent from "@testing-library/user-event";
+import { togglePlayerList } from "../Tests/actions";
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
@@ -63,6 +64,8 @@ describe("GameInfo", () => {
     it("shows the judge icon next to the player who is the judge", async () => {
       const { findByTestId } = renderer();
 
+      await togglePlayerList();
+
       expect(await findByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
     });
 
@@ -74,9 +77,11 @@ describe("GameInfo", () => {
       expect(await queryByTestId(`user-${nonJudge.id}-judge`)).toBeNull();
     });
 
-    it("Shows the users name in green when they have submitted the cards", () => {
+    it("Shows the users name in green when they have submitted the cards", async () => {
       data.users[1].hasSubmittedWhiteCards = true;
       const wrapper = renderer();
+
+      await togglePlayerList();
 
       expect(wrapper.queryByTestId(`user-${data.users[1].id}`)).toHaveClass(
         "text-green-500"
@@ -88,6 +93,8 @@ describe("GameInfo", () => {
       const playerToKickId = data.users.filter(
         (item) => item.id !== data.current_user.id
       )[0].id;
+
+      await togglePlayerList();
 
       await waitFor(() => {
         expect(
@@ -125,6 +132,8 @@ describe("GameInfo", () => {
       const playerToKick = data.users.filter(
         (item) => item.id !== data.current_user.id
       )[0];
+
+      await togglePlayerList();
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));

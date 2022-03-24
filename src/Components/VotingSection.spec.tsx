@@ -1,7 +1,7 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { customKardsRender } from "../Tests/testRenders";
-import { RenderResult, screen, waitFor } from "@testing-library/react";
+import { RenderResult, waitFor } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
 import { IGameContext } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
@@ -11,7 +11,6 @@ import userEvent from "@testing-library/user-event";
 import * as Vote from "../State/Vote/VoteContext";
 import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
-import { SelectWinnerAction } from "../State/Vote/VoteActions";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
@@ -292,8 +291,8 @@ describe("VotingSection", () => {
     });
 
     it("will display players submitted cards in order", async () => {
-      await renderer();
-      const sortedCards = submittedCardsResponse.data[0].submitted_cards.sort(
+      const submittedResponse = submittedCardsResponse.data[0];
+      const sortedCards = submittedResponse.submitted_cards.sort(
         (left, right) => left.order - right.order
       );
 
@@ -304,8 +303,13 @@ describe("VotingSection", () => {
         .replace("_", sortedCards[0].text.replace(/\.$/, ""))
         .replace("_", sortedCards[1].text.replace(/\.$/, ""));
 
+      const wrapper = await renderer();
+
       await waitFor(() => {
-        expect(screen.queryByText(expectedCardText)).toBeInTheDocument();
+        const submittedCard = wrapper.getByTestId(
+          `player-card-response-${submittedResponse.user_id}`
+        );
+        expect(submittedCard.textContent).toEqual(expectedCardText);
       });
     });
 

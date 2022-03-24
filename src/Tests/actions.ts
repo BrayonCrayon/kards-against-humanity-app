@@ -1,7 +1,7 @@
 import userEvent from "@testing-library/user-event";
 import { whiteCardTestId } from "./selectors";
 import { WhiteCard } from "../Types/WhiteCard";
-import { waitFor, screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 
 export const selectWhiteCards = async (cards: WhiteCard[]) => {
   await waitFor(() => {
@@ -29,4 +29,12 @@ export const setupAndSubmitForm = (userName: string, gameCode: string) => {
 
   const submit = screen.getByTestId("join-game-form-submit");
   userEvent.click(submit);
+};
+
+export const togglePlayerList = async () => {
+  await waitFor(() => {
+    expect(screen.queryByTestId("players-sidebar")).toBeInTheDocument();
+
+    userEvent.click(screen.getByTestId("players-sidebar"));
+  });
 };

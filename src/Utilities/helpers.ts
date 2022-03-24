@@ -8,7 +8,7 @@ export const fillOutBlackCard = (
   let blackCardText = blackCard.text;
 
   if (!blackCard.text.includes("_")) {
-    return `${blackCardText}\n\n${cards[0].text}`;
+    return `${blackCardText}\n\n<strong>${cards[0].text}</strong>`;
   }
 
   cards
@@ -16,7 +16,10 @@ export const fillOutBlackCard = (
     .forEach((card) => {
       if (blackCardText.indexOf("_", 0) < 0) return;
 
-      blackCardText = blackCardText.replace("_", card.text.replace(/\.$/, ""));
+      blackCardText = blackCardText.replace(
+        "_",
+        `<strong>${card.text.replace(/\.$/, "")}</strong>`
+      );
     });
   return blackCardText;
 };

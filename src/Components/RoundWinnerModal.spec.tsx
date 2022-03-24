@@ -183,14 +183,19 @@ describe("RoundWinnerModal", () => {
       },
     }));
     const {
-      data: { black_card, submitted_cards },
+      data: { black_card, submitted_cards, user_id },
     } = roundWinnerExampleResponse;
     const expectedCardText = fillOutBlackCard(black_card, submitted_cards);
 
     const wrapper = renderComponent();
 
     await waitFor(() => {
-      expect(wrapper.queryByText(expectedCardText)).toBeInTheDocument();
+      const winnerCardElement = wrapper.getByTestId(
+        `player-card-response-${user_id}`
+      );
+      expect(winnerCardElement.textContent).toEqual(
+        expectedCardText.replaceAll("<strong>", "").replaceAll("</strong>", "")
+      );
     });
   });
 });

@@ -29,9 +29,12 @@ const JoinGameForm: React.FC = () => {
       event.preventDefault();
 
       try {
-        const { data } = await apiClient.post(`/api/game/${code}/join`, {
-          name: userName,
-        });
+        const { data } = await apiClient.post(
+          `/api/game/${code.toUpperCase()}/join`,
+          {
+            name: userName,
+          }
+        );
         setGame({
           id: data.id,
           judge_id: data.judge.id,
@@ -81,6 +84,8 @@ const JoinGameForm: React.FC = () => {
             name="name"
             className="border-2 rounded shadow ml-2 px-2"
             required
+            minLength={3}
+            maxLength={17}
             onChange={(e) => setUserName(e.target.value)}
           />
         </label>
