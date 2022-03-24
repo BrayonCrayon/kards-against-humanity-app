@@ -119,16 +119,6 @@ describe("GamePage", () => {
       });
     });
 
-    it("displays the user's name", async () => {
-      const wrapper = renderer();
-
-      await togglePlayerList();
-
-      await waitFor(() => {
-        expect(wrapper.getByText(userFixture.name)).toBeInTheDocument();
-      });
-    });
-
     it("displays the black card", () => {
       const wrapper = renderer();
 

@@ -3,7 +3,9 @@ import { render } from "@testing-library/react";
 import ToggleSidebar from "./ToggleSidebar";
 
 const renderToggle = (children = <div />) => {
-  return render(<ToggleSidebar>{children}</ToggleSidebar>);
+  return render(
+    <ToggleSidebar dataTestId="toggle-button">{children}</ToggleSidebar>
+  );
 };
 
 describe("ToggleSidebar", () => {
@@ -13,8 +15,8 @@ describe("ToggleSidebar", () => {
     expect(wrapper.queryByTestId("sidebar")).not.toBeInTheDocument();
   });
 
-  it("will toggle side panel", () => {
-    const wrapper = renderToggle();
+  it("will toggle side panel", async () => {
+    const wrapper = await renderToggle();
 
     const toggleButton = wrapper.getByTestId("toggle-button");
     userEvent.click(toggleButton);
