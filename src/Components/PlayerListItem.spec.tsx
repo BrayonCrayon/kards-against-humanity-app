@@ -28,8 +28,11 @@ const props = {
 
 const player = transformUser(gameStateExampleResponse.data.users[0]);
 
-const renderer = (value?: Partial<Partial<IGameContext>>): RenderResult => {
-  return customKardsRender(<PlayerListItem player={player} />, {
+const renderer = (
+  user = player,
+  value?: Partial<Partial<IGameContext>>
+): RenderResult => {
+  return customKardsRender(<PlayerListItem player={user} />, {
     ...value,
     ...props,
   });
@@ -71,6 +74,17 @@ describe("PlayerListItem", () => {
 
     await waitFor(() => {
       expect(mockKickPlayer).not.toHaveBeenCalledWith(props.game.id, player.id);
+    });
+  });
+
+  it("will show icon on user that is signed in from the users list", async () => {
+    const wrapper = renderer(props.judge);
+
+    await waitFor(() => {
+      const isUserLoggedIn =
+        wrapper.getByTestId(`user-${props.judge.id}`).getElementsByTagName("i")
+          .length > 0;
+      expect(isUserLoggedIn).toBeTruthy();
     });
   });
 });
