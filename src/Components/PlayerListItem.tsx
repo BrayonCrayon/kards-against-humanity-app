@@ -1,7 +1,8 @@
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, useCallback, useContext, useMemo } from "react";
 import { User } from "../Types/User";
 import { GameContext } from "../State/Game/GameContext";
 import useKickPlayer from "../Hooks/Game/useKickPlayer";
+import Swal from "sweetalert2";
 
 interface PlayerListItemProps {
   player: User;
@@ -10,7 +11,25 @@ interface PlayerListItemProps {
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   const { judge, game, user } = useContext(GameContext);
 
-  const kickPlayer = useKickPlayer();
+  const kick = useKickPlayer();
+
+  const kickPlayer = useCallback(
+    async (player) => {
+      const result = await Swal.fire({
+        title: `Are you sure you want to kick ${player.name}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, kick!",
+      });
+
+      if (!result.isConfirmed) return;
+
+      await kick(game.id, player.id);
+    },
+    [game, kick]
+  );
 
   const canKickPeople = useMemo(() => {
     return user.id === judge.id && user.id !== player.id;
@@ -34,7 +53,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
         )}
         {canKickPeople && (
           <i
-            onClick={() => kickPlayer(game.id, player.id)}
+            onClick={() => kickPlayer(player)}
             data-testid={`kick-player-${player.id}`}
             className="fas fa-minus cursor-pointer px-2 self-center text-lg justify-self-end hover:text-red-500"
           />
