@@ -37,25 +37,30 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <p
-        data-testid={`user-${player.id}`}
-        className={`text-lg ${
-          player.hasSubmittedWhiteCards ? "text-green-500" : ""
-        }`}
-      >
-        {player.name}
-      </p>
+      <div className="flex">
+        <p
+          data-testid={`user-${player.id}`}
+          className={`text-2xl ${
+            player.hasSubmittedWhiteCards ? "text-green-500" : ""
+          }`}
+        >
+          {player.name}
+        </p>
+        {user.id === player.id && (
+          <i className="fas fa-user-check text-2xl ml-4 text-gray-400" />
+        )}
+      </div>
       <div>
         {judge.id === player.id && (
           <div data-testid={`user-${player.id}-judge`} className="mr-2">
-            <i className="fas fa-gavel text-lg" />
+            <i className="fas fa-gavel text-2xl" />
           </div>
         )}
         {canKickPeople && (
           <i
             onClick={() => kickPlayer(player)}
             data-testid={`kick-player-${player.id}`}
-            className="fas fa-minus cursor-pointer px-2 self-center text-lg justify-self-end hover:text-red-500"
+            className="fas fa-user-slash cursor-pointer px-2 self-center text-2xl justify-self-end hover:text-red-700"
           />
         )}
       </div>

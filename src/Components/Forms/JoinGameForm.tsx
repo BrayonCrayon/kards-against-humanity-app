@@ -38,6 +38,7 @@ const JoinGameForm: React.FC = () => {
         setGame({
           id: data.id,
           judge_id: data.judge.id,
+          name: data.name,
           code: data.code,
         } as Game);
         setUser(transformUser(data.current_user));
@@ -77,6 +78,17 @@ const JoinGameForm: React.FC = () => {
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
         <label className="mb-4 pl-2 mt-4 flex justify-between">
+          Code:
+          <input
+            type="text"
+            data-testid="join-game-code-input"
+            name="code"
+            className="border-2 rounded shadow ml-2 px-2"
+            required
+            onChange={(e) => setCode(e.target.value)}
+          />
+        </label>
+        <label className="mb-4 pl-2 mt-4 flex justify-between">
           Player Name:
           <input
             type="text"
@@ -87,17 +99,6 @@ const JoinGameForm: React.FC = () => {
             minLength={3}
             maxLength={17}
             onChange={(e) => setUserName(e.target.value)}
-          />
-        </label>
-        <label className="mb-4 pl-2 mt-4 flex justify-between">
-          Code:
-          <input
-            type="text"
-            data-testid="join-game-code-input"
-            name="code"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            onChange={(e) => setCode(e.target.value)}
           />
         </label>
 
