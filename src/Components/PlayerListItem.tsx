@@ -1,7 +1,8 @@
-import React, { FC, useContext, useMemo } from "react";
+import React, { FC, useCallback, useContext, useMemo } from "react";
 import { User } from "../Types/User";
 import { GameContext } from "../State/Game/GameContext";
 import useKickPlayer from "../Hooks/Game/useKickPlayer";
+import Swal from "sweetalert2";
 
 interface PlayerListItemProps {
   player: User;
@@ -10,7 +11,25 @@ interface PlayerListItemProps {
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   const { judge, game, user } = useContext(GameContext);
 
-  const kickPlayer = useKickPlayer();
+  const kick = useKickPlayer();
+
+  const kickPlayer = useCallback(
+    async (player) => {
+      const result = await Swal.fire({
+        title: `Are you sure you want to kick ${player.name}`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, kick!",
+      });
+
+      if (!result.isConfirmed) return;
+
+      await kick(game.id, player.id);
+    },
+    [game, kick]
+  );
 
   const canKickPeople = useMemo(() => {
     return user.id === judge.id && user.id !== player.id;
@@ -18,25 +37,30 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <p
-        data-testid={`user-${player.id}`}
-        className={`text-lg ${
-          player.hasSubmittedWhiteCards ? "text-green-500" : ""
-        }`}
-      >
-        {player.name}
-      </p>
+      <div className="flex">
+        <p
+          data-testid={`user-${player.id}`}
+          className={`text-2xl ${
+            player.hasSubmittedWhiteCards ? "text-green-500" : ""
+          }`}
+        >
+          {player.name}
+        </p>
+        {user.id === player.id && (
+          <i className="fas fa-user-check text-2xl ml-4 text-gray-400" />
+        )}
+      </div>
       <div>
         {judge.id === player.id && (
           <div data-testid={`user-${player.id}-judge`} className="mr-2">
-            <i className="fas fa-gavel text-lg" />
+            <i className="fas fa-gavel text-2xl" />
           </div>
         )}
         {canKickPeople && (
           <i
-            onClick={() => kickPlayer(game.id, player.id)}
+            onClick={() => kickPlayer(player)}
             data-testid={`kick-player-${player.id}`}
-            className="fas fa-minus cursor-pointer px-2 self-center text-lg justify-self-end hover:text-red-500"
+            className="fas fa-user-slash cursor-pointer px-2 self-center text-2xl justify-self-end hover:text-red-700"
           />
         )}
       </div>

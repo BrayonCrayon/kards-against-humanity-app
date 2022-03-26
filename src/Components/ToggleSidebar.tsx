@@ -26,7 +26,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
       </div>
       {show && (
         <div
-          className="w-screen h-screen fixed top-0 left-0 bg-white bg-opacity-75 flex"
+          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white bg-opacity-75 flex"
           data-testid="sidebar"
         >
           <div className="w-3/4 border-r border-black shadow-md bg-white h-screen relative md:w-1/2">

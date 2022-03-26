@@ -44,8 +44,12 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
 
   return (
     <div
-      className={`rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-wrap cursor-pointer hover:bg-gray-100 
-        ${card.selected ? "border-4 border-blue-400" : "border border-black"} 
+      className={`relative rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-wrap cursor-pointer hover:bg-gray-100 
+        ${
+          card.selected
+            ? "border-2 border-blue-400 bg-gray-100"
+            : "border border-black"
+        } 
         ${hasSubmittedCards ? "cursor-not-allowed" : ""} 
         ${nonSubmittedCards ? "opacity-25" : ""}
       `}
@@ -55,13 +59,13 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
       {card.order > 0 && (
         <div
           data-testid={`white-card-${card.id}-order`}
-          className=" text-sm w-full text-right"
+          className="absolute text-sm top-1 right-2 font-bold"
         >
           {card.order}
         </div>
       )}
       <span>{card.text}</span>
-      <div className="text-xs self-end hidden md:block">
+      <div className="absolute text-xs bottom-1 right-1 ">
         Kards Against Humanity
       </div>
     </div>
