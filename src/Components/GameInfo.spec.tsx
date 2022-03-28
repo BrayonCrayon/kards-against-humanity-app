@@ -62,11 +62,13 @@ jest.mock("../State/Users/UsersContext", () => ({
 describe("GameInfo", () => {
   describe("Users Box", () => {
     it("shows the judge icon next to the player who is the judge", async () => {
-      const { findByTestId } = renderer();
+      const { queryByTestId } = renderer();
 
       await togglePlayerList();
 
-      expect(await findByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
+      await waitFor(async () => {
+        expect(queryByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
+      });
     });
 
     it("does not show the judge icon next to the player who is not the judge", async () => {
@@ -137,6 +139,10 @@ describe("GameInfo", () => {
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
+      });
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByText("Yes, kick!"));
       });
 
       await waitFor(() => {

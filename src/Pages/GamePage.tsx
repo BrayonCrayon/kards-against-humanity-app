@@ -2,7 +2,11 @@ import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { GameContext } from "../State/Game/GameContext";
 import { WhiteKard } from "../Components/WhiteKard";
-import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "../Services/PusherService";
+import {
+  listenWhenGameRotates,
+  listenWhenUserJoinsGame,
+  listenWhenUserSubmittedCards,
+} from "../Services/PusherService";
 import useFetchGameState from "../Hooks/Game/useFetchGameState";
 import { apiClient } from "../Api/apiClient";
 import GameInfo from "../Components/GameInfo";
@@ -30,7 +34,6 @@ const GamePage = () => {
   } = useContext(GameContext);
 
   const {
-    dispatch,
     state: { hand },
   } = useHand();
 
@@ -43,7 +46,6 @@ const GamePage = () => {
   const fetchGameState = useFetchGameState(
     setUser,
     setGame,
-    setHand,
     setBlackCard,
     setHasSubmittedCards,
     setJudge
@@ -93,7 +95,7 @@ const GamePage = () => {
       listenWhenUserJoinsGame(game.id, updateGameStateCallback);
       listenWhenUserSubmittedCards(game.id, updateGameStateCallback);
     }
-  }, [fetchGameState, id]);
+  }, [id]);
 
   return (
     <div>

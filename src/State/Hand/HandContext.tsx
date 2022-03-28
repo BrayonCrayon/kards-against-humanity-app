@@ -24,6 +24,8 @@ const HandProvider: FC = ({ children }) => {
   );
 };
 
-const useHand = () => useGenericContext(HandContext);
+function useHand() {
+  return useGenericContext(HandContext);
+}
 
 export { HandProvider, useHand };

@@ -9,20 +9,17 @@ import { transformUser, transformUsers } from "../../Types/User";
 import { Button } from "../Button";
 import { useUsers } from "../../State/Users/UsersContext";
 import { SetPlayersAction } from "../../State/Users/UsersActions";
+import { useHand } from "../../State/Hand/HandContext";
+import { SetHandAction } from "../../State/Hand/HandActionts";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
   const { dispatch } = useUsers();
-  const {
-    setGame,
-    setUser,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge,
-  } = useContext(GameContext);
+  const { dispatch: handDispatch } = useHand();
+  const { setGame, setUser, setBlackCard, setHasSubmittedCards, setJudge } =
+    useContext(GameContext);
 
   const submitToApi = useCallback(
     async (event) => {
@@ -46,7 +43,7 @@ const JoinGameForm: React.FC = () => {
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
-        setHand(hand);
+        handDispatch(new SetHandAction(hand));
         setBlackCard(data.current_black_card);
         setHasSubmittedCards(data.hasSubmittedWhiteCards);
         setJudge(transformUser(data.judge));
@@ -64,7 +61,6 @@ const JoinGameForm: React.FC = () => {
       setUser,
       setBlackCard,
       setHasSubmittedCards,
-      setHand,
       history,
     ]
   );

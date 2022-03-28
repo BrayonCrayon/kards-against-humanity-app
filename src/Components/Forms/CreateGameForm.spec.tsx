@@ -26,7 +26,6 @@ jest.mock("../../State/Users/UsersContext", () => ({
 
 const setGame = jest.fn();
 const setUser = jest.fn();
-const setHand = jest.fn();
 const setBlackCard = jest.fn();
 const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
@@ -35,7 +34,6 @@ const renderer = () => {
   return customKardsRender(<CreateGameForm />, {
     setGame,
     setUser,
-    setHand,
     setBlackCard,
     setHasSubmittedCards,
     setJudge,
@@ -132,7 +130,6 @@ describe("CreateGameForm", () => {
         judge_id: gameStateExampleResponse.data.judge.id,
       };
       expect(setGame).toHaveBeenCalledWith(receivedGame);
-      expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
       expect(setUser).toHaveBeenCalledWith(
         transformUser(gameStateExampleResponse.data.current_user)
       );

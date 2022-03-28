@@ -37,9 +37,8 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex" data-testid={`user-${player.id}`}>
         <p
-          data-testid={`user-${player.id}`}
           className={`text-2xl ${
             player.hasSubmittedWhiteCards ? "text-green-500" : ""
           }`}

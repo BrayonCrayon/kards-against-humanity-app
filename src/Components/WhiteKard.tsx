@@ -1,14 +1,19 @@
 import React, { useCallback, useContext, useMemo } from "react";
 import { WhiteCard } from "../Types/WhiteCard";
 import { GameContext } from "../State/Game/GameContext";
+import { useHand } from "../State/Hand/HandContext";
+import { SetHandAction } from "../State/Hand/HandActionts";
 
 interface WhiteKardProps {
   card: WhiteCard;
 }
 
 export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
-  const { setHand, hand, blackCard, hasSubmittedCards } =
-    useContext(GameContext);
+  const { blackCard, hasSubmittedCards } = useContext(GameContext);
+  const {
+    state: { hand },
+    dispatch,
+  } = useHand();
 
   const highestOrder = useMemo(() => {
     return Math.max(...hand.map((item) => item.order));
@@ -39,8 +44,8 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
     }
     cardToSelect.selected = !card.selected;
 
-    setHand(() => clone);
-  }, [card, setHand, hand, hasSubmittedCards, highestOrder, blackCard]);
+    dispatch(new SetHandAction(clone));
+  }, [card, dispatch, hand, hasSubmittedCards, highestOrder, blackCard]);
 
   return (
     <div

@@ -1,12 +1,8 @@
-import { act, RenderResult, screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
-import { IGameContext, initialState } from "../State/Game/GameContext";
 import { apiClient } from "../Api/apiClient";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { whiteCardFixture as cardsInHand } from "../Api/fixtures/whiteCardFixture";
-import { userFixture } from "../Api/fixtures/userFixture";
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
-import { gameFixture } from "../Api/fixtures/gameFixture";
 import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "../Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import { happyToast } from "../Utilities/toasts";
@@ -14,12 +10,11 @@ import { gameStateSubmittedWhiteCardsExampleResponse } from "../Api/fixtures/gam
 import { cannotSelectCardClass, getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "../Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "../Tests/actions";
 import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
-import { customKardsRender, kardsRender } from "../Tests/testRenders";
+import { kardsRender } from "../Tests/testRenders";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "../Api/fixtures/gameStateOnePlayerInGameExampleResponse";
 import * as Vote from "../State/Vote/VoteContext";
-import { transformUsers, User } from "../Types/User";
 
 jest.mock("../Api/apiClient");
 jest.mock("../Services/PusherService");
@@ -27,11 +22,12 @@ jest.mock("../Utilities/toasts");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
-const gameId = "123123";
+let mockGameId = gameStateExampleResponse.data.id;
+const cardsInHand = gameStateExampleResponse.data.hand;
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
-    id: gameId,
+    id: mockGameId,
   }),
 }));
 
@@ -41,36 +37,9 @@ Object.assign(navigator, {
   },
 });
 
-const setHand = jest.fn();
-const setHasSubmittedCards = jest.fn();
-const updateGameStateCallback = jest.fn();
-let mockUsers: User[] = [];
-
-const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customKardsRender(<GamePage />, {
-    ...initialState,
-    setHand,
-    setHasSubmittedCards,
-    updateGameStateCallback,
-    game: gameFixture,
-    user: userFixture,
-    hand: cardsInHand,
-    blackCard: blackCardFixture,
-    ...value,
-  });
-};
-
 describe("GamePage", () => {
-  beforeAll(() => {
-    jest.mock("../State/Users/UsersContext", () => ({
-      ...jest.requireActual("../State/Users/UsersContext"),
-      useUsers: () => ({
-        state: {
-          users: mockUsers,
-        },
-        dispatch: jest.fn(),
-      }),
-    }));
+  beforeEach(() => {
+    mockedAxios.get.mockResolvedValue(gameStateExampleResponse);
   });
 
   afterAll(() => {
@@ -78,12 +47,16 @@ describe("GamePage", () => {
   });
 
   describe("Displaying game features", () => {
+    beforeEach(() => {
+      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+    });
+
     it("shows users hand of seven white cards", async () => {
-      const wrapper = renderer();
+      const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         cardsInHand.forEach((card) => {
-          const whiteCardElement = wrapper.queryByTestId(
+          const whiteCardElement = wrapper.getByTestId(
             whiteCardTestId(card.id)
           );
           expect(whiteCardElement).not.toBeNull();
@@ -92,24 +65,25 @@ describe("GamePage", () => {
     });
 
     it("shows game code", async () => {
-      const wrapper = renderer();
+      const { id, code } = gameStateExampleResponse.data;
+      const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         const gameCodeDisplayElement = wrapper.queryByTestId(
-          `game-${gameFixture.id}`
+          `game-${id}`
         ) as HTMLElement;
         expect(gameCodeDisplayElement).not.toBeNull();
-        expect(gameCodeDisplayElement).toHaveTextContent(gameFixture.code);
+        expect(gameCodeDisplayElement).toHaveTextContent(code);
       });
     });
 
     it("displays notification when game code is clicked", async () => {
-      const wrapper = renderer();
+      const { id } = gameStateExampleResponse.data;
+      const wrapper = kardsRender(<GamePage />);
 
-      const gameIdDisplayElement = wrapper.queryByTestId(
-        `game-${gameFixture.id}`
-      ) as HTMLElement;
-      gameIdDisplayElement.click();
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`game-${id}`));
+      });
 
       await waitFor(() => {
         expect(happyToast).toHaveBeenCalledWith(
@@ -119,15 +93,18 @@ describe("GamePage", () => {
       });
     });
 
-    it("displays the black card", () => {
-      const wrapper = renderer();
+    it("displays the black card", async () => {
+      const blackCard = gameStateExampleResponse.data.current_black_card;
+      const wrapper = kardsRender(<GamePage />);
 
-      expect(
-        wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
-      ).toBeInTheDocument();
-      expect(
-        wrapper.queryByTestId(`black-card-${blackCardFixture.id}`)
-      ).toHaveTextContent(blackCardFixture.text);
+      await waitFor(() => {
+        expect(
+          wrapper.queryByTestId(`black-card-${blackCard.id}`)
+        ).toBeInTheDocument();
+        expect(
+          wrapper.queryByTestId(`black-card-${blackCard.id}`)
+        ).toHaveTextContent(blackCard.text);
+      });
     });
   });
 
@@ -142,15 +119,12 @@ describe("GamePage", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
 
-      renderer({ ...initialState, updateGameStateCallback });
+      kardsRender(<GamePage />);
 
       await waitFor(() => {
-        expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
+        expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${mockGameId}`);
         expect(consoleSpy).not.toHaveBeenCalled();
-        expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
-          gameId,
-          updateGameStateCallback
-        );
+        expect(listenWhenUserJoinsGame).toHaveBeenCalled();
       });
     });
 
@@ -162,7 +136,7 @@ describe("GamePage", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
 
-      renderer(initialState);
+      kardsRender(<GamePage />);
 
       await waitFor(() => {
         expect(consoleSpy).toBeCalledWith(errorResponse);
@@ -186,85 +160,71 @@ describe("GamePage", () => {
   });
 
   it("copies game code to clipboard when clicked", async () => {
+    const { id, code } = gameStateExampleResponse.data;
     jest.spyOn(navigator.clipboard, "writeText");
 
-    const wrapper = renderer();
+    const wrapper = await kardsRender(<GamePage />);
 
-    const gameIdDisplayElement = wrapper.queryByTestId(
-      `game-${gameFixture.id}`
-    ) as HTMLElement;
-    gameIdDisplayElement.click();
     await waitFor(() => {
-      expect(navigator.clipboard.writeText).toBeCalledWith(gameFixture.code);
+      userEvent.click(wrapper.getByTestId(`game-${id}`));
+    });
+
+    await waitFor(() => {
+      expect(navigator.clipboard.writeText).toBeCalledWith(code);
     });
   });
 
-  it("listens on user joins pusher event when loading game page", () => {
-    renderer();
+  it("listens on user joins pusher event when loading game page", async () => {
+    kardsRender(<GamePage />);
 
-    expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
-      gameFixture.id,
-      updateGameStateCallback
-    );
+    await waitFor(() => {
+      expect(listenWhenUserJoinsGame).toHaveBeenCalled();
+    });
   });
 
   it("listens on user joins pusher event when user refreshes game page", async () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-    renderer({ ...initialState, updateGameStateCallback });
+    kardsRender(<GamePage />);
 
     await waitFor(() => {
-      expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(
-        gameId,
-        updateGameStateCallback
-      );
+      expect(listenWhenUserJoinsGame).toHaveBeenCalled();
     });
   });
 
   it("listens on game rotate pusher event when user refreshes game page", async () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-    renderer({ ...initialState, updateGameStateCallback });
+    kardsRender(<GamePage />);
 
     await waitFor(() => {
-      expect(listenWhenGameRotates).toHaveBeenCalledWith(
-        gameId,
-        updateGameStateCallback
-      );
+      expect(listenWhenGameRotates).toHaveBeenCalled();
     });
   });
 
-  it("listens on submitted cards pusher event when game page is loaded", () => {
-    renderer();
+  it("listens on submitted cards pusher event when game page is loaded", async () => {
+    kardsRender(<GamePage />);
 
-    expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
-      gameFixture.id,
-      updateGameStateCallback
-    );
+    await waitFor(() => {
+      expect(listenWhenUserSubmittedCards).toHaveBeenCalled();
+    });
   });
 
-  it("listens on rotate game pusher event when game page is loaded", () => {
-    renderer();
+  it("listens on rotate game pusher event when game page is loaded", async () => {
+    kardsRender(<GamePage />);
 
-    expect(listenWhenGameRotates).toHaveBeenCalledWith(
-      gameFixture.id,
-      updateGameStateCallback
-    );
+    await waitFor(() => {
+      expect(listenWhenGameRotates).toHaveBeenCalled();
+    });
   });
 
   it("changes user name colour when we receive submitted cards event from pusher", async () => {
-    mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
-    renderer({ ...initialState, updateGameStateCallback });
+    kardsRender(<GamePage />);
 
     await waitFor(() => {
-      expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
-        gameId,
-        updateGameStateCallback
-      );
+      expect(listenWhenUserSubmittedCards).toHaveBeenCalled();
     });
   });
 
   describe("Selecting Cards", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValueOnce(gameStateExampleResponse);
+      mockedAxios.get.mockResolvedValue(gameStateExampleResponse);
     });
 
     it("shows all cards visibly", async () => {
@@ -275,18 +235,6 @@ describe("GamePage", () => {
           expect(getWhiteCardElement(item.id)).not.toHaveClass("opacity-25");
         });
       });
-    });
-
-    it("calls set hand when a user selects a card", async () => {
-      const wrapper = renderer();
-
-      const [cardToSelect] = cardsInHand;
-
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
-      });
-
-      expect(setHand).toHaveBeenCalled();
     });
 
     it("applies correct class when a white card is selected", async () => {
@@ -372,6 +320,10 @@ describe("GamePage", () => {
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
+      });
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByText("Yes, kick!"));
       });
 
       expect(
@@ -708,9 +660,6 @@ describe("Voting section", () => {
     mockedAxios.get.mockResolvedValueOnce(
       gameStateAllPlayerSubmittedCardsExampleResponse
     );
-    mockUsers = transformUsers(
-      gameStateAllPlayerSubmittedCardsExampleResponse.data.users
-    );
 
     const wrapper = kardsRender(<GamePage />);
 
@@ -733,7 +682,6 @@ describe("Voting section", () => {
     const { data } = gameStateAllPlayerSubmittedCardsExampleResponse;
     data.current_user = data.users[0];
     mockedAxios.get.mockResolvedValueOnce({ data });
-    mockUsers = transformUsers(data.users);
     mockedAxios.get.mockResolvedValueOnce(submittedCardsResponse);
 
     await act(async () => {

@@ -48,7 +48,7 @@ function useFetchGameState(
         console.error(error);
       }
     },
-    [setUser, setGame, handDispatch, setBlackCard, setHasSubmittedWhiteCards]
+    [setUser, setGame, setBlackCard, setHasSubmittedWhiteCards]
   );
 
   return fetchGameState;

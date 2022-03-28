@@ -125,6 +125,7 @@ describe("JoinGameForm", () => {
         id: gameStateExampleResponse.data.id,
         judge_id: gameStateExampleResponse.data.judge.id,
         code: gameStateExampleResponse.data.code,
+        name: gameStateExampleResponse.data.name,
       } as Game);
       expect(setUser).toHaveBeenCalledWith(
         transformUser(gameStateExampleResponse.data.current_user)

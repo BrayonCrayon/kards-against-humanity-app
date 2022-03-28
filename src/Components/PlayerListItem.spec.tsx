@@ -6,8 +6,6 @@ import { IGameContext } from "../State/Game/GameContext";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { transformUser } from "../Types/User";
 
-window.scrollTo = jest.fn();
-
 const mockKickPlayer = jest.fn();
 jest.mock("../Hooks/Game/useKickPlayer", () => {
   return () => {

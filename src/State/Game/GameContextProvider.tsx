@@ -1,22 +1,20 @@
-import React, {useCallback, useState} from "react";
-import {GameContext, initialState} from "./GameContext";
-import {UpdateGameState} from "../../Services/PusherService";
+import React, { useCallback, useState } from "react";
+import { GameContext, initialState } from "./GameContext";
+import { UpdateGameState } from "../../Services/PusherService";
 import useFetchGameState from "../../Hooks/Game/useFetchGameState";
 
-const GameContextProvider: React.FC = ({children}) => {
-    const [game, setGame] = useState(initialState.game);
-    const [user, setUser] = useState(initialState.user);
-    const [hand, setHand] = useState(initialState.hand);
-    const [judge, setJudge] = useState(initialState.judge);
-    const [blackCard, setBlackCard] = useState(initialState.blackCard);
-    const [hasSubmittedCards, setHasSubmittedCards] = useState(
-        initialState.hasSubmittedCards
-    );
+const GameContextProvider: React.FC = ({ children }) => {
+  const [game, setGame] = useState(initialState.game);
+  const [user, setUser] = useState(initialState.user);
+  const [judge, setJudge] = useState(initialState.judge);
+  const [blackCard, setBlackCard] = useState(initialState.blackCard);
+  const [hasSubmittedCards, setHasSubmittedCards] = useState(
+    initialState.hasSubmittedCards
+  );
 
   const fetchGameState = useFetchGameState(
     setUser,
     setGame,
-    setHand,
     setBlackCard,
     setHasSubmittedCards,
     setJudge
@@ -35,13 +33,11 @@ const GameContextProvider: React.FC = ({children}) => {
         game,
         user,
         judge,
-        hand,
         blackCard,
         hasSubmittedCards,
         setGame,
         setUser,
         setJudge,
-        setHand,
         setBlackCard,
         setHasSubmittedCards,
         updateGameStateCallback,
