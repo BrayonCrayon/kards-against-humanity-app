@@ -76,6 +76,7 @@ export const CreateGameForm: React.FC = () => {
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
+        // use the hand context
         setHand(hand);
         setBlackCard(data.current_black_card);
         setHasSubmittedCards(data.hasSubmittedWhiteCards);

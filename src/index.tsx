@@ -4,20 +4,23 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GameContextProvider from "./State/Game/GameContextProvider";
-import {VoteProvider} from "./State/Vote/VoteContext";
-import {UsersProvider} from "./State/Users/UsersContext";
+import { VoteProvider } from "./State/Vote/VoteContext";
+import { UsersProvider } from "./State/Users/UsersContext";
+import { HandProvider } from "./State/Hand/HandContext";
 
 ReactDOM.render(
-    <React.StrictMode>
-        <UsersProvider>
-            <GameContextProvider>
-                <VoteProvider>
-                    <App/>
-                </VoteProvider>
-            </GameContextProvider>
-        </UsersProvider>
-    </React.StrictMode>,
-    document.getElementById("root")
+  <React.StrictMode>
+    <HandProvider>
+      <UsersProvider>
+        <GameContextProvider>
+          <VoteProvider>
+            <App />
+          </VoteProvider>
+        </GameContextProvider>
+      </UsersProvider>
+    </HandProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

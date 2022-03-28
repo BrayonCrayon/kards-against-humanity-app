@@ -7,13 +7,13 @@ import { gameStateSubmittedWhiteCardsExampleResponse } from "../../Api/fixtures/
 import { constructWhiteCardArray } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
 import * as Users from "../../State/Users/UsersContext";
+import * as Hand from "../../State/Hand/HandContext";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 const setUser = jest.fn();
 const setGame = jest.fn();
-const setHand = jest.fn();
 const setBlackCard = jest.fn();
 const setHasSubmittedWhiteCards = jest.fn();
 const setJudge = jest.fn();
@@ -33,11 +33,17 @@ describe("useFetchGameState", () => {
         users: [],
       },
     }));
+
+    jest.spyOn(Hand, "useHand").mockImplementation(() => ({
+      dispatch: mockedDispatch,
+      state: {
+        hand: [],
+      },
+    }));
     const { result } = renderHook(() =>
       useFetchGameState(
         setUser,
         setGame,
-        setHand,
         setBlackCard,
         setHasSubmittedWhiteCards,
         setJudge
@@ -64,13 +70,23 @@ describe("useFetchGameState", () => {
       code: data.code,
     } as Game);
 
-    expect(setHand).toHaveBeenCalledWith(
-      constructWhiteCardArray(
-        data.hand,
-        data.hasSubmittedWhiteCards,
-        data.submittedWhiteCardIds
-      )
+    expect(mockedDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: constructWhiteCardArray(
+          data.hand,
+          data.hasSubmittedWhiteCards,
+          data.submittedWhiteCardIds
+        ),
+      })
     );
+    // expect(setHand).toHaveBeenCalledWith(
+    //   constructWhiteCardArray(
+    //     data.hand,
+    //     data.hasSubmittedWhiteCards,
+    //     data.submittedWhiteCardIds
+    //   )
+    // );
     expect(setBlackCard).toHaveBeenCalledWith(data.current_black_card);
     expect(setHasSubmittedWhiteCards).toHaveBeenCalledWith(
       data.hasSubmittedWhiteCards
