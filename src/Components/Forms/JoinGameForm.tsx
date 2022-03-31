@@ -11,6 +11,7 @@ import { useUsers } from "../../State/Users/UsersContext";
 import { SetPlayersAction } from "../../State/Users/UsersActions";
 import { useHand } from "../../State/Hand/HandContext";
 import { SetHandAction } from "../../State/Hand/HandActionts";
+import KAHInput from "../KAHInput";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -73,31 +74,23 @@ const JoinGameForm: React.FC = () => {
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
-        <label className="mb-4 pl-2 mt-4 flex justify-between">
-          Code:
-          <input
-            type="text"
-            data-testid="join-game-code-input"
-            name="code"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            onChange={(e) => setCode(e.target.value)}
-          />
-        </label>
-        <label className="mb-4 pl-2 mt-4 flex justify-between">
-          Player Name:
-          <input
-            type="text"
-            data-testid="join-game-name-input"
-            name="name"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            minLength={3}
-            maxLength={17}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </label>
-
+        <KAHInput
+          label="Code"
+          placeholder="ex: A3D5"
+          name="code"
+          dataTestid="join-game-code-input"
+          pattern="[A-Z0-9]"
+          required
+          onChange={(e) => setCode(e.target.value)}
+        />
+        <KAHInput
+          label="Player Name"
+          placeholder="Bob's your uncle"
+          name="name"
+          dataTestid="join-game-name-input"
+          required
+          onChange={(e) => setUserName(e.target.value)}
+        />
         <Button text="Join" dataTestid="join-game-form-submit" />
       </form>
     </div>
