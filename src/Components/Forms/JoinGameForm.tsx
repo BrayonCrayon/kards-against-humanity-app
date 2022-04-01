@@ -79,6 +79,7 @@ const JoinGameForm: React.FC = () => {
           placeholder="ex: A3D5"
           name="code"
           dataTestid="join-game-code-input"
+          inputClass="flex-grow"
           pattern="[A-Z0-9]"
           required
           onChange={(e) => setCode(e.target.value)}
@@ -88,6 +89,9 @@ const JoinGameForm: React.FC = () => {
           placeholder="Bob's your uncle"
           name="name"
           dataTestid="join-game-name-input"
+          inputClass="flex-grow"
+          minLength={3}
+          maxLength={17}
           required
           onChange={(e) => setUserName(e.target.value)}
         />

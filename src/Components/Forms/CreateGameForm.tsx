@@ -11,6 +11,7 @@ import { useUsers } from "../../State/Users/UsersContext";
 import { SetPlayersAction } from "../../State/Users/UsersActions";
 import { useHand } from "../../State/Hand/HandContext";
 import { SetHandAction } from "../../State/Hand/HandActionts";
+import KAHInput from "../KAHInput";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -122,19 +123,17 @@ export const CreateGameForm: React.FC = () => {
             );
           })}
         </div>
-        <label className="mb-4 pl-2 mt-4">
-          Player Name:
-          <input
-            type="text"
-            data-testid="user-name"
-            name="name"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            minLength={3}
-            maxLength={17}
-            onChange={(event) => setUserName(event.target.value)}
-          />
-        </label>
+        <KAHInput
+          type="text"
+          data-testid="user-name"
+          name="name"
+          label="Player Name"
+          placeholder="Bob's your uncle"
+          required
+          minLength={3}
+          maxLength={17}
+          onChange={(event) => setUserName(event.target.value)}
+        />
         <Button text="Create" dataTestid="create-game-submit-button" />
       </form>
     </div>
