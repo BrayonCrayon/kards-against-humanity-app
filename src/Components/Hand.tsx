@@ -5,7 +5,7 @@ import { useUser } from "../State/User/UserContext";
 import { GameContext } from "../State/Game/GameContext";
 import { SetHandAction } from "../State/Hand/HandActionts";
 import { WhiteCard } from "../Types/WhiteCard";
-import { sortHand } from "../Utilities/helpers";
+import { reorderHand } from "../Utilities/helpers";
 
 const Hand = () => {
   const {
@@ -19,7 +19,17 @@ const Hand = () => {
     state: { hasSubmittedCards },
   } = useUser();
 
-  const highestOrder = useMemo(() => {
+  /*
+   #1 white card - 1
+   #2 white card - 2
+   #3 white card - 0
+   #4 white card - 0
+   #5 white card - 0
+   #6 white card - 0
+   #7 white card - 0
+   orderOfLastSelectedCard
+   */
+  const positionOfLastSelectedCard = useMemo(() => {
     return Math.max(...hand.map((item) => item.order));
   }, [hand]);
 
@@ -32,17 +42,23 @@ const Hand = () => {
 
       if (!cardToSelect) return;
 
-      if (blackCard.pick < highestOrder + 1) {
-        sortHand(clone);
-        cardToSelect.order = highestOrder;
+      if (blackCard.pick < positionOfLastSelectedCard + 1) {
+        reorderHand(clone);
+        cardToSelect.order = positionOfLastSelectedCard;
       } else {
-        cardToSelect.order = highestOrder + 1;
+        cardToSelect.order = positionOfLastSelectedCard + 1;
       }
       cardToSelect.selected = !card.selected;
 
       handDispatch(new SetHandAction(clone));
     },
-    [handDispatch, hand, hasSubmittedCards, highestOrder, blackCard]
+    [
+      handDispatch,
+      hand,
+      hasSubmittedCards,
+      positionOfLastSelectedCard,
+      blackCard,
+    ]
   );
 
   return (

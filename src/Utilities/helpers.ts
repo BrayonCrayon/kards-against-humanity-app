@@ -25,7 +25,7 @@ export const fillOutBlackCard = (
   return blackCardText;
 };
 
-export const sortHand = (clone: WhiteCard[]) => {
+export const reorderHand = (clone: WhiteCard[]) => {
   clone.forEach((item) => {
     if (item.order > 0) {
       item.order -= 1;
