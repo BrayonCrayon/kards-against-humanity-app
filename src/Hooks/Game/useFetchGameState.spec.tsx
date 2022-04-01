@@ -8,6 +8,8 @@ import { constructWhiteCardArray } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
 import * as Users from "../../State/Users/UsersContext";
 import * as Hand from "../../State/Hand/HandContext";
+import * as User from "../../State/User/UserContext";
+import { initialUserState } from "../../State/User/UserState";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
@@ -40,14 +42,16 @@ describe("useFetchGameState", () => {
         hand: [],
       },
     }));
+
+    jest.spyOn(User, "useUser").mockImplementation(() => ({
+      dispatch: mockedDispatch,
+      state: {
+        user: initialUserState.user,
+        hasSubmittedCards: false,
+      },
+    }));
     const { result } = renderHook(() =>
-      useFetchGameState(
-        setUser,
-        setGame,
-        setBlackCard,
-        setHasSubmittedWhiteCards,
-        setJudge
-      )
+      useFetchGameState(setGame, setBlackCard, setJudge)
     );
     const gameId = "123";
     await result.current(gameId);
@@ -56,7 +60,6 @@ describe("useFetchGameState", () => {
 
     expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
 
-    expect(setUser).toHaveBeenCalledWith(transformUser(data.current_user));
     expect(mockedDispatch).toHaveBeenCalledWith(
       expect.objectContaining({
         execute: expect.any(Function),
@@ -80,17 +83,22 @@ describe("useFetchGameState", () => {
         ),
       })
     );
-    // expect(setHand).toHaveBeenCalledWith(
-    //   constructWhiteCardArray(
-    //     data.hand,
-    //     data.hasSubmittedWhiteCards,
-    //     data.submittedWhiteCardIds
-    //   )
-    // );
-    expect(setBlackCard).toHaveBeenCalledWith(data.current_black_card);
-    expect(setHasSubmittedWhiteCards).toHaveBeenCalledWith(
-      data.hasSubmittedWhiteCards
+
+    expect(mockedDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: transformUser(data.current_user),
+      })
     );
+
+    expect(mockedDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        execute: expect.any(Function),
+        payload: data.hasSubmittedWhiteCards,
+      })
+    );
+
+    expect(setBlackCard).toHaveBeenCalledWith(data.current_black_card);
     expect(setJudge).toHaveBeenCalledWith(transformUser(data.judge));
   });
 });

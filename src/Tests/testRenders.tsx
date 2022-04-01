@@ -10,6 +10,7 @@ import { Router } from "react-router-dom";
 import { VoteProvider } from "../State/Vote/VoteContext";
 import { UsersProvider } from "../State/Users/UsersContext";
 import { HandProvider } from "../State/Hand/HandContext";
+import { UserProvider } from "../State/User/UserContext";
 
 export const history = createMemoryHistory();
 history.push = jest.fn();
@@ -20,18 +21,20 @@ export const customKardsRender = (
 ): RenderResult => {
   return render(
     <Router history={history}>
-      <HandProvider>
-        <GameContext.Provider
-          value={{
-            ...initialState,
-            ...value,
-          }}
-        >
-          <VoteProvider>
-            <UsersProvider>{children}</UsersProvider>
-          </VoteProvider>
-        </GameContext.Provider>
-      </HandProvider>
+      <UserProvider>
+        <HandProvider>
+          <GameContext.Provider
+            value={{
+              ...initialState,
+              ...value,
+            }}
+          >
+            <VoteProvider>
+              <UsersProvider>{children}</UsersProvider>
+            </VoteProvider>
+          </GameContext.Provider>
+        </HandProvider>
+      </UserProvider>
     </Router>
   );
 };
@@ -40,11 +43,13 @@ export const kardsRender = (children: JSX.Element): RenderResult => {
   return render(
     <Router history={history}>
       <GameContextProvider>
-        <HandProvider>
-          <VoteProvider>
-            <UsersProvider>{children}</UsersProvider>
-          </VoteProvider>
-        </HandProvider>
+        <UserProvider>
+          <HandProvider>
+            <VoteProvider>
+              <UsersProvider>{children}</UsersProvider>
+            </VoteProvider>
+          </HandProvider>
+        </UserProvider>
       </GameContextProvider>
     </Router>
   );

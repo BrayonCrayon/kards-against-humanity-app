@@ -6,6 +6,7 @@ import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExa
 import { customKardsRender } from "../Tests/testRenders";
 import userEvent from "@testing-library/user-event";
 import { togglePlayerList } from "../Tests/actions";
+import { transformUser } from "../Types/User";
 
 const setHand = jest.fn();
 const setHasSubmittedCards = jest.fn();
@@ -13,11 +14,12 @@ const updateGameStateCallback = jest.fn();
 
 const { data } = gameStateJudgeExampleResponse;
 let mockUsers = data.users;
+let mockUser = transformUser(data.current_user);
+let mockHasSubmittedCards = false;
 let mockUsersDispatch = jest.fn();
 
 const renderer = (value?: Partial<IGameContext>): RenderResult => {
   return customKardsRender(<GameInfo />, {
-    setHand,
     setHasSubmittedCards,
     updateGameStateCallback,
     game: {
@@ -31,12 +33,6 @@ const renderer = (value?: Partial<IGameContext>): RenderResult => {
       hasSubmittedWhiteCards: false,
       whiteCards: data.hand,
     },
-    user: {
-      ...data.current_user,
-      hasSubmittedWhiteCards: false,
-      whiteCards: data.hand,
-    },
-    hand: data.hand,
     blackCard: data.current_black_card,
     ...value,
   });
@@ -54,6 +50,17 @@ jest.mock("../State/Users/UsersContext", () => ({
   useUsers: () => ({
     state: {
       users: mockUsers,
+    },
+    dispatch: mockUsersDispatch,
+  }),
+}));
+
+jest.mock("../State/User/UserContext", () => ({
+  ...jest.requireActual("../State/User/UserContext"),
+  useUser: () => ({
+    state: {
+      user: mockUser,
+      hasSubmittedWhiteCards: mockHasSubmittedCards,
     },
     dispatch: mockUsersDispatch,
   }),
@@ -80,14 +87,17 @@ describe("GameInfo", () => {
     });
 
     it("Shows the users name in green when they have submitted the cards", async () => {
-      data.users[1].hasSubmittedWhiteCards = true;
+      mockUsers[0].hasSubmittedWhiteCards = true;
       const wrapper = renderer();
 
       await togglePlayerList();
 
-      expect(wrapper.queryByTestId(`user-${data.users[1].id}`)).toHaveClass(
-        "text-green-500"
-      );
+      const playerNameElement = wrapper
+        .getByTestId(`user-${mockUsers[0].id}`)
+        .getElementsByTagName("p")[0];
+
+      expect(playerNameElement).toHaveClass("text-green-500");
+      mockHasSubmittedCards = false;
     });
 
     it("shows a button to kick players on users list", async () => {

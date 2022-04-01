@@ -12,6 +12,11 @@ import { SetPlayersAction } from "../../State/Users/UsersActions";
 import { useHand } from "../../State/Hand/HandContext";
 import { SetHandAction } from "../../State/Hand/HandActionts";
 import KAHInput from "../KAHInput";
+import { useUser } from "../../State/User/UserContext";
+import {
+  SetHasSubmittedCards,
+  SetUserAction,
+} from "../../State/User/UserActions";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -22,10 +27,10 @@ export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const { dispatch } = useUsers();
+  const { dispatch: usersDispatch } = useUsers();
   const { dispatch: handDispatch } = useHand();
-  const { setGame, setUser, setBlackCard, setHasSubmittedCards, setJudge } =
-    useContext(GameContext);
+  const { dispatch: userDispatch } = useUser();
+  const { setGame, setBlackCard, setJudge } = useContext(GameContext);
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -69,14 +74,14 @@ export const CreateGameForm: React.FC = () => {
           code: data.code,
           judge_id: data.judge.id,
         });
-        setUser(transformUser(data.current_user));
-        dispatch(new SetPlayersAction(transformUsers(data.users)));
+        userDispatch(new SetUserAction(transformUser(data.current_user)));
+        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         handDispatch(new SetHandAction(hand));
         setBlackCard(data.current_black_card);
-        setHasSubmittedCards(data.hasSubmittedWhiteCards);
+        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
         setJudge(transformUser(data.judge));
         history.push("/game/" + data.id);
       } catch (error) {
@@ -88,10 +93,9 @@ export const CreateGameForm: React.FC = () => {
       userName,
       history,
       setGame,
-      setUser,
       setBlackCard,
-      setHasSubmittedCards,
-      dispatch,
+      usersDispatch,
+      userDispatch,
     ]
   );
 
@@ -125,7 +129,7 @@ export const CreateGameForm: React.FC = () => {
         </div>
         <KAHInput
           type="text"
-          data-testid="user-name"
+          dataTestid="user-name"
           name="name"
           label="Player Name"
           placeholder="Bob's your uncle"

@@ -13,6 +13,19 @@ jest.mock("../Hooks/Game/useKickPlayer", () => {
   };
 });
 
+const mockUser = transformUser(gameStateExampleResponse.data.judge);
+
+jest.mock("../State/User/UserContext", () => ({
+  ...jest.requireActual("../State/User/UserContext"),
+  useUser: () => ({
+    state: {
+      user: mockUser,
+      hasSubmittedWhiteCards: false,
+    },
+    dispatch: () => {},
+  }),
+}));
+
 const props = {
   judge: transformUser(gameStateExampleResponse.data.judge),
   game: {
@@ -21,7 +34,6 @@ const props = {
     code: gameStateExampleResponse.data.code,
     judge_id: gameStateExampleResponse.data.judge.id,
   },
-  user: transformUser(gameStateExampleResponse.data.judge),
 };
 
 const player = transformUser(gameStateExampleResponse.data.users[0]);

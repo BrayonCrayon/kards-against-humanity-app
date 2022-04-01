@@ -10,13 +10,17 @@ import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
 import { SelectWinnerAction } from "../State/Vote/VoteActions";
+import { useUser } from "../State/User/UserContext";
 
 export const VotingSection: FC = () => {
-  const { game, judge, user, blackCard } = useContext(GameContext);
+  const { game, judge, blackCard } = useContext(GameContext);
   const {
     state: { selectedPlayerId, selectedRoundWinner },
     dispatch,
   } = useVote();
+  const {
+    state: { user },
+  } = useUser();
 
   const [submittedCards, setSubmittedCards] = useState<
     Array<PlayerSubmittedCard>

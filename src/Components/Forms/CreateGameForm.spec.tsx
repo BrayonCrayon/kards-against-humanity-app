@@ -24,18 +24,25 @@ jest.mock("../../State/Users/UsersContext", () => ({
   }),
 }));
 
+jest.mock("../../State/User/UserContext", () => ({
+  ...jest.requireActual("../../State/User/UserContext"),
+  useUser: () => ({
+    state: {
+      user: {},
+      hasSubmittedWhiteCards: false,
+    },
+    dispatch: mockDispatch,
+  }),
+}));
+
 const setGame = jest.fn();
-const setUser = jest.fn();
 const setBlackCard = jest.fn();
-const setHasSubmittedCards = jest.fn();
 const setJudge = jest.fn();
 
 const renderer = () => {
   return customKardsRender(<CreateGameForm />, {
     setGame,
-    setUser,
     setBlackCard,
-    setHasSubmittedCards,
     setJudge,
   });
 };
@@ -130,8 +137,11 @@ describe("CreateGameForm", () => {
         judge_id: gameStateExampleResponse.data.judge.id,
       };
       expect(setGame).toHaveBeenCalledWith(receivedGame);
-      expect(setUser).toHaveBeenCalledWith(
-        transformUser(gameStateExampleResponse.data.current_user)
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          execute: expect.any(Function),
+          payload: transformUser(gameStateExampleResponse.data.current_user),
+        })
       );
       expect(mockDispatch).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -142,8 +152,11 @@ describe("CreateGameForm", () => {
       expect(setBlackCard).toHaveBeenCalledWith(
         gameStateExampleResponse.data.current_black_card
       );
-      expect(setHasSubmittedCards).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.hasSubmittedWhiteCards
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          execute: expect.any(Function),
+          payload: gameStateExampleResponse.data.hasSubmittedWhiteCards,
+        })
       );
       expect(setJudge).toHaveBeenCalledWith(
         transformUser(gameStateExampleResponse.data.judge)

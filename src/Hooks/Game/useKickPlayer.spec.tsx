@@ -12,7 +12,9 @@ const renderUseKickPlayer = () => {
   return renderHook(useKickPlayer, {
     wrapper: ({ children }) => (
       <VoteProvider>
-        <UsersProvider>{children}</UsersProvider>
+        <UsersProvider>
+          {children}
+        </UsersProvider>
       </VoteProvider>
     ),
   });

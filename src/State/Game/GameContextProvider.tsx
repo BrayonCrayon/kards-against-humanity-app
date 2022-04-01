@@ -5,20 +5,10 @@ import useFetchGameState from "../../Hooks/Game/useFetchGameState";
 
 const GameContextProvider: React.FC = ({ children }) => {
   const [game, setGame] = useState(initialState.game);
-  const [user, setUser] = useState(initialState.user);
   const [judge, setJudge] = useState(initialState.judge);
   const [blackCard, setBlackCard] = useState(initialState.blackCard);
-  const [hasSubmittedCards, setHasSubmittedCards] = useState(
-    initialState.hasSubmittedCards
-  );
 
-  const fetchGameState = useFetchGameState(
-    setUser,
-    setGame,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge
-  );
+  const fetchGameState = useFetchGameState(setGame, setBlackCard, setJudge);
 
   const updateGameStateCallback = useCallback(
     async (data: UpdateGameState) => {
@@ -31,15 +21,11 @@ const GameContextProvider: React.FC = ({ children }) => {
     <GameContext.Provider
       value={{
         game,
-        user,
         judge,
         blackCard,
-        hasSubmittedCards,
         setGame,
-        setUser,
         setJudge,
         setBlackCard,
-        setHasSubmittedCards,
         updateGameStateCallback,
       }}
     >

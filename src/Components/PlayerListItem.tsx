@@ -3,13 +3,18 @@ import { User } from "../Types/User";
 import { GameContext } from "../State/Game/GameContext";
 import useKickPlayer from "../Hooks/Game/useKickPlayer";
 import Swal from "sweetalert2";
+import { useUser } from "../State/User/UserContext";
 
 interface PlayerListItemProps {
   player: User;
 }
 
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
-  const { judge, game, user } = useContext(GameContext);
+  const { judge, game } = useContext(GameContext);
+
+  const {
+    state: { user },
+  } = useUser();
 
   const kick = useKickPlayer();
 

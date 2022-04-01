@@ -15,21 +15,17 @@ import { RoundWinnerModal } from "../Components/RoundWinnerModal";
 import { Button } from "../Components/Button";
 import { useUsers } from "../State/Users/UsersContext";
 import { useHand } from "../State/Hand/HandContext";
+import { useUser } from "../State/User/UserContext";
+import { SetHasSubmittedCards } from "../State/User/UserActions";
 
 const GamePage = () => {
   const {
-    // hand,
     game,
-    user,
     blackCard,
-    hasSubmittedCards,
     judge,
     updateGameStateCallback,
-    setUser,
     setGame,
-    // setHand,
     setBlackCard,
-    setHasSubmittedCards,
     setJudge,
   } = useContext(GameContext);
 
@@ -41,15 +37,14 @@ const GamePage = () => {
     state: { users },
   } = useUsers();
 
+  const {
+    state: { user, hasSubmittedCards },
+    dispatch: userDispatch,
+  } = useUser();
+
   const { id } = useParams<{ id: string }>();
 
-  const fetchGameState = useFetchGameState(
-    setUser,
-    setGame,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge
-  );
+  const fetchGameState = useFetchGameState(setGame, setBlackCard, setJudge);
 
   const showVotingSection = useMemo(() => {
     const players = users.filter((item) => item.id !== judge.id);
@@ -77,11 +72,12 @@ const GamePage = () => {
           .sort((leftCard, rightCard) => leftCard.order - rightCard.order)
           .map((card) => card.id),
       });
-      setHasSubmittedCards(true);
+      // setHasSubmittedCards(true);
+      userDispatch(new SetHasSubmittedCards(true));
     } catch (e) {
       console.error(e);
     }
-  }, [blackCard, hand, game, setHasSubmittedCards, hasSubmittedCards]);
+  }, [blackCard, hand, game, hasSubmittedCards]);
 
   useEffect(() => {
     if (!game.id) {

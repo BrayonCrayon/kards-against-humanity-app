@@ -7,18 +7,21 @@ import GameContextProvider from "./State/Game/GameContextProvider";
 import { VoteProvider } from "./State/Vote/VoteContext";
 import { UsersProvider } from "./State/Users/UsersContext";
 import { HandProvider } from "./State/Hand/HandContext";
+import { UserProvider } from "./State/User/UserContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <HandProvider>
-      <UsersProvider>
-        <GameContextProvider>
-          <VoteProvider>
-            <App />
-          </VoteProvider>
-        </GameContextProvider>
-      </UsersProvider>
-    </HandProvider>
+    <UserProvider>
+      <HandProvider>
+        <UsersProvider>
+          <GameContextProvider>
+            <VoteProvider>
+              <App />
+            </VoteProvider>
+          </GameContextProvider>
+        </UsersProvider>
+      </HandProvider>
+    </UserProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

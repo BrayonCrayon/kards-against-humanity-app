@@ -3,17 +3,22 @@ import { WhiteCard } from "../Types/WhiteCard";
 import { GameContext } from "../State/Game/GameContext";
 import { useHand } from "../State/Hand/HandContext";
 import { SetHandAction } from "../State/Hand/HandActionts";
+import { useUser } from "../State/User/UserContext";
 
 interface WhiteKardProps {
   card: WhiteCard;
 }
 
 export const WhiteKard: React.FC<WhiteKardProps> = ({ card }) => {
-  const { blackCard, hasSubmittedCards } = useContext(GameContext);
+  const { blackCard } = useContext(GameContext);
   const {
     state: { hand },
     dispatch,
   } = useHand();
+
+  const {
+    state: { hasSubmittedCards },
+  } = useUser();
 
   const highestOrder = useMemo(() => {
     return Math.max(...hand.map((item) => item.order));

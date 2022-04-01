@@ -12,6 +12,11 @@ import { SetPlayersAction } from "../../State/Users/UsersActions";
 import { useHand } from "../../State/Hand/HandContext";
 import { SetHandAction } from "../../State/Hand/HandActionts";
 import KAHInput from "../KAHInput";
+import { useUser } from "../../State/User/UserContext";
+import {
+  SetHasSubmittedCards,
+  SetUserAction,
+} from "../../State/User/UserActions";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -19,8 +24,8 @@ const JoinGameForm: React.FC = () => {
   const [userName, setUserName] = useState("");
   const { dispatch } = useUsers();
   const { dispatch: handDispatch } = useHand();
-  const { setGame, setUser, setBlackCard, setHasSubmittedCards, setJudge } =
-    useContext(GameContext);
+  const { dispatch: userDispatch } = useUser();
+  const { setGame, setBlackCard, setJudge } = useContext(GameContext);
 
   const submitToApi = useCallback(
     async (event) => {
@@ -39,14 +44,14 @@ const JoinGameForm: React.FC = () => {
           name: data.name,
           code: data.code,
         } as Game);
-        setUser(transformUser(data.current_user));
+        userDispatch(new SetUserAction(transformUser(data.current_user)));
         dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         handDispatch(new SetHandAction(hand));
         setBlackCard(data.current_black_card);
-        setHasSubmittedCards(data.hasSubmittedWhiteCards);
+        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
         setJudge(transformUser(data.judge));
 
         history.push(`/game/${data.id}`);
@@ -55,15 +60,7 @@ const JoinGameForm: React.FC = () => {
         errorToast("Game does not exist");
       }
     },
-    [
-      userName,
-      code,
-      setGame,
-      setUser,
-      setBlackCard,
-      setHasSubmittedCards,
-      history,
-    ]
+    [userName, code, setGame, setBlackCard, history]
   );
 
   return (

@@ -33,15 +33,11 @@ const game: Game = {
 
 const props = {
   game,
-  user: transformUser(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
-  ),
   judge: transformUser(
     gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
   ),
   blackCard:
     gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
-  hand: gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
 };
 
 let mockUsers = transformUsers(
@@ -52,6 +48,20 @@ jest.mock("../State/Users/UsersContext", () => ({
   useUsers: () => ({
     state: {
       users: mockUsers,
+    },
+    dispatch: jest.fn(),
+  }),
+}));
+
+let mockUser = transformUser(
+  gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
+);
+jest.mock("../State/User/UserContext", () => ({
+  ...jest.requireActual("../State/User/UserContext"),
+  useUser: () => ({
+    state: {
+      user: mockUser,
+      hasSubmittedWhiteCards: false,
     },
     dispatch: jest.fn(),
   }),
@@ -143,11 +153,13 @@ describe("RoundWinnerModal", () => {
     ).toBeInTheDocument();
   });
 
-  it("will call round rotation hook", () => {
+  it("will call round rotation hook", async () => {
     renderComponent();
 
-    expect(mockRotateGame).toHaveBeenCalledTimes(1);
-    expect(mockRotateGame).toHaveBeenCalledWith(props.game.id);
+    await waitFor(() => {
+      expect(mockRotateGame).toHaveBeenCalledTimes(1);
+      expect(mockRotateGame).toHaveBeenCalledWith(props.game.id);
+    });
   });
 
   it("will only call round rotation hook when a winner is selected", () => {
@@ -166,7 +178,7 @@ describe("RoundWinnerModal", () => {
   });
 
   it("does not call game rotate when user is not a judge", async () => {
-    props.user = mockUsers[0];
+    mockUser = mockUsers[0];
     renderComponent();
 
     await waitFor(() => {

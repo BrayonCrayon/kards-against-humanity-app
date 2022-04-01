@@ -9,30 +9,36 @@ import { useUsers } from "../../State/Users/UsersContext";
 import { SetPlayersAction } from "../../State/Users/UsersActions";
 import { useHand } from "../../State/Hand/HandContext";
 import { SetHandAction } from "../../State/Hand/HandActionts";
+import { useUser } from "../../State/User/UserContext";
+import {
+  SetHasSubmittedCards,
+  SetUserAction,
+} from "../../State/User/UserActions";
 
 function useFetchGameState(
-  setUser: setState<User>,
   setGame: setState<Game>,
   setBlackCard: setState<BlackCard>,
-  setHasSubmittedWhiteCards: setState<boolean>,
   setJudge: setState<User>
 ) {
-  const { dispatch } = useUsers();
+  const { dispatch: usersDispatch } = useUsers();
   const { dispatch: handDispatch } = useHand();
+  const { dispatch: userDispatch } = useUser();
 
   const fetchGameState = useCallback(
     async (gameId: string) => {
       try {
         const { data } = await apiClient.get(`/api/game/${gameId}`);
-        setUser(transformUser(data.current_user));
-        dispatch(new SetPlayersAction(transformUsers(data.users)));
+
+        userDispatch(new SetUserAction(transformUser(data.current_user)));
+        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
         setGame({
           id: data.id,
           judge_id: data.judge.id,
           name: data.name,
           code: data.code,
         } as Game);
-        setHasSubmittedWhiteCards(data.hasSubmittedWhiteCards);
+
+        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
         handDispatch(
           new SetHandAction(
             constructWhiteCardArray(
@@ -48,7 +54,7 @@ function useFetchGameState(
         console.error(error);
       }
     },
-    [setUser, setGame, setBlackCard, setHasSubmittedWhiteCards]
+    [setGame, setBlackCard]
   );
 
   return fetchGameState;
