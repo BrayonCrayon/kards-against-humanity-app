@@ -25,7 +25,9 @@ export const fillOutBlackCard = (
   return blackCardText;
 };
 
-export const reorderHand = (clone: WhiteCard[]) => {
+export const decrementPreviouslySelectedCardPositions = (
+  clone: WhiteCard[]
+) => {
   clone.forEach((item) => {
     if (item.order > 0) {
       item.order -= 1;
