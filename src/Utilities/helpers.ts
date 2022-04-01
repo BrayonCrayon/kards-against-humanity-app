@@ -1,5 +1,6 @@
 import { SubmittedCard } from "../Types/ResponseTypes";
 import { BlackCard } from "../Types/BlackCard";
+import { WhiteCard } from "../Types/WhiteCard";
 
 export const fillOutBlackCard = (
   blackCard: BlackCard,
@@ -22,4 +23,13 @@ export const fillOutBlackCard = (
       );
     });
   return blackCardText;
+};
+
+export const sortHand = (clone: WhiteCard[]) => {
+  clone.forEach((item) => {
+    if (item.order > 0) {
+      item.order -= 1;
+    }
+    item.selected = item.order !== 0;
+  });
 };

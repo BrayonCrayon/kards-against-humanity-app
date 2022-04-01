@@ -5,6 +5,7 @@ import { useUser } from "../State/User/UserContext";
 import { GameContext } from "../State/Game/GameContext";
 import { SetHandAction } from "../State/Hand/HandActionts";
 import { WhiteCard } from "../Types/WhiteCard";
+import { sortHand } from "../Utilities/helpers";
 
 const Hand = () => {
   const {
@@ -32,12 +33,7 @@ const Hand = () => {
       if (!cardToSelect) return;
 
       if (blackCard.pick < highestOrder + 1) {
-        clone.forEach((item) => {
-          if (item.order > 0) {
-            item.order -= 1;
-          }
-          item.selected = item.order !== 0;
-        });
+        sortHand(clone);
         cardToSelect.order = highestOrder;
       } else {
         cardToSelect.order = highestOrder + 1;
