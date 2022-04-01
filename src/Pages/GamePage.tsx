@@ -17,6 +17,7 @@ import { useUsers } from "../State/Users/UsersContext";
 import { useHand } from "../State/Hand/HandContext";
 import { useUser } from "../State/User/UserContext";
 import { SetHasSubmittedCards } from "../State/User/UserActions";
+import Hand from "../Components/Hand";
 
 const GamePage = () => {
   const {
@@ -96,13 +97,7 @@ const GamePage = () => {
   return (
     <div>
       <GameInfo />
-      {judge.id !== user.id && !showVotingSection && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
-          {hand.map((card) => (
-            <WhiteKard card={card} key={card.id} />
-          ))}
-        </div>
-      )}
+      {judge.id !== user.id && !showVotingSection && <Hand />}
       {judge.id !== user.id && !showVotingSection && (
         <div className="flex justify-center">
           <Button
