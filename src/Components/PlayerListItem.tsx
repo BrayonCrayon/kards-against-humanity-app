@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useContext, useMemo } from "react";
 import { User } from "../Types/User";
-import { GameContext } from "../State/Game/GameContext";
+import { GameContext, useGame } from "../State/Game/GameContext";
 import useKickPlayer from "../Hooks/Game/useKickPlayer";
 import Swal from "sweetalert2";
 import { useUser } from "../State/User/UserContext";
@@ -10,7 +10,9 @@ interface PlayerListItemProps {
 }
 
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
-  const { judge, game } = useContext(GameContext);
+  const {
+    state: { judge, game },
+  } = useGame();
 
   const {
     state: { user },

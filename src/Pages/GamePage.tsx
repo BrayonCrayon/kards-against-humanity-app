@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { GameContext } from "../State/Game/GameContext";
-import { WhiteKard } from "../Components/WhiteKard";
+import { GameContext, useGame } from "../State/Game/GameContext";
 import {
   listenWhenGameRotates,
   listenWhenUserJoinsGame,
@@ -18,17 +17,12 @@ import { useHand } from "../State/Hand/HandContext";
 import { useUser } from "../State/User/UserContext";
 import { SetHasSubmittedCards } from "../State/User/UserActions";
 import Hand from "../Components/Hand";
+import useGameStateCallback from "../Hooks/Game/useGameStateCallback";
 
 const GamePage = () => {
   const {
-    game,
-    blackCard,
-    judge,
-    updateGameStateCallback,
-    setGame,
-    setBlackCard,
-    setJudge,
-  } = useContext(GameContext);
+    state: { game, judge, blackCard },
+  } = useGame();
 
   const {
     state: { hand },
@@ -45,7 +39,8 @@ const GamePage = () => {
 
   const { id } = useParams<{ id: string }>();
 
-  const fetchGameState = useFetchGameState(setGame, setBlackCard, setJudge);
+  const fetchGameState = useFetchGameState();
+  const updateState = useGameStateCallback();
 
   const showVotingSection = useMemo(() => {
     const players = users.filter((item) => item.id !== judge.id);
@@ -73,7 +68,6 @@ const GamePage = () => {
           .sort((leftCard, rightCard) => leftCard.order - rightCard.order)
           .map((card) => card.id),
       });
-      // setHasSubmittedCards(true);
       userDispatch(new SetHasSubmittedCards(true));
     } catch (e) {
       console.error(e);
@@ -83,14 +77,14 @@ const GamePage = () => {
   useEffect(() => {
     if (!game.id) {
       fetchGameState(id).then(() => {
-        listenWhenUserJoinsGame(id, updateGameStateCallback);
-        listenWhenUserSubmittedCards(id, updateGameStateCallback);
-        listenWhenGameRotates(id, updateGameStateCallback);
+        listenWhenUserJoinsGame(id, updateState);
+        listenWhenUserSubmittedCards(id, updateState);
+        listenWhenGameRotates(id, updateState);
       });
     } else {
-      listenWhenGameRotates(game.id, updateGameStateCallback);
-      listenWhenUserJoinsGame(game.id, updateGameStateCallback);
-      listenWhenUserSubmittedCards(game.id, updateGameStateCallback);
+      listenWhenGameRotates(game.id, updateState);
+      listenWhenUserJoinsGame(game.id, updateState);
+      listenWhenUserSubmittedCards(game.id, updateState);
     }
   }, [id]);
 

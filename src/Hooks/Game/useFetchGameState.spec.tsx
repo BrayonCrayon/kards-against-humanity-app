@@ -1,23 +1,10 @@
 import React from "react";
-import { renderHook } from "@testing-library/react-hooks";
 import useFetchGameState from "./useFetchGameState";
 import { apiClient } from "../../Api/apiClient";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "../../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { constructWhiteCardArray } from "../../Types/WhiteCard";
 import { transformUser, transformUsers } from "../../Types/User";
-import * as Users from "../../State/Users/UsersContext";
-import * as Hand from "../../State/Hand/HandContext";
-import * as User from "../../State/User/UserContext";
-import * as Game from "../../State/Game/GameContext";
-import { initialUserState } from "../../State/User/UserState";
-import { initialGameState } from "../../State/Game/GameState";
-import { history } from "../../Tests/testRenders";
-import { UserProvider } from "../../State/User/UserContext";
-import { HandProvider } from "../../State/Hand/HandContext";
-import { VoteProvider } from "../../State/Vote/VoteContext";
-import { UsersProvider } from "../../State/Users/UsersContext";
-import { Router } from "react-router-dom";
-import { GameProvider } from "../../State/Game/GameContext";
+import { kardsHookRender } from "../../Tests/testRenders";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
@@ -87,24 +74,6 @@ jest.mock("../../State/Game/GameContext", () => ({
   }),
 }));
 
-function renderUseFetchGameHook() {
-  return renderHook(useFetchGameState, {
-    wrapper: ({ children }) => (
-      <Router history={history}>
-        <GameProvider>
-          <UserProvider>
-            <HandProvider>
-              <VoteProvider>
-                <UsersProvider>{children}</UsersProvider>
-              </VoteProvider>
-            </HandProvider>
-          </UserProvider>
-        </GameProvider>
-      </Router>
-    ),
-  });
-}
-
 describe("useFetchGameState", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValueOnce(
@@ -113,7 +82,7 @@ describe("useFetchGameState", () => {
   });
 
   it("returns correct data", async () => {
-    const { result } = renderUseFetchGameHook();
+    const { result } = kardsHookRender(useFetchGameState);
     const gameId = "123";
     await result.current(gameId);
 

@@ -7,7 +7,7 @@ import JoinGameForm from "./JoinGameForm";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { transformUser, transformUsers } from "../../Types/User";
-import { customKardsRender, history } from "../../Tests/testRenders";
+import { history, kardsRender } from "../../Tests/testRenders";
 import { setupAndSubmitForm } from "../../Tests/actions";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
 
@@ -50,19 +50,8 @@ const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const userName = "Joe";
 const code = "1234";
 
-const setGame = jest.fn();
-const setUser = jest.fn();
-const setHand = jest.fn();
-const setBlackCard = jest.fn();
-const setHasSubmittedCards = jest.fn();
-const setJudge = jest.fn();
-
 const renderer = () => {
-  return customKardsRender(<JoinGameForm />, {
-    setGame,
-    setBlackCard,
-    setJudge,
-  });
+  return kardsRender(<JoinGameForm />);
 };
 
 describe("JoinGameForm", () => {
@@ -146,9 +135,6 @@ describe("JoinGameForm", () => {
         code: gameStateExampleResponse.data.code,
         name: gameStateExampleResponse.data.name,
       } as Game);
-      // expect(setUser).toHaveBeenCalledWith(
-      //   transformUser(gameStateExampleResponse.data.current_user)
-      // );
       expect(mockDispatch).toHaveBeenCalledWith(
         expect.objectContaining({
           execute: expect.any(Function),

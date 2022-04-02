@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { apiClient } from "../../Api/apiClient";
 import { useHistory } from "react-router-dom";
-import { GameContext } from "../../State/Game/GameContext";
+import { GameContext, useGame } from "../../State/Game/GameContext";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
@@ -17,6 +17,11 @@ import {
   SetHasSubmittedCards,
   SetUserAction,
 } from "../../State/User/UserActions";
+import {
+  SetBlackCardAction,
+  SetGameAction,
+  SetJudgeAction,
+} from "../../State/Game/GameActions";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
@@ -25,7 +30,7 @@ const JoinGameForm: React.FC = () => {
   const { dispatch } = useUsers();
   const { dispatch: handDispatch } = useHand();
   const { dispatch: userDispatch } = useUser();
-  const { setGame, setBlackCard, setJudge } = useContext(GameContext);
+  const { dispatch: gameDispatch } = useGame();
 
   const submitToApi = useCallback(
     async (event) => {
@@ -38,21 +43,23 @@ const JoinGameForm: React.FC = () => {
             name: userName,
           }
         );
-        setGame({
-          id: data.id,
-          judge_id: data.judge.id,
-          name: data.name,
-          code: data.code,
-        } as Game);
+        gameDispatch(
+          new SetGameAction({
+            id: data.id,
+            judge_id: data.judge.id,
+            name: data.name,
+            code: data.code,
+          })
+        );
         userDispatch(new SetUserAction(transformUser(data.current_user)));
         dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         handDispatch(new SetHandAction(hand));
-        setBlackCard(data.current_black_card);
+        gameDispatch(new SetBlackCardAction(data.current_black_card));
         userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
-        setJudge(transformUser(data.judge));
+        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
 
         history.push(`/game/${data.id}`);
       } catch (e) {
@@ -60,7 +67,7 @@ const JoinGameForm: React.FC = () => {
         errorToast("Game does not exist");
       }
     },
-    [userName, code, setGame, setBlackCard, history]
+    [userName, code, history]
   );
 
   return (

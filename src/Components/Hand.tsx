@@ -2,7 +2,7 @@ import { useHand } from "../State/Hand/HandContext";
 import { WhiteKard } from "./WhiteKard";
 import { useCallback, useContext, useMemo } from "react";
 import { useUser } from "../State/User/UserContext";
-import { GameContext } from "../State/Game/GameContext";
+import { GameContext, useGame } from "../State/Game/GameContext";
 import { SetHandAction } from "../State/Hand/HandActionts";
 import { WhiteCard } from "../Types/WhiteCard";
 import { decrementPreviouslySelectedCardPositions } from "../Utilities/helpers";
@@ -13,7 +13,9 @@ const Hand = () => {
     dispatch: handDispatch,
   } = useHand();
 
-  const { blackCard } = useContext(GameContext);
+  const {
+    state: { blackCard },
+  } = useGame();
 
   const {
     state: { hasSubmittedCards },

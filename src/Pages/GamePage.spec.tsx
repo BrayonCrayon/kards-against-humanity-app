@@ -45,6 +45,12 @@ jest.mock("react-router-dom", () => ({
   }),
 }));
 
+const mockUseUpdateGameState = jest.fn();
+
+jest.mock("../Hooks/Game/useGameStateCallback", () => {
+  return () => mockUseUpdateGameState;
+});
+
 Object.assign(navigator, {
   clipboard: {
     writeText: () => {},
@@ -66,7 +72,7 @@ describe("GamePage", () => {
     });
 
     it("shows users hand of seven white cards", async () => {
-      const wrapper = await kardsRender(<GamePage />);
+      const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         cardsInHand.forEach((card) => {

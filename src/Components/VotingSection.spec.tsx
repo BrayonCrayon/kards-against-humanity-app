@@ -1,9 +1,7 @@
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { customKardsRender } from "../Tests/testRenders";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { apiClient } from "../Api/apiClient";
-import { IGameContext } from "../State/Game/GameContext";
 import { transformUser, transformUsers } from "../Types/User";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "../Types/WhiteCard";

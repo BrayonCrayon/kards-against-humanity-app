@@ -1,13 +1,15 @@
-import React, { FC, useCallback, useContext } from "react";
+import React, { FC, useCallback } from "react";
 import { happyToast } from "../Utilities/toasts";
 import { BlackKard } from "./BlackKard";
-import { GameContext } from "../State/Game/GameContext";
+import { useGame } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
 import ToggleSidebar from "./ToggleSidebar";
 import PlayerList from "./PlayerList";
 
 const GameInfo: FC = () => {
-  const { game, blackCard } = useContext(GameContext);
+  const {
+    state: { game, blackCard },
+  } = useGame();
   const {
     state: { users },
   } = useUsers();

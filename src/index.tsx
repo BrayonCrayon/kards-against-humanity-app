@@ -3,22 +3,22 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import GameContextProvider from "./State/Game/GameContextProvider";
 import { VoteProvider } from "./State/Vote/VoteContext";
 import { UsersProvider } from "./State/Users/UsersContext";
 import { HandProvider } from "./State/Hand/HandContext";
 import { UserProvider } from "./State/User/UserContext";
+import { GameProvider } from "./State/Game/GameContext";
 
 ReactDOM.render(
   <React.StrictMode>
     <UserProvider>
       <HandProvider>
         <UsersProvider>
-          <GameContextProvider>
+          <GameProvider>
             <VoteProvider>
               <App />
             </VoteProvider>
-          </GameContextProvider>
+          </GameProvider>
         </UsersProvider>
       </HandProvider>
     </UserProvider>

@@ -24,37 +24,40 @@ function useFetchGameState() {
   const { dispatch: userDispatch } = useUser();
   const { dispatch: gameDispatch } = useGame();
 
-  const fetchGameState = useCallback(async (gameId: string) => {
-    try {
-      const { data } = await apiClient.get(`/api/game/${gameId}`);
+  const fetchGameState = useCallback(
+    async (gameId: string) => {
+      try {
+        const { data } = await apiClient.get(`/api/game/${gameId}`);
 
-      userDispatch(new SetUserAction(transformUser(data.current_user)));
-      usersDispatch(new SetPlayersAction(transformUsers(data.users)));
-      gameDispatch(
-        new SetGameAction({
-          id: data.id,
-          judge_id: data.judge.id,
-          name: data.name,
-          code: data.code,
-        })
-      );
+        userDispatch(new SetUserAction(transformUser(data.current_user)));
+        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
+        gameDispatch(
+          new SetGameAction({
+            id: data.id,
+            judge_id: data.judge.id,
+            name: data.name,
+            code: data.code,
+          })
+        );
 
-      userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
-      handDispatch(
-        new SetHandAction(
-          constructWhiteCardArray(
-            data.hand,
-            data.hasSubmittedWhiteCards,
-            data.submittedWhiteCardIds
+        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
+        handDispatch(
+          new SetHandAction(
+            constructWhiteCardArray(
+              data.hand,
+              data.hasSubmittedWhiteCards,
+              data.submittedWhiteCardIds
+            )
           )
-        )
-      );
-      gameDispatch(new SetBlackCardAction(data.current_black_card));
-      gameDispatch(new SetJudgeAction(data.judge));
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+        );
+        gameDispatch(new SetBlackCardAction(data.current_black_card));
+        gameDispatch(new SetJudgeAction(data.judge));
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    [handDispatch, userDispatch, usersDispatch, gameDispatch]
+  );
 
   return fetchGameState;
 }

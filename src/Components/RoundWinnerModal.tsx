@@ -3,7 +3,7 @@ import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { ClearStateAction } from "../State/Vote/VoteActions";
 import { Button } from "./Button";
-import { GameContext } from "../State/Game/GameContext";
+import { GameContext, useGame } from "../State/Game/GameContext";
 import useRotateGame from "../Hooks/Game/useRotateGame";
 import { useUsers } from "../State/Users/UsersContext";
 import { useUser } from "../State/User/UserContext";
@@ -13,7 +13,9 @@ export function RoundWinnerModal() {
     dispatch,
     state: { selectedRoundWinner },
   } = useVote();
-  const { game } = useContext(GameContext);
+  const {
+    state: { game },
+  } = useGame();
   const {
     state: { user },
   } = useUser();

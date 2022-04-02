@@ -1,6 +1,6 @@
 import { FC, useCallback, useContext, useEffect, useState } from "react";
 import { apiClient } from "../Api/apiClient";
-import { GameContext } from "../State/Game/GameContext";
+import { GameContext, useGame } from "../State/Game/GameContext";
 import { PlayerSubmittedCard } from "../Types/ResponseTypes";
 import { useVote } from "../State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
@@ -13,7 +13,9 @@ import { SelectWinnerAction } from "../State/Vote/VoteActions";
 import { useUser } from "../State/User/UserContext";
 
 export const VotingSection: FC = () => {
-  const { game, judge, blackCard } = useContext(GameContext);
+  const {
+    state: { game, judge, blackCard },
+  } = useGame();
   const {
     state: { selectedPlayerId, selectedRoundWinner },
     dispatch,
