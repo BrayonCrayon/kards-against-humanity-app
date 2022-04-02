@@ -5,7 +5,7 @@ import { whiteCardFixture } from "../Api/fixtures/whiteCardFixture";
 const card = whiteCardFixture[0];
 
 const selectableWhiteKardRender = (): RenderResult => {
-  return render(<WhiteKard card={card} />);
+  return render(<WhiteKard card={card} onClick={() => {}} />);
 };
 
 describe("Kards", function () {

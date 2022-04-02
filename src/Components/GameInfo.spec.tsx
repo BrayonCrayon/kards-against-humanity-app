@@ -8,8 +8,6 @@ import userEvent from "@testing-library/user-event";
 import { togglePlayerList } from "../Tests/actions";
 import { transformUser } from "../Types/User";
 
-const setHand = jest.fn();
-const setHasSubmittedCards = jest.fn();
 const updateGameStateCallback = jest.fn();
 
 const { data } = gameStateJudgeExampleResponse;
@@ -18,9 +16,10 @@ let mockUser = transformUser(data.current_user);
 let mockHasSubmittedCards = false;
 let mockUsersDispatch = jest.fn();
 
-const renderer = (value?: Partial<IGameContext>): RenderResult => {
-  return customKardsRender(<GameInfo />, {
-    setHasSubmittedCards,
+const renderer = async (
+  value?: Partial<IGameContext>
+): Promise<RenderResult> => {
+  return await customKardsRender(<GameInfo />, {
     updateGameStateCallback,
     game: {
       id: data.id,
@@ -69,7 +68,7 @@ jest.mock("../State/User/UserContext", () => ({
 describe("GameInfo", () => {
   describe("Users Box", () => {
     it("shows the judge icon next to the player who is the judge", async () => {
-      const { queryByTestId } = renderer();
+      const { queryByTestId } = await renderer();
 
       await togglePlayerList();
 
@@ -79,16 +78,20 @@ describe("GameInfo", () => {
     });
 
     it("does not show the judge icon next to the player who is not the judge", async () => {
-      const nonJudge = data.users[1];
+      const nonJudgeUser = mockUsers.find((item) => item.id !== mockUser.id);
+      const { queryByTestId } = await renderer();
 
-      const { queryByTestId } = renderer({ user: nonJudge });
+      await togglePlayerList();
 
-      expect(await queryByTestId(`user-${nonJudge.id}-judge`)).toBeNull();
+      await waitFor(async () => {
+        expect(nonJudgeUser).not.toBeNull();
+        expect(queryByTestId(`user-${nonJudgeUser!.id}-judge`)).toBeNull();
+      });
     });
 
     it("Shows the users name in green when they have submitted the cards", async () => {
       mockUsers[0].hasSubmittedWhiteCards = true;
-      const wrapper = renderer();
+      const wrapper = await renderer();
 
       await togglePlayerList();
 
@@ -101,7 +104,7 @@ describe("GameInfo", () => {
     });
 
     it("shows a button to kick players on users list", async () => {
-      const wrapper = renderer();
+      const wrapper = await renderer();
       const playerToKickId = data.users.filter(
         (item) => item.id !== data.current_user.id
       )[0].id;
@@ -116,9 +119,7 @@ describe("GameInfo", () => {
     });
 
     it("only show kick player buttons when user is the judge", async () => {
-      const wrapper = renderer({
-        user: data.users.filter((item) => item.id !== data.judge.id)[0],
-      });
+      const wrapper = await renderer();
 
       await waitFor(() => {
         data.users.forEach((user) => {
@@ -130,7 +131,7 @@ describe("GameInfo", () => {
     });
 
     it("will not show kick player on player that is the judge", async () => {
-      const wrapper = renderer();
+      const wrapper = await renderer();
 
       await waitFor(() => {
         expect(
@@ -140,7 +141,7 @@ describe("GameInfo", () => {
     });
 
     it("will call api endpoint to kick player from game", async () => {
-      const wrapper = renderer();
+      const wrapper = await renderer();
       const playerToKick = data.users.filter(
         (item) => item.id !== data.current_user.id
       )[0];
@@ -162,8 +163,8 @@ describe("GameInfo", () => {
   });
 
   describe("Game box", () => {
-    it("shows game name", () => {
-      const wrapper = renderer();
+    it("shows game name", async () => {
+      const wrapper = await renderer();
 
       expect(wrapper.queryByTestId(`game-${data.id}-name`)).not.toBeNull();
       expect(wrapper.queryByTestId(`game-${data.id}-name`)).toHaveTextContent(

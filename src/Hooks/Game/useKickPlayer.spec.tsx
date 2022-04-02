@@ -7,14 +7,13 @@ import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleRes
 import { transformUsers } from "../../Types/User";
 import * as Users from "../../State/Users/UsersContext";
 import { UsersProvider } from "../../State/Users/UsersContext";
+import { act } from "react-dom/test-utils";
 
 const renderUseKickPlayer = () => {
   return renderHook(useKickPlayer, {
     wrapper: ({ children }) => (
       <VoteProvider>
-        <UsersProvider>
-          {children}
-        </UsersProvider>
+        <UsersProvider>{children}</UsersProvider>
       </VoteProvider>
     ),
   });
@@ -30,7 +29,9 @@ describe("useKickPlayer", () => {
   it("will call api to kick player", async () => {
     const { result } = renderUseKickPlayer();
 
-    await result.current(gameId, userId);
+    await act(async () => {
+      await result.current(gameId, userId);
+    });
 
     expect(mockedAxios.post).toHaveBeenCalledWith(
       `/api/game/${gameId}/player/${userId}/kick`
@@ -45,7 +46,9 @@ describe("useKickPlayer", () => {
       .mockImplementation(() => {});
     const { result } = renderUseKickPlayer();
 
-    await result.current(gameId, userId);
+    await act(async () => {
+      await result.current(gameId, userId);
+    });
 
     expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
   });
@@ -60,7 +63,9 @@ describe("useKickPlayer", () => {
     }));
     const { result } = renderUseKickPlayer();
 
-    await result.current(gameId, userId);
+    await act(async () => {
+      await result.current(gameId, userId);
+    });
 
     expect(mockDispatch).toHaveBeenCalledWith(
       expect.objectContaining({

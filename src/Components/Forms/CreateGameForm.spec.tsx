@@ -8,6 +8,7 @@ import { apiClient } from "../../Api/apiClient";
 import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
 import { transformUser, transformUsers } from "../../Types/User";
 import { customKardsRender, history } from "../../Tests/testRenders";
+import { act } from "react-dom/test-utils";
 
 jest.mock("../../Api/apiClient");
 
@@ -70,11 +71,13 @@ describe("CreateGameForm", () => {
 
     renderer();
 
-    const nameInput = await screen.findByTestId("user-name");
-    userEvent.type(nameInput, name);
+    await act(async () => {
+      const nameInput = await screen.findByTestId("user-name");
+      userEvent.type(nameInput, name);
 
-    const submitBtn = await screen.findByTestId("create-game-submit-button");
-    userEvent.click(submitBtn);
+      const submitBtn = await screen.findByTestId("create-game-submit-button");
+      userEvent.click(submitBtn);
+    });
 
     expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
       expansionIds: getExpansionsExampleResponse.data.map((exp) => exp.id),

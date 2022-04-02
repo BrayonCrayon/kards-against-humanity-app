@@ -11,6 +11,7 @@ import userEvent from "@testing-library/user-event";
 import * as Vote from "../State/Vote/VoteContext";
 import { happyToast } from "../Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+import { act } from "react-dom/test-utils";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
@@ -64,7 +65,9 @@ jest.mock("../State/User/UserContext", () => ({
   }),
 }));
 
-const renderer = (value?: Partial<IGameContext>): RenderResult => {
+const renderer = async (
+  value?: Partial<IGameContext>
+): Promise<RenderResult> => {
   return customKardsRender(<VotingSection />, {
     ...props,
     ...value,
@@ -95,7 +98,7 @@ describe("VotingSection", () => {
         .spyOn(console, "error")
         .mockImplementation(() => {});
 
-      renderer();
+      await renderer();
 
       await waitFor(() => {
         expect(consoleSpy).toBeCalledWith(errorMessage);
@@ -106,7 +109,7 @@ describe("VotingSection", () => {
     it("submits selected winner to api", async () => {
       const { user_id } = submittedCardsResponse.data[0];
 
-      const wrapper = renderer();
+      const wrapper = await renderer();
 
       await waitFor(() => {
         userEvent.click(
@@ -133,7 +136,7 @@ describe("VotingSection", () => {
       mockedAxios.post.mockRejectedValueOnce(apiPostError);
       const { user_id } = submittedCardsResponse.data[0];
 
-      const wrapper = renderer();
+      const wrapper = await renderer();
 
       await waitFor(() => {
         userEvent.click(
@@ -150,7 +153,7 @@ describe("VotingSection", () => {
     });
 
     it("will not allow user to submit winner without selecting a winner first", async () => {
-      const wrapper = renderer();
+      const wrapper = await renderer();
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId("submit-selected-winner"));
@@ -169,8 +172,10 @@ describe("VotingSection", () => {
     beforeEach(() => {
       mockedAxios.get.mockResolvedValue(submittedCardsResponse);
     });
-    it("listens on winner selected pusher event when loading game page", () => {
-      renderer();
+    it("listens on winner selected pusher event when loading game page", async () => {
+      await act(async () => {
+        await renderer();
+      });
 
       expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(
         gameFixture.id,
