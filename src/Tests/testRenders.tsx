@@ -54,3 +54,17 @@ export const kardsRender = (children: JSX.Element): RenderResult => {
     </Router>
   );
 };
+
+// export const kardsRenderHook = () => {
+//   return () => <Router history={history}>
+//     <GameContextProvider>
+//       <UserProvider>
+//         <HandProvider>
+//           <VoteProvider>
+//             <UsersProvider>{children}</UsersProvider>
+//           </VoteProvider>
+//         </HandProvider>
+//       </UserProvider>
+//     </GameContextProvider>
+//   </Router>
+// }
