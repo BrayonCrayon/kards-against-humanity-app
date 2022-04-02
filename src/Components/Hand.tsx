@@ -27,7 +27,13 @@ const Hand = () => {
     return blackCard.pick < positionOfLastSelectedCard + 1;
   }, [positionOfLastSelectedCard, blackCard]);
 
-  const toggle = useCallback(
+  const nextCardPosition = useMemo(() => {
+    return hasSelectedAmountReached
+      ? positionOfLastSelectedCard
+      : positionOfLastSelectedCard + 1;
+  }, [hasSelectedAmountReached, positionOfLastSelectedCard]);
+
+  const select = useCallback(
     (card: WhiteCard) => {
       if (hasSubmittedCards) return;
 
@@ -36,13 +42,11 @@ const Hand = () => {
 
       if (!cardToSelect) return;
 
-      if (hasSelectedAmountReached) {
+      if (hasSelectedAmountReached)
         decrementPreviouslySelectedCardPositions(clone);
-        cardToSelect.order = positionOfLastSelectedCard;
-      } else {
-        cardToSelect.order = positionOfLastSelectedCard + 1;
-      }
-      cardToSelect.selected = !card.selected;
+
+      cardToSelect.order = nextCardPosition;
+      cardToSelect.selected = true;
 
       handDispatch(new SetHandAction(clone));
     },
@@ -50,6 +54,8 @@ const Hand = () => {
       handDispatch,
       hand,
       hasSubmittedCards,
+      nextCardPosition,
+      hasSelectedAmountReached,
       positionOfLastSelectedCard,
       blackCard,
     ]
@@ -58,7 +64,7 @@ const Hand = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
       {hand.map((card) => (
-        <WhiteKard card={card} key={card.id} onClick={toggle} />
+        <WhiteKard card={card} key={card.id} onClick={select} />
       ))}
     </div>
   );
