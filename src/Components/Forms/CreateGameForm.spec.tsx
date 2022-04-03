@@ -1,23 +1,23 @@
 import { screen, waitFor } from "@testing-library/react";
-import { CreateGameForm } from "./CreateGameForm";
+import { CreateGameForm } from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
-import { Game } from "../../Types/Game";
-import { apiClient } from "../../Api/apiClient";
-import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
-import { transformUser, transformUsers } from "../../Types/User";
-import { history, kardsRender } from "../../Tests/testRenders";
+import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
+import { Game } from "Types/Game";
+import { apiClient } from "Api/apiClient";
+import { SELECTED_CARD_BACKGROUND } from "Components/ExpansionCard";
+import { transformUser, transformUsers } from "Types/User";
+import { history, kardsRender } from "Tests/testRenders";
 import { act } from "react-dom/test-utils";
-import { expectDispatch } from "../../Tests/testHelpers";
+import { expectDispatch } from "Tests/testHelpers";
 
-jest.mock("../../Api/apiClient");
+jest.mock("Api/apiClient");
 
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 let mockDispatch = jest.fn();
-jest.mock("../../State/Users/UsersContext", () => ({
-  ...jest.requireActual("../../State/Users/UsersContext"),
+jest.mock("State/Users/UsersContext", () => ({
+  ...jest.requireActual("State/Users/UsersContext"),
   useUsers: () => ({
     state: {
       users: [],
@@ -26,8 +26,8 @@ jest.mock("../../State/Users/UsersContext", () => ({
   }),
 }));
 
-jest.mock("../../State/User/UserContext", () => ({
-  ...jest.requireActual("../../State/User/UserContext"),
+jest.mock("State/User/UserContext", () => ({
+  ...jest.requireActual("State/User/UserContext"),
   useUser: () => ({
     state: {
       user: {},
@@ -37,8 +37,8 @@ jest.mock("../../State/User/UserContext", () => ({
   }),
 }));
 
-jest.mock("../../State/Game/GameContext", () => ({
-  ...jest.requireActual("../../State/Game/GameContext"),
+jest.mock("State/Game/GameContext", () => ({
+  ...jest.requireActual("State/Game/GameContext"),
   useGame: () => ({
     state: {
       game: {},

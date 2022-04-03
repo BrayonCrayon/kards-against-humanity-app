@@ -1,24 +1,24 @@
-import { kardsRender } from "../Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import { RoundWinnerModal } from "./RoundWinnerModal";
-import * as Vote from "../State/Vote/VoteContext";
-import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
+import * as Vote from "State/Vote/VoteContext";
+import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { Game } from "../Types/Game";
-import { transformUser, transformUsers } from "../Types/User";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { Game } from "Types/Game";
+import { transformUser, transformUsers } from "Types/User";
 import { waitFor } from "@testing-library/react";
-import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
-import { fillOutBlackCard } from "../Utilities/helpers";
+import { roundWinnerExampleResponse } from "Api/fixtures/roundWinnerExampleResponse";
+import { fillOutBlackCard } from "Utilities/helpers";
 
 const mockRotateGame = jest.fn(async () => {});
-jest.mock("../Hooks/Game/useRotateGame", () => {
+jest.mock("Hooks/Game/useRotateGame", () => {
   return () => {
     return mockRotateGame;
   };
 });
 
 const mockFetchGameState = jest.fn();
-jest.mock("../Hooks/Game/useFetchGameState", () => {
+jest.mock("Hooks/Game/useFetchGameState", () => {
   return () => {
     return mockFetchGameState;
   };
@@ -42,8 +42,8 @@ const props = {
 let mockUsers = transformUsers(
   gameStateAllPlayerSubmittedCardsExampleResponse.data.users
 );
-jest.mock("../State/Users/UsersContext", () => ({
-  ...jest.requireActual("../State/Users/UsersContext"),
+jest.mock("State/Users/UsersContext", () => ({
+  ...jest.requireActual("State/Users/UsersContext"),
   useUsers: () => ({
     state: {
       users: mockUsers,
@@ -55,8 +55,8 @@ jest.mock("../State/Users/UsersContext", () => ({
 let mockUser = transformUser(
   gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
 );
-jest.mock("../State/User/UserContext", () => ({
-  ...jest.requireActual("../State/User/UserContext"),
+jest.mock("State/User/UserContext", () => ({
+  ...jest.requireActual("State/User/UserContext"),
   useUser: () => ({
     state: {
       user: mockUser,
@@ -66,8 +66,8 @@ jest.mock("../State/User/UserContext", () => ({
   }),
 }));
 
-jest.mock("../State/Game/GameContext", () => ({
-  ...jest.requireActual("../State/Game/GameContext"),
+jest.mock("State/Game/GameContext", () => ({
+  ...jest.requireActual("State/Game/GameContext"),
   useGame: () => ({
     state: {
       game: mockGame,

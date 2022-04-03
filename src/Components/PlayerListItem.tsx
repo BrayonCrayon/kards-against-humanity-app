@@ -1,9 +1,9 @@
-import React, { FC, useCallback, useContext, useMemo } from "react";
-import { User } from "../Types/User";
-import { GameContext, useGame } from "../State/Game/GameContext";
-import useKickPlayer from "../Hooks/Game/useKickPlayer";
+import React, { FC, useCallback, useMemo } from "react";
+import { User } from "Types/User";
+import { useGame } from "State/Game/GameContext";
+import useKickPlayer from "Hooks/Game/useKickPlayer";
 import Swal from "sweetalert2";
-import { useUser } from "../State/User/UserContext";
+import { useUser } from "State/User/UserContext";
 
 interface PlayerListItemProps {
   player: User;
