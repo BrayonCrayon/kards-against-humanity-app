@@ -2,7 +2,7 @@ import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { apiClient } from "Api/apiClient";
-import { transformUser, transformUsers } from "Types/User";
+import { transformUser, transformUsers, User } from "Types/User";
 import { VotingSection } from "./VotingSection";
 import { constructWhiteCardArray } from "Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
@@ -67,7 +67,11 @@ jest.mock("State/Game/GameContext", () => ({
   }),
 }));
 
-const renderer = async (): Promise<RenderResult> => {
+const renderer = async (
+  loggedInUser: User | undefined = undefined
+): Promise<RenderResult> => {
+  if (loggedInUser) mockUser = loggedInUser;
+
   return kardsRender(<VotingSection />);
 };
 
@@ -318,7 +322,7 @@ describe("VotingSection", () => {
     });
 
     it("will not allow non judge users to select submitted cards", async () => {
-      const wrapper = await renderer();
+      const wrapper = await renderer(mockProps.users[0]);
 
       const [submittedCard] = submittedCardsResponse.data;
 

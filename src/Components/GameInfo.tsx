@@ -6,6 +6,8 @@ import { useUsers } from "../State/Users/UsersContext";
 import ToggleSidebar from "./ToggleSidebar";
 import PlayerList from "./PlayerList";
 import PlayerNotificationBar from "./PlayerNotificationBar";
+import JudgeMessage from "./JudgeMessage";
+import { useUser } from "../State/User/UserContext";
 
 const GameInfo: FC = () => {
   const {
@@ -14,6 +16,9 @@ const GameInfo: FC = () => {
   const {
     state: { users },
   } = useUsers();
+  const {
+    state: { user },
+  } = useUser();
 
   const copyGameCode = useCallback(async () => {
     try {
@@ -72,6 +77,7 @@ const GameInfo: FC = () => {
       <div className="mx-auto my-2 w-full px-2 md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />
       </div>
+      <JudgeMessage user={user} judge={judge} />
     </div>
   );
 };
