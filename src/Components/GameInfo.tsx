@@ -77,7 +77,7 @@ const GameInfo: FC = () => {
       <div className="mx-auto my-2 w-full px-2 md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />
       </div>
-      <JudgeMessage user={user} judge={judge} />
+      <JudgeMessage user={user} judge={judge} className="mt-6" />
     </div>
   );
 };
