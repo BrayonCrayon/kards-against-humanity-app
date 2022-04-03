@@ -1,30 +1,30 @@
-import { customKardsRender } from "../Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import { RoundWinnerModal } from "./RoundWinnerModal";
-import * as Vote from "../State/Vote/VoteContext";
-import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
+import * as Vote from "State/Vote/VoteContext";
+import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { Game } from "../Types/Game";
-import { transformUser, transformUsers } from "../Types/User";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { Game } from "Types/Game";
+import { transformUser, transformUsers } from "Types/User";
 import { waitFor } from "@testing-library/react";
-import { roundWinnerExampleResponse } from "../Api/fixtures/roundWinnerExampleResponse";
-import { fillOutBlackCard } from "../Utilities/helpers";
+import { roundWinnerExampleResponse } from "Api/fixtures/roundWinnerExampleResponse";
+import { fillOutBlackCard } from "Utilities/helpers";
 
 const mockRotateGame = jest.fn(async () => {});
-jest.mock("../Hooks/Game/useRotateGame", () => {
+jest.mock("Hooks/Game/useRotateGame", () => {
   return () => {
     return mockRotateGame;
   };
 });
 
 const mockFetchGameState = jest.fn();
-jest.mock("../Hooks/Game/useFetchGameState", () => {
+jest.mock("Hooks/Game/useFetchGameState", () => {
   return () => {
     return mockFetchGameState;
   };
 });
 
-const game: Game = {
+const mockGame: Game = {
   id: gameStateAllPlayerSubmittedCardsExampleResponse.data.id,
   name: gameStateAllPlayerSubmittedCardsExampleResponse.data.name,
   code: gameStateAllPlayerSubmittedCardsExampleResponse.data.code,
@@ -32,23 +32,18 @@ const game: Game = {
 };
 
 const props = {
-  game,
-  user: transformUser(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
-  ),
   judge: transformUser(
     gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
   ),
   blackCard:
     gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
-  hand: gameStateAllPlayerSubmittedCardsExampleResponse.data.hand,
 };
 
 let mockUsers = transformUsers(
   gameStateAllPlayerSubmittedCardsExampleResponse.data.users
 );
-jest.mock("../State/Users/UsersContext", () => ({
-  ...jest.requireActual("../State/Users/UsersContext"),
+jest.mock("State/Users/UsersContext", () => ({
+  ...jest.requireActual("State/Users/UsersContext"),
   useUsers: () => ({
     state: {
       users: mockUsers,
@@ -57,8 +52,32 @@ jest.mock("../State/Users/UsersContext", () => ({
   }),
 }));
 
+let mockUser = transformUser(
+  gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
+);
+jest.mock("State/User/UserContext", () => ({
+  ...jest.requireActual("State/User/UserContext"),
+  useUser: () => ({
+    state: {
+      user: mockUser,
+      hasSubmittedWhiteCards: false,
+    },
+    dispatch: jest.fn(),
+  }),
+}));
+
+jest.mock("State/Game/GameContext", () => ({
+  ...jest.requireActual("State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: mockGame,
+    },
+    dispatch: jest.fn(),
+  }),
+}));
+
 const renderComponent = () => {
-  return customKardsRender(<RoundWinnerModal />, props);
+  return kardsRender(<RoundWinnerModal />);
 };
 
 describe("RoundWinnerModal", () => {
@@ -143,11 +162,13 @@ describe("RoundWinnerModal", () => {
     ).toBeInTheDocument();
   });
 
-  it("will call round rotation hook", () => {
+  it("will call round rotation hook", async () => {
     renderComponent();
 
-    expect(mockRotateGame).toHaveBeenCalledTimes(1);
-    expect(mockRotateGame).toHaveBeenCalledWith(props.game.id);
+    await waitFor(() => {
+      expect(mockRotateGame).toHaveBeenCalledTimes(1);
+      expect(mockRotateGame).toHaveBeenCalledWith(mockGame.id);
+    });
   });
 
   it("will only call round rotation hook when a winner is selected", () => {
@@ -162,11 +183,11 @@ describe("RoundWinnerModal", () => {
     renderComponent();
 
     expect(mockRotateGame).toHaveBeenCalledTimes(0);
-    expect(mockRotateGame).not.toHaveBeenCalledWith(props.game.id);
+    expect(mockRotateGame).not.toHaveBeenCalledWith(mockGame.id);
   });
 
   it("does not call game rotate when user is not a judge", async () => {
-    props.user = mockUsers[0];
+    mockUser = mockUsers[0];
     renderComponent();
 
     await waitFor(() => {

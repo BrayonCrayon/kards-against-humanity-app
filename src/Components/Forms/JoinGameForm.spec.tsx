@@ -4,11 +4,12 @@ import { apiClient } from "../../Api/apiClient";
 import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
 import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { transformUser, transformUsers } from "../../Types/User";
-import { customKardsRender, history } from "../../Tests/testRenders";
+import { history, kardsRender } from "../../Tests/testRenders";
 import { setupAndSubmitForm } from "../../Tests/actions";
+import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
+import { expectDispatch } from "../../Tests/testHelpers";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
@@ -24,26 +25,43 @@ jest.mock("../../State/Users/UsersContext", () => ({
   }),
 }));
 
+jest.mock("../../State/User/UserContext", () => ({
+  ...jest.requireActual("../../State/User/UserContext"),
+  useUser: () => ({
+    state: {
+      user: {},
+      hasSubmittedWhiteCards: false,
+    },
+    dispatch: mockDispatch,
+  }),
+}));
+
+jest.mock("../../State/Hand/HandContext", () => ({
+  ...jest.requireActual("../../State/Hand/HandContext"),
+  useHand: () => ({
+    state: {
+      hand: [],
+    },
+    dispatch: mockDispatch,
+  }),
+}));
+
+jest.mock("../../State/Game/GameContext", () => ({
+  ...jest.requireActual("../../State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: {},
+    },
+    dispatch: mockDispatch,
+  }),
+}));
+
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 const userName = "Joe";
 const code = "1234";
 
-const setGame = jest.fn();
-const setUser = jest.fn();
-const setHand = jest.fn();
-const setBlackCard = jest.fn();
-const setHasSubmittedCards = jest.fn();
-const setJudge = jest.fn();
-
 const renderer = () => {
-  return customKardsRender(<JoinGameForm />, {
-    setGame,
-    setUser,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge,
-  });
+  return kardsRender(<JoinGameForm />);
 };
 
 describe("JoinGameForm", () => {
@@ -121,28 +139,36 @@ describe("JoinGameForm", () => {
     userEvent.click(submit);
 
     await waitFor(() => {
-      expect(setGame).toHaveBeenCalledWith({
+      expectDispatch(mockDispatch, {
         id: gameStateExampleResponse.data.id,
         judge_id: gameStateExampleResponse.data.judge.id,
         code: gameStateExampleResponse.data.code,
-      } as Game);
-      expect(setUser).toHaveBeenCalledWith(
+        name: gameStateExampleResponse.data.name,
+      });
+      expectDispatch(
+        mockDispatch,
         transformUser(gameStateExampleResponse.data.current_user)
       );
-      expect(setHand).toHaveBeenCalledWith(gameStateExampleResponse.data.hand);
-      expect(setBlackCard).toHaveBeenCalledWith(
-        gameStateExampleResponse.data.current_black_card
-      );
-      expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          execute: expect.any(Function),
-          payload: transformUsers(gameStateExampleResponse.data.users),
+      expectDispatch(
+        mockDispatch,
+        gameStateExampleResponse.data.hand.map((item: IWhiteCard) => {
+          return new WhiteCard(item.id, item.text, item.expansion_id);
         })
       );
-      expect(setHasSubmittedCards).toHaveBeenCalledWith(
+      expectDispatch(
+        mockDispatch,
+        gameStateExampleResponse.data.current_black_card
+      );
+      expectDispatch(
+        mockDispatch,
+        transformUsers(gameStateExampleResponse.data.users)
+      );
+      expectDispatch(
+        mockDispatch,
         gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
-      expect(setJudge).toHaveBeenCalledWith(
+      expectDispatch(
+        mockDispatch,
         transformUser(gameStateExampleResponse.data.judge)
       );
     });

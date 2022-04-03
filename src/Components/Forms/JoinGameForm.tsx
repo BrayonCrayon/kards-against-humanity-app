@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useState } from "react";
 import { apiClient } from "../../Api/apiClient";
 import { useHistory } from "react-router-dom";
-import { GameContext } from "../../State/Game/GameContext";
+import { GameContext, useGame } from "../../State/Game/GameContext";
 import { Game } from "../../Types/Game";
 import { errorToast } from "../../Utilities/toasts";
 import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
@@ -9,20 +9,28 @@ import { transformUser, transformUsers } from "../../Types/User";
 import { Button } from "../Button";
 import { useUsers } from "../../State/Users/UsersContext";
 import { SetPlayersAction } from "../../State/Users/UsersActions";
+import { useHand } from "../../State/Hand/HandContext";
+import { SetHandAction } from "../../State/Hand/HandActionts";
+import KAHInput from "../KAHInput";
+import { useUser } from "../../State/User/UserContext";
+import {
+  SetHasSubmittedCards,
+  SetUserAction,
+} from "../../State/User/UserActions";
+import {
+  SetBlackCardAction,
+  SetGameAction,
+  SetJudgeAction,
+} from "../../State/Game/GameActions";
 
 const JoinGameForm: React.FC = () => {
   const history = useHistory();
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
   const { dispatch } = useUsers();
-  const {
-    setGame,
-    setUser,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge,
-  } = useContext(GameContext);
+  const { dispatch: handDispatch } = useHand();
+  const { dispatch: userDispatch } = useUser();
+  const { dispatch: gameDispatch } = useGame();
 
   const submitToApi = useCallback(
     async (event) => {
@@ -35,21 +43,23 @@ const JoinGameForm: React.FC = () => {
             name: userName,
           }
         );
-        setGame({
-          id: data.id,
-          judge_id: data.judge.id,
-          name: data.name,
-          code: data.code,
-        } as Game);
-        setUser(transformUser(data.current_user));
+        gameDispatch(
+          new SetGameAction({
+            id: data.id,
+            judge_id: data.judge.id,
+            name: data.name,
+            code: data.code,
+          })
+        );
+        userDispatch(new SetUserAction(transformUser(data.current_user)));
         dispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
-        setHand(hand);
-        setBlackCard(data.current_black_card);
-        setHasSubmittedCards(data.hasSubmittedWhiteCards);
-        setJudge(transformUser(data.judge));
+        handDispatch(new SetHandAction(hand));
+        gameDispatch(new SetBlackCardAction(data.current_black_card));
+        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
+        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
 
         history.push(`/game/${data.id}`);
       } catch (e) {
@@ -57,16 +67,7 @@ const JoinGameForm: React.FC = () => {
         errorToast("Game does not exist");
       }
     },
-    [
-      userName,
-      code,
-      setGame,
-      setUser,
-      setBlackCard,
-      setHasSubmittedCards,
-      setHand,
-      history,
-    ]
+    [userName, code, history]
   );
 
   return (
@@ -77,31 +78,26 @@ const JoinGameForm: React.FC = () => {
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
-        <label className="mb-4 pl-2 mt-4 flex justify-between">
-          Code:
-          <input
-            type="text"
-            data-testid="join-game-code-input"
-            name="code"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            onChange={(e) => setCode(e.target.value)}
-          />
-        </label>
-        <label className="mb-4 pl-2 mt-4 flex justify-between">
-          Player Name:
-          <input
-            type="text"
-            data-testid="join-game-name-input"
-            name="name"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            minLength={3}
-            maxLength={17}
-            onChange={(e) => setUserName(e.target.value)}
-          />
-        </label>
-
+        <KAHInput
+          label="Code"
+          placeholder="ex: A3D5"
+          name="code"
+          dataTestid="join-game-code-input"
+          inputClass="flex-grow"
+          required
+          onChange={(e) => setCode(e.target.value)}
+        />
+        <KAHInput
+          label="Player Name"
+          placeholder="Bob's your uncle"
+          name="name"
+          dataTestid="join-game-name-input"
+          inputClass="flex-grow"
+          minLength={3}
+          maxLength={17}
+          required
+          onChange={(e) => setUserName(e.target.value)}
+        />
         <Button text="Join" dataTestid="join-game-form-submit" />
       </form>
     </div>

@@ -1,15 +1,22 @@
-import React, { FC, useCallback, useContext, useMemo } from "react";
-import { User } from "../Types/User";
-import { GameContext } from "../State/Game/GameContext";
-import useKickPlayer from "../Hooks/Game/useKickPlayer";
+import React, { FC, useCallback, useMemo } from "react";
+import { User } from "Types/User";
+import { useGame } from "State/Game/GameContext";
+import useKickPlayer from "Hooks/Game/useKickPlayer";
 import Swal from "sweetalert2";
+import { useUser } from "State/User/UserContext";
 
 interface PlayerListItemProps {
   player: User;
 }
 
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
-  const { judge, game, user } = useContext(GameContext);
+  const {
+    state: { judge, game },
+  } = useGame();
+
+  const {
+    state: { user },
+  } = useUser();
 
   const kick = useKickPlayer();
 
@@ -37,9 +44,8 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <div className="flex">
+      <div className="flex" data-testid={`user-${player.id}`}>
         <p
-          data-testid={`user-${player.id}`}
           className={`text-2xl ${
             player.hasSubmittedWhiteCards ? "text-green-500" : ""
           }`}

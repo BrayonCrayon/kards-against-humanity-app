@@ -1,14 +1,27 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import ExpansionCard from "../ExpansionCard";
-import { Expansion } from "../../Types/Expansion";
+import React, { useCallback, useEffect, useState } from "react";
+import ExpansionCard from "Components/ExpansionCard";
+import { Expansion } from "Types/Expansion";
 import { useHistory } from "react-router-dom";
-import { apiClient } from "../../Api/apiClient";
-import { GameContext } from "../../State/Game/GameContext";
-import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
-import { transformUser, transformUsers } from "../../Types/User";
-import { Button } from "../Button";
-import { useUsers } from "../../State/Users/UsersContext";
-import { SetPlayersAction } from "../../State/Users/UsersActions";
+import { apiClient } from "Api/apiClient";
+import { useGame } from "State/Game/GameContext";
+import { IWhiteCard, WhiteCard } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { Button } from "Components/Button";
+import { useUsers } from "State/Users/UsersContext";
+import { SetPlayersAction } from "State/Users/UsersActions";
+import { useHand } from "State/Hand/HandContext";
+import { SetHandAction } from "State/Hand/HandActionts";
+import KAHInput from "Components/KAHInput";
+import { useUser } from "State/User/UserContext";
+import {
+  SetHasSubmittedCards,
+  SetUserAction,
+} from "../../State/User/UserActions";
+import {
+  SetBlackCardAction,
+  SetGameAction,
+  SetJudgeAction,
+} from "../../State/Game/GameActions";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -19,15 +32,10 @@ export const CreateGameForm: React.FC = () => {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const history = useHistory();
-  const { dispatch } = useUsers();
-  const {
-    setGame,
-    setUser,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge,
-  } = useContext(GameContext);
+  const { dispatch: usersDispatch } = useUsers();
+  const { dispatch: handDispatch } = useHand();
+  const { dispatch: userDispatch } = useUser();
+  const { dispatch: gameDispatch } = useGame();
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -65,37 +73,29 @@ export const CreateGameForm: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        setGame({
-          id: data.id,
-          name: data.name,
-          code: data.code,
-          judge_id: data.judge.id,
-        });
-        setUser(transformUser(data.current_user));
-        dispatch(new SetPlayersAction(transformUsers(data.users)));
+        gameDispatch(
+          new SetGameAction({
+            id: data.id,
+            name: data.name,
+            code: data.code,
+            judge_id: data.judge.id,
+          })
+        );
+        userDispatch(new SetUserAction(transformUser(data.current_user)));
+        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
-        setHand(hand);
-        setBlackCard(data.current_black_card);
-        setHasSubmittedCards(data.hasSubmittedWhiteCards);
-        setJudge(transformUser(data.judge));
+        handDispatch(new SetHandAction(hand));
+        gameDispatch(new SetBlackCardAction(data.current_black_card));
+        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
+        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
         history.push("/game/" + data.id);
       } catch (error) {
         console.error(error);
       }
     },
-    [
-      expansions,
-      userName,
-      history,
-      setGame,
-      setUser,
-      setHand,
-      setBlackCard,
-      setHasSubmittedCards,
-      dispatch,
-    ]
+    [expansions, userName, history]
   );
 
   const onToggle = useCallback((id: number, checked: boolean) => {
@@ -126,19 +126,17 @@ export const CreateGameForm: React.FC = () => {
             );
           })}
         </div>
-        <label className="mb-4 pl-2 mt-4">
-          Player Name:
-          <input
-            type="text"
-            data-testid="user-name"
-            name="name"
-            className="border-2 rounded shadow ml-2 px-2"
-            required
-            minLength={3}
-            maxLength={17}
-            onChange={(event) => setUserName(event.target.value)}
-          />
-        </label>
+        <KAHInput
+          type="text"
+          dataTestid="user-name"
+          name="name"
+          label="Player Name"
+          placeholder="Bob's your uncle"
+          required
+          minLength={3}
+          maxLength={17}
+          onChange={(event) => setUserName(event.target.value)}
+        />
         <Button text="Create" dataTestid="create-game-submit-button" />
       </form>
     </div>

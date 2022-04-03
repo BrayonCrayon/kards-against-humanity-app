@@ -1,7 +1,6 @@
 import React, { useCallback, useContext, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { GameContext } from "../State/Game/GameContext";
-import { WhiteKard } from "../Components/WhiteKard";
+import { GameContext, useGame } from "../State/Game/GameContext";
 import {
   listenWhenGameRotates,
   listenWhenUserJoinsGame,
@@ -14,38 +13,34 @@ import { VotingSection } from "../Components/VotingSection";
 import { RoundWinnerModal } from "../Components/RoundWinnerModal";
 import { Button } from "../Components/Button";
 import { useUsers } from "../State/Users/UsersContext";
+import { useHand } from "../State/Hand/HandContext";
+import { useUser } from "../State/User/UserContext";
+import { SetHasSubmittedCards } from "../State/User/UserActions";
+import Hand from "../Components/Hand";
+import useGameStateCallback from "../Hooks/Game/useGameStateCallback";
 
 const GamePage = () => {
   const {
-    hand,
-    game,
-    user,
-    blackCard,
-    hasSubmittedCards,
-    judge,
-    updateGameStateCallback,
-    setUser,
-    setGame,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge,
-  } = useContext(GameContext);
+    state: { game, judge, blackCard },
+  } = useGame();
+
+  const {
+    state: { hand },
+  } = useHand();
 
   const {
     state: { users },
   } = useUsers();
 
+  const {
+    state: { user, hasSubmittedCards },
+    dispatch: userDispatch,
+  } = useUser();
+
   const { id } = useParams<{ id: string }>();
 
-  const fetchGameState = useFetchGameState(
-    setUser,
-    setGame,
-    setHand,
-    setBlackCard,
-    setHasSubmittedCards,
-    setJudge
-  );
+  const fetchGameState = useFetchGameState();
+  const updateState = useGameStateCallback();
 
   const showVotingSection = useMemo(() => {
     const players = users.filter((item) => item.id !== judge.id);
@@ -73,36 +68,30 @@ const GamePage = () => {
           .sort((leftCard, rightCard) => leftCard.order - rightCard.order)
           .map((card) => card.id),
       });
-      setHasSubmittedCards(true);
+      userDispatch(new SetHasSubmittedCards(true));
     } catch (e) {
       console.error(e);
     }
-  }, [blackCard, hand, game, setHasSubmittedCards, hasSubmittedCards]);
+  }, [blackCard, hand, game, hasSubmittedCards]);
 
   useEffect(() => {
     if (!game.id) {
       fetchGameState(id).then(() => {
-        listenWhenUserJoinsGame(id, updateGameStateCallback);
-        listenWhenUserSubmittedCards(id, updateGameStateCallback);
-        listenWhenGameRotates(id, updateGameStateCallback);
+        listenWhenUserJoinsGame(id, updateState);
+        listenWhenUserSubmittedCards(id, updateState);
+        listenWhenGameRotates(id, updateState);
       });
     } else {
-      listenWhenGameRotates(game.id, updateGameStateCallback);
-      listenWhenUserJoinsGame(game.id, updateGameStateCallback);
-      listenWhenUserSubmittedCards(game.id, updateGameStateCallback);
+      listenWhenGameRotates(game.id, updateState);
+      listenWhenUserJoinsGame(game.id, updateState);
+      listenWhenUserSubmittedCards(game.id, updateState);
     }
-  }, [fetchGameState, id]);
+  }, [id]);
 
   return (
     <div>
       <GameInfo />
-      {judge.id !== user.id && !showVotingSection && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
-          {hand.map((card) => (
-            <WhiteKard card={card} key={card.id} />
-          ))}
-        </div>
-      )}
+      {judge.id !== user.id && !showVotingSection && <Hand />}
       {judge.id !== user.id && !showVotingSection && (
         <div className="flex justify-center">
           <Button
