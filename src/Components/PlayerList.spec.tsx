@@ -1,7 +1,7 @@
-import { kardsRender } from "../Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import PlayerList from "./PlayerList";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { transformUsers } from "../Types/User";
+import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { transformUsers } from "Types/User";
 import { waitFor } from "@testing-library/react";
 
 const users = transformUsers(gameStateExampleResponse.data.users);
