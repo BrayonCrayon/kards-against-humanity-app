@@ -11,9 +11,12 @@ const loggedInUser = transformUser(current_user);
 
 const renderComponent = (
   user: User = loggedInUser,
+  usersProp: User[] = transformUsers(users),
   judgeProp: User = transformUser(judge)
 ) => {
-  return kardsRender(<JudgeMessage user={user} judge={judgeProp} />);
+  return kardsRender(
+    <JudgeMessage user={user} users={usersProp} judge={judgeProp} />
+  );
 };
 
 describe("JudgeMessage", () => {
@@ -33,6 +36,21 @@ describe("JudgeMessage", () => {
 
   it("will not show message when the current user is not a judge", () => {
     const wrapper = renderComponent();
+    expect(wrapper.queryByTestId("judge-message")).not.toBeInTheDocument();
+  });
+
+  it("will not show message if all users have submitted their cards", () => {
+    const user = transformUsers(users).find((item) => item.id === judge.id);
+    const allPlayersHaveSubmitted = transformUsers(
+      users.map((item) => {
+        if (item.id !== judge.id) {
+          item.has_submitted_white_cards = true;
+        }
+        return item;
+      })
+    );
+    const wrapper = renderComponent(user, allPlayersHaveSubmitted);
+
     expect(wrapper.queryByTestId("judge-message")).not.toBeInTheDocument();
   });
 });

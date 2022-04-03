@@ -1,20 +1,29 @@
 import { User } from "../Types/User";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
 interface JudgeMessageProps {
   user: User;
   judge: User;
+  users: User[];
   className?: string;
 }
 
 const JudgeMessage: FC<JudgeMessageProps> = ({
   user,
   judge,
+  users,
   className = "",
 }) => {
+  const allPlayersSubmitted = useMemo(() => {
+    return (
+      users.filter((item) => item.hasSubmittedWhiteCards).length !==
+      users.length - 1
+    );
+  }, [users, judge]);
+
   return (
     <>
-      {user.id === judge.id && (
+      {user.id === judge.id && allPlayersSubmitted && (
         <div
           data-testid="judge-message"
           className={`flex flex-col w-full ${className}`}
