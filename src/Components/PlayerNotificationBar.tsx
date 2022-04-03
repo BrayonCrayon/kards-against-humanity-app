@@ -18,11 +18,16 @@ const PlayerNotificationBar: FC<PlayerNotificationBarProps> = ({
     return nonJudgeUsers.filter((item) => item.hasSubmittedWhiteCards).length;
   }, [nonJudgeUsers]);
 
+  const infoMessage = useMemo(() => {
+    return nonJudgeUsers.length === 0 ||
+      nonJudgeUsers.length > totalSubmittedAmount
+      ? `${totalSubmittedAmount}/${nonJudgeUsers.length} Players Submitted`
+      : "Prepare for Judgement!";
+  }, [nonJudgeUsers, totalSubmittedAmount]);
+
   return (
-    <div>
-      <div data-testid="player-submitted-info">
-        {totalSubmittedAmount}/{nonJudgeUsers.length} Players Submitted
-      </div>
+    <div className="w-full flex justify-center my-1 mx-2 py-1 rounded-full bg-gray-800 text-white font-semibold">
+      <div data-testid="player-submitted-info">{infoMessage}</div>
     </div>
   );
 };

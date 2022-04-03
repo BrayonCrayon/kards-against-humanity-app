@@ -5,10 +5,11 @@ import { useGame } from "../State/Game/GameContext";
 import { useUsers } from "../State/Users/UsersContext";
 import ToggleSidebar from "./ToggleSidebar";
 import PlayerList from "./PlayerList";
+import PlayerNotificationBar from "./PlayerNotificationBar";
 
 const GameInfo: FC = () => {
   const {
-    state: { game, blackCard },
+    state: { game, blackCard, judge },
   } = useGame();
   const {
     state: { users },
@@ -26,6 +27,7 @@ const GameInfo: FC = () => {
   return (
     <div>
       <div className="flex flex-wrap justify-between md:items-start md:flex-row">
+        <PlayerNotificationBar users={users} judge={judge} />
         <div className="border-2 w-3/5 border-gray-300 shadow-md p-2 m-2 rounded font-semibold md:w-auto">
           <div
             data-testid={`game-${game.id}`}

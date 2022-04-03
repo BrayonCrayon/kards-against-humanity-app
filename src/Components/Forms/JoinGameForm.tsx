@@ -84,7 +84,6 @@ const JoinGameForm: React.FC = () => {
           name="code"
           dataTestid="join-game-code-input"
           inputClass="flex-grow"
-          pattern="[A-Z0-9]"
           required
           onChange={(e) => setCode(e.target.value)}
         />

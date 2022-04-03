@@ -31,19 +31,16 @@ describe("PlayerNotificationBar", () => {
     );
   });
 
-  it("will show correct amount of players that have submitted their cards", () => {
+  it("will show judgement message when all players have submitted their cards", () => {
     const nonJudgePlayers = transformUsers(
       users.filter((item) => item.id !== judge.id)
     );
-    const totalSubmittedCount = nonJudgePlayers.filter(
-      (item) => item.hasSubmittedWhiteCards
-    ).length;
 
     const wrapper = renderComponent(nonJudgePlayers);
 
     expect(wrapper.queryByTestId("player-submitted-info")).toBeInTheDocument();
     expect(wrapper.queryByTestId("player-submitted-info")?.textContent).toEqual(
-      `${totalSubmittedCount}/${nonJudgePlayers.length} Players Submitted`
+      "Prepare for Judgement!"
     );
   });
 
