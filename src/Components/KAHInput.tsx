@@ -23,7 +23,7 @@ const KAHInput: FC<KAHInputProps> = ({
   required = false,
   labelClass = "",
   inputClass = "",
-  pattern = "",
+  pattern,
   placeholder = "",
   maxLength = Infinity,
   minLength = 0,
