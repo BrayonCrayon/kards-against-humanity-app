@@ -51,7 +51,7 @@ function useFetchGameState() {
           )
         );
         gameDispatch(new SetBlackCardAction(data.current_black_card));
-        gameDispatch(new SetJudgeAction(data.judge));
+        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
       } catch (error) {
         console.error(error);
       }
