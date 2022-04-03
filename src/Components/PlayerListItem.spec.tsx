@@ -1,11 +1,11 @@
-import { customKardsRender } from "../Tests/testRenders";
+import { kardsRender } from "../Tests/testRenders";
 import PlayerListItem from "./PlayerListItem";
 import { RenderResult, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { IGameContext } from "../State/Game/GameContext";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { transformUser } from "../Types/User";
 
+const { data } = gameStateExampleResponse;
 const mockKickPlayer = jest.fn();
 jest.mock("../Hooks/Game/useKickPlayer", () => {
   return () => {
@@ -13,7 +13,7 @@ jest.mock("../Hooks/Game/useKickPlayer", () => {
   };
 });
 
-const mockUser = transformUser(gameStateExampleResponse.data.judge);
+const mockUser = transformUser(data.judge);
 
 jest.mock("../State/User/UserContext", () => ({
   ...jest.requireActual("../State/User/UserContext"),
@@ -26,26 +26,31 @@ jest.mock("../State/User/UserContext", () => ({
   }),
 }));
 
-const props = {
-  judge: transformUser(gameStateExampleResponse.data.judge),
-  game: {
-    id: gameStateExampleResponse.data.id,
-    name: gameStateExampleResponse.data.name,
-    code: gameStateExampleResponse.data.code,
-    judge_id: gameStateExampleResponse.data.judge.id,
-  },
+const mockGame = {
+  id: data.id,
+  name: data.name,
+  code: data.code,
+  judge_id: data.judge.id,
 };
+const mockJudge = transformUser(data.judge);
+const mockBlackCard = data.current_black_card;
+
+jest.mock("../State/Game/GameContext", () => ({
+  ...jest.requireActual("../State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: mockGame,
+      judge: mockJudge,
+      blackCard: mockBlackCard,
+    },
+    dispatch: () => {},
+  }),
+}));
 
 const player = transformUser(gameStateExampleResponse.data.users[0]);
 
-const renderer = (
-  user = player,
-  value?: Partial<Partial<IGameContext>>
-): RenderResult => {
-  return customKardsRender(<PlayerListItem player={user} />, {
-    ...value,
-    ...props,
-  });
+const renderer = (user = player): RenderResult => {
+  return kardsRender(<PlayerListItem player={user} />);
 };
 
 describe("PlayerListItem", () => {
@@ -57,14 +62,14 @@ describe("PlayerListItem", () => {
     });
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(props.game.id, player.id);
+      expect(mockKickPlayer).not.toHaveBeenCalledWith(mockGame.id, player.id);
       expect(wrapper.queryByText("Yes, kick!")).toBeInTheDocument();
     });
 
     userEvent.click(wrapper.getByText("Yes, kick!"));
 
     await waitFor(() => {
-      expect(mockKickPlayer).toHaveBeenCalledWith(props.game.id, player.id);
+      expect(mockKickPlayer).toHaveBeenCalledWith(mockGame.id, player.id);
     });
   });
 
@@ -76,23 +81,23 @@ describe("PlayerListItem", () => {
     });
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(props.game.id, player.id);
+      expect(mockKickPlayer).not.toHaveBeenCalledWith(mockGame.id, player.id);
       expect(wrapper.queryByText("Cancel")).toBeInTheDocument();
     });
 
     userEvent.click(wrapper.getByText("Cancel"));
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(props.game.id, player.id);
+      expect(mockKickPlayer).not.toHaveBeenCalledWith(mockGame.id, player.id);
     });
   });
 
   it("will show icon on user that is signed in from the users list", async () => {
-    const wrapper = renderer(props.judge);
+    const wrapper = renderer(mockUser);
 
     await waitFor(() => {
       const isUserLoggedIn =
-        wrapper.getByTestId(`user-${props.judge.id}`).getElementsByTagName("i")
+        wrapper.getByTestId(`user-${mockUser.id}`).getElementsByTagName("i")
           .length > 0;
       expect(isUserLoggedIn).toBeTruthy();
     });

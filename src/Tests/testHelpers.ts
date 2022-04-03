@@ -1,14 +1,11 @@
-import { initialUsersState, IUsersState } from "../State/Users/UsersState";
-
-export const mockUseUsers = (
-  dispatchMock: Function = jest.fn(),
-  state: IUsersState = initialUsersState
+export const expectDispatch = <TFunction, TPayload>(
+  mockFunction: TFunction,
+  payload: TPayload
 ) => {
-  jest.mock("../../State/Users/UsersContext", () => ({
-    ...jest.requireActual("../../State/Users/UsersContext"),
-    useUsers: () => ({
-      dispatch: dispatchMock,
-      state,
-    }),
-  }));
+  return expect(mockFunction).toHaveBeenCalledWith(
+    expect.objectContaining({
+      execute: expect.any(Function),
+      payload,
+    })
+  );
 };

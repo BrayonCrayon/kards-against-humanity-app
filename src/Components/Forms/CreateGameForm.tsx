@@ -1,22 +1,27 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import ExpansionCard from "../ExpansionCard";
-import { Expansion } from "../../Types/Expansion";
+import React, { useCallback, useEffect, useState } from "react";
+import ExpansionCard from "Components/ExpansionCard";
+import { Expansion } from "Types/Expansion";
 import { useHistory } from "react-router-dom";
-import { apiClient } from "../../Api/apiClient";
-import { GameContext } from "../../State/Game/GameContext";
-import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
-import { transformUser, transformUsers } from "../../Types/User";
-import { Button } from "../Button";
-import { useUsers } from "../../State/Users/UsersContext";
-import { SetPlayersAction } from "../../State/Users/UsersActions";
-import { useHand } from "../../State/Hand/HandContext";
-import { SetHandAction } from "../../State/Hand/HandActionts";
-import KAHInput from "../KAHInput";
-import { useUser } from "../../State/User/UserContext";
+import { apiClient } from "Api/apiClient";
+import { useGame } from "State/Game/GameContext";
+import { IWhiteCard, WhiteCard } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { Button } from "Components/Button";
+import { useUsers } from "State/Users/UsersContext";
+import { SetPlayersAction } from "State/Users/UsersActions";
+import { useHand } from "State/Hand/HandContext";
+import { SetHandAction } from "State/Hand/HandActionts";
+import KAHInput from "Components/KAHInput";
+import { useUser } from "State/User/UserContext";
 import {
   SetHasSubmittedCards,
   SetUserAction,
 } from "../../State/User/UserActions";
+import {
+  SetBlackCardAction,
+  SetGameAction,
+  SetJudgeAction,
+} from "../../State/Game/GameActions";
 
 type ExpansionOption = {
   expansion: Expansion;
@@ -30,7 +35,7 @@ export const CreateGameForm: React.FC = () => {
   const { dispatch: usersDispatch } = useUsers();
   const { dispatch: handDispatch } = useHand();
   const { dispatch: userDispatch } = useUser();
-  const { setGame, setBlackCard, setJudge } = useContext(GameContext);
+  const { dispatch: gameDispatch } = useGame();
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -68,35 +73,29 @@ export const CreateGameForm: React.FC = () => {
             .map((e) => e.expansion.id),
         });
 
-        setGame({
-          id: data.id,
-          name: data.name,
-          code: data.code,
-          judge_id: data.judge.id,
-        });
+        gameDispatch(
+          new SetGameAction({
+            id: data.id,
+            name: data.name,
+            code: data.code,
+            judge_id: data.judge.id,
+          })
+        );
         userDispatch(new SetUserAction(transformUser(data.current_user)));
         usersDispatch(new SetPlayersAction(transformUsers(data.users)));
         const hand = data.hand.map((item: IWhiteCard) => {
           return new WhiteCard(item.id, item.text, item.expansion_id);
         });
         handDispatch(new SetHandAction(hand));
-        setBlackCard(data.current_black_card);
+        gameDispatch(new SetBlackCardAction(data.current_black_card));
         userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
-        setJudge(transformUser(data.judge));
+        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
         history.push("/game/" + data.id);
       } catch (error) {
         console.error(error);
       }
     },
-    [
-      expansions,
-      userName,
-      history,
-      setGame,
-      setBlackCard,
-      usersDispatch,
-      userDispatch,
-    ]
+    [expansions, userName, history]
   );
 
   const onToggle = useCallback((id: number, checked: boolean) => {

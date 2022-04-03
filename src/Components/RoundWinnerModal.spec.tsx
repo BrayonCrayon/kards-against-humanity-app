@@ -1,4 +1,4 @@
-import { customKardsRender } from "../Tests/testRenders";
+import { kardsRender } from "../Tests/testRenders";
 import { RoundWinnerModal } from "./RoundWinnerModal";
 import * as Vote from "../State/Vote/VoteContext";
 import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
@@ -24,7 +24,7 @@ jest.mock("../Hooks/Game/useFetchGameState", () => {
   };
 });
 
-const game: Game = {
+const mockGame: Game = {
   id: gameStateAllPlayerSubmittedCardsExampleResponse.data.id,
   name: gameStateAllPlayerSubmittedCardsExampleResponse.data.name,
   code: gameStateAllPlayerSubmittedCardsExampleResponse.data.code,
@@ -32,7 +32,6 @@ const game: Game = {
 };
 
 const props = {
-  game,
   judge: transformUser(
     gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
   ),
@@ -67,8 +66,18 @@ jest.mock("../State/User/UserContext", () => ({
   }),
 }));
 
+jest.mock("../State/Game/GameContext", () => ({
+  ...jest.requireActual("../State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: mockGame,
+    },
+    dispatch: jest.fn(),
+  }),
+}));
+
 const renderComponent = () => {
-  return customKardsRender(<RoundWinnerModal />, props);
+  return kardsRender(<RoundWinnerModal />);
 };
 
 describe("RoundWinnerModal", () => {
@@ -158,7 +167,7 @@ describe("RoundWinnerModal", () => {
 
     await waitFor(() => {
       expect(mockRotateGame).toHaveBeenCalledTimes(1);
-      expect(mockRotateGame).toHaveBeenCalledWith(props.game.id);
+      expect(mockRotateGame).toHaveBeenCalledWith(mockGame.id);
     });
   });
 
@@ -174,7 +183,7 @@ describe("RoundWinnerModal", () => {
     renderComponent();
 
     expect(mockRotateGame).toHaveBeenCalledTimes(0);
-    expect(mockRotateGame).not.toHaveBeenCalledWith(props.game.id);
+    expect(mockRotateGame).not.toHaveBeenCalledWith(mockGame.id);
   });
 
   it("does not call game rotate when user is not a judge", async () => {

@@ -1,15 +1,17 @@
-import { submittedCardsResponse } from "../Api/fixtures/submittedCardsResponse";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { RenderResult, waitFor } from "@testing-library/react";
-import { apiClient } from "../Api/apiClient";
-import { transformUser, transformUsers } from "../Types/User";
+import { apiClient } from "Api/apiClient";
+import { transformUser, transformUsers } from "Types/User";
 import { VotingSection } from "./VotingSection";
-import { constructWhiteCardArray } from "../Types/WhiteCard";
+import { constructWhiteCardArray } from "Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
-import * as Vote from "../State/Vote/VoteContext";
-import { happyToast } from "../Utilities/toasts";
-import { listenWhenWinnerIsSelected } from "../Services/PusherService";
+import * as Vote from "State/Vote/VoteContext";
+import { happyToast } from "Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "Services/PusherService";
 import { act } from "react-dom/test-utils";
+import { kardsRender } from "Tests/testRenders";
+import { IGameState } from "../State/Game/GameState";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
@@ -30,7 +32,7 @@ const gameFixture = {
   judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
 };
 
-const props = {
+const mockProps = {
   game: gameFixture,
   judge: transformUser(
     gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
@@ -63,13 +65,20 @@ jest.mock("../State/User/UserContext", () => ({
   }),
 }));
 
-const renderer = async (
-  value?: Partial<IGameContext>
-): Promise<RenderResult> => {
-  return customKardsRender(<VotingSection />, {
-    ...props,
-    ...value,
-  });
+jest.mock("State/Game/GameContext", () => ({
+  ...jest.requireActual("State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: mockProps.game,
+      judge: mockProps.judge,
+      blackCard: mockProps.blackCard,
+    },
+    dispatch: jest.fn(),
+  }),
+}));
+
+const renderer = async (): Promise<RenderResult> => {
+  return kardsRender(<VotingSection />);
 };
 
 describe("VotingSection", () => {
@@ -84,7 +93,7 @@ describe("VotingSection", () => {
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledTimes(1);
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          `/api/game/${props.game.id}/submitted-cards`
+          `/api/game/${mockProps.game.id}/submitted-cards`
         );
       });
     });
@@ -119,7 +128,7 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledWith(
-          `/api/game/${props.game.id}/winner`,
+          `/api/game/${mockProps.game.id}/winner`,
           { user_id }
         );
         expect(happyToast).toHaveBeenCalledWith("Winner Selected!", "top");
@@ -206,8 +215,8 @@ describe("VotingSection", () => {
     });
 
     it("will not show submit winner button when user is not the judge", async () => {
-      props.judge = props.users[0];
-      props.game.judge_id = props.judge.id;
+      mockProps.judge = mockProps.users[0];
+      mockProps.game.judge_id = mockProps.judge.id;
       const wrapper = await renderer();
 
       await waitFor(() => {
@@ -218,7 +227,7 @@ describe("VotingSection", () => {
     });
 
     it.skip("calls dispatch with correct action and payload when a user is selected", async () => {
-      mockUser = props.users[3];
+      mockUser = mockProps.users[3];
       jest.spyOn(Vote, "useVote").mockImplementation(() => ({
         dispatch: mockDispatch,
         state: {
@@ -243,7 +252,7 @@ describe("VotingSection", () => {
           })
         );
       });
-      mockUser = props.users[0];
+      mockUser = mockProps.users[0];
     });
 
     it("does not show submit winner button when a winner is in state", async () => {
@@ -253,7 +262,7 @@ describe("VotingSection", () => {
           selectedPlayerId: -1,
           selectedRoundWinner: {
             ...submittedCardsResponse.data[0],
-            black_card: props.blackCard,
+            black_card: mockProps.blackCard,
           },
         },
       }));
@@ -329,9 +338,7 @@ describe("VotingSection", () => {
     });
 
     it("will not allow non judge users to select submitted cards", async () => {
-      const wrapper = await renderer({
-        judge: props.users[1],
-      });
+      const wrapper = await renderer();
 
       const [submittedCard] = submittedCardsResponse.data;
 

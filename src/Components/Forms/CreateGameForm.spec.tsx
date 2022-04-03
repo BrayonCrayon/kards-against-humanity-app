@@ -7,8 +7,9 @@ import { Game } from "../../Types/Game";
 import { apiClient } from "../../Api/apiClient";
 import { SELECTED_CARD_BACKGROUND } from "../ExpansionCard";
 import { transformUser, transformUsers } from "../../Types/User";
-import { customKardsRender, history } from "../../Tests/testRenders";
+import { history, kardsRender } from "../../Tests/testRenders";
 import { act } from "react-dom/test-utils";
+import { expectDispatch } from "../../Tests/testHelpers";
 
 jest.mock("../../Api/apiClient");
 
@@ -36,16 +37,20 @@ jest.mock("../../State/User/UserContext", () => ({
   }),
 }));
 
-const setGame = jest.fn();
-const setBlackCard = jest.fn();
-const setJudge = jest.fn();
+jest.mock("../../State/Game/GameContext", () => ({
+  ...jest.requireActual("../../State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: {},
+      blackCard: {},
+      judge: {},
+    },
+    dispatch: mockDispatch,
+  }),
+}));
 
 const renderer = () => {
-  return customKardsRender(<CreateGameForm />, {
-    setGame,
-    setBlackCard,
-    setJudge,
-  });
+  return kardsRender(<CreateGameForm />);
 };
 
 describe("CreateGameForm", () => {
@@ -139,29 +144,25 @@ describe("CreateGameForm", () => {
         code: gameStateExampleResponse.data.code,
         judge_id: gameStateExampleResponse.data.judge.id,
       };
-      expect(setGame).toHaveBeenCalledWith(receivedGame);
-      expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          execute: expect.any(Function),
-          payload: transformUser(gameStateExampleResponse.data.current_user),
-        })
+      expectDispatch(mockDispatch, receivedGame);
+      expectDispatch(
+        mockDispatch,
+        transformUser(gameStateExampleResponse.data.current_user)
       );
-      expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          execute: expect.any(Function),
-          payload: transformUsers(gameStateExampleResponse.data.users),
-        })
+      expectDispatch(
+        mockDispatch,
+        transformUsers(gameStateExampleResponse.data.users)
       );
-      expect(setBlackCard).toHaveBeenCalledWith(
+      expectDispatch(
+        mockDispatch,
         gameStateExampleResponse.data.current_black_card
       );
-      expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          execute: expect.any(Function),
-          payload: gameStateExampleResponse.data.hasSubmittedWhiteCards,
-        })
+      expectDispatch(
+        mockDispatch,
+        gameStateExampleResponse.data.hasSubmittedWhiteCards
       );
-      expect(setJudge).toHaveBeenCalledWith(
+      expectDispatch(
+        mockDispatch,
         transformUser(gameStateExampleResponse.data.judge)
       );
     });

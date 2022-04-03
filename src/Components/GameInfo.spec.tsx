@@ -1,67 +1,67 @@
 import React from "react";
-import { IGameContext } from "../State/Game/GameContext";
 import { RenderResult, waitFor } from "@testing-library/react";
 import GameInfo from "./GameInfo";
-import { gameStateJudgeExampleResponse } from "../Api/fixtures/gameStateJudgeExampleResponse";
-import { customKardsRender } from "../Tests/testRenders";
+import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
 import userEvent from "@testing-library/user-event";
-import { togglePlayerList } from "../Tests/actions";
-import { transformUser } from "../Types/User";
-
-const updateGameStateCallback = jest.fn();
+import { togglePlayerList } from "Tests/actions";
+import { transformUser } from "Types/User";
+import { kardsRender } from "Tests/testRenders";
 
 const { data } = gameStateJudgeExampleResponse;
 let mockUsers = data.users;
 let mockUser = transformUser(data.current_user);
 let mockHasSubmittedCards = false;
-let mockUsersDispatch = jest.fn();
+let mockDispatch = jest.fn();
 
-const renderer = async (
-  value?: Partial<IGameContext>
-): Promise<RenderResult> => {
-  return await customKardsRender(<GameInfo />, {
-    updateGameStateCallback,
-    game: {
-      id: data.id,
-      name: data.name,
-      code: data.code,
-      judge_id: data.judge.id,
-    },
-    judge: {
-      ...data.judge,
-      hasSubmittedWhiteCards: false,
-      whiteCards: data.hand,
-    },
-    blackCard: data.current_black_card,
-    ...value,
-  });
+const renderer = async (): Promise<RenderResult> => {
+  return kardsRender(<GameInfo />);
 };
 
 const mockKickPlayer = jest.fn();
-jest.mock("../Hooks/Game/useKickPlayer", () => {
+jest.mock("Hooks/Game/useKickPlayer", () => {
   return () => {
     return mockKickPlayer;
   };
 });
 
-jest.mock("../State/Users/UsersContext", () => ({
-  ...jest.requireActual("../State/Users/UsersContext"),
+jest.mock("State/Users/UsersContext", () => ({
+  ...jest.requireActual("State/Users/UsersContext"),
   useUsers: () => ({
     state: {
       users: mockUsers,
     },
-    dispatch: mockUsersDispatch,
+    dispatch: mockDispatch,
   }),
 }));
 
-jest.mock("../State/User/UserContext", () => ({
-  ...jest.requireActual("../State/User/UserContext"),
+jest.mock("State/User/UserContext", () => ({
+  ...jest.requireActual("State/User/UserContext"),
   useUser: () => ({
     state: {
       user: mockUser,
       hasSubmittedWhiteCards: mockHasSubmittedCards,
     },
-    dispatch: mockUsersDispatch,
+    dispatch: mockDispatch,
+  }),
+}));
+
+const mockGame = {
+  id: data.id,
+  code: data.code,
+  name: data.name,
+  judge_id: data.judge.id,
+};
+const mockJudge = transformUser(data.judge);
+const mockBlackCard = data.current_black_card;
+jest.mock("State/Game/GameContext", () => ({
+  ...jest.requireActual("State/Game/GameContext"),
+  useGame: () => ({
+    state: {
+      game: mockGame,
+      judge: mockJudge,
+      blackCard: mockBlackCard,
+    },
+    dispatch: mockDispatch,
   }),
 }));
 

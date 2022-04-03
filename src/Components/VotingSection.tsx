@@ -1,16 +1,16 @@
-import { FC, useCallback, useContext, useEffect, useState } from "react";
-import { apiClient } from "../Api/apiClient";
-import { GameContext, useGame } from "../State/Game/GameContext";
-import { PlayerSubmittedCard } from "../Types/ResponseTypes";
-import { useVote } from "../State/Vote/VoteContext";
+import { FC, useCallback, useEffect, useState } from "react";
+import { apiClient } from "Api/apiClient";
+import { useGame } from "State/Game/GameContext";
+import { PlayerSubmittedCard } from "Types/ResponseTypes";
+import { useVote } from "State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import { happyToast } from "../Utilities/toasts";
-import { listenWhenWinnerIsSelected } from "../Services/PusherService";
-import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
+import { happyToast } from "Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import UseFetchRoundWinner from "Hooks/Game/UseFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
-import { SelectWinnerAction } from "../State/Vote/VoteActions";
-import { useUser } from "../State/User/UserContext";
+import { SelectWinnerAction } from "State/Vote/VoteActions";
+import { useUser } from "State/User/UserContext";
 
 export const VotingSection: FC = () => {
   const {
