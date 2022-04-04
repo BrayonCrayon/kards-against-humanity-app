@@ -1,22 +1,28 @@
-import { FC, useCallback, useContext, useEffect, useState } from "react";
-import { apiClient } from "../Api/apiClient";
-import { GameContext } from "../State/Game/GameContext";
-import { PlayerSubmittedCard } from "../Types/ResponseTypes";
-import { useVote } from "../State/Vote/VoteContext";
+import { FC, useCallback, useEffect, useState } from "react";
+import { apiClient } from "Api/apiClient";
+import { useGame } from "State/Game/GameContext";
+import { PlayerSubmittedCard } from "Types/ResponseTypes";
+import { useVote } from "State/Vote/VoteContext";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import { happyToast } from "../Utilities/toasts";
-import { listenWhenWinnerIsSelected } from "../Services/PusherService";
-import UseFetchRoundWinner from "../Hooks/Game/UseFetchRoundWinner";
+import { happyToast } from "Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import UseFetchRoundWinner from "Hooks/Game/UseFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
-import { SelectWinnerAction } from "../State/Vote/VoteActions";
+import { SelectWinnerAction } from "State/Vote/VoteActions";
+import { useUser } from "State/User/UserContext";
 
 export const VotingSection: FC = () => {
-  const { game, judge, user, blackCard } = useContext(GameContext);
+  const {
+    state: { game, judge, blackCard },
+  } = useGame();
   const {
     state: { selectedPlayerId, selectedRoundWinner },
     dispatch,
   } = useVote();
+  const {
+    state: { user },
+  } = useUser();
 
   const [submittedCards, setSubmittedCards] = useState<
     Array<PlayerSubmittedCard>
@@ -69,7 +75,7 @@ export const VotingSection: FC = () => {
       <div className="mt-6 border-b-2  border-gray-500 mx-2 text-xl font-semibold text-center">
         Submitted cards
       </div>
-      <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-flow-col">
+      <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-cols-4">
         {submittedCards.map((submission) => (
           <Selectable
             key={submission.user_id}
