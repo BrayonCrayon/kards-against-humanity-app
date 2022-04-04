@@ -97,7 +97,7 @@ describe("GameInfo", () => {
 
       const playerNameElement = wrapper
         .getByTestId(`user-${mockUsers[0].id}`)
-        .getElementsByTagName("p")[0];
+        .getElementsByTagName("p")[1];
 
       expect(playerNameElement).toHaveClass("text-green-500");
       mockHasSubmittedCards = false;
