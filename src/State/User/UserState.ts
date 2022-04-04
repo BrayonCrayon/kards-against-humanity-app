@@ -9,6 +9,7 @@ export const initialUserState: IUserState = {
   user: {
     id: 0,
     name: "",
+    score: 0,
     whiteCards: [],
     hasSubmittedWhiteCards: false,
   },

@@ -8,6 +8,7 @@ export const gameStateOnePlayerInGameExampleResponse = {
     judge: {
       id: 1,
       name: "brady",
+      score: 0,
       has_submitted_white_cards: false,
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
@@ -16,6 +17,7 @@ export const gameStateOnePlayerInGameExampleResponse = {
       {
         id: 1,
         name: "brady",
+        score: 0,
         has_submitted_white_cards: false,
         created_at: "2021-10-27T19:33:43.000000Z",
         updated_at: "2021-10-27T19:33:43.000000Z",
@@ -24,6 +26,7 @@ export const gameStateOnePlayerInGameExampleResponse = {
     current_user: {
       id: 1,
       name: "brady",
+      score: 0,
       has_submitted_white_cards: false,
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",

@@ -44,16 +44,15 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <div className="flex" data-testid={`user-${player.id}`}>
+      <div className="flex text-2xl" data-testid={`user-${player.id}`}>
+        <p className="mr-1 w-8">{player.score}</p>
         <p
-          className={`text-2xl ${
-            player.hasSubmittedWhiteCards ? "text-green-500" : ""
-          }`}
+          className={`${player.hasSubmittedWhiteCards ? "text-green-500" : ""}`}
         >
-          {player.name}
+          - {player.name}
         </p>
         {user.id === player.id && (
-          <i className="fas fa-user-check text-2xl ml-4 text-gray-400" />
+          <i className="fas fa-user-check ml-4 text-gray-400" />
         )}
       </div>
       <div>

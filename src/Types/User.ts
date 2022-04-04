@@ -3,6 +3,7 @@ import { WhiteCard } from "./WhiteCard";
 export interface User {
   id: number;
   name: string;
+  score: number;
   whiteCards: WhiteCard[];
   hasSubmittedWhiteCards: boolean;
 }
@@ -10,6 +11,7 @@ export interface User {
 export interface UserResponse {
   id: number;
   name: string;
+  score: number;
   has_submitted_white_cards: boolean;
   created_at: string;
   updated_at: string;

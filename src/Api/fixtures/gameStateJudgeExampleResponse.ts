@@ -8,6 +8,7 @@ export const gameStateJudgeExampleResponse = {
     judge: {
       id: 1,
       name: "brady",
+      score: 0,
       has_submitted_white_cards: false,
       created_at: "2021-10-27T19:33:43.000000Z",
       updated_at: "2021-10-27T19:33:43.000000Z",
@@ -16,7 +17,7 @@ export const gameStateJudgeExampleResponse = {
       {
         id: 1,
         name: "brady",
-        whiteCards: [],
+        score: 0,
         has_submitted_white_cards: false,
         hasSubmittedWhiteCards: false,
         created_at: "2021-10-27T19:33:43.000000Z",
@@ -25,7 +26,7 @@ export const gameStateJudgeExampleResponse = {
       {
         id: 2,
         name: "Rick",
-        whiteCards: [],
+        score: 0,
         has_submitted_white_cards: false,
         hasSubmittedWhiteCards: false,
         created_at: "2021-10-27T19:33:43.000000Z",
@@ -34,7 +35,7 @@ export const gameStateJudgeExampleResponse = {
       {
         id: 3,
         name: "Morty",
-        whiteCards: [],
+        score: 0,
         has_submitted_white_cards: false,
         hasSubmittedWhiteCards: false,
         created_at: "2021-10-27T19:33:43.000000Z",
@@ -44,6 +45,7 @@ export const gameStateJudgeExampleResponse = {
     current_user: {
       id: 1,
       name: "brady",
+      score: 0,
       has_submitted_white_cards: false,
       hasSubmittedWhiteCards: false,
       created_at: "2021-10-27T19:33:43.000000Z",

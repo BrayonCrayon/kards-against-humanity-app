@@ -12,6 +12,7 @@ export const initialGameState: IGameState = {
   judge: {
     id: 0,
     name: "",
+    score: 0,
     whiteCards: [],
     hasSubmittedWhiteCards: false,
   },

@@ -102,4 +102,12 @@ describe("PlayerListItem", () => {
       expect(isUserLoggedIn).toBeTruthy();
     });
   });
+
+  it("will display the user's score", async () => {
+    const wrapper = renderer(mockUser);
+
+    await waitFor(() => {
+      wrapper.getByText(`${mockUser.score}`);
+    });
+  });
 });
