@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/react";
+import { getByTestId, screen, waitFor } from "@testing-library/react";
 import { CreateGameForm } from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
@@ -165,6 +165,27 @@ describe("CreateGameForm", () => {
         mockDispatch,
         transformUser(gameStateExampleResponse.data.judge)
       );
+    });
+  });
+
+  it("toggle all expansion packs", async () => {
+    mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
+    const wrapper = renderer();
+
+    const toggle = await waitFor(() => {
+      return wrapper.getByTestId("toggle-all-expansions");
+    });
+
+    expect(
+      wrapper.container.querySelectorAll("input[type=checkbox]:checked")
+    ).toHaveLength(2);
+
+    userEvent.click(toggle);
+
+    await waitFor(() => {
+      expect(
+        wrapper.container.querySelectorAll("input[type=checkbox]:not(:checked)")
+      ).toHaveLength(2);
     });
   });
 });

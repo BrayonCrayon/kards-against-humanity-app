@@ -106,6 +106,12 @@ export const CreateGameForm: React.FC = () => {
     });
   }, []);
 
+  const toggleExpansions = useCallback(() => {
+    setExpansions((prev) => {
+      return prev.map((ex) => ({ ...ex, isSelected: !ex.isSelected }));
+    });
+  }, [expansions, setExpansions]);
+
   return (
     <div className="w-full flex justify-center">
       <form
@@ -113,6 +119,13 @@ export const CreateGameForm: React.FC = () => {
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
+        <button
+          type="button"
+          data-testid={"toggle-all-expansions"}
+          onClick={toggleExpansions}
+        >
+          Toggle Expansions
+        </button>
         <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
           {expansions.map(({ expansion, isSelected }) => {
             return (
