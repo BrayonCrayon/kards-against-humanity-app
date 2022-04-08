@@ -1,4 +1,4 @@
-import { getByTestId, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { CreateGameForm } from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
@@ -8,7 +8,6 @@ import { apiClient } from "Api/apiClient";
 import { SELECTED_CARD_BACKGROUND } from "Components/ExpansionCard";
 import { transformUser, transformUsers } from "Types/User";
 import { history, kardsRender } from "Tests/testRenders";
-import { act } from "react-dom/test-utils";
 import { expectDispatch } from "Tests/testHelpers";
 
 jest.mock("Api/apiClient");
@@ -76,17 +75,17 @@ describe("CreateGameForm", () => {
 
     renderer();
 
-    await act(async () => {
-      const nameInput = await screen.findByTestId("user-name");
-      userEvent.type(nameInput, name);
+    const nameInput = await screen.findByTestId("user-name");
+    userEvent.type(nameInput, name);
 
-      const submitBtn = await screen.findByTestId("create-game-submit-button");
-      userEvent.click(submitBtn);
-    });
+    const submitBtn = await screen.findByTestId("create-game-submit-button");
+    userEvent.click(submitBtn);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
-      expansionIds: getExpansionsExampleResponse.data.map((exp) => exp.id),
-      name,
+    await waitFor(() => {
+      expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game`, {
+        expansionIds: getExpansionsExampleResponse.data.map((exp) => exp.id),
+        name,
+      });
     });
   });
 
@@ -100,9 +99,12 @@ describe("CreateGameForm", () => {
     const expansionCard = await screen.findByTestId(
       `expansion-${expansionToExclude.id}`
     );
+
     userEvent.click(expansionCard);
 
-    expect(expansionCard).not.toHaveClass(SELECTED_CARD_BACKGROUND);
+    await waitFor(() => {
+      expect(expansionCard).not.toHaveClass(SELECTED_CARD_BACKGROUND);
+    });
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, name);
