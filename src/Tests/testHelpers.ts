@@ -9,3 +9,15 @@ export const expectDispatch = <TFunction, TPayload>(
     })
   );
 };
+
+export const expectNoDispatch = <TFunction, TPayload>(
+  mockFunction: TFunction,
+  payload: TPayload
+) => {
+  return expect(mockFunction).not.toHaveBeenCalledWith(
+    expect.objectContaining({
+      execute: expect.any(Function),
+      payload,
+    })
+  );
+};

@@ -1,23 +1,17 @@
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { GameContext, useGame } from "../State/Game/GameContext";
-import {
-  listenWhenGameRotates,
-  listenWhenUserJoinsGame,
-  listenWhenUserSubmittedCards,
-} from "../Services/PusherService";
-import useFetchGameState from "../Hooks/Game/useFetchGameState";
-import { apiClient } from "../Api/apiClient";
-import GameInfo from "../Components/GameInfo";
-import { VotingSection } from "../Components/VotingSection";
-import { RoundWinnerModal } from "../Components/RoundWinnerModal";
-import { Button } from "../Components/Button";
-import { useUsers } from "../State/Users/UsersContext";
-import { useHand } from "../State/Hand/HandContext";
-import { useUser } from "../State/User/UserContext";
-import { SetHasSubmittedCards } from "../State/User/UserActions";
-import Hand from "../Components/Hand";
-import useGameStateCallback from "../Hooks/Game/useGameStateCallback";
+import { useGame } from "State/Game/GameContext";
+import useFetchGameState from "Hooks/Game/useFetchGameState";
+import GameInfo from "Components/GameInfo";
+import { VotingSection } from "Components/VotingSection";
+import { RoundWinnerModal } from "Components/RoundWinnerModal";
+import { Button } from "Components/Button";
+import { useUsers } from "State/Users/UsersContext";
+import { useHand } from "State/Hand/HandContext";
+import { useUser } from "State/User/UserContext";
+import Hand from "Components/Hand";
+import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
+import useSubmitCards from "Hooks/Game/useSubmitCards";
 
 const GamePage = () => {
   const {
@@ -34,13 +28,13 @@ const GamePage = () => {
 
   const {
     state: { user, hasSubmittedCards },
-    dispatch: userDispatch,
   } = useUser();
 
   const { id } = useParams<{ id: string }>();
 
   const fetchGameState = useFetchGameState();
-  const updateState = useGameStateCallback();
+  const listenOnEvents = useListenOnEvents();
+  const submitCards = useSubmitCards();
 
   const showVotingSection = useMemo(() => {
     const players = users.filter((item) => item.id !== judge.id);
@@ -60,52 +54,40 @@ const GamePage = () => {
   const onSubmit = useCallback(async () => {
     if (hasSubmittedCards) return;
 
-    try {
-      await apiClient.post(`/api/game/${game.id}/submit`, {
-        submitAmount: blackCard.pick,
-        whiteCardIds: hand
-          .filter((card) => card.selected)
-          .sort((leftCard, rightCard) => leftCard.order - rightCard.order)
-          .map((card) => card.id),
-      });
-      userDispatch(new SetHasSubmittedCards(true));
-    } catch (e) {
-      console.error(e);
-    }
+    await submitCards(game.id, blackCard.pick, hand);
   }, [blackCard, hand, game, hasSubmittedCards]);
 
   useEffect(() => {
-    if (!game.id) {
-      fetchGameState(id).then(() => {
-        listenWhenUserJoinsGame(id, updateState);
-        listenWhenUserSubmittedCards(id, updateState);
-        listenWhenGameRotates(id, updateState);
-      });
-    } else {
-      listenWhenGameRotates(game.id, updateState);
-      listenWhenUserJoinsGame(game.id, updateState);
-      listenWhenUserSubmittedCards(game.id, updateState);
+    if (game.id) {
+      listenOnEvents(game.id);
+      return;
     }
+
+    fetchGameState(id).then(() => {
+      listenOnEvents(id);
+    });
   }, [id]);
 
   return (
     <div>
       <GameInfo />
-      {judge.id !== user.id && !showVotingSection && <Hand />}
       {judge.id !== user.id && !showVotingSection && (
-        <div className="flex justify-center">
-          <Button
-            text="Submit"
-            onClick={onSubmit}
-            dataTestid="white-card-submit-btn"
-            className={
-              !canSubmitCards
-                ? "shadow-inner opacity-70 cursor-not-allowed"
-                : ""
-            }
-            disabled={!canSubmitCards}
-          />
-        </div>
+        <>
+          <Hand />
+          <div className="flex justify-center">
+            <Button
+              text="Submit"
+              onClick={onSubmit}
+              dataTestid="white-card-submit-btn"
+              className={
+                !canSubmitCards
+                  ? "shadow-inner opacity-70 cursor-not-allowed"
+                  : ""
+              }
+              disabled={!canSubmitCards}
+            />
+          </div>
+        </>
       )}
       {showVotingSection && <VotingSection />}
       <RoundWinnerModal />

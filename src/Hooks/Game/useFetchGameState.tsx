@@ -1,22 +1,19 @@
 import { useCallback } from "react";
-import { apiClient } from "../../Api/apiClient";
-import { constructWhiteCardArray } from "../../Types/WhiteCard";
-import { transformUser, transformUsers } from "../../Types/User";
-import { useUsers } from "../../State/Users/UsersContext";
-import { SetPlayersAction } from "../../State/Users/UsersActions";
-import { useHand } from "../../State/Hand/HandContext";
-import { SetHandAction } from "../../State/Hand/HandActionts";
-import { useUser } from "../../State/User/UserContext";
-import {
-  SetHasSubmittedCards,
-  SetUserAction,
-} from "../../State/User/UserActions";
-import { useGame } from "../../State/Game/GameContext";
+import { constructWhiteCardArray } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { useUsers } from "State/Users/UsersContext";
+import { SetPlayersAction } from "State/Users/UsersActions";
+import { useHand } from "State/Hand/HandContext";
+import { SetHandAction } from "State/Hand/HandActionts";
+import { useUser } from "State/User/UserContext";
+import { SetHasSubmittedCards, SetUserAction } from "State/User/UserActions";
+import { useGame } from "State/Game/GameContext";
 import {
   SetBlackCardAction,
   SetGameAction,
   SetJudgeAction,
-} from "../../State/Game/GameActions";
+} from "State/Game/GameActions";
+import { fetchState } from "Services/GameService";
 
 function useFetchGameState() {
   const { dispatch: usersDispatch } = useUsers();
@@ -24,10 +21,10 @@ function useFetchGameState() {
   const { dispatch: userDispatch } = useUser();
   const { dispatch: gameDispatch } = useGame();
 
-  const fetchGameState = useCallback(
+  return useCallback(
     async (gameId: string) => {
       try {
-        const { data } = await apiClient.get(`/api/game/${gameId}`);
+        const { data } = await fetchState(gameId);
 
         userDispatch(new SetUserAction(transformUser(data.current_user)));
         usersDispatch(new SetPlayersAction(transformUsers(data.users)));
@@ -58,8 +55,6 @@ function useFetchGameState() {
     },
     [handDispatch, userDispatch, usersDispatch, gameDispatch]
   );
-
-  return fetchGameState;
 }
 
 export default useFetchGameState;
