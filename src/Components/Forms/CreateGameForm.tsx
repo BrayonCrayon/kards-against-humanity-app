@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import ExpansionCard from "Components/ExpansionCard";
 import { Expansion } from "Types/Expansion";
 import { useHistory } from "react-router-dom";
@@ -98,13 +103,23 @@ export const CreateGameForm: React.FC = () => {
     [expansions, userName, history]
   );
 
-  const onToggle = useCallback((id: number, checked: boolean) => {
+  const onToggle = useCallback(
+    (id: number) => {
+      setExpansions((prevState) => {
+        return prevState.map((item) => {
+          if (item.expansion.id === id) item.isSelected = !item.isSelected;
+          return item;
+        });
+      });
+    },
+    [expansions, setExpansions]
+  );
+
+  const toggleExpansions = useCallback(() => {
     setExpansions((prev) => {
-      const expansionOption = prev.find((item) => item.expansion.id === id);
-      if (expansionOption) expansionOption.isSelected = !checked;
-      return prev;
+      return prev.map((ex) => ({ ...ex, isSelected: !ex.isSelected }));
     });
-  }, []);
+  }, [expansions, setExpansions]);
 
   return (
     <div className="w-full flex justify-center">
@@ -113,6 +128,12 @@ export const CreateGameForm: React.FC = () => {
         className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
       >
         <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
+        <Button
+          text="Toggle Expansions"
+          dataTestid="toggle-all-expansions"
+          className="text-sm"
+          onClick={toggleExpansions}
+        />
         <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
           {expansions.map(({ expansion, isSelected }) => {
             return (
@@ -137,7 +158,11 @@ export const CreateGameForm: React.FC = () => {
           maxLength={17}
           onChange={(event) => setUserName(event.target.value)}
         />
-        <Button text="Create" dataTestid="create-game-submit-button" />
+        <Button
+          text="Create"
+          dataTestid="create-game-submit-button"
+          type="submit"
+        />
       </form>
     </div>
   );
