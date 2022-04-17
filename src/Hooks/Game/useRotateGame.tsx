@@ -1,10 +1,10 @@
 import React, { useCallback } from "react";
-import { apiClient } from "../../Api/apiClient";
+import { rotate } from "../../Services/GameService";
 
 function useRotateGame() {
   const rotateGame = useCallback(async (gameId: string) => {
     try {
-      await apiClient.post(`/api/game/${gameId}/rotate`);
+      await rotate(gameId);
     } catch (e) {
       console.error(e);
     }

@@ -14,17 +14,14 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({
   checked,
   onToggle,
 }) => {
-  const [isChecked, setIsChecked] = useState(true);
-
   const onChange = useCallback(() => {
     onToggle(id, checked);
-    setIsChecked((checked) => !checked);
-  }, [onToggle, setIsChecked, checked, id]);
+  }, [onToggle, checked, id]);
 
   return (
     <div
       className={`bg-white py-2 mt-4 rounded border my-2 px-2 hover:font-bold hover:shadow-md cursor-pointer my-2 text-center border-gray-500 border-2 ${
-        isChecked ? ` ${SELECTED_CARD_BACKGROUND}` : ""
+        checked ? ` ${SELECTED_CARD_BACKGROUND}` : ""
       }`}
       data-testid={`expansion-${id}`}
       onClick={onChange}
@@ -33,7 +30,7 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({
         className="mr-2"
         type="checkbox"
         data-testid={`checkbox-${id}`}
-        checked={isChecked}
+        checked={checked}
         readOnly={true}
         onChange={() => {}}
       />

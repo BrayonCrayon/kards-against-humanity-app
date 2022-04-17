@@ -14,14 +14,14 @@ window.Echo = new Echo({
 // @ts-ignore
 export const echo = window.Echo;
 
-export interface UpdateGameState {
+export interface gameCallbackData {
   gameId: string;
   userId: number;
 }
 
 export const listenWhenUserJoinsGame = (
   gameId: string,
-  callback: (data: UpdateGameState) => void
+  callback: (data: gameCallbackData) => void
 ) => {
   echo.channel(`game-${gameId}`).stopListening(".game.joined");
   echo.channel(`game-${gameId}`).listen(".game.joined", callback);
@@ -29,7 +29,7 @@ export const listenWhenUserJoinsGame = (
 
 export const listenWhenUserSubmittedCards = (
   gameId: string,
-  callback: (data: UpdateGameState) => void
+  callback: (data: gameCallbackData) => void
 ) => {
   echo.channel(`game-${gameId}`).stopListening(".cards.submitted");
   echo.channel(`game-${gameId}`).listen(".cards.submitted", callback);
@@ -51,7 +51,7 @@ export const listenWhenWinnerIsSelected = (
 
 export const listenWhenGameRotates = (
   gameId: string,
-  callback: (data: UpdateGameState) => void
+  callback: (data: gameCallbackData) => void
 ) => {
   echo.channel(`game-${gameId}`).stopListening(".game.rotate");
   echo.channel(`game-${gameId}`).listen(".game.rotate", callback);

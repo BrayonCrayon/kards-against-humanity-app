@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { UpdateGameState } from "../../Services/PusherService";
+import { gameCallbackData } from "Services/PusherService";
 import useFetchGameState from "./useFetchGameState";
 
 function useGameStateCallback() {
   const fetchGameState = useFetchGameState();
 
-  return useCallback(async (data: UpdateGameState) => {
+  return useCallback(async (data: gameCallbackData) => {
     await fetchGameState(data.gameId);
   }, []);
 }
