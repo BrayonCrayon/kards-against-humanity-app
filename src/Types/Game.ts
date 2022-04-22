@@ -1,8 +1,19 @@
 export interface Game {
-  id: string;
-  name: string;
-  judge_id: number;
-  created_at?: Date;
-  deleted_at?: Date;
-  code: string;
+    id: string;
+    name: string;
+    judge_id: number;
+    created_at?: Date;
+    deleted_at?: Date;
+    code: string;
+    redrawLimit: number;
+}
+
+export const initialGameObject = (): Game => {
+    return {
+        id: "",
+        name: "",
+        judge_id: 0,
+        code: "",
+        redrawLimit: 2
+    }
 }

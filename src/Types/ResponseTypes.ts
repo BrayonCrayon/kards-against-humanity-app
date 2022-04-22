@@ -1,5 +1,5 @@
-import { IWhiteCard } from "./WhiteCard";
-import { BlackCard } from "./BlackCard";
+import {IWhiteCard} from "./WhiteCard";
+import {BlackCard} from "./BlackCard";
 
 export interface SubmittedCard extends Partial<IWhiteCard> {
   id: number;
@@ -23,4 +23,16 @@ export interface SubmittedCardsResponse {
 
 export interface RoundWinnerResponse {
   data: RoundWinner;
+}
+
+export interface PlayerCard {
+  id: number;
+  text: string;
+  expansion_id: number;
+  order: number;
+  selected: boolean;
+}
+
+export interface Resource<T> {
+  data: T
 }
