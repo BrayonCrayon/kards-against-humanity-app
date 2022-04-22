@@ -98,7 +98,7 @@ const JoinGameForm: React.FC = () => {
           required
           onChange={(e) => setUserName(e.target.value)}
         />
-        <Button text="Join" dataTestid="join-game-form-submit" />
+        <Button type="submit" text="Join" dataTestid="join-game-form-submit" />
       </form>
     </div>
   );
