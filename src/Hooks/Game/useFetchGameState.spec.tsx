@@ -1,11 +1,13 @@
 import React from "react";
 import useFetchGameState from "./useFetchGameState";
-import { apiClient } from "../../Api/apiClient";
-import { gameStateSubmittedWhiteCardsExampleResponse } from "../../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { constructWhiteCardArray } from "../../Types/WhiteCard";
-import { transformUser, transformUsers } from "../../Types/User";
-import { kardsHookRender } from "../../Tests/testRenders";
-import { expectDispatch } from "../../Tests/testHelpers";
+import {apiClient} from "../../Api/apiClient";
+import {
+  gameStateSubmittedWhiteCardsExampleResponse
+} from "../../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import {transformWhiteCardArray} from "../../Types/WhiteCard";
+import {transformUser, transformUsers} from "../../Types/User";
+import {kardsHookRender} from "../../Tests/testRenders";
+import {expectDispatch} from "../../Tests/testHelpers";
 
 jest.mock("../../Api/apiClient");
 const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
@@ -97,15 +99,16 @@ describe("useFetchGameState", () => {
       judge_id: data.judge.id,
       name: data.name,
       code: data.code,
+      redrawLimit: data.redrawLimit,
     });
 
     expectDispatch(
       mockedDispatch,
-      constructWhiteCardArray(
-        data.hand,
-        data.hasSubmittedWhiteCards,
-        data.submittedWhiteCardIds
-      )
+        transformWhiteCardArray(
+            data.hand,
+            data.hasSubmittedWhiteCards,
+            data.submittedWhiteCardIds
+        )
     );
 
     expectDispatch(mockedDispatch, transformUser(data.current_user));

@@ -1,14 +1,14 @@
-import { renderHook } from "@testing-library/react-hooks";
+import {renderHook} from "@testing-library/react-hooks";
 import UseFetchRoundWinner from "./UseFetchRoundWinner";
-import { apiClient } from "../../Api/apiClient";
-import { PlayerSubmittedCard } from "../../Types/ResponseTypes";
-import { VoteProvider } from "../../State/Vote/VoteContext";
-import { gameFixture } from "../../Api/fixtures/gameFixture";
-import { blackCardFixture } from "../../Api/fixtures/blackcardFixture";
+import {PlayerSubmittedCard} from "../../Types/ResponseTypes";
+import {VoteProvider} from "../../State/Vote/VoteContext";
+import {gameFixture} from "../../Api/fixtures/gameFixture";
+import {blackCardFixture} from "../../Api/fixtures/blackcardFixture";
+import {mockedAxios} from "../../setupTests";
 
 const renderUseFetchRoundWinner = () => {
   return renderHook(UseFetchRoundWinner, {
-    wrapper: ({ children }) => <VoteProvider>{children}</VoteProvider>,
+    wrapper: ({children}) => <VoteProvider>{children}</VoteProvider>,
   });
 };
 
@@ -31,10 +31,6 @@ jest.mock("../../State/Vote/VoteContext", () => {
     },
   };
 });
-
-jest.mock("../../Api/apiClient");
-
-const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 const mockApiData: PlayerSubmittedCard = {
   submitted_cards: [],

@@ -1,14 +1,14 @@
-import { screen, waitFor } from "@testing-library/react";
-import { CreateGameForm } from "Components/Forms/CreateGameForm";
+import {screen, waitFor} from "@testing-library/react";
+import {CreateGameForm} from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
-import { Game } from "Types/Game";
-import { apiClient } from "Api/apiClient";
-import { SELECTED_CARD_BACKGROUND } from "Components/ExpansionCard";
-import { transformUser, transformUsers } from "Types/User";
-import { history, kardsRender } from "Tests/testRenders";
-import { expectDispatch } from "Tests/testHelpers";
+import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
+import {getExpansionsExampleResponse} from "Api/fixtures/getExpansionsExampleResponse";
+import {Game} from "Types/Game";
+import {apiClient} from "Api/apiClient";
+import {SELECTED_CARD_BACKGROUND} from "Components/ExpansionCard";
+import {transformUser, transformUsers} from "Types/User";
+import {history, kardsRender} from "Tests/testRenders";
+import {expectDispatch} from "Tests/testHelpers";
 
 jest.mock("Api/apiClient");
 
@@ -145,6 +145,7 @@ describe("CreateGameForm", () => {
         name: gameStateExampleResponse.data.name,
         code: gameStateExampleResponse.data.code,
         judge_id: gameStateExampleResponse.data.judge.id,
+        redrawLimit: gameStateExampleResponse.data.redrawLimit,
       };
       expectDispatch(mockDispatch, receivedGame);
       expectDispatch(

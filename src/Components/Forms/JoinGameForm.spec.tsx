@@ -1,15 +1,15 @@
-import { waitFor } from "@testing-library/react";
+import {waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { apiClient } from "../../Api/apiClient";
-import { gameStateExampleResponse } from "../../Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "../../Api/fixtures/getExpansionsExampleResponse";
+import {apiClient} from "../../Api/apiClient";
+import {gameStateExampleResponse} from "../../Api/fixtures/gameStateExampleResponse";
+import {getExpansionsExampleResponse} from "../../Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import { errorToast } from "../../Utilities/toasts";
-import { transformUser, transformUsers } from "../../Types/User";
-import { history, kardsRender } from "../../Tests/testRenders";
-import { setupAndSubmitForm } from "../../Tests/actions";
-import { IWhiteCard, WhiteCard } from "../../Types/WhiteCard";
-import { expectDispatch } from "../../Tests/testHelpers";
+import {errorToast} from "../../Utilities/toasts";
+import {transformUser, transformUsers} from "../../Types/User";
+import {history, kardsRender} from "../../Tests/testRenders";
+import {setupAndSubmitForm} from "../../Tests/actions";
+import {IWhiteCard, WhiteCard} from "../../Types/WhiteCard";
+import {expectDispatch} from "../../Tests/testHelpers";
 
 jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
@@ -144,6 +144,7 @@ describe("JoinGameForm", () => {
         judge_id: gameStateExampleResponse.data.judge.id,
         code: gameStateExampleResponse.data.code,
         name: gameStateExampleResponse.data.name,
+        redrawLimit: gameStateExampleResponse.data.redrawLimit
       });
       expectDispatch(
         mockDispatch,

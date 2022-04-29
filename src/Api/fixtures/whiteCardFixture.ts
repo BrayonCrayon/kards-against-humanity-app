@@ -1,4 +1,4 @@
-import { WhiteCard } from "../../Types/WhiteCard";
+import {WhiteCard} from "Types/WhiteCard";
 
 export const whiteCardFixture: WhiteCard[] = [
   {
