@@ -1,17 +1,19 @@
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { RenderResult, waitFor } from "@testing-library/react";
-import { apiClient } from "Api/apiClient";
-import { transformUser, transformUsers, User } from "Types/User";
-import { VotingSection } from "./VotingSection";
-import { constructWhiteCardArray } from "Types/WhiteCard";
+import {submittedCardsResponse} from "Api/fixtures/submittedCardsResponse";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {RenderResult, waitFor} from "@testing-library/react";
+import {apiClient} from "Api/apiClient";
+import {transformUser, transformUsers, User} from "Types/User";
+import {VotingSection} from "./VotingSection";
+import {transformWhiteCardArray} from "Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import * as Vote from "State/Vote/VoteContext";
-import { happyToast } from "Utilities/toasts";
-import { listenWhenWinnerIsSelected } from "Services/PusherService";
-import { act } from "react-dom/test-utils";
-import { kardsRender } from "Tests/testRenders";
-import { expectDispatch } from "../Tests/testHelpers";
+import {happyToast} from "Utilities/toasts";
+import {listenWhenWinnerIsSelected} from "Services/PusherService";
+import {act} from "react-dom/test-utils";
+import {kardsRender} from "Tests/testRenders";
+import {expectDispatch} from "../Tests/testHelpers";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
@@ -38,7 +40,7 @@ const mockProps = {
   game: gameFixture,
   judge: transformUser(data.judge),
   users: transformUsers(data.users),
-  hand: constructWhiteCardArray(data.hand, false, []),
+  hand: transformWhiteCardArray(data.hand, false, []),
   blackCard: data.current_black_card,
 };
 

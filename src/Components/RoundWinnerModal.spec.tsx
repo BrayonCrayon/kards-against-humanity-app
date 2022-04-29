@@ -1,16 +1,19 @@
-import { kardsRender } from "Tests/testRenders";
-import { RoundWinnerModal } from "./RoundWinnerModal";
+import {kardsRender} from "Tests/testRenders";
+import {RoundWinnerModal} from "./RoundWinnerModal";
 import * as Vote from "State/Vote/VoteContext";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
+import {submittedCardsResponse} from "Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { Game } from "Types/Game";
-import { transformUser, transformUsers } from "Types/User";
-import { waitFor } from "@testing-library/react";
-import { roundWinnerExampleResponse } from "Api/fixtures/roundWinnerExampleResponse";
-import { fillOutBlackCard } from "Utilities/helpers";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {Game} from "Types/Game";
+import {transformUser, transformUsers} from "Types/User";
+import {waitFor} from "@testing-library/react";
+import {roundWinnerExampleResponse} from "Api/fixtures/roundWinnerExampleResponse";
+import {fillOutBlackCard} from "Utilities/helpers";
 
-const mockRotateGame = jest.fn(async () => {});
+const mockRotateGame = jest.fn(async () => {
+});
 jest.mock("Hooks/Game/useRotateGame", () => {
   return () => {
     return mockRotateGame;
@@ -24,24 +27,17 @@ jest.mock("Hooks/Game/useFetchGameState", () => {
   };
 });
 
+const {data} = gameStateAllPlayerSubmittedCardsExampleResponse;
+
 const mockGame: Game = {
-  id: gameStateAllPlayerSubmittedCardsExampleResponse.data.id,
-  name: gameStateAllPlayerSubmittedCardsExampleResponse.data.name,
-  code: gameStateAllPlayerSubmittedCardsExampleResponse.data.code,
-  judge_id: gameStateAllPlayerSubmittedCardsExampleResponse.data.judge.id,
+  id: data.id,
+  name: data.name,
+  code: data.code,
+  judge_id: data.judge.id,
+  redrawLimit: data.redrawLimit
 };
 
-const props = {
-  judge: transformUser(
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.judge
-  ),
-  blackCard:
-    gameStateAllPlayerSubmittedCardsExampleResponse.data.current_black_card,
-};
-
-let mockUsers = transformUsers(
-  gameStateAllPlayerSubmittedCardsExampleResponse.data.users
-);
+let mockUsers = transformUsers(data.users);
 jest.mock("State/Users/UsersContext", () => ({
   ...jest.requireActual("State/Users/UsersContext"),
   useUsers: () => ({
@@ -52,9 +48,7 @@ jest.mock("State/Users/UsersContext", () => ({
   }),
 }));
 
-let mockUser = transformUser(
-  gameStateAllPlayerSubmittedCardsExampleResponse.data.current_user
-);
+let mockUser = transformUser(data.current_user);
 jest.mock("State/User/UserContext", () => ({
   ...jest.requireActual("State/User/UserContext"),
   useUser: () => ({
@@ -87,9 +81,7 @@ describe("RoundWinnerModal", () => {
       state: {
         selectedRoundWinner: {
           ...submittedCardsResponse.data[0],
-          black_card:
-            gameStateAllPlayerSubmittedCardsExampleResponse.data
-              .current_black_card,
+          black_card: data.current_black_card,
         },
         selectedPlayerId: 1,
       },
@@ -148,9 +140,7 @@ describe("RoundWinnerModal", () => {
       state: {
         selectedRoundWinner: {
           ...winner,
-          black_card:
-            gameStateAllPlayerSubmittedCardsExampleResponse.data
-              .current_black_card,
+          black_card: data.current_black_card,
         },
         selectedPlayerId: 1,
       },
@@ -204,19 +194,19 @@ describe("RoundWinnerModal", () => {
       },
     }));
     const {
-      data: { black_card, submitted_cards, user_id },
+      data: {black_card, submitted_cards, user_id},
     } = roundWinnerExampleResponse;
-    const expectedCardText = fillOutBlackCard(black_card, submitted_cards);
+    const expectedCardText = fillOutBlackCard(black_card, submitted_cards)
+        .replaceAll("<strong>", "")
+        .replaceAll("</strong>", "");
 
     const wrapper = renderComponent();
 
     await waitFor(() => {
       const winnerCardElement = wrapper.getByTestId(
-        `player-card-response-${user_id}`
+          `player-card-response-${user_id}`
       );
-      expect(winnerCardElement.textContent).toEqual(
-        expectedCardText.replaceAll("<strong>", "").replaceAll("</strong>", "")
-      );
+      expect(winnerCardElement.textContent).toEqual(expectedCardText);
     });
   });
 });

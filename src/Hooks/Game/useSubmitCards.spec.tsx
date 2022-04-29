@@ -1,7 +1,7 @@
-import { kardsHookRender } from "Tests/testRenders";
-import { constructWhiteCardArray } from "Types/WhiteCard";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
-import { expectDispatch, expectNoDispatch } from "Tests/testHelpers";
+import {kardsHookRender} from "Tests/testRenders";
+import {transformWhiteCardArray} from "Types/WhiteCard";
+import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
+import {expectDispatch, expectNoDispatch} from "Tests/testHelpers";
 import useSubmitCards from "./useSubmitCards";
 import gameService from "Services/GameService";
 
@@ -16,10 +16,10 @@ const {
 } = gameStateJudgeExampleResponse;
 
 const mockPickAmount = current_black_card.pick;
-const mockHand = constructWhiteCardArray(
-  hand,
-  hasSubmittedWhiteCards,
-  submittedWhiteCardIds
+const mockHand = transformWhiteCardArray(
+    hand,
+    hasSubmittedWhiteCards,
+    submittedWhiteCardIds
 );
 
 jest.mock("Services/GameService");

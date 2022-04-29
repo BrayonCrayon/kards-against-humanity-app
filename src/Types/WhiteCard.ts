@@ -32,15 +32,15 @@ export class WhiteCard implements IWhiteCard {
   }
 }
 
-export const constructWhiteCardArray = (
-  cards: WhiteCard[],
-  hasSubmittedWhiteCards: boolean,
-  submittedWhiteCardIds: number[]
+export const transformWhiteCardArray = (
+    cards: WhiteCard[],
+    hasSubmittedWhiteCards: boolean,
+    submittedWhiteCardIds: number[]
 ) => {
   return cards.map((item: IWhiteCard) => {
     const alreadySubmitted =
-      hasSubmittedWhiteCards &&
-      submittedWhiteCardIds.find((cardId: number) => cardId === item.id) !==
+        hasSubmittedWhiteCards &&
+        submittedWhiteCardIds.find((cardId: number) => cardId === item.id) !==
         undefined;
 
     return new WhiteCard(

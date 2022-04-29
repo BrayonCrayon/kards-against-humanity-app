@@ -1,20 +1,20 @@
 import React from "react";
-import { RenderResult, waitFor } from "@testing-library/react";
+import {RenderResult, waitFor} from "@testing-library/react";
 import GameInfo from "./GameInfo";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
+import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
 import userEvent from "@testing-library/user-event";
-import { togglePlayerList } from "Tests/actions";
-import { transformUser } from "Types/User";
-import { kardsRender } from "Tests/testRenders";
+import {togglePlayerList} from "Tests/actions";
+import {transformUser, transformUsers} from "Types/User";
+import {kardsRender} from "Tests/testRenders";
 
-const { data } = gameStateJudgeExampleResponse;
-let mockUsers = data.users;
+const {data} = gameStateJudgeExampleResponse;
+let mockUsers = transformUsers(data.users);
 let mockUser = transformUser(data.current_user);
 let mockHasSubmittedCards = false;
 let mockDispatch = jest.fn();
 
 const renderer = async (): Promise<RenderResult> => {
-  return kardsRender(<GameInfo />);
+  return kardsRender(<GameInfo/>);
 };
 
 const mockKickPlayer = jest.fn();
