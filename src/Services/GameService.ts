@@ -28,8 +28,8 @@ export const submitCards = (
   });
 };
 
-export const redraw = (gameId: string) => {
-  return apiClient.post<Resource<PlayerCard[]>>(`/api/game/${gameId}/redraw`);
+export const redraw = (code: string) => {
+  return apiClient.post<Resource<PlayerCard[]>>(`/api/game/${code}/redraw`);
 }
 
 export default {

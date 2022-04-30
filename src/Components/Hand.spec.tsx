@@ -8,13 +8,13 @@ import {gameFixture} from "Api/fixtures/gameFixture";
 import {transformUser} from "Types/User";
 import {errorToast} from "Utilities/toasts";
 
-const {data: {id, hand, current_black_card, current_user}} = gameStateExampleResponse;
+const {data: {code, hand, current_black_card, current_user}} = gameStateExampleResponse;
 
 const mockBlackCard = current_black_card;
 const mockHand = transformWhiteCardArray(hand, false, []);
 const mockGame = {
     ...gameFixture,
-    id
+    code
 }
 const mockUser = transformUser(current_user);
 
@@ -73,7 +73,7 @@ describe("Hand", () => {
         userEvent.click(wrapper.getByText("Yes"));
 
         await waitFor(() => {
-            expect(mockRedraw).toHaveBeenCalledWith(id);
+            expect(mockRedraw).toHaveBeenCalledWith(code);
         });
     });
 
