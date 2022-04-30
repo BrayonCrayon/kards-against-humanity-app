@@ -5,7 +5,7 @@ import {expectDispatch, expectNoDispatch} from "Tests/testHelpers";
 import {transformWhiteCardArray} from "Types/WhiteCard";
 import useRedrawPlayerHand from "./useRedrawPlayerHand";
 
-const {data: {hand, id}} = gameStateExampleResponse;
+const {data: {hand, code}} = gameStateExampleResponse;
 
 jest.mock("Services/GameService");
 
@@ -33,9 +33,9 @@ describe('useRedrawPlayerHand', function () {
         mockedGameService.redraw.mockResolvedValue({data: hand});
         const {result} = kardsHookRender(useRedrawPlayerHand);
 
-        await result.current(id);
+        await result.current(code);
 
-        expect(gameService.redraw).toHaveBeenCalledWith(id);
+        expect(gameService.redraw).toHaveBeenCalledWith(code);
         expectDispatch(mockDispatch, transformWhiteCardArray(hand, false, []));
         expectDispatch(mockDispatch, 1);
     });
@@ -48,9 +48,9 @@ describe('useRedrawPlayerHand', function () {
         mockedGameService.redraw.mockRejectedValue(errorMessage);
         const {result} = kardsHookRender(useRedrawPlayerHand);
 
-        await result.current(id);
+        await result.current(code);
 
-        expect(gameService.redraw).toHaveBeenCalledWith(id);
+        expect(gameService.redraw).toHaveBeenCalledWith(code);
         expectNoDispatch(mockDispatch, transformWhiteCardArray(hand, false, []));
         expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
     });
