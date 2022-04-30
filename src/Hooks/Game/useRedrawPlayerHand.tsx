@@ -11,9 +11,9 @@ function useRedrawPlayerHand() {
     const {dispatch} = useHand();
     const {dispatch: userDispatch} = useUser();
 
-    return useCallback(async (code: string) => {
+    return useCallback(async (gameId: string) => {
         try {
-            const {data} = await gameService.redraw(code);
+            const {data} = await gameService.redraw(gameId);
             // @ts-ignore
             dispatch(new SetHandAction(transformWhiteCardArray(data, false, [])));
             userDispatch(new IncrementRedrawCount(1));
