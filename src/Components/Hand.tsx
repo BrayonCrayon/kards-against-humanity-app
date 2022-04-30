@@ -47,7 +47,7 @@ const Hand = () => {
 
         if (!result) return;
 
-        await redrawHand(game.code);
+        await redrawHand(game.id);
     }, [game, user]);
 
     const positionOfLastSelectedCard = useMemo(() => {
