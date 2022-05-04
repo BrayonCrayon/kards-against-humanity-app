@@ -15,6 +15,10 @@ export const fetchPlayers = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}/players`);
 };
 
+export const joinAsSpectator = (gameId: string) => {
+  return apiClient.post(`/api/game/${gameId}/spectate`)
+}
+
 export const rotate = (gameId: string) => {
   return apiClient.post(`/api/game/${gameId}/rotate`);
 };
