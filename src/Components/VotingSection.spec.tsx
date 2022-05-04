@@ -24,26 +24,17 @@ jest.mock("../Hooks/Game/UseFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 
-const { data } = gameStateAllPlayerSubmittedCardsExampleResponse;
-
-const game = {
-  id: data.id,
-  code: data.code,
-  name: data.name,
-  judge_id: data.judge.id,
-  redrawLimit: data.redrawLimit
-};
+const { data: {game, hand, blackCard, users, currentUser, hasSubmittedWhiteCards} } = gameStateAllPlayerSubmittedCardsExampleResponse;
 
 const mockProps = {
   game,
-  judge: transformUser(data.judge),
-  users: transformUsers(data.users),
-  hand: transformWhiteCardArray(data.hand, false, []),
-  blackCard: data.blackCard,
+  users: transformUsers(users),
+  hand: transformWhiteCardArray(hand, false, []),
+  blackCard: blackCard,
 };
 
-let auth = transformUser(data.currentUser);
-const mockHasSubmittedWhiteCards = data.hasSubmittedWhiteCards;
+let auth = transformUser(currentUser);
+const mockHasSubmittedWhiteCards = hasSubmittedWhiteCards;
 
 const renderer = async (): Promise<RenderResult> => {
   return kardsRender(<VotingSection />);
@@ -51,8 +42,8 @@ const renderer = async (): Promise<RenderResult> => {
 
 describe("VotingSection", () => {
   beforeEach(() => {
-    spyOnUseGame({ game, judge: mockProps.judge, blackCard: mockProps.blackCard, });
-    spyOnUseAuth({ auth, hasSubmittedCards: mockHasSubmittedWhiteCards});
+    spyOnUseGame(jest.fn(), { game, blackCard: mockProps.blackCard, });
+    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: mockHasSubmittedWhiteCards});
   })
 
   describe("Api call", () => {
@@ -184,9 +175,8 @@ describe("VotingSection", () => {
     });
 
     it("will not show submit winner button when user is not the judge", async () => {
-      spyOnUseGame({
-        game: {...mockProps.game, judge_id: mockProps.users[0].id},
-        judge: mockProps.users[0],
+      spyOnUseGame(jest.fn(), {
+        game: {...mockProps.game, judgeId: mockProps.users[0].id},
         blackCard: mockProps.blackCard
       });
       const wrapper = await renderer();
@@ -199,7 +189,7 @@ describe("VotingSection", () => {
     });
 
     it("calls dispatch with correct action and payload when a user is selected", async () => {
-      spyOnUseVote(initialVoteState, mockDispatch);
+      spyOnUseVote(mockDispatch, initialVoteState);
       const wrapper = await renderer();
       const { user_id } = submittedCardsResponse.data[0];
 
@@ -215,7 +205,7 @@ describe("VotingSection", () => {
     });
 
     it("does not show submit winner button when a winner is in state", async () => {
-      spyOnUseVote({
+      spyOnUseVote(jest.fn(), {
         selectedRoundWinner: { ...submittedCardsResponse.data[0], black_card: mockProps.blackCard, },
         selectedPlayerId: -1
       });
@@ -232,7 +222,7 @@ describe("VotingSection", () => {
   describe("displaying players submitted card", () => {
     beforeEach(() => {
       service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
-      spyOnUseVote({ selectedPlayerId: -1, selectedRoundWinner: undefined}, mockDispatch);
+      spyOnUseVote(mockDispatch, { selectedPlayerId: -1, selectedRoundWinner: undefined});
     });
 
     afterEach(() => {
@@ -267,7 +257,7 @@ describe("VotingSection", () => {
         (left, right) => left.order - right.order
       );
 
-      const { text: blackCardText } = data.blackCard;
+      const { text: blackCardText } = blackCard;
 
       const expectedCardText = blackCardText
         .replace("_", sortedCards[0].text.replace(/\.$/, ""))
@@ -284,7 +274,7 @@ describe("VotingSection", () => {
     });
 
     it("will not allow non judge users to select submitted cards", async () => {
-      spyOnUseAuth({ auth: mockProps.users[0], hasSubmittedCards: false});
+      spyOnUseAuth(mockDispatch, { auth: mockProps.users[0], hasSubmittedCards: false});
       const wrapper = await renderer();
 
       const [submittedCard] = submittedCardsResponse.data;

@@ -15,7 +15,7 @@ import { fetchSubmittedCards } from "Services/GameService";
 
 export const VotingSection: FC = () => {
   const {
-    state: { game, judge, blackCard },
+    state: { game, blackCard },
   } = useGame();
   const {
     state: { selectedPlayerId, selectedRoundWinner },
@@ -60,11 +60,11 @@ export const VotingSection: FC = () => {
 
   const selectCard = useCallback(
     (user_id) => {
-      if (judge.id !== auth.id) return;
+      if (game.judgeId !== auth.id) return;
 
       dispatch(new SelectWinnerAction(user_id));
     },
-    [dispatch, judge, auth]
+    [dispatch, game, auth]
   );
 
   return (
@@ -88,7 +88,7 @@ export const VotingSection: FC = () => {
         ))}
       </div>
       <div className="flex justify-center">
-        {auth.id === judge.id && !selectedRoundWinner && (
+        {auth.id === game.judgeId && !selectedRoundWinner && (
           <Button
             text="Submit Winner"
             onClick={submitWinner}

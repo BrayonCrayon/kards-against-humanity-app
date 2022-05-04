@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react";
-import { Expansion } from "../Types/Expansion";
+import React, { useCallback } from "react";
+import { Expansion } from "Types/Expansion";
 
 interface ExpansionCardProps extends Pick<Expansion, "id" | "name"> {
   checked: boolean;

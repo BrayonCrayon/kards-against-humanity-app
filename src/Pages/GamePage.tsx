@@ -15,7 +15,7 @@ import useSubmitCards from "Hooks/Game/useSubmitCards";
 
 const GamePage = () => {
   const {
-    state: { game, judge, blackCard },
+    state: { game, blackCard },
   } = useGame();
 
   const {
@@ -37,13 +37,13 @@ const GamePage = () => {
   const submitCards = useSubmitCards();
 
   const showVotingSection = useMemo(() => {
-    const currentPlayers = players.filter((item) => item.id !== judge.id);
+    const currentPlayers = players.filter((item) => item.id !== game.judgeId);
     return (
       currentPlayers.length > 0 &&
       currentPlayers.filter((item) => item.hasSubmittedWhiteCards).length ===
         currentPlayers.length
     );
-  }, [players, judge]);
+  }, [players, game]);
 
   const canSubmitCards = useMemo(() => {
     return (
@@ -71,7 +71,7 @@ const GamePage = () => {
   return (
     <div>
       <GameInfo />
-      {judge.id !== auth.id && !showVotingSection && (
+      {game.judgeId !== auth.id && !showVotingSection && (
         <>
           <Hand />
           <div className="flex justify-center">

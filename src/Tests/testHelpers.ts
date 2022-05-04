@@ -34,38 +34,43 @@ export const expectNoDispatch = <TFunction, TPayload>(
 };
 
 export const spyOnUseHand = (
-  state: IHandState = initialHandState,
-  mockedDispatch = jest.fn()
+  mockedDispatch = jest.fn(),
+  state: IHandState = initialHandState
 ) => {
-  return spyOnState(state, mockedDispatch, useHand, "useHand");
+  spyOnState(state, mockedDispatch, useHand, "useHand");
+  return mockedDispatch;
 }
 
 export const spyOnUseAuth = (
-  state: IAuthState = initialAuthState,
-  mockedDispatch = jest.fn()
+  mockedDispatch = jest.fn(),
+  state: IAuthState = initialAuthState
 ) => {
-  return spyOnState(state, mockedDispatch, useAuth, "useAuth");
+  spyOnState(state, mockedDispatch, useAuth, "useAuth");
+  return mockedDispatch;
 }
 
 export const spyOnUseGame = (
+  mockedDispatch = jest.fn(),
   state: IGameState = initialGameState,
-  mockedDispatch = jest.fn()
 ) => {
-  return spyOnState(state, mockedDispatch, useGame, "useGame");
+  spyOnState(state, mockedDispatch, useGame, "useGame");
+  return mockedDispatch;
 }
 
 export const spyOnUseVote = (
+  mockedDispatch = jest.fn(),
   state: IVoteState = initialVoteState,
-  mockedDispatch = jest.fn()
 ) => {
-  return spyOnState(state, mockedDispatch, useVote, "useVote");
+  spyOnState(state, mockedDispatch, useVote, "useVote");
+  return mockedDispatch;
 }
 
 export const spyOnUsePlayers = (
+  mockedDispatch = jest.fn(),
   state: IPlayersState = initialPlayersState,
-  mockedDispatch = jest.fn()
 ) => {
-  return spyOnState(state, mockedDispatch, usePlayers, "usePlayers");
+  spyOnState(state, mockedDispatch, usePlayers, "usePlayers");
+  return mockedDispatch;
 };
 
 export const spyOnState = <T>(

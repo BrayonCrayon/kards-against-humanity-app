@@ -1,7 +1,7 @@
 export interface Game {
     id: string;
     name: string;
-    judge_id: number;
+    judgeId: number;
     createdAt?: Date;
     deleted_at?: Date;
     code: string;
@@ -12,7 +12,7 @@ export const initialGameObject = (): Game => {
     return {
         id: "",
         name: "",
-        judge_id: 0,
+        judgeId: 0,
         code: "",
         redrawLimit: 2
     }

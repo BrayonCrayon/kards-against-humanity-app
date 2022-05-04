@@ -8,7 +8,7 @@ import { SetHandAction } from "State/Hand/HandActions";
 import { useAuth } from "State/Auth/useAuth";
 import { SetAuthAction, SetHasSubmittedCards } from "State/Auth/AuthActions";
 import { useGame } from "State/Game/useGame";
-import { SetBlackCardAction, SetGameAction, SetJudgeAction } from "State/Game/GameActions";
+import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
 import { fetchState } from "Services/GameService";
 
 function useFetchGameState() {
@@ -24,16 +24,7 @@ function useFetchGameState() {
 
         userDispatch(new SetAuthAction(transformUser(data.currentUser)));
         usersDispatch(new SetPlayersAction(transformUsers(data.users)));
-        gameDispatch(
-          new SetGameAction({
-            id: data.id,
-            judge_id: data.judge.id,
-            name: data.name,
-            code: data.code,
-            redrawLimit: data.redrawLimit
-          })
-        );
-
+        gameDispatch(new SetGameAction(data.game));
         userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
         handDispatch(
           new SetHandAction(
@@ -45,7 +36,6 @@ function useFetchGameState() {
           )
         );
         gameDispatch(new SetBlackCardAction(data.blackCard));
-        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
       } catch (error) {
         console.error(error);
       }

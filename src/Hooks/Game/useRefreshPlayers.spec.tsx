@@ -12,7 +12,7 @@ const mockedDispatch = jest.fn();
 
 describe("useRotateGame", () => {
   beforeEach(() => {
-    spyOnUsePlayers(initialPlayersState, mockedDispatch);
+    spyOnUsePlayers(mockedDispatch, initialPlayersState);
   });
 
   it("will call game players endpoint", async () => {

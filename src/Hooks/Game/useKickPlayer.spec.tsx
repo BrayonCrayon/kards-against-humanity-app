@@ -11,7 +11,7 @@ const gameId = gameFixture.id;
 const userId = 1;
 
 const renderUseKickPlayer = () => {
-  spyOnUsePlayers(initialPlayersState, mockedDispatch);
+  spyOnUsePlayers(mockedDispatch, initialPlayersState);
   return kardsHookRender(useKickPlayer);
 };
 

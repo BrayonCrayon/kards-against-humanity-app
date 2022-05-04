@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import GamePage from "./Pages/GamePage";
 import Navigation from "./Layouts/Navigation";
 import HomePage from "./Pages/HomePage";
 import { apiClient } from "./Api/apiClient";
+import { SpectatorPage } from "Pages/SpectatorPage";
 
 export default function App() {
   useEffect(() => {
@@ -20,6 +21,10 @@ export default function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path="/game/:id/spectate">
+            <SpectatorPage />
+          </Route>
+
           <Route path="/game/:id">
             <GamePage />
           </Route>

@@ -1,18 +1,18 @@
-import { User } from "../Types/User";
+import { User } from "Types/User";
 import { FC, useMemo } from "react";
 
 interface PlayerNotificationBarProps {
   users: User[];
-  judge: User;
+  judgeId: number;
 }
 
 const PlayerNotificationBar: FC<PlayerNotificationBarProps> = ({
   users,
-  judge,
+  judgeId,
 }) => {
   const nonJudgeUsers = useMemo(() => {
-    return users.filter((item) => item.id !== judge.id);
-  }, [users, judge]);
+    return users.filter((item) => item.id !== judgeId);
+  }, [users, judgeId]);
 
   const totalSubmittedAmount = useMemo(() => {
     return nonJudgeUsers.filter((item) => item.hasSubmittedWhiteCards).length;

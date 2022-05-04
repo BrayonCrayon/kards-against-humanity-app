@@ -11,7 +11,7 @@ interface PlayerListItemProps {
 
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   const {
-    state: { judge, game },
+    state: { game },
   } = useGame();
 
   const {
@@ -39,8 +39,8 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   );
 
   const canKickPeople = useMemo(() => {
-    return auth.id === judge.id && auth.id !== player.id;
-  }, [auth, judge]);
+    return auth.id === game.judgeId && auth.id !== player.id;
+  }, [auth, game]);
 
   return (
     <>
@@ -56,7 +56,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
         )}
       </div>
       <div>
-        {judge.id === player.id && (
+        {game.judgeId === player.id && (
           <div data-testid={`user-${player.id}-judge`} className="mr-2">
             <i className="fas fa-gavel text-2xl" />
           </div>

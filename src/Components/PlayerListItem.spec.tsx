@@ -3,30 +3,16 @@ import PlayerListItem from "./PlayerListItem";
 import { RenderResult, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { transformUser, User } from "Types/User";
+import { transformUser } from "Types/User";
 import { spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
-import { Game } from "Types/Game";
-import { BlackCard } from "Types/BlackCard";
 
-const { data } = gameStateExampleResponse;
+const { data: {game, currentUser: auth, blackCard} } = gameStateExampleResponse;
 const mockKickPlayer = jest.fn();
 jest.mock("Hooks/Game/useKickPlayer", () => {
   return () => {
     return mockKickPlayer;
   };
 });
-
-const auth = transformUser(data.judge);
-
-const game: Game = {
-  id: data.id,
-  name: data.name,
-  code: data.code,
-  judge_id: data.judge.id,
-  redrawLimit: data.redrawLimit
-};
-const judge: User = transformUser(data.judge);
-const blackCard: BlackCard = data.blackCard;
 
 const player = transformUser(gameStateExampleResponse.data.users[0]);
 
@@ -36,8 +22,8 @@ const renderer = (user = player): RenderResult => {
 
 describe("PlayerListItem", () => {
   beforeEach(() => {
-    spyOnUseGame({ game, judge, blackCard });
-    spyOnUseAuth({ auth, hasSubmittedCards: false });
+    spyOnUseGame(jest.fn(), { game, blackCard });
+    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
   });
 
   it("will show prompt when a user is being kicked from the game", async () => {

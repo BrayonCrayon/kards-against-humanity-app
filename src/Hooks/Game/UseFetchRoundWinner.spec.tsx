@@ -23,7 +23,7 @@ const mockApiData: RoundWinner = {
 
 describe("UseFetchRoundWinner", () => {
   beforeEach(() => {
-    spyOnUseVote(initialVoteState, mockDispatch);
+    spyOnUseVote(mockDispatch, initialVoteState);
     // @ts-ignore
     service.roundWinner.mockResolvedValue({ data: mockApiData });
   });
