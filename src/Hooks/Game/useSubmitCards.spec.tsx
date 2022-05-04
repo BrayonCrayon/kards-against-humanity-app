@@ -9,7 +9,7 @@ import { initialAuthState } from "State/Auth/AuthState";
 const {
   data: {
     hand,
-    id,
+    game,
     hasSubmittedWhiteCards,
     submittedWhiteCardIds,
     blackCard,
@@ -27,16 +27,16 @@ const mockDispatch = jest.fn();
 
 describe("useSubmitCards", () => {
   beforeEach(() => {
-    spyOnUseAuth(initialAuthState, mockDispatch);
+    spyOnUseAuth(mockDispatch, initialAuthState);
   });
 
   it("will submit cards", async () => {
     const { result } = kardsHookRender(useSubmitCards);
 
-    await result.current(id, mockPickAmount, mockHand);
+    await result.current(game.id, mockPickAmount, mockHand);
 
     expect(gameService.submitCards).toHaveBeenCalledWith(
-      id,
+      game.id,
       mockPickAmount,
       submittedWhiteCardIds
     );
@@ -52,10 +52,10 @@ describe("useSubmitCards", () => {
       .mockImplementationOnce(() => {});
     const { result } = kardsHookRender(useSubmitCards);
 
-    await result.current(id, mockPickAmount, mockHand);
+    await result.current(game.id, mockPickAmount, mockHand);
 
     expect(gameService.submitCards).toHaveBeenCalledWith(
-      id,
+      game.id,
       mockPickAmount,
       submittedWhiteCardIds
     );

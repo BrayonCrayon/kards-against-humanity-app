@@ -18,10 +18,10 @@ let mockedDispatch = jest.fn();
 
 describe("useFetchGameState", () => {
   beforeEach(() => {
-    spyOnUseHand(initialHandState, mockedDispatch);
-    spyOnUsePlayers(initialPlayersState, mockedDispatch);
-    spyOnUseAuth(initialAuthState, mockedDispatch);
-    spyOnUseGame(initialGameState, mockedDispatch);
+    spyOnUseHand(mockedDispatch, initialHandState);
+    spyOnUsePlayers(mockedDispatch, initialPlayersState);
+    spyOnUseAuth(mockedDispatch, initialAuthState);
+    spyOnUseGame(mockedDispatch, initialGameState);
     service.fetchState.mockResolvedValueOnce(
       gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
     );
@@ -36,13 +36,7 @@ describe("useFetchGameState", () => {
 
     expect(fetchState).toHaveBeenCalledWith(gameId);
     expectDispatch(usePlayers().dispatch, transformUsers(data.users));
-    expectDispatch(mockedDispatch, {
-      id: data.id,
-      judge_id: data.judge.id,
-      name: data.name,
-      code: data.code,
-      redrawLimit: data.redrawLimit,
-    });
+    expectDispatch(mockedDispatch, data.game);
 
     expectDispatch(
       mockedDispatch,
@@ -54,11 +48,7 @@ describe("useFetchGameState", () => {
     );
 
     expectDispatch(mockedDispatch, transformUser(data.currentUser));
-
     expectDispatch(mockedDispatch, data.hasSubmittedWhiteCards);
-
     expectDispatch(mockedDispatch, data.blackCard);
-
-    expectDispatch(mockedDispatch, transformUser(data.judge));
   });
 });

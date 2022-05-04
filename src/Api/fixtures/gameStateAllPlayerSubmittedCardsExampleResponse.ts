@@ -1,20 +1,14 @@
 export const gameStateAllPlayerSubmittedCardsExampleResponse = {
   data: {
-    id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-    code: "1234",
-    name: "Puzzled Penguin",
-    redrawLimit: 2,
+    game: {
+      id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
+      code: "1234",
+      name: "Puzzled Penguin",
+      redrawLimit: 2,
+      judgeId: 4,
+    },
     hasSubmittedWhiteCards: false,
     submittedWhiteCardIds: [],
-    judge: {
-      id: 4,
-      name: "Tommis",
-      score: 0,
-      hasSubmittedWhiteCards: false,
-      redrawCount: 0,
-      createdAt: "2021-10-27T19:33:43.000000Z",
-      updatedAt: "2021-10-27T19:33:43.000000Z",
-    },
     users: [
       {
         id: 1,

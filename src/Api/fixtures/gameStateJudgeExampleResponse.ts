@@ -1,18 +1,14 @@
 export const gameStateJudgeExampleResponse = {
   data: {
-    id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-    code: "1234",
-    name: "Puzzled Penguin",
-    hasSubmittedWhiteCards: false,
-    redrawLimit: 2,
-    submittedWhiteCardIds: [],
-    judge: {
-      id: 1,
-      name: "brady",
-      score: 0,
-      redrawCount: 0,
-      hasSubmittedWhiteCards: false
+    game: {
+      id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
+      code: "1234",
+      name: "Puzzled Penguin",
+      judgeId: 1,
+      redrawLimit: 2,
     },
+    hasSubmittedWhiteCards: false,
+    submittedWhiteCardIds: [],
     users: [
       {
         id: 1,

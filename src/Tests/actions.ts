@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { whiteCardTestId } from "./selectors";
-import { WhiteCard } from "../Types/WhiteCard";
+import { WhiteCard } from "Types/WhiteCard";
 import { screen, waitFor } from "@testing-library/react";
 
 export const selectWhiteCards = async (cards: WhiteCard[]) => {
@@ -16,7 +16,7 @@ export const selectAndSubmitWhiteCards = async (cards: WhiteCard[]) => {
   userEvent.click(screen.getByTestId("white-card-submit-btn"));
 };
 
-export const setupAndSubmitForm = (userName: string, gameCode: string) => {
+export const setupAndSubmitForm = (userName: string, gameCode: string, spectate: boolean = false) => {
   expect(screen.queryByTestId("join-game-form")).not.toBeNull();
 
   const nameInput = screen.queryByTestId("join-game-name-input");
@@ -26,6 +26,8 @@ export const setupAndSubmitForm = (userName: string, gameCode: string) => {
   const codeInput = screen.queryByTestId("join-game-code-input");
   expect(codeInput).not.toBeNull();
   userEvent.type(codeInput!, gameCode);
+
+  if(spectate) userEvent.click(screen.getByTestId("is-spectator"));
 
   const submit = screen.getByTestId("join-game-form-submit");
   userEvent.click(submit);

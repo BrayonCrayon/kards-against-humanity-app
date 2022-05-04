@@ -4,7 +4,7 @@ import { WinnerSelectedAction } from "State/Vote/VoteActions";
 import { IWinnerIsSelectedEventData } from "Services/PusherService";
 import gameService from "Services/GameService";
 
-function UseFetchRoundWinner() {
+function useFetchRoundWinner() {
   const { dispatch } = useVote();
   return useCallback(async (data: IWinnerIsSelectedEventData) => {
       try {
@@ -16,4 +16,4 @@ function UseFetchRoundWinner() {
     }, []);
 }
 
-export default UseFetchRoundWinner;
+export default useFetchRoundWinner;

@@ -1,5 +1,5 @@
 import { render } from "@testing-library/react";
-import { BlackCard } from "../Types/BlackCard";
+import { BlackCard } from "Types/BlackCard";
 import { BlackKard } from "./BlackKard";
 
 describe("BlackCards", function () {

@@ -1,71 +1,38 @@
-import { FC, useCallback, useEffect, useState } from "react";
-import { apiClient } from "Api/apiClient";
+import { FC, useCallback, useEffect } from "react";
 import { useGame } from "State/Game/useGame";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
 import { useVote } from "State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import { happyToast } from "Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "Services/PusherService";
-import UseFetchRoundWinner from "Hooks/Game/UseFetchRoundWinner";
+import useFetchRoundWinner from "Hooks/Game/useFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
 import { SelectWinnerAction } from "State/Vote/VoteActions";
 import { useAuth } from "State/Auth/useAuth";
-import { fetchSubmittedCards } from "Services/GameService";
+import useSubmittedCards from "Hooks/Game/useSubmittedCards";
+import useSubmitWinner from "Hooks/Game/useSubmitWinner";
 
 export const VotingSection: FC = () => {
-  const {
-    state: { game, judge, blackCard },
-  } = useGame();
-  const {
-    state: { selectedPlayerId, selectedRoundWinner },
-    dispatch,
-  } = useVote();
-  const {
-    state: { auth },
-  } = useAuth();
+  const { state: { game, blackCard }, } = useGame();
+  const { state: { selectedPlayerId, selectedRoundWinner }, dispatch, } = useVote();
+  const { state: { auth }, } = useAuth();
 
-  const [submittedCards, setSubmittedCards] = useState<Array<PlayerSubmittedCard>>([]);
+  const {submittedCards, getSubmittedCards} = useSubmittedCards();
+  const submitWinner = useSubmitWinner();
 
-  const getSubmittedCards = useCallback(async () => {
-    try {
-      const { data } = await fetchSubmittedCards(game.id);
-      setSubmittedCards(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }, [setSubmittedCards]);
-
-  const fetchRoundWinner = UseFetchRoundWinner();
+  const fetchRoundWinner = useFetchRoundWinner();
   useEffect(() => {
     listenWhenWinnerIsSelected(game.id, fetchRoundWinner);
   }, []);
 
   useEffect(() => {
     if (submittedCards.length > 0) return;
-    getSubmittedCards();
-  }, [submittedCards]);
+    getSubmittedCards(game.id);
+  }, []);
 
-  const submitWinner = useCallback(async () => {
-    if (selectedPlayerId <= 0) return;
-    try {
-      await apiClient.post(`/api/game/${game.id}/winner`, {
-        user_id: selectedPlayerId,
-      });
-      happyToast("Winner Selected!", "top");
-    } catch (error) {
-      console.error(error);
-    }
-  }, [selectedPlayerId, game]);
-
-  const selectCard = useCallback(
-    (user_id) => {
-      if (judge.id !== auth.id) return;
-
+  const selectCard = useCallback((user_id) => {
+      if (game.judgeId !== auth.id) return;
       dispatch(new SelectWinnerAction(user_id));
-    },
-    [dispatch, judge, auth]
-  );
+  }, [dispatch, game, auth]);
 
   return (
     <div data-testid="voting-section">
@@ -88,15 +55,11 @@ export const VotingSection: FC = () => {
         ))}
       </div>
       <div className="flex justify-center">
-        {auth.id === judge.id && !selectedRoundWinner && (
+        {auth.id === game.judgeId && !selectedRoundWinner && (
           <Button
             text="Submit Winner"
-            onClick={submitWinner}
-            className={
-              selectedPlayerId > 0
-                ? ""
-                : "disabled cursor-not-allowed opacity-75"
-            }
+            onClick={() => submitWinner(game.id, selectedPlayerId)}
+            className={selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed opacity-75"}
             dataTestid="submit-selected-winner"
           />
         )}

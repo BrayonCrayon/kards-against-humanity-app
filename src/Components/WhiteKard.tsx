@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { WhiteCard } from "../Types/WhiteCard";
+import { WhiteCard } from "Types/WhiteCard";
 import { useAuth } from "State/Auth/useAuth";
 
 interface WhiteKardProps {

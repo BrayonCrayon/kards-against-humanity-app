@@ -1,5 +1,4 @@
-import UseFetchRoundWinner from "./UseFetchRoundWinner";
-import useFetchRoundWinner from "./UseFetchRoundWinner";
+import useFetchRoundWinner from "Hooks/Game/useFetchRoundWinner";
 import { RoundWinner } from "Types/ResponseTypes";
 import { gameFixture } from "Api/fixtures/gameFixture";
 import { blackCardFixture } from "Api/fixtures/blackcardFixture";
@@ -21,9 +20,9 @@ const mockApiData: RoundWinner = {
   black_card: roundWinnerExampleResponse.data.black_card
 };
 
-describe("UseFetchRoundWinner", () => {
+describe("useFetchRoundWinner", () => {
   beforeEach(() => {
-    spyOnUseVote(initialVoteState, mockDispatch);
+    spyOnUseVote(mockDispatch, initialVoteState);
     // @ts-ignore
     service.roundWinner.mockResolvedValue({ data: mockApiData });
   });

@@ -7,13 +7,13 @@ import { service } from "setupTests";
 import { initialAuthState } from "State/Auth/AuthState";
 import { initialHandState } from "State/Hand/HandState";
 
-const {data: {hand, id}} = gameStateExampleResponse;
+const {data: {hand, game}} = gameStateExampleResponse;
 const mockDispatch = jest.fn();
 
 describe('useRedrawPlayerHand', function () {
     beforeEach(() => {
-       spyOnUseAuth(initialAuthState, mockDispatch);
-       spyOnUseHand(initialHandState, mockDispatch);
+       spyOnUseAuth(mockDispatch, initialAuthState);
+       spyOnUseHand(mockDispatch, initialHandState);
     });
 
     it('will call redraw endpoint and set state', async () => {
@@ -21,9 +21,9 @@ describe('useRedrawPlayerHand', function () {
         service.redraw.mockResolvedValue({ data: hand  });
         const {result} = kardsHookRender(useRedrawPlayerHand);
 
-        await result.current(id);
+        await result.current(game.id);
 
-        expect(service.redraw).toHaveBeenCalledWith(id);
+        expect(service.redraw).toHaveBeenCalledWith(game.id);
         expectDispatch(mockDispatch, transformWhiteCardArray(hand, false, []));
         expectDispatch(mockDispatch, 1);
     });
@@ -35,9 +35,9 @@ describe('useRedrawPlayerHand', function () {
         service.redraw.mockRejectedValue(errorMessage);
         const {result} = kardsHookRender(useRedrawPlayerHand);
 
-        await result.current(id);
+        await result.current(game.id);
 
-        expect(service.redraw).toHaveBeenCalledWith(id);
+        expect(service.redraw).toHaveBeenCalledWith(game.id);
         expectNoDispatch(mockDispatch, transformWhiteCardArray(hand, false, []));
         expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
     });
