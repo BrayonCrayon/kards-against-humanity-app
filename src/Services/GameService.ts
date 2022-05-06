@@ -7,7 +7,7 @@ export const fetchState = (gameId: string) => {
 };
 
 export const fetchPlayers = (gameId: string) => {
-  return apiClient.post(`/api/game/${gameId}/players`);
+  return apiClient.get(`/api/game/${gameId}/players`);
 };
 
 export const rotate = (gameId: string) => {
