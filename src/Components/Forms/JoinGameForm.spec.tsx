@@ -1,62 +1,25 @@
-import {waitFor} from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {apiClient} from "../../Api/apiClient";
-import {gameStateExampleResponse} from "../../Api/fixtures/gameStateExampleResponse";
-import {getExpansionsExampleResponse} from "../../Api/fixtures/getExpansionsExampleResponse";
+import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import {errorToast} from "../../Utilities/toasts";
-import {transformUser, transformUsers} from "../../Types/User";
-import {history, kardsRender} from "../../Tests/testRenders";
-import {setupAndSubmitForm} from "../../Tests/actions";
-import {IWhiteCard, WhiteCard} from "../../Types/WhiteCard";
-import {expectDispatch} from "../../Tests/testHelpers";
+import { errorToast } from "Utilities/toasts";
+import { transformUser, transformUsers } from "Types/User";
+import { history, kardsRender } from "Tests/testRenders";
+import { setupAndSubmitForm } from "Tests/actions";
+import { transformWhiteCardArray } from "Types/WhiteCard";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
+import { mockedAxios } from "setupTests";
+import { initialGameState } from "State/Game/GameState";
+import { initialPlayersState } from "State/Players/PlayersState";
+import { initialAuthState } from "State/Auth/AuthState";
+import { initialHandState } from "State/Hand/HandState";
 
-jest.mock("../../Api/apiClient");
 jest.mock("../../Utilities/toasts");
 
 let mockDispatch = jest.fn();
-jest.mock("../../State/Users/UsersContext", () => ({
-  ...jest.requireActual("../../State/Users/UsersContext"),
-  useUsers: () => ({
-    state: {
-      users: [],
-    },
-    dispatch: mockDispatch,
-  }),
-}));
 
-jest.mock("../../State/User/UserContext", () => ({
-  ...jest.requireActual("../../State/User/UserContext"),
-  useUser: () => ({
-    state: {
-      user: {},
-      hasSubmittedWhiteCards: false,
-    },
-    dispatch: mockDispatch,
-  }),
-}));
-
-jest.mock("../../State/Hand/HandContext", () => ({
-  ...jest.requireActual("../../State/Hand/HandContext"),
-  useHand: () => ({
-    state: {
-      hand: [],
-    },
-    dispatch: mockDispatch,
-  }),
-}));
-
-jest.mock("../../State/Game/GameContext", () => ({
-  ...jest.requireActual("../../State/Game/GameContext"),
-  useGame: () => ({
-    state: {
-      game: {},
-    },
-    dispatch: mockDispatch,
-  }),
-}));
-
-const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+const {data} = gameStateExampleResponse;
 const userName = "Joe";
 const code = "1234";
 
@@ -66,12 +29,12 @@ const renderer = () => {
 
 describe("JoinGameForm", () => {
   beforeEach(() => {
+    spyOnUseGame(initialGameState, mockDispatch);
+    spyOnUsePlayers(initialPlayersState, mockDispatch);
+    spyOnUseAuth(initialAuthState, mockDispatch);
+    spyOnUseHand(initialHandState, mockDispatch);
     mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
   });
 
   it("renders", async () => {
@@ -130,48 +93,31 @@ describe("JoinGameForm", () => {
     const { findByTestId } = renderer();
 
     const nameInput = await findByTestId("join-game-name-input");
-    userEvent.type(nameInput, gameStateExampleResponse.data.current_user.name);
+    userEvent.type(nameInput, data.currentUser.name);
 
     const codeInput = await findByTestId("join-game-code-input");
-    userEvent.type(codeInput, gameStateExampleResponse.data.code);
+    userEvent.type(codeInput, data.code);
 
     const submit = await findByTestId("join-game-form-submit");
     userEvent.click(submit);
 
     await waitFor(() => {
       expectDispatch(mockDispatch, {
-        id: gameStateExampleResponse.data.id,
-        judge_id: gameStateExampleResponse.data.judge.id,
-        code: gameStateExampleResponse.data.code,
-        name: gameStateExampleResponse.data.name,
-        redrawLimit: gameStateExampleResponse.data.redrawLimit
+        id: data.id,
+        judge_id: data.judge.id,
+        code: data.code,
+        name: data.name,
+        redrawLimit: data.redrawLimit
       });
+      expectDispatch(mockDispatch, transformUser(data.currentUser));
       expectDispatch(
         mockDispatch,
-        transformUser(gameStateExampleResponse.data.current_user)
+        transformWhiteCardArray(data.hand, false, [])
       );
-      expectDispatch(
-        mockDispatch,
-        gameStateExampleResponse.data.hand.map((item: IWhiteCard) => {
-          return new WhiteCard(item.id, item.text, item.expansion_id);
-        })
-      );
-      expectDispatch(
-        mockDispatch,
-        gameStateExampleResponse.data.current_black_card
-      );
-      expectDispatch(
-        mockDispatch,
-        transformUsers(gameStateExampleResponse.data.users)
-      );
-      expectDispatch(
-        mockDispatch,
-        gameStateExampleResponse.data.hasSubmittedWhiteCards
-      );
-      expectDispatch(
-        mockDispatch,
-        transformUser(gameStateExampleResponse.data.judge)
-      );
+      expectDispatch(mockDispatch, data.blackCard);
+      expectDispatch(mockDispatch, transformUsers(data.users));
+      expectDispatch(mockDispatch, data.hasSubmittedWhiteCards);
+      expectDispatch(mockDispatch, transformUser(data.judge));
     });
   });
 });

@@ -1,24 +1,24 @@
 import React, { FC, useCallback } from "react";
-import { happyToast } from "../Utilities/toasts";
+import { happyToast } from "Utilities/toasts";
 import { BlackKard } from "./BlackKard";
-import { useGame } from "../State/Game/GameContext";
-import { useUsers } from "../State/Users/UsersContext";
+import { usePlayers } from "State/Players/usePlayers";
 import ToggleSidebar from "./ToggleSidebar";
 import PlayerList from "./PlayerList";
 import PlayerNotificationBar from "./PlayerNotificationBar";
 import JudgeMessage from "./JudgeMessage";
-import { useUser } from "../State/User/UserContext";
+import { useAuth } from "State/Auth/useAuth";
+import { useGame } from "State/Game/useGame";
 
 const GameInfo: FC = () => {
   const {
     state: { game, blackCard, judge },
   } = useGame();
   const {
-    state: { users },
-  } = useUsers();
+    state: { players },
+  } = usePlayers();
   const {
-    state: { user },
-  } = useUser();
+    state: { auth },
+  } = useAuth();
 
   const copyGameCode = useCallback(async () => {
     try {
@@ -32,7 +32,7 @@ const GameInfo: FC = () => {
   return (
     <div>
       <div className="flex flex-wrap justify-between md:items-start md:flex-row">
-        <PlayerNotificationBar users={users} judge={judge} />
+        <PlayerNotificationBar users={players} judge={judge} />
         <div className="border-2 w-3/5 border-gray-300 shadow-md p-2 m-2 rounded font-semibold md:w-auto">
           <div
             data-testid={`game-${game.id}`}
@@ -71,13 +71,13 @@ const GameInfo: FC = () => {
             </>
           }
         >
-          <PlayerList users={users} />
+          <PlayerList users={players} />
         </ToggleSidebar>
       </div>
       <div className="mx-auto my-2 w-full px-2 md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />
       </div>
-      <JudgeMessage user={user} judge={judge} users={users} className="mt-6" />
+      <JudgeMessage user={auth} judge={judge} users={players} className="mt-6" />
     </div>
   );
 };

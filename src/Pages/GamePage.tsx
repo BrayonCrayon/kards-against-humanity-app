@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
-import { useGame } from "State/Game/GameContext";
+import { useGame } from "State/Game/useGame";
 import useFetchGameState from "Hooks/Game/useFetchGameState";
 import GameInfo from "Components/GameInfo";
 import { VotingSection } from "Components/VotingSection";
 import { RoundWinnerModal } from "Components/RoundWinnerModal";
 import { Button } from "Components/Button";
-import { useUsers } from "State/Users/UsersContext";
-import { useHand } from "State/Hand/HandContext";
-import { useUser } from "State/User/UserContext";
+import { usePlayers } from "State/Players/usePlayers";
+import { useHand } from "State/Hand/useHand";
+import { useAuth } from "State/Auth/useAuth";
 import Hand from "Components/Hand";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 import useSubmitCards from "Hooks/Game/useSubmitCards";
@@ -23,12 +23,12 @@ const GamePage = () => {
   } = useHand();
 
   const {
-    state: { users },
-  } = useUsers();
+    state: { players },
+  } = usePlayers();
 
   const {
-    state: { user, hasSubmittedCards },
-  } = useUser();
+    state: { auth, hasSubmittedCards },
+  } = useAuth();
 
   const { id } = useParams<{ id: string }>();
 
@@ -37,13 +37,13 @@ const GamePage = () => {
   const submitCards = useSubmitCards();
 
   const showVotingSection = useMemo(() => {
-    const players = users.filter((item) => item.id !== judge.id);
+    const currentPlayers = players.filter((item) => item.id !== judge.id);
     return (
-      players.length > 0 &&
-      players.filter((item) => item.hasSubmittedWhiteCards).length ===
-        players.length
+      currentPlayers.length > 0 &&
+      currentPlayers.filter((item) => item.hasSubmittedWhiteCards).length ===
+        currentPlayers.length
     );
-  }, [users, judge]);
+  }, [players, judge]);
 
   const canSubmitCards = useMemo(() => {
     return (
@@ -71,7 +71,7 @@ const GamePage = () => {
   return (
     <div>
       <GameInfo />
-      {judge.id !== user.id && !showVotingSection && (
+      {judge.id !== auth.id && !showVotingSection && (
         <>
           <Hand />
           <div className="flex justify-center">

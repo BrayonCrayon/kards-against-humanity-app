@@ -1,6 +1,6 @@
-import { BaseContext, useGenericContext, useGenericReducer } from "../GeneralContext";
+import { BaseContext, useGenericReducer } from "../GeneralContext";
 import { IHandState, initialHandState } from "./HandState";
-import { HandActionTypes } from "./HandActionts";
+import { HandActionTypes } from "State/Hand/HandActions";
 import React, { FC } from "react";
 
 export const HandContext = React.createContext<
@@ -24,8 +24,4 @@ const HandProvider: FC = ({ children }) => {
   );
 };
 
-function useHand() {
-  return useGenericContext(HandContext);
-}
-
-export { HandProvider, useHand };
+export { HandProvider };

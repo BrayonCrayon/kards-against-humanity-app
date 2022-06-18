@@ -1,20 +1,20 @@
-import React, {useCallback, useEffect, useState,} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ExpansionCard from "Components/ExpansionCard";
-import {Expansion} from "Types/Expansion";
-import {useHistory} from "react-router-dom";
-import {apiClient} from "Api/apiClient";
-import {useGame} from "State/Game/GameContext";
-import {transformWhiteCardArray} from "Types/WhiteCard";
-import {transformUser, transformUsers} from "Types/User";
-import {Button} from "Components/Button";
-import {useUsers} from "State/Users/UsersContext";
-import {SetPlayersAction} from "State/Users/UsersActions";
-import {useHand} from "State/Hand/HandContext";
-import {SetHandAction} from "State/Hand/HandActionts";
+import { Expansion } from "Types/Expansion";
+import { useHistory } from "react-router-dom";
+import { apiClient } from "Api/apiClient";
+import { useGame } from "State/Game/useGame";
+import { transformWhiteCardArray } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { Button } from "Components/Button";
+import { usePlayers } from "State/Players/usePlayers";
+import { SetPlayersAction } from "State/Players/PlayersActions";
+import { useHand } from "State/Hand/useHand";
+import { SetHandAction } from "State/Hand/HandActions";
 import KAHInput from "Components/KAHInput";
-import {useUser} from "State/User/UserContext";
-import {SetHasSubmittedCards, SetUserAction,} from "../../State/User/UserActions";
-import {SetBlackCardAction, SetGameAction, SetJudgeAction,} from "../../State/Game/GameActions";
+import { useAuth } from "State/Auth/useAuth";
+import { SetAuthAction, SetHasSubmittedCards } from "State/Auth/AuthActions";
+import { SetBlackCardAction, SetGameAction, SetJudgeAction } from "State/Game/GameActions";
 
 type ExpansionOption = {
     expansion: Expansion;
@@ -25,9 +25,9 @@ export const CreateGameForm: React.FC = () => {
     const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
     const [userName, setUserName] = useState("");
     const history = useHistory();
-  const { dispatch: usersDispatch } = useUsers();
+  const { dispatch: usersDispatch } = usePlayers();
   const { dispatch: handDispatch } = useHand();
-  const { dispatch: userDispatch } = useUser();
+  const { dispatch: userDispatch } = useAuth();
   const { dispatch: gameDispatch } = useGame();
 
   const fetchExpansions = useCallback(async () => {
@@ -75,10 +75,10 @@ export const CreateGameForm: React.FC = () => {
               redrawLimit: data.redrawLimit
           })
         );
-        userDispatch(new SetUserAction(transformUser(data.current_user)));
-          usersDispatch(new SetPlayersAction(transformUsers(data.users)));
-          handDispatch(new SetHandAction(transformWhiteCardArray(data.hand, false, [])));
-          gameDispatch(new SetBlackCardAction(data.current_black_card));
+        userDispatch(new SetAuthAction(transformUser(data.currentUser)));
+        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
+        handDispatch(new SetHandAction(transformWhiteCardArray(data.hand, false, [])));
+        gameDispatch(new SetBlackCardAction(data.blackCard));
         userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
         gameDispatch(new SetJudgeAction(transformUser(data.judge)));
         history.push("/game/" + data.id);

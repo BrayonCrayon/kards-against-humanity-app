@@ -4,10 +4,10 @@ import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleRespon
 import { transformUser, transformUsers, User } from "../Types/User";
 
 const {
-  data: { current_user, judge, users },
+  data: { currentUser, judge, users },
 } = gameStateExampleResponse;
 
-const loggedInUser = transformUser(current_user);
+const loggedInUser = transformUser(currentUser);
 
 const renderComponent = (
   user: User = loggedInUser,
@@ -44,7 +44,7 @@ describe("JudgeMessage", () => {
     const allPlayersHaveSubmitted = transformUsers(
       users.map((item) => {
         if (item.id !== judge.id) {
-          item.has_submitted_white_cards = true;
+          item.hasSubmittedWhiteCards = true;
         }
         return item;
       })

@@ -1,10 +1,6 @@
 import React, { FC } from "react";
 import { VoteActionTypes } from "./VoteActions";
-import {
-  BaseContext,
-  useGenericContext,
-  useGenericReducer,
-} from "../GeneralContext";
+import { BaseContext, useGenericReducer } from "../GeneralContext";
 import { initialVoteState, IVoteState } from "./VoteState";
 
 export const VoteContext = React.createContext<
@@ -28,8 +24,4 @@ const VoteProvider: FC = ({ children }) => {
   );
 };
 
-function useVote() {
-  return useGenericContext(VoteContext);
-}
-
-export { VoteProvider, useVote };
+export { VoteProvider };

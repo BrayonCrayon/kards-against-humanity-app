@@ -1,8 +1,8 @@
 import { FC, useCallback, useEffect, useState } from "react";
 import { apiClient } from "Api/apiClient";
-import { useGame } from "State/Game/GameContext";
+import { useGame } from "State/Game/useGame";
 import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { useVote } from "State/Vote/VoteContext";
+import { useVote } from "State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import { happyToast } from "Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "Services/PusherService";
@@ -10,7 +10,8 @@ import UseFetchRoundWinner from "Hooks/Game/UseFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
 import { SelectWinnerAction } from "State/Vote/VoteActions";
-import { useUser } from "State/User/UserContext";
+import { useAuth } from "State/Auth/useAuth";
+import { fetchSubmittedCards } from "Services/GameService";
 
 export const VotingSection: FC = () => {
   const {
@@ -21,18 +22,14 @@ export const VotingSection: FC = () => {
     dispatch,
   } = useVote();
   const {
-    state: { user },
-  } = useUser();
+    state: { auth },
+  } = useAuth();
 
-  const [submittedCards, setSubmittedCards] = useState<
-    Array<PlayerSubmittedCard>
-  >([]);
+  const [submittedCards, setSubmittedCards] = useState<Array<PlayerSubmittedCard>>([]);
 
   const getSubmittedCards = useCallback(async () => {
     try {
-      const { data } = await apiClient.get<Array<PlayerSubmittedCard>>(
-        `/api/game/${game.id}/submitted-cards`
-      );
+      const { data } = await fetchSubmittedCards(game.id);
       setSubmittedCards(data);
     } catch (error) {
       console.error(error);
@@ -63,11 +60,11 @@ export const VotingSection: FC = () => {
 
   const selectCard = useCallback(
     (user_id) => {
-      if (judge.id !== user.id) return;
+      if (judge.id !== auth.id) return;
 
       dispatch(new SelectWinnerAction(user_id));
     },
-    [dispatch, judge, user]
+    [dispatch, judge, auth]
   );
 
   return (
@@ -91,7 +88,7 @@ export const VotingSection: FC = () => {
         ))}
       </div>
       <div className="flex justify-center">
-        {user.id === judge.id && !selectedRoundWinner && (
+        {auth.id === judge.id && !selectedRoundWinner && (
           <Button
             text="Submit Winner"
             onClick={submitWinner}
