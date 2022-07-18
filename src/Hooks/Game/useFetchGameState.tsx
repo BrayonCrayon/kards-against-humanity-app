@@ -1,20 +1,20 @@
-import {useCallback} from "react";
-import {transformWhiteCardArray} from "Types/WhiteCard";
-import {transformUser, transformUsers} from "Types/User";
-import {useUsers} from "State/Users/UsersContext";
-import {SetPlayersAction} from "State/Users/UsersActions";
-import {useHand} from "State/Hand/HandContext";
-import {SetHandAction} from "State/Hand/HandActionts";
-import {useUser} from "State/User/UserContext";
-import {SetHasSubmittedCards, SetUserAction} from "State/User/UserActions";
-import {useGame} from "State/Game/GameContext";
-import {SetBlackCardAction, SetGameAction, SetJudgeAction,} from "State/Game/GameActions";
-import {fetchState} from "Services/GameService";
+import { useCallback } from "react";
+import { transformWhiteCardArray } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { usePlayers } from "State/Players/usePlayers";
+import { SetPlayersAction } from "State/Players/PlayersActions";
+import { useHand } from "State/Hand/useHand";
+import { SetHandAction } from "State/Hand/HandActions";
+import { useAuth } from "State/Auth/useAuth";
+import { SetAuthAction, SetHasSubmittedCards } from "State/Auth/AuthActions";
+import { useGame } from "State/Game/useGame";
+import { SetBlackCardAction, SetGameAction, SetJudgeAction } from "State/Game/GameActions";
+import { fetchState } from "Services/GameService";
 
 function useFetchGameState() {
-    const {dispatch: usersDispatch} = useUsers();
+    const {dispatch: usersDispatch} = usePlayers();
     const {dispatch: handDispatch} = useHand();
-    const {dispatch: userDispatch} = useUser();
+    const {dispatch: userDispatch} = useAuth();
     const {dispatch: gameDispatch} = useGame();
 
     return useCallback(
@@ -22,7 +22,7 @@ function useFetchGameState() {
             try {
         const { data } = await fetchState(gameId);
 
-        userDispatch(new SetUserAction(transformUser(data.current_user)));
+        userDispatch(new SetAuthAction(transformUser(data.currentUser)));
         usersDispatch(new SetPlayersAction(transformUsers(data.users)));
         gameDispatch(
           new SetGameAction({
@@ -44,7 +44,7 @@ function useFetchGameState() {
               )
           )
         );
-        gameDispatch(new SetBlackCardAction(data.current_black_card));
+        gameDispatch(new SetBlackCardAction(data.blackCard));
         gameDispatch(new SetJudgeAction(transformUser(data.judge)));
       } catch (error) {
         console.error(error);

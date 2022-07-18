@@ -4,24 +4,24 @@ import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { VoteProvider } from "./State/Vote/VoteContext";
-import { UsersProvider } from "./State/Users/UsersContext";
+import { PlayersProvider } from "State/Players/PlayersContext";
 import { HandProvider } from "./State/Hand/HandContext";
-import { UserProvider } from "./State/User/UserContext";
+import { AuthProvider } from "State/Auth/AuthContext";
 import { GameProvider } from "./State/Game/GameContext";
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserProvider>
+    <AuthProvider>
       <HandProvider>
-        <UsersProvider>
+        <PlayersProvider>
           <GameProvider>
             <VoteProvider>
               <App />
             </VoteProvider>
           </GameProvider>
-        </UsersProvider>
+        </PlayersProvider>
       </HandProvider>
-    </UserProvider>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

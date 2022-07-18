@@ -7,7 +7,7 @@ describe("BlackCards", function () {
     const card: BlackCard = {
       id: 1,
       text: "Some funny text",
-      expansion_id: 1,
+      expansionId: 1,
       pick: 1,
     };
 

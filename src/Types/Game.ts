@@ -2,7 +2,7 @@ export interface Game {
     id: string;
     name: string;
     judge_id: number;
-    created_at?: Date;
+    createdAt?: Date;
     deleted_at?: Date;
     code: string;
     redrawLimit: number;

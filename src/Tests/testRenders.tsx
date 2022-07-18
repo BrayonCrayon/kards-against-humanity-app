@@ -3,9 +3,9 @@ import { GameProvider } from "State/Game/GameContext";
 import { createMemoryHistory } from "history";
 import { Router } from "react-router-dom";
 import { VoteProvider } from "State/Vote/VoteContext";
-import { UsersProvider } from "State/Users/UsersContext";
+import { PlayersProvider } from "State/Players/PlayersContext";
 import { HandProvider } from "State/Hand/HandContext";
-import { UserProvider } from "State/User/UserContext";
+import { AuthProvider } from "State/Auth/AuthContext";
 import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
 
@@ -16,13 +16,13 @@ export const kardsRender = (children: JSX.Element): RenderResult => {
   return render(
     <Router history={history}>
       <GameProvider>
-        <UserProvider>
+        <AuthProvider>
           <HandProvider>
             <VoteProvider>
-              <UsersProvider>{children}</UsersProvider>
+              <PlayersProvider>{children}</PlayersProvider>
             </VoteProvider>
           </HandProvider>
-        </UserProvider>
+        </AuthProvider>
       </GameProvider>
     </Router>
   );
@@ -35,13 +35,13 @@ export const kardsHookRender = <TProps, TResult>(
     wrapper: ({ children }) => (
       <Router history={history}>
         <GameProvider>
-          <UserProvider>
+          <AuthProvider>
             <HandProvider>
               <VoteProvider>
-                <UsersProvider>{children}</UsersProvider>
+                <PlayersProvider>{children}</PlayersProvider>
               </VoteProvider>
             </HandProvider>
-          </UserProvider>
+          </AuthProvider>
         </GameProvider>
       </Router>
     ),

@@ -1,11 +1,11 @@
 import {initialUserObject, User} from "../../Types/User";
 
-export interface IUserState {
-  user: User;
+export interface IAuthState {
+  auth: User;
   hasSubmittedCards: boolean;
 }
 
-export const initialUserState: IUserState = {
-  user: initialUserObject(),
+export const initialAuthState: IAuthState = {
+  auth: initialUserObject(),
   hasSubmittedCards: false,
 };

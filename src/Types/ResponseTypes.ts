@@ -4,7 +4,7 @@ import {BlackCard} from "./BlackCard";
 export interface SubmittedCard extends Partial<IWhiteCard> {
   id: number;
   text: string;
-  expansion_id: number;
+  expansionId: number;
   order: number;
 }
 
@@ -28,7 +28,7 @@ export interface RoundWinnerResponse {
 export interface PlayerCard {
   id: number;
   text: string;
-  expansion_id: number;
+  expansionId: number;
   order: number;
   selected: boolean;
 }

@@ -7,13 +7,13 @@ export const roundWinnerExampleResponse: RoundWinnerResponse = {
       {
         id: 76,
         text: "A little boy who won't shut the fuck up about dinosaurs.",
-        expansion_id: 1,
+        expansionId: 1,
         order: 2,
       },
       {
         id: 3732,
         text: "Slapping a racist old lady.",
-        expansion_id: 26,
+        expansionId: 26,
         order: 1,
       },
     ],
@@ -21,7 +21,7 @@ export const roundWinnerExampleResponse: RoundWinnerResponse = {
       id: 1234,
       pick: 2,
       text: "_ is what you tell cheap hookers when they leave _.",
-      expansion_id: 69,
+      expansionId: 69,
     },
   },
 };

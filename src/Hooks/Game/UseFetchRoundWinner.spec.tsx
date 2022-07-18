@@ -1,45 +1,31 @@
-import {renderHook} from "@testing-library/react-hooks";
 import UseFetchRoundWinner from "./UseFetchRoundWinner";
-import {PlayerSubmittedCard} from "../../Types/ResponseTypes";
-import {VoteProvider} from "../../State/Vote/VoteContext";
-import {gameFixture} from "../../Api/fixtures/gameFixture";
-import {blackCardFixture} from "../../Api/fixtures/blackcardFixture";
-import {mockedAxios} from "../../setupTests";
+import useFetchRoundWinner from "./UseFetchRoundWinner";
+import { RoundWinner } from "Types/ResponseTypes";
+import { gameFixture } from "Api/fixtures/gameFixture";
+import { blackCardFixture } from "Api/fixtures/blackcardFixture";
+import { kardsHookRender } from "Tests/testRenders";
+import { expectDispatch, spyOnUseVote } from "Tests/testHelpers";
+import { initialVoteState } from "State/Vote/VoteState";
+import { service } from "setupTests";
+import { roundWinnerExampleResponse } from "Api/fixtures/roundWinnerExampleResponse";
 
 const renderUseFetchRoundWinner = () => {
-  return renderHook(UseFetchRoundWinner, {
-    wrapper: ({children}) => <VoteProvider>{children}</VoteProvider>,
-  });
+  return kardsHookRender(useFetchRoundWinner);
 };
 
 const mockDispatch = jest.fn();
 
-jest.mock("../../State/Vote/VoteContext", () => {
-  return {
-    ...jest.requireActual("../../State/Vote/VoteContext"),
-    useVote: () => {
-      return {
-        state: {
-          selectedPlayerId: 0,
-          selectedRoundWinner: {
-            user_id: -1,
-            submitted_cards: [],
-          },
-        },
-        dispatch: mockDispatch,
-      };
-    },
-  };
-});
-
-const mockApiData: PlayerSubmittedCard = {
+const mockApiData: RoundWinner = {
   submitted_cards: [],
   user_id: 0,
+  black_card: roundWinnerExampleResponse.data.black_card
 };
 
 describe("UseFetchRoundWinner", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue({ data: mockApiData });
+    spyOnUseVote(initialVoteState, mockDispatch);
+    // @ts-ignore
+    service.roundWinner.mockResolvedValue({ data: mockApiData });
   });
 
   it("it will hit the api to fetch round winner", async () => {
@@ -51,26 +37,17 @@ describe("UseFetchRoundWinner", () => {
       userId: 2,
       blackCardId: blackCardFixture.id,
     });
-    expect(mockedAxios.get).toHaveBeenCalledWith(
-      `/api/game/${gameId}/round/winner/${blackCardFixture.id}`
-    );
-    expect(mockDispatch).toHaveBeenCalledWith(
-      expect.objectContaining({
-        execute: expect.any(Function),
-        payload: mockApiData,
-      })
-    );
+
+    expect(service.roundWinner).toHaveBeenCalledWith(gameId, blackCardFixture.id);
+    expectDispatch(mockDispatch, mockApiData);
   });
 
   it("will catch error if api call fails", async () => {
-    const mockErrorMessage = {
-      code: 500,
-      message: "server failure",
-    };
+    const mockErrorMessage = { code: 500, message: "server failure", };
     const spyConsole = jest
       .spyOn(console, "error")
       .mockImplementation(jest.fn());
-    mockedAxios.get.mockRejectedValueOnce(mockErrorMessage);
+    service.roundWinner.mockRejectedValueOnce(mockErrorMessage);
     const gameId = gameFixture.id;
     const { result } = renderUseFetchRoundWinner();
 

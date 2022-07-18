@@ -1,102 +1,79 @@
-import {submittedCardsResponse} from "Api/fixtures/submittedCardsResponse";
-import {
-  gameStateAllPlayerSubmittedCardsExampleResponse
-} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import {RenderResult, waitFor} from "@testing-library/react";
-import {apiClient} from "Api/apiClient";
-import {transformUser, transformUsers, User} from "Types/User";
-import {VotingSection} from "./VotingSection";
-import {transformWhiteCardArray} from "Types/WhiteCard";
+import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { RenderResult, waitFor } from "@testing-library/react";
+import { transformUser, transformUsers } from "Types/User";
+import { VotingSection } from "./VotingSection";
+import { transformWhiteCardArray } from "Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
-import * as Vote from "State/Vote/VoteContext";
-import {happyToast} from "Utilities/toasts";
-import {listenWhenWinnerIsSelected} from "Services/PusherService";
-import {act} from "react-dom/test-utils";
-import {kardsRender} from "Tests/testRenders";
-import {expectDispatch} from "../Tests/testHelpers";
+import { happyToast } from "Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import { act } from "react-dom/test-utils";
+import { kardsRender } from "Tests/testRenders";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "Tests/testHelpers";
+import { initialVoteState } from "State/Vote/VoteState";
+import { mockedAxios, service } from "setupTests";
+import { fetchSubmittedCards } from "Services/GameService";
+import { AxiosResponse } from "axios";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock("../Api/apiClient");
 jest.mock("../Utilities/toasts");
 jest.mock("../Services/PusherService");
 jest.mock("../Hooks/Game/UseFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 
-const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
-
 const { data } = gameStateAllPlayerSubmittedCardsExampleResponse;
 
-const gameFixture = {
-  id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-  code: "1234",
-  name: "Puzzled Penguin",
+const game = {
+  id: data.id,
+  code: data.code,
+  name: data.name,
   judge_id: data.judge.id,
+  redrawLimit: data.redrawLimit
 };
 
 const mockProps = {
-  game: gameFixture,
+  game,
   judge: transformUser(data.judge),
   users: transformUsers(data.users),
   hand: transformWhiteCardArray(data.hand, false, []),
-  blackCard: data.current_black_card,
+  blackCard: data.blackCard,
 };
 
-let mockUser = transformUser(data.current_user);
+let auth = transformUser(data.currentUser);
 const mockHasSubmittedWhiteCards = data.hasSubmittedWhiteCards;
-jest.mock("../State/User/UserContext", () => ({
-  ...jest.requireActual("../State/User/UserContext"),
-  useUser: () => ({
-    state: {
-      user: mockUser,
-      hasSubmittedWhiteCards: mockHasSubmittedWhiteCards,
-    },
-    dispatch: () => {},
-  }),
-}));
 
-jest.mock("State/Game/GameContext", () => ({
-  ...jest.requireActual("State/Game/GameContext"),
-  useGame: () => ({
-    state: {
-      game: mockProps.game,
-      judge: mockProps.judge,
-      blackCard: mockProps.blackCard,
-    },
-    dispatch: jest.fn(),
-  }),
-}));
-
-const renderer = async (
-  loggedInUser: User | undefined = undefined
-): Promise<RenderResult> => {
-  if (loggedInUser) mockUser = loggedInUser;
-
+const renderer = async (): Promise<RenderResult> => {
   return kardsRender(<VotingSection />);
 };
 
 describe("VotingSection", () => {
+  beforeEach(() => {
+    spyOnUseGame({ game, judge: mockProps.judge, blackCard: mockProps.blackCard, });
+    spyOnUseAuth({ auth, hasSubmittedCards: mockHasSubmittedWhiteCards});
+  })
+
   describe("Api call", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+      service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
     });
 
     it("calls backend api for submitted cards", async () => {
       await renderer();
 
       await waitFor(() => {
-        expect(mockedAxios.get).toHaveBeenCalledTimes(1);
-        expect(mockedAxios.get).toHaveBeenCalledWith(
-          `/api/game/${mockProps.game.id}/submitted-cards`
+        expect(fetchSubmittedCards).toHaveBeenCalledTimes(1);
+        expect(fetchSubmittedCards).toHaveBeenCalledWith(
+          mockProps.game.id
         );
       });
     });
 
     it("catches axios error if api call fails", async () => {
       const errorMessage = { message: "failed api call" };
-      mockedAxios.get.mockRejectedValueOnce(errorMessage);
+      service.fetchSubmittedCards.mockRejectedValueOnce(errorMessage)
       const consoleSpy = jest
         .spyOn(console, "error")
         .mockImplementation(() => {});
@@ -173,7 +150,7 @@ describe("VotingSection", () => {
 
   describe("pusher events", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+      service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
     });
     it("listens on winner selected pusher event when loading game page", async () => {
       await act(async () => {
@@ -181,7 +158,7 @@ describe("VotingSection", () => {
       });
 
       expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(
-        gameFixture.id,
+        game.id,
         mockFetchRoundWinner
       );
     });
@@ -189,7 +166,7 @@ describe("VotingSection", () => {
 
   describe("select a player submitted card", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
+      service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
     });
 
     it("allows user to select a player submitted card", async () => {
@@ -207,8 +184,11 @@ describe("VotingSection", () => {
     });
 
     it("will not show submit winner button when user is not the judge", async () => {
-      mockProps.judge = mockProps.users[0];
-      mockProps.game.judge_id = mockProps.judge.id;
+      spyOnUseGame({
+        game: {...mockProps.game, judge_id: mockProps.users[0].id},
+        judge: mockProps.users[0],
+        blackCard: mockProps.blackCard
+      });
       const wrapper = await renderer();
 
       await waitFor(() => {
@@ -216,18 +196,10 @@ describe("VotingSection", () => {
           wrapper.queryByTestId("submit-selected-winner")
         ).not.toBeInTheDocument();
       });
-      mockProps.judge = mockProps.users[3];
-      mockProps.game.judge_id = mockProps.judge.id;
     });
 
     it("calls dispatch with correct action and payload when a user is selected", async () => {
-      jest.spyOn(Vote, "useVote").mockImplementation(() => ({
-        dispatch: mockDispatch,
-        state: {
-          selectedPlayerId: -1,
-          selectedRoundWinner: undefined,
-        },
-      }));
+      spyOnUseVote(initialVoteState, mockDispatch);
       const wrapper = await renderer();
       const { user_id } = submittedCardsResponse.data[0];
 
@@ -243,16 +215,10 @@ describe("VotingSection", () => {
     });
 
     it("does not show submit winner button when a winner is in state", async () => {
-      jest.spyOn(Vote, "useVote").mockImplementation(() => ({
-        dispatch: jest.fn(),
-        state: {
-          selectedPlayerId: -1,
-          selectedRoundWinner: {
-            ...submittedCardsResponse.data[0],
-            black_card: mockProps.blackCard,
-          },
-        },
-      }));
+      spyOnUseVote({
+        selectedRoundWinner: { ...submittedCardsResponse.data[0], black_card: mockProps.blackCard, },
+        selectedPlayerId: -1
+      });
       const wrapper = await renderer();
 
       await waitFor(() => {
@@ -265,14 +231,8 @@ describe("VotingSection", () => {
 
   describe("displaying players submitted card", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValue(submittedCardsResponse);
-      jest.spyOn(Vote, "useVote").mockImplementation(() => ({
-        dispatch: mockDispatch,
-        state: {
-          selectedPlayerId: -1,
-          selectedRoundWinner: undefined,
-        },
-      }));
+      service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
+      spyOnUseVote({ selectedPlayerId: -1, selectedRoundWinner: undefined}, mockDispatch);
     });
 
     afterEach(() => {
@@ -307,7 +267,7 @@ describe("VotingSection", () => {
         (left, right) => left.order - right.order
       );
 
-      const { text: blackCardText } = data.current_black_card;
+      const { text: blackCardText } = data.blackCard;
 
       const expectedCardText = blackCardText
         .replace("_", sortedCards[0].text.replace(/\.$/, ""))
@@ -324,7 +284,8 @@ describe("VotingSection", () => {
     });
 
     it("will not allow non judge users to select submitted cards", async () => {
-      const wrapper = await renderer(mockProps.users[0]);
+      spyOnUseAuth({ auth: mockProps.users[0], hasSubmittedCards: false});
+      const wrapper = await renderer();
 
       const [submittedCard] = submittedCardsResponse.data;
 

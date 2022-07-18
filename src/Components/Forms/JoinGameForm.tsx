@@ -1,27 +1,27 @@
-import React, {useCallback, useState} from "react";
-import {apiClient} from "Api/apiClient";
-import {useHistory} from "react-router-dom";
-import {useGame} from "State/Game/GameContext";
-import {errorToast} from "Utilities/toasts";
-import {transformWhiteCardArray} from "Types/WhiteCard";
-import {transformUser, transformUsers} from "Types/User";
-import {Button} from "../Button";
-import {useUsers} from "State/Users/UsersContext";
-import {SetPlayersAction} from "State/Users/UsersActions";
-import {useHand} from "State/Hand/HandContext";
-import {SetHandAction} from "State/Hand/HandActionts";
+import React, { useCallback, useState } from "react";
+import { apiClient } from "Api/apiClient";
+import { useHistory } from "react-router-dom";
+import { useGame } from "State/Game/useGame";
+import { errorToast } from "Utilities/toasts";
+import { transformWhiteCardArray } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { Button } from "../Button";
+import { usePlayers } from "State/Players/usePlayers";
+import { SetPlayersAction } from "State/Players/PlayersActions";
+import { useHand } from "State/Hand/useHand";
+import { SetHandAction } from "State/Hand/HandActions";
 import KAHInput from "../KAHInput";
-import {useUser} from "State/User/UserContext";
-import {SetHasSubmittedCards, SetUserAction,} from "State/User/UserActions";
-import {SetBlackCardAction, SetGameAction, SetJudgeAction,} from "State/Game/GameActions";
+import { useAuth } from "State/Auth/useAuth";
+import { SetAuthAction, SetHasSubmittedCards } from "State/Auth/AuthActions";
+import { SetBlackCardAction, SetGameAction, SetJudgeAction } from "State/Game/GameActions";
 
 const JoinGameForm: React.FC = () => {
     const history = useHistory();
     const [code, setCode] = useState("");
     const [userName, setUserName] = useState("");
-    const {dispatch} = useUsers();
+    const {dispatch} = usePlayers();
     const {dispatch: handDispatch} = useHand();
-    const {dispatch: userDispatch} = useUser();
+    const {dispatch: userDispatch} = useAuth();
     const {dispatch: gameDispatch} = useGame();
 
   const submitToApi = useCallback(
@@ -44,10 +44,10 @@ const JoinGameForm: React.FC = () => {
               redrawLimit: data.redrawLimit
           })
         );
-        userDispatch(new SetUserAction(transformUser(data.current_user)));
+        userDispatch(new SetAuthAction(transformUser(data.currentUser)));
           dispatch(new SetPlayersAction(transformUsers(data.users)));
           handDispatch(new SetHandAction(transformWhiteCardArray(data.hand, false, [])));
-          gameDispatch(new SetBlackCardAction(data.current_black_card));
+          gameDispatch(new SetBlackCardAction(data.blackCard));
         userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
         gameDispatch(new SetJudgeAction(transformUser(data.judge)));
 

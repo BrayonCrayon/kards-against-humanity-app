@@ -1,12 +1,12 @@
-import { useVote } from "../State/Vote/VoteContext";
+import { useVote } from "State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
-import { ClearStateAction } from "../State/Vote/VoteActions";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { ClearStateAction } from "State/Vote/VoteActions";
 import { Button } from "./Button";
-import { GameContext, useGame } from "../State/Game/GameContext";
-import useRotateGame from "../Hooks/Game/useRotateGame";
-import { useUsers } from "../State/Users/UsersContext";
-import { useUser } from "../State/User/UserContext";
+import { useGame } from "State/Game/useGame";
+import useRotateGame from "Hooks/Game/useRotateGame";
+import { usePlayers } from "State/Players/usePlayers";
+import { useAuth } from "State/Auth/useAuth";
 
 export function RoundWinnerModal() {
   const {
@@ -17,16 +17,16 @@ export function RoundWinnerModal() {
     state: { game },
   } = useGame();
   const {
-    state: { user },
-  } = useUser();
+    state: { auth },
+  } = useAuth();
   const {
-    state: { users },
-  } = useUsers();
+    state: { players },
+  } = usePlayers();
 
   const rotateGame = useRotateGame();
 
   const name = useMemo(() => {
-    const user = users.find((user) => {
+    const user = players.find((user) => {
       return user.id === selectedRoundWinner?.user_id;
     });
 
@@ -35,7 +35,7 @@ export function RoundWinnerModal() {
     }
 
     return user.name;
-  }, [users, selectedRoundWinner]);
+  }, [players, selectedRoundWinner]);
 
   const close = useCallback(() => {
     dispatch(new ClearStateAction());
@@ -46,7 +46,7 @@ export function RoundWinnerModal() {
   }, [game]);
 
   useEffect(() => {
-    if (selectedRoundWinner && user.id === game.judge_id) rotate();
+    if (selectedRoundWinner && auth.id === game.judge_id) rotate();
   }, [selectedRoundWinner]);
 
   if (!selectedRoundWinner) return null;

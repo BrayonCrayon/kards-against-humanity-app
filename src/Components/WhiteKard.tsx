@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { WhiteCard } from "../Types/WhiteCard";
-import { useUser } from "../State/User/UserContext";
+import { useAuth } from "State/Auth/useAuth";
 
 interface WhiteKardProps {
   card: WhiteCard;
@@ -13,7 +13,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
 }) => {
   const {
     state: { hasSubmittedCards },
-  } = useUser();
+  } = useAuth();
 
   const nonSubmittedCards = useMemo(() => {
     return !card.selected && hasSubmittedCards;

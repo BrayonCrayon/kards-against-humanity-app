@@ -1,6 +1,11 @@
-import {apiClient} from "../Api/apiClient";
-import {WhiteCard} from "../Types/WhiteCard";
-import {PlayerCard, Resource} from "../Types/ResponseTypes";
+import { apiClient } from "../Api/apiClient";
+import { PlayerCard, PlayerSubmittedCard, Resource, RoundWinner } from "../Types/ResponseTypes";
+
+export const fetchSubmittedCards = (gameId: string) => {
+  return apiClient.get<Array<PlayerSubmittedCard>>(
+    `/api/game/${gameId}/submitted-cards`
+  );
+}
 
 export const fetchState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}`);
@@ -17,19 +22,24 @@ export const rotate = (gameId: string) => {
 export const submitCards = (
     gameId: string,
     blackCardPickAmount: number,
-    hand: WhiteCard[]
+    cardIds: number[]
 ) => {
-  return apiClient.post(`/api/game/${gameId}/submit`, {
+  return apiClient.post(`/api/game/${gameId}/select`, {
     submitAmount: blackCardPickAmount,
-    whiteCardIds: hand
-        .filter((card) => card.selected)
-        .sort((leftCard, rightCard) => leftCard.order - rightCard.order)
-        .map((card) => card.id),
+    whiteCardIds: cardIds,
   });
 };
 
 export const redraw = (code: string) => {
   return apiClient.post<Resource<PlayerCard[]>>(`/api/game/${code}/redraw`);
+}
+
+export const roundWinner = (gameId: string, blackCardId: number) => {
+  return apiClient.get<RoundWinner>(`/api/game/${gameId}/round/winner/${blackCardId}`);
+}
+
+export const kick = (gameId: string, userId: number) => {
+  return apiClient.post(`/api/game/${gameId}/player/${userId}/kick`);
 }
 
 export default {
@@ -38,4 +48,7 @@ export default {
   fetchPlayers,
   rotate,
   redraw,
+  roundWinner,
+  kick,
+  fetchSubmittedCards
 };

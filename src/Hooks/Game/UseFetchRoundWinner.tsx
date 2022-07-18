@@ -1,27 +1,19 @@
 import { useCallback } from "react";
-import { apiClient } from "../../Api/apiClient";
-import { useVote } from "../../State/Vote/VoteContext";
-import { WinnerSelectedAction } from "../../State/Vote/VoteActions";
-import { RoundWinner } from "../../Types/ResponseTypes";
-import { IWinnerIsSelectedEventData } from "../../Services/PusherService";
+import { useVote } from "State/Vote/useVote";
+import { WinnerSelectedAction } from "State/Vote/VoteActions";
+import { IWinnerIsSelectedEventData } from "Services/PusherService";
+import gameService from "Services/GameService";
 
 function UseFetchRoundWinner() {
   const { dispatch } = useVote();
-  const fetchRoundWinner = useCallback(
-    async (data: IWinnerIsSelectedEventData) => {
+  return useCallback(async (data: IWinnerIsSelectedEventData) => {
       try {
-        const response = await apiClient.get<RoundWinner>(
-          `/api/game/${data.gameId}/round/winner/${data.blackCardId}`
-        );
+        const response = await gameService.roundWinner(data.gameId, data.blackCardId);
         dispatch(new WinnerSelectedAction(response.data));
       } catch (e) {
         console.error(e);
       }
-    },
-    []
-  );
-
-  return fetchRoundWinner;
+    }, []);
 }
 
 export default UseFetchRoundWinner;

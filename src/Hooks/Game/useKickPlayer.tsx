@@ -1,21 +1,19 @@
 import { useCallback } from "react";
-import { apiClient } from "../../Api/apiClient";
-import { useUsers } from "../../State/Users/UsersContext";
-import { KickPlayerAction } from "../../State/Users/UsersActions";
+import { usePlayers } from "State/Players/usePlayers";
+import { KickPlayerAction } from "State/Players/PlayersActions";
+import gameService from "Services/GameService";
 
 function useKickPlayer() {
-  const { dispatch } = useUsers();
+  const { dispatch } = usePlayers();
 
-  const kickPlayer = useCallback(async (gameId: string, userId: number) => {
+  return useCallback(async (gameId: string, userId: number) => {
     try {
-      await apiClient.post(`/api/game/${gameId}/player/${userId}/kick`);
+      await gameService.kick(gameId, userId);
       dispatch(new KickPlayerAction(userId));
     } catch (error) {
       console.error(error);
     }
   }, []);
-
-  return kickPlayer;
 }
 
 export default useKickPlayer;

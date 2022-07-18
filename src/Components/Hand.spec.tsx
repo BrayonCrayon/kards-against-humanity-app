@@ -7,55 +7,27 @@ import {waitFor} from "@testing-library/react";
 import {gameFixture} from "Api/fixtures/gameFixture";
 import {transformUser} from "Types/User";
 import {errorToast} from "Utilities/toasts";
+import {spyOnUseAuth, spyOnUseGame, spyOnUseHand} from "Tests/testHelpers";
 
-const {data: {id, hand, current_black_card, current_user}} = gameStateExampleResponse;
+const {data: {id, hand: handResponse, blackCard, currentUser}} = gameStateExampleResponse;
 
-const mockBlackCard = current_black_card;
-const mockHand = transformWhiteCardArray(hand, false, []);
-const mockGame = {
+const hand = transformWhiteCardArray(handResponse, false, []);
+const game = {
     ...gameFixture,
     id
 }
-const mockUser = transformUser(current_user);
-
-const mockDispatch = jest.fn();
-jest.mock("State/Hand/HandContext", () => ({
-    ...jest.requireActual("State/Hand/HandContext"),
-    useHand: () => ({
-        state: {
-            hand: mockHand
-        },
-        dispatch: mockDispatch
-    })
-}));
-
-jest.mock("State/Game/GameContext", () => ({
-    ...jest.requireActual("State/Game/GameContext"),
-    useGame: () => ({
-        state: {
-            game: mockGame,
-            blackCard: mockBlackCard
-        }
-    })
-}));
-
-jest.mock("State/User/UserContext", () => ({
-    ...jest.requireActual("State/User/UserContext"),
-    useUser: () => ({
-        state: {
-            hasSubmittedCards: false,
-            user: mockUser
-        }
-    })
-}));
+const auth = transformUser(currentUser);
 
 const mockRedraw = jest.fn();
 jest.mock("Hooks/Game/useRedrawPlayerHand", () => () => mockRedraw);
-
 jest.mock("Utilities/toasts");
 
-
 describe("Hand", () => {
+    beforeEach(() => {
+        spyOnUseGame({ game, blackCard: blackCard, judge: auth });
+        spyOnUseAuth({ auth, hasSubmittedCards: false });
+        spyOnUseHand({hand});
+    })
 
     it("will prompt user to confirm to redraw", () => {
         const wrapper = kardsRender(<Hand/>);
@@ -63,6 +35,21 @@ describe("Hand", () => {
         userEvent.click(wrapper.getByTestId("redraw-button"));
 
         wrapper.getByText("Are you sure you want to redraw?");
+    });
+
+    it('will not redraw hand when user cancels confirm', async () => {
+        const wrapper = kardsRender(<Hand/>);
+
+        userEvent.click(wrapper.getByTestId("redraw-button"));
+
+        await waitFor(() => {
+            userEvent.click(wrapper.getByText("Cancel"));
+        })
+
+        await waitFor(() => {
+            expect(mockRedraw).not.toHaveBeenCalled()
+        });
+
     });
 
     it("will call redraw hook when user confirms to redraw", async () => {
@@ -78,21 +65,21 @@ describe("Hand", () => {
     });
 
     it("will show the remaining redraws a user can take", () => {
-        mockUser.redrawCount = 1;
+        auth.redrawCount = 1;
         const wrapper = kardsRender(<Hand/>);
 
-        wrapper.getByText(`${mockUser.redrawCount} Redraws Left`);
+        wrapper.getByText(`${auth.redrawCount} Redraws Left`);
     });
 
     it("will show different text when user reaches limit of redraws", () => {
-        mockUser.redrawCount = mockGame.redrawLimit;
+        auth.redrawCount = game.redrawLimit;
         const wrapper = kardsRender(<Hand/>);
 
         wrapper.getByText("0 Redraws Left");
     });
 
     it("will not allow user to redraw when they reach their limit", () => {
-        mockUser.redrawCount = mockGame.redrawLimit;
+        auth.redrawCount = game.redrawLimit;
         const wrapper = kardsRender(<Hand/>);
 
         userEvent.click(wrapper.getByTestId("redraw-button"));

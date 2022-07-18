@@ -2,8 +2,8 @@ export interface BlackCard {
   id: number;
   text: string;
   pick: number;
-  expansion_id: number;
-  created_at?: Date;
+  expansionId: number;
+  createdAt?: Date;
   deleted_at?: Date;
 }
 
@@ -12,6 +12,6 @@ export const initialBlackCardObject = (): BlackCard => {
         id: 0,
         text: "",
         pick: 0,
-        expansion_id: 0,
+        expansionId: 0,
     }
 }
