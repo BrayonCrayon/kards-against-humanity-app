@@ -25,4 +25,15 @@ describe('SpectatorPage', () => {
     expect(wrapper.queryByTestId(data.game.judgeId)).toContainHTML(`fas fa-gavel text-2xl`)
 
   });
+
+  it("will display user icon for players", () => {
+    const wrapper = kardsRender(<SpectatorPage/>)
+    let players = data.users.filter(function (user) {
+      return user.id !== data.game.judgeId;
+    });
+
+    players.forEach((player) => {
+      expect(wrapper.queryByTestId(player.id)).toContainHTML(`fas fa-user text-2xl`)
+    })
+  });
 })
