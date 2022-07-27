@@ -22,7 +22,7 @@ describe('SpectatorPage', () => {
 
   it('will display the gavel icon for judges', () => {
     const wrapper = kardsRender(<SpectatorPage/>)
-    expect(wrapper.queryByTestId(data.game.judgeId)).toContainHTML(`<i className="fas fa-gavel text-2xl" />`)
+    expect(wrapper.queryByTestId(data.game.judgeId)).toContainHTML(`fas fa-gavel text-2xl`)
 
   });
 })

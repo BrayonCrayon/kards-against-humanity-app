@@ -9,8 +9,8 @@ export const SpectatorPage: React.FC = () => {
     <div className="flex justify-between">
       {
         players.map(({ name, id }: User) => (
-          <div className="flex flex-1 align-center justify-center">
-            <p data-testid={id} key={id}>
+          <div key={id} className="flex flex-1 align-center justify-center">
+            <p data-testid={id}>
               {name}
               <i className="fas fa-gavel text-2xl" />
             </p>
