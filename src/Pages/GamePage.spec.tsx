@@ -21,7 +21,7 @@ import { spyOnUseVote } from "Tests/testHelpers";
 jest.mock("../Services/PusherService");
 jest.mock("../Utilities/toasts");
 
-let mockGameId = gameStateExampleResponse.data.id;
+let mockGameId = gameStateExampleResponse.data.game.id;
 const cardsInHand = gameStateExampleResponse.data.hand;
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
@@ -68,24 +68,24 @@ describe("GamePage", () => {
     });
 
     it("shows game code", async () => {
-      const { id, code } = gameStateExampleResponse.data;
+      const { game } = gameStateExampleResponse.data;
       const wrapper = await kardsRender(<GamePage />);
 
       await waitFor(() => {
         const gameCodeDisplayElement = wrapper.queryByTestId(
-          `game-${id}`
+          `game-${game.id}`
         ) as HTMLElement;
         expect(gameCodeDisplayElement).not.toBeNull();
-        expect(gameCodeDisplayElement).toHaveTextContent(code);
+        expect(gameCodeDisplayElement).toHaveTextContent(game.code);
       });
     });
 
     it("displays notification when game code is clicked", async () => {
-      const { id } = gameStateExampleResponse.data;
+      const { game } = gameStateExampleResponse.data;
       const wrapper = await kardsRender(<GamePage />);
 
       await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`game-${id}`));
+        userEvent.click(wrapper.getByTestId(`game-${game.id}`));
       });
 
       await waitFor(() => {
@@ -160,17 +160,17 @@ describe("GamePage", () => {
   });
 
   it("copies game code to clipboard when clicked", async () => {
-    const { id, code } = gameStateExampleResponse.data;
+    const { game } = gameStateExampleResponse.data;
     jest.spyOn(navigator.clipboard, "writeText");
 
     const wrapper = await kardsRender(<GamePage />);
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`game-${id}`));
+      userEvent.click(wrapper.getByTestId(`game-${game.id}`));
     });
 
     await waitFor(() => {
-      expect(navigator.clipboard.writeText).toBeCalledWith(code);
+      expect(navigator.clipboard.writeText).toBeCalledWith(game.code);
     });
   });
 
@@ -362,7 +362,7 @@ describe("Submitting cards", () => {
 
   it("can submit white card selection", async () => {
     const wrapper = await kardsRender(<GamePage />);
-    const {data: { id, blackCard, hand}} = gameStateExampleResponse;
+    const {data: { game, blackCard, hand}} = gameStateExampleResponse;
     const [cardToSelect] = hand;
 
     await waitFor(() => {
@@ -373,7 +373,7 @@ describe("Submitting cards", () => {
 
     await waitFor(() => {
       expect(service.submitCards).toHaveBeenCalledWith(
-        id,
+        game.id,
         blackCard.pick,
         [cardToSelect.id]
       );
@@ -404,7 +404,6 @@ describe("Submitting cards", () => {
 
   it("will console error when submit white cards api call fails", async () => {
     const apiFailedResponse = { message: "500 error" };
-    // mockedAxios.post.mockRejectedValueOnce(apiFailedResponse);
     service.submitCards.mockRejectedValueOnce(apiFailedResponse);
     const wrapper = await kardsRender(<GamePage />);
     const [cardToSelect] = gameStateExampleResponse.data.hand;
@@ -595,26 +594,28 @@ describe("Submitting cards", () => {
     });
 
     it("when submitting two white cards the order is maintained", async () => {
+      const {data: {game}} = gameStateExampleResponse;
       await kardsRender(<GamePage />);
 
       await selectAndSubmitWhiteCards(cardsToSelect);
 
       await waitFor(() => {
         expect(service.submitCards).toHaveBeenCalledWith(
-          gameStateExampleResponse.data.id,
+          game.id,
           cardsToSelect.length,
           cardsToSelect.map(item => item.id)
         );
       });
     });
     it("when selecting and deselecting cards, order is properly updated", async () => {
+      const {data: {game}} = gameStateExampleResponse;
       await kardsRender(<GamePage />);
 
       await selectAndSubmitWhiteCards(cardsToSelect);
 
       await waitFor(() => {
         expect(service.submitCards).toHaveBeenCalledWith(
-          gameStateExampleResponse.data.id,
+          game.id,
           cardsToSelect.length,
           cardsToSelect.map(item => item.id)
         );
@@ -694,7 +695,7 @@ describe("Voting section", () => {
   it("can display round winner", async () => {
     service.fetchState.mockResolvedValueOnce(gameStateExampleResponse as AxiosResponse);
     const [submittedCard] = submittedCardsResponse.data[0].submitted_cards;
-    spyOnUseVote({
+    spyOnUseVote(jest.fn(), {
       selectedPlayerId: -1,
       selectedRoundWinner: {
         user_id: 1,

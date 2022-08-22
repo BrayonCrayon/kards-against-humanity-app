@@ -9,3 +9,5 @@ export const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 jest.mock("Services/GameService");
 export const service = gameService as jest.Mocked<typeof gameService>;
+
+jest.mock("Utilities/toasts");

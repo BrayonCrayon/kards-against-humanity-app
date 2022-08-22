@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { AlertContext, IAlert } from "../../State/Alert/AlertContext";
+import { AlertContext, IAlert } from "State/Alert/AlertContext";
 
 interface IAlertProps {
   alert: IAlert;

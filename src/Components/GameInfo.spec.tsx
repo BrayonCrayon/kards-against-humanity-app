@@ -8,9 +8,9 @@ import { transformUser, transformUsers } from "Types/User";
 import { kardsRender } from "Tests/testRenders";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "Tests/testHelpers";
 
-const { data } = gameStateJudgeExampleResponse;
-const players = transformUsers(data.users);
-const auth = transformUser(data.currentUser);
+const { data: {game, users, currentUser, blackCard} } = gameStateJudgeExampleResponse;
+const players = transformUsers(users);
+const auth = transformUser(currentUser);
 const hasSubmittedCards = false;
 
 const renderer = async (): Promise<RenderResult> => {
@@ -24,24 +24,14 @@ jest.mock("Hooks/Game/useKickPlayer", () => {
   };
 });
 
-const game = {
-  id: data.id,
-  code: data.code,
-  name: data.name,
-  judge_id: data.judge.id,
-  redrawLimit: data.redrawLimit
-};
-const judge = transformUser(data.judge);
-const blackCard = data.blackCard;
-
 describe("GameInfo", () => {
   beforeEach(() => {
-    spyOnUsePlayers({ players });
-    spyOnUseAuth({ auth, hasSubmittedCards });
-    spyOnUseGame({ game, blackCard, judge });
+    spyOnUsePlayers(jest.fn(), { players });
+    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards });
+    spyOnUseGame(jest.fn(), { game, blackCard });
   });
 
-  describe("Players Box", () => {
+  describe("Spectation Box", () => {
     it("shows the judge icon next to the player who is the judge", async () => {
 
       const { queryByTestId } = await renderer();
@@ -49,7 +39,7 @@ describe("GameInfo", () => {
       await togglePlayerList();
 
       await waitFor(async () => {
-        expect(queryByTestId(`user-${data.judge.id}-judge`)).not.toBeNull();
+        expect(queryByTestId(`user-${game.judgeId}-judge`)).not.toBeNull();
       });
     });
 
@@ -80,9 +70,7 @@ describe("GameInfo", () => {
 
     it("shows a button to kick players on users list", async () => {
       const wrapper = await renderer();
-      const playerToKickId = data.users.filter(
-        (item) => item.id !== data.currentUser.id
-      )[0].id;
+      const playerToKickId = users.filter((item) => item.id !== currentUser.id)[0].id;
 
       await togglePlayerList();
 
@@ -97,10 +85,8 @@ describe("GameInfo", () => {
       const wrapper = await renderer();
 
       await waitFor(() => {
-        data.users.forEach((user) => {
-          expect(
-            wrapper.queryByTestId(`kick-player-${user.id}`)
-          ).not.toBeInTheDocument();
+        users.forEach((user) => {
+          expect(wrapper.queryByTestId(`kick-player-${user.id}`)).not.toBeInTheDocument();
         });
       });
     });
@@ -109,17 +95,13 @@ describe("GameInfo", () => {
       const wrapper = await renderer();
 
       await waitFor(() => {
-        expect(
-          wrapper.queryByTestId(`kick-player-${data.currentUser.id}`)
-        ).not.toBeInTheDocument();
+        expect(wrapper.queryByTestId(`kick-player-${currentUser.id}`)).not.toBeInTheDocument();
       });
     });
 
     it("will call api endpoint to kick player from game", async () => {
       const wrapper = await renderer();
-      const playerToKick = data.users.filter(
-        (item) => item.id !== data.currentUser.id
-      )[0];
+      const playerToKick = users.filter((item) => item.id !== currentUser.id)[0];
 
       await togglePlayerList();
 
@@ -132,7 +114,7 @@ describe("GameInfo", () => {
       });
 
       await waitFor(() => {
-        expect(mockKickPlayer).toHaveBeenCalledWith(data.id, playerToKick.id);
+        expect(mockKickPlayer).toHaveBeenCalledWith(game.id, playerToKick.id);
       });
     });
   });
@@ -141,9 +123,9 @@ describe("GameInfo", () => {
     it("shows game name", async () => {
       const wrapper = await renderer();
 
-      expect(wrapper.queryByTestId(`game-${data.id}-name`)).not.toBeNull();
-      expect(wrapper.queryByTestId(`game-${data.id}-name`)).toHaveTextContent(
-        data.name
+      expect(wrapper.queryByTestId(`game-${game.id}-name`)).not.toBeNull();
+      expect(wrapper.queryByTestId(`game-${game.id}-name`)).toHaveTextContent(
+        game.name
       );
     });
   });

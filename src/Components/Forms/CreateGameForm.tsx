@@ -1,20 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import ExpansionCard from "Components/ExpansionCard";
 import { Expansion } from "Types/Expansion";
-import { useHistory } from "react-router-dom";
 import { apiClient } from "Api/apiClient";
-import { useGame } from "State/Game/useGame";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { transformUser, transformUsers } from "Types/User";
 import { Button } from "Components/Button";
-import { usePlayers } from "State/Players/usePlayers";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { useHand } from "State/Hand/useHand";
-import { SetHandAction } from "State/Hand/HandActions";
 import KAHInput from "Components/KAHInput";
-import { useAuth } from "State/Auth/useAuth";
-import { SetAuthAction, SetHasSubmittedCards } from "State/Auth/AuthActions";
-import { SetBlackCardAction, SetGameAction, SetJudgeAction } from "State/Game/GameActions";
+import useCreateGame from "Hooks/Game/useCreateGame";
 
 type ExpansionOption = {
     expansion: Expansion;
@@ -24,11 +14,7 @@ type ExpansionOption = {
 export const CreateGameForm: React.FC = () => {
     const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
     const [userName, setUserName] = useState("");
-    const history = useHistory();
-  const { dispatch: usersDispatch } = usePlayers();
-  const { dispatch: handDispatch } = useHand();
-  const { dispatch: userDispatch } = useAuth();
-  const { dispatch: gameDispatch } = useGame();
+    const createGame = useCreateGame();
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -52,45 +38,20 @@ export const CreateGameForm: React.FC = () => {
     fetchExpansions();
   }, [fetchExpansions, expansions]);
 
-  const submitToApi = useCallback(
-    async (event: any) => {
+  const submitToApi = useCallback(async (event: any) => {
       event.preventDefault();
 
-      try {
-        const { data } = await apiClient.post(`/api/game`, {
-          name: userName,
-          expansionIds: expansions
-            .filter((e) => {
-              return e.isSelected;
-            })
-            .map((e) => e.expansion.id),
-        });
-
-        gameDispatch(
-          new SetGameAction({
-            id: data.id,
-            name: data.name,
-            code: data.code,
-            judge_id: data.judge.id,
-              redrawLimit: data.redrawLimit
-          })
-        );
-        userDispatch(new SetAuthAction(transformUser(data.currentUser)));
-        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
-        handDispatch(new SetHandAction(transformWhiteCardArray(data.hand, false, [])));
-        gameDispatch(new SetBlackCardAction(data.blackCard));
-        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
-        gameDispatch(new SetJudgeAction(transformUser(data.judge)));
-        history.push("/game/" + data.id);
-      } catch (error) {
-        console.error(error);
-      }
+      await createGame(
+        userName,
+        expansions
+          .filter(e => e.isSelected)
+          .map(e => e.expansion.id)
+      );
     },
-    [expansions, userName, history]
+    [expansions, userName]
   );
 
-  const onToggle = useCallback(
-    (id: number) => {
+  const onToggle = useCallback((id: number) => {
       setExpansions((prevState) => {
         return prevState.map((item) => {
           if (item.expansion.id === id) item.isSelected = !item.isSelected;

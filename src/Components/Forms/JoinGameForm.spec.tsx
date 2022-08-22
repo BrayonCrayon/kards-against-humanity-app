@@ -1,23 +1,21 @@
 import { waitFor } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import { errorToast } from "Utilities/toasts";
-import { transformUser, transformUsers } from "Types/User";
-import { history, kardsRender } from "Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import { setupAndSubmitForm } from "Tests/actions";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
+import { spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
 import { mockedAxios } from "setupTests";
-import { initialGameState } from "State/Game/GameState";
-import { initialPlayersState } from "State/Players/PlayersState";
-import { initialAuthState } from "State/Auth/AuthState";
-import { initialHandState } from "State/Hand/HandState";
+import userEvent from "@testing-library/user-event";
 
-jest.mock("../../Utilities/toasts");
-
-let mockDispatch = jest.fn();
+const mockJoinAsSpectator = jest.fn();
+const mockJoinGame = jest.fn();
+jest.mock("Hooks/Game/useJoinAsSpectator", () => {
+  return () => mockJoinAsSpectator
+})
+jest.mock("Hooks/Game/useJoinGame", () => {
+  return () => mockJoinGame
+});
 
 const {data} = gameStateExampleResponse;
 const userName = "Joe";
@@ -29,11 +27,10 @@ const renderer = () => {
 
 describe("JoinGameForm", () => {
   beforeEach(() => {
-    spyOnUseGame(initialGameState, mockDispatch);
-    spyOnUsePlayers(initialPlayersState, mockDispatch);
-    spyOnUseAuth(initialAuthState, mockDispatch);
-    spyOnUseHand(initialHandState, mockDispatch);
-    mockedAxios.post.mockResolvedValue(gameStateExampleResponse);
+    spyOnUseGame();
+    spyOnUsePlayers();
+    spyOnUseAuth();
+    spyOnUseHand();
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
   });
 
@@ -45,79 +42,36 @@ describe("JoinGameForm", () => {
     });
   });
 
-  it("submits form with username and game code", async () => {
+  it("allows user to join game as a player", async () => {
     renderer();
     setupAndSubmitForm(userName, code);
 
     await waitFor(() => {
-      expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${code}/join`, {
-        name: userName,
-      });
+      expect(mockJoinGame).toHaveBeenCalledWith(code, userName);
     });
   });
 
-  it("navigates to game page after join form has been submitted", async () => {
-    renderer();
-    setupAndSubmitForm(userName, code);
+  it('allows a user to join as a spectator', async () => {
+    renderer()
+    setupAndSubmitForm(userName, code, true);
 
-    await waitFor(() => {
-      expect(history.push).toHaveBeenCalledWith(
-        `/game/${gameStateExampleResponse.data.id}`
-      );
+    await waitFor(async () => {
+      expect(mockJoinAsSpectator).toHaveBeenCalledWith( data.game.code );
+      expect(mockJoinGame).not.toHaveBeenCalled();
     });
-  });
+  })
 
-  it("catches error if join game fails", async () => {
-    const errorMessage = { message: "No Api" };
-    mockedAxios.post.mockRejectedValueOnce(errorMessage);
-    console.error = jest.fn();
-    const consoleSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
+  it("will hide user name input when spectator is checked", () => {
+    const gameCode = "1j1j";
+    const wrapper = renderer();
 
-    renderer();
-    setupAndSubmitForm(userName, code);
+    const codeInput = wrapper.queryByTestId("join-game-code-input");
+    expect(codeInput).not.toBeNull();
+    userEvent.type(codeInput!, gameCode);
 
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
-    });
+    expect(wrapper.queryByRole('user-name')).toBeInTheDocument();
+    userEvent.click(wrapper.getByTestId("is-spectator"));
 
-    expect(errorToast).toHaveBeenCalledWith("Game does not exist");
-  });
-
-  it("sets game state after join game submitted", async () => {
-    mockedAxios.post.mockResolvedValue({
-      ...gameStateExampleResponse,
-    });
-
-    const { findByTestId } = renderer();
-
-    const nameInput = await findByTestId("join-game-name-input");
-    userEvent.type(nameInput, data.currentUser.name);
-
-    const codeInput = await findByTestId("join-game-code-input");
-    userEvent.type(codeInput, data.code);
-
-    const submit = await findByTestId("join-game-form-submit");
-    userEvent.click(submit);
-
-    await waitFor(() => {
-      expectDispatch(mockDispatch, {
-        id: data.id,
-        judge_id: data.judge.id,
-        code: data.code,
-        name: data.name,
-        redrawLimit: data.redrawLimit
-      });
-      expectDispatch(mockDispatch, transformUser(data.currentUser));
-      expectDispatch(
-        mockDispatch,
-        transformWhiteCardArray(data.hand, false, [])
-      );
-      expectDispatch(mockDispatch, data.blackCard);
-      expectDispatch(mockDispatch, transformUsers(data.users));
-      expectDispatch(mockDispatch, data.hasSubmittedWhiteCards);
-      expectDispatch(mockDispatch, transformUser(data.judge));
-    });
+    expect(wrapper.queryByRole('user-name')).not.toBeInTheDocument();
   });
 });

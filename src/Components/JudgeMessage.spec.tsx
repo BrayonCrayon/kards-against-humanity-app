@@ -3,19 +3,17 @@ import JudgeMessage from "./JudgeMessage";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { transformUser, transformUsers, User } from "../Types/User";
 
-const {
-  data: { currentUser, judge, users },
-} = gameStateExampleResponse;
+const { data: { currentUser, users, game } } = gameStateExampleResponse;
 
 const loggedInUser = transformUser(currentUser);
 
 const renderComponent = (
   user: User = loggedInUser,
   usersProp: User[] = transformUsers(users),
-  judgeProp: User = transformUser(judge)
+  judgeIdProp: number = game.judgeId,
 ) => {
   return kardsRender(
-    <JudgeMessage user={user} users={usersProp} judge={judgeProp} />
+    <JudgeMessage user={user} users={usersProp} judgeId={judgeIdProp} />
   );
 };
 
@@ -26,7 +24,7 @@ describe("JudgeMessage", () => {
   });
 
   it("will show judge message current user is a judge", () => {
-    const user = transformUsers(users).find((item) => item.id === judge.id);
+    const user = transformUsers(users).find((item) => item.id === game.judgeId);
     const wrapper = renderComponent(user);
 
     expect(wrapper.getByTestId("judge-message").textContent).toEqual(
@@ -40,10 +38,10 @@ describe("JudgeMessage", () => {
   });
 
   it("will not show message if all users have submitted their cards", () => {
-    const user = transformUsers(users).find((item) => item.id === judge.id);
+    const user = transformUsers(users).find((item) => item.id === game.judgeId);
     const allPlayersHaveSubmitted = transformUsers(
       users.map((item) => {
-        if (item.id !== judge.id) {
+        if (item.id !== game.judgeId) {
           item.hasSubmittedWhiteCards = true;
         }
         return item;

@@ -1,21 +1,16 @@
-import {kardsRender} from "Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import Hand from "./Hand";
-import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
-import {transformWhiteCardArray} from "Types/WhiteCard";
+import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { transformWhiteCardArray } from "Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
-import {waitFor} from "@testing-library/react";
-import {gameFixture} from "Api/fixtures/gameFixture";
-import {transformUser} from "Types/User";
-import {errorToast} from "Utilities/toasts";
-import {spyOnUseAuth, spyOnUseGame, spyOnUseHand} from "Tests/testHelpers";
+import { waitFor } from "@testing-library/react";
+import { transformUser } from "Types/User";
+import { errorToast } from "Utilities/toasts";
+import { spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "Tests/testHelpers";
 
-const {data: {id, hand: handResponse, blackCard, currentUser}} = gameStateExampleResponse;
+const {data: {game, hand: handResponse, blackCard, currentUser}} = gameStateExampleResponse;
 
 const hand = transformWhiteCardArray(handResponse, false, []);
-const game = {
-    ...gameFixture,
-    id
-}
 const auth = transformUser(currentUser);
 
 const mockRedraw = jest.fn();
@@ -24,9 +19,9 @@ jest.mock("Utilities/toasts");
 
 describe("Hand", () => {
     beforeEach(() => {
-        spyOnUseGame({ game, blackCard: blackCard, judge: auth });
-        spyOnUseAuth({ auth, hasSubmittedCards: false });
-        spyOnUseHand({hand});
+        spyOnUseGame(jest.fn(), { game, blackCard: blackCard });
+        spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
+        spyOnUseHand(jest.fn(), {hand});
     })
 
     it("will prompt user to confirm to redraw", () => {
@@ -60,7 +55,7 @@ describe("Hand", () => {
         userEvent.click(wrapper.getByText("Yes"));
 
         await waitFor(() => {
-            expect(mockRedraw).toHaveBeenCalledWith(id);
+            expect(mockRedraw).toHaveBeenCalledWith(game.id);
         });
     });
 

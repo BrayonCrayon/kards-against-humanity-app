@@ -11,7 +11,7 @@ import { useGame } from "State/Game/useGame";
 
 const GameInfo: FC = () => {
   const {
-    state: { game, blackCard, judge },
+    state: { game, blackCard },
   } = useGame();
   const {
     state: { players },
@@ -32,7 +32,7 @@ const GameInfo: FC = () => {
   return (
     <div>
       <div className="flex flex-wrap justify-between md:items-start md:flex-row">
-        <PlayerNotificationBar users={players} judge={judge} />
+        <PlayerNotificationBar users={players} judgeId={game.judgeId} />
         <div className="border-2 w-3/5 border-gray-300 shadow-md p-2 m-2 rounded font-semibold md:w-auto">
           <div
             data-testid={`game-${game.id}`}
@@ -77,7 +77,7 @@ const GameInfo: FC = () => {
       <div className="mx-auto my-2 w-full px-2 md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />
       </div>
-      <JudgeMessage user={auth} judge={judge} users={players} className="mt-6" />
+      <JudgeMessage user={auth} judgeId={game.judgeId} users={players} className="mt-6" />
     </div>
   );
 };
