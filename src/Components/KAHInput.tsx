@@ -33,15 +33,15 @@ const KAHInput: FC<KAHInputProps> = ({
   onChange = (event: ChangeEvent<HTMLInputElement>) => {},
 }) => {
   return (
-    <label className={`mb-4 pl-2 mt-4 flex ${labelClass}`}>
-      {label}:
+    <label className={`my-4 flex flex-wrap font-sans ${labelClass}`}>
+      {label}
       <input
         role={ariaRole}
         placeholder={placeholder}
         type={type}
         data-testid={dataTestid}
         name={name}
-        className={`border-2 rounded shadow ml-2 px-2 ${inputClass}`}
+        className={`border-2 border-black py-1 px-2 mt-2 w-full ${inputClass}`}
         pattern={pattern}
         required={required}
         minLength={minLength}

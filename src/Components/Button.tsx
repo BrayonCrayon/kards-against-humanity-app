@@ -7,6 +7,7 @@ interface ButtonProps {
   dataTestid?: string;
   className?: string;
   disabled?: boolean;
+  variant?: "primary" | "light-outline";
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -16,10 +17,12 @@ export const Button: FC<ButtonProps> = ({
   dataTestid = "",
   className = "",
   disabled = false,
+  variant= 'primary'
 }) => {
-  const classNames =
-    "bg-gray-300 py-2 px-4 text-gray-900 font-semibold rounded shadow mt-4 mb-4 text-xl hover:bg-gray-200 " +
-    className;
+  const classNames = variant === 'primary' ?
+    "bg-black py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 " +
+    className : "bg-black border-2 border-white py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 " +
+  className;
   return (
     <button
       type={type}

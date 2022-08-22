@@ -15,7 +15,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="h-screen ">
+      <div className="h-screen bg-gray-100">
         <Navigation />
 
         {/* A <Switch> looks through its children <Route>s and
