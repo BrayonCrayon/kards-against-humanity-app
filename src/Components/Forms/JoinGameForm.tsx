@@ -29,12 +29,13 @@ const JoinGameForm: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full" data-testid="join-game-section">
-      <KAHCard className="flex-grow mx-3 my-6">
+      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
         <form
           data-testid="join-game-form"
           onSubmit={submitToApi}
+          className={"flex flex-col"}
         >
-          <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
+          <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput
             label="Code"
             placeholder="ex: A3D5"
@@ -61,7 +62,7 @@ const JoinGameForm: React.FC = () => {
                        text="Spectator"
                        onClick={(value) => setSpectator(value)}
           />
-          <Button className="w-full" type="submit" text="Join Now" dataTestid="join-game-form-submit" />
+          <Button className="w-full md:w-1/2 md:mx-auto" type="submit" text="Join Now" dataTestid="join-game-form-submit"/>
         </form>
       </KAHCard>
       <CreateGameBanner/>
