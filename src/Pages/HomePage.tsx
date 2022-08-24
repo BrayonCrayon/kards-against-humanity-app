@@ -3,7 +3,7 @@ import JoinGameForm from "../Components/Forms/JoinGameForm";
 
 const HomePage: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 gap-y-8 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-y-8">
       <JoinGameForm />
     </div>
   );
