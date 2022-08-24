@@ -59,7 +59,7 @@ export const VotingSection: FC = () => {
           <Button
             text="Submit Winner"
             onClick={() => submitWinner(game.id, selectedPlayerId)}
-            className={selectedPlayerId > 0 ? "" : "disabled cursor-not-allowed opacity-75"}
+            className={selectedPlayerId > 0 ? "disabled cursor-not-allowed opacity-75" : ""}
             dataTestid="submit-selected-winner"
           />
         )}

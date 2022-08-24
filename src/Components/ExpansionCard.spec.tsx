@@ -12,16 +12,9 @@ describe("Expansion Cards", function () {
       onToggle={() => {}}
     />
   );
-  const checkbox = wrapper.queryByTestId(
-    `checkbox-${expansionId}`
-  ) as HTMLInputElement;
-
-  it("has a checkbox", () => {
-    expect(checkbox).not.toBeNull();
-    expect(checkbox.type).toBe("checkbox");
-  });
 
   it("matches the checked property of the Expansion Card", () => {
-    expect(checkbox.checked).toBe(isChecked);
+    const checkbox = wrapper.container.querySelector('i');
+    expect(checkbox!.className).toContain('fa-check');
   });
 });
