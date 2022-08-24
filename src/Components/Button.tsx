@@ -1,4 +1,10 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
+
+export enum ButtonVariant {
+  "primary" = "bg-black py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 ",
+  "light-outline" = "bg-black border-2 border-white py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 ",
+  "dark-outline" = "bg-white py-3 px-4 text-black border-2 border-black font-bold mt-4 mb-4 hover:bg-gray-100 "
+}
 
 interface ButtonProps {
   text: string;
@@ -7,7 +13,8 @@ interface ButtonProps {
   dataTestid?: string;
   className?: string;
   disabled?: boolean;
-  variant?: "primary" | "light-outline";
+  variant?: ButtonVariant;
+  role?: string;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -17,18 +24,21 @@ export const Button: FC<ButtonProps> = ({
   dataTestid = "",
   className = "",
   disabled = false,
-  variant= 'primary'
+  variant= ButtonVariant.primary,
+  role= 'button',
 }) => {
-  const classNames = variant === 'primary' ?
-    "bg-black py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 " +
-    className : "bg-black border-2 border-white py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 " +
-  className;
+
+  const style = useMemo(() => {
+    return `${variant} ${className}`;
+  }, [variant]);
+
   return (
     <button
+      role={role}
       type={type}
       onClick={(e) => onClick(e)}
       data-testid={dataTestid}
-      className={classNames}
+      className={style}
       disabled={disabled}
     >
       {text}

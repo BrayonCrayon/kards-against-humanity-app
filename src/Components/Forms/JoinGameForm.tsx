@@ -5,7 +5,7 @@ import KAHInput from "Components/KAHInput";
 import { KAHCheckbox } from "Components/KAHCheckbox";
 import useJoinGame from "Hooks/Game/useJoinGame";
 import { KAHCard } from "Components/KAHCard";
-import { CreateGameBanner } from "Components/CreateGameBanner";
+import { JoinGameBanner } from "Components/JoinGameBanner";
 
 const JoinGameForm: React.FC = () => {
   const [code, setCode] = useState("");
@@ -33,7 +33,7 @@ const JoinGameForm: React.FC = () => {
         <form
           data-testid="join-game-form"
           onSubmit={submitToApi}
-          className={"flex flex-col"}
+          className="flex flex-col"
         >
           <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput
@@ -57,15 +57,17 @@ const JoinGameForm: React.FC = () => {
             required
             onChange={(e) => setUserName(e.target.value)}
           /> : null}
-          <KAHCheckbox dataTestid="is-spectator"
-                       size="text-2xl"
-                       text="Spectator"
-                       onClick={(value) => setSpectator(value)}
-          />
+          <div className="flex items-center">
+            <KAHCheckbox dataTestid="is-spectator"
+                         className="text-2xl border-2 border-black h-8 w-8 mr-2"
+                         onClick={(value) => setSpectator(value)}
+            />
+            <span>Spectator</span>
+          </div>
           <Button className="w-full md:w-1/2 md:mx-auto" type="submit" text="Join Now" dataTestid="join-game-form-submit"/>
         </form>
       </KAHCard>
-      <CreateGameBanner/>
+      <JoinGameBanner/>
     </div>
   );
 };

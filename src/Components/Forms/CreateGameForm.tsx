@@ -1,20 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
-import ExpansionCard from "Components/ExpansionCard";
 import { Expansion } from "Types/Expansion";
 import { apiClient } from "Api/apiClient";
 import { Button } from "Components/Button";
 import KAHInput from "Components/KAHInput";
 import useCreateGame from "Hooks/Game/useCreateGame";
+import { CreateGameBanner } from "Components/CreateGameBanner";
+import { KAHCard } from "Components/KAHCard";
+import { ExpansionSelector } from "Components/Sidebars/ExpansionSelector";
 
 type ExpansionOption = {
-    expansion: Expansion;
-    isSelected: boolean;
+  expansion: Expansion;
+  isSelected: boolean;
 };
 
 export const CreateGameForm: React.FC = () => {
-    const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
-    const [userName, setUserName] = useState("");
-    const createGame = useCreateGame();
+  const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
+  const [userName, setUserName] = useState("");
+  const createGame = useCreateGame();
 
   const fetchExpansions = useCallback(async () => {
     try {
@@ -24,7 +26,7 @@ export const CreateGameForm: React.FC = () => {
         data.map((item: Expansion) => {
           return {
             expansion: item,
-            isSelected: true,
+            isSelected: true
           };
         })
       );
@@ -52,65 +54,48 @@ export const CreateGameForm: React.FC = () => {
   );
 
   const onToggle = useCallback((id: number) => {
-      setExpansions((prevState) => {
-        return prevState.map((item) => {
-          if (item.expansion.id === id) item.isSelected = !item.isSelected;
-          return item;
-        });
-      });
+      setExpansions(expansions.map((item) => {
+        if (item.expansion.id === id)  item.isSelected = !item.isSelected;
+        return item;
+      }));
     },
     [expansions, setExpansions]
   );
 
-  const toggleExpansions = useCallback(() => {
+  const toggleExpansions = useCallback((toggledState: boolean) => {
     setExpansions((prev) => {
-      return prev.map((ex) => ({ ...ex, isSelected: !ex.isSelected }));
+      return prev.map((ex) => ({ ...ex, isSelected: toggledState}));
     });
   }, [expansions, setExpansions]);
 
   return (
-    <div className="w-full flex justify-center">
-      <form
-        onSubmit={submitToApi}
-        className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
-      >
-        <div className="text-2xl font-semibold mb-4 mt-2">Create Game</div>
-        <Button
-          text="Toggle Expansions"
-          dataTestid="toggle-all-expansions"
-          className="text-sm"
-          onClick={toggleExpansions}
-        />
-        <div className="h-64 overflow-x-auto p-2 border rounded mb-4 bg-gray-100">
-          {expansions.map(({ expansion, isSelected }) => {
-            return (
-              <ExpansionCard
-                key={`expansion-${expansion.id}`}
-                id={expansion.id}
-                name={expansion.name}
-                checked={isSelected}
-                onToggle={onToggle}
-              />
-            );
-          })}
-        </div>
-        <KAHInput
-          type="text"
-          dataTestid="user-name"
-          name="name"
-          label="Player Name"
-          placeholder="Bob's your uncle"
-          required
-          minLength={3}
-          maxLength={17}
-          onChange={(event) => setUserName(event.target.value)}
-        />
-        <Button
-          text="Create"
-          dataTestid="create-game-submit-button"
-          type="submit"
-        />
-      </form>
+    <div className="flex flex-col w-full">
+      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
+        <form
+          onSubmit={submitToApi}
+          className="flex flex-col"
+        >
+          <h2 className="text-2xl font-semibold mb-4 mt-2">Create Game</h2>
+          <KAHInput
+            type="text"
+            dataTestid="user-name"
+            name="name"
+            label="Player Name"
+            placeholder="Bob's your uncle"
+            required
+            minLength={3}
+            maxLength={17}
+            onChange={(event) => setUserName(event.target.value)}
+          />
+          <ExpansionSelector expansions={expansions} onToggle={onToggle} toggleAll={toggleExpansions} />
+          <Button
+            text="Create"
+            dataTestid="create-game-submit-button"
+            type="submit"
+          />
+        </form>
+      </KAHCard>
+      <CreateGameBanner />
     </div>
   );
 };

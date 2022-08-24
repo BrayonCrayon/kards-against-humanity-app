@@ -17,7 +17,7 @@ describe("KAHCheckbox", () => {
 
     await waitFor(() => {
       expect(wrapper.container.querySelector("i")!.className)
-        .toContain("fa-square-check");
+        .toContain("fa-check");
     });
     expect(mockClick).toHaveBeenCalledWith(true);
   });

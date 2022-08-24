@@ -1,12 +1,11 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { Expansion } from "Types/Expansion";
+import { KAHCheckbox } from "Components/KAHCheckbox";
 
 interface ExpansionCardProps extends Pick<Expansion, "id" | "name"> {
   checked: boolean;
-  onToggle: (id: number, checked: boolean) => void;
+  onToggle: (id: number) => void;
 }
-
-export const SELECTED_CARD_BACKGROUND = "bg-blue-100";
 
 const ExpansionCard: React.FC<ExpansionCardProps> = ({
   id,
@@ -14,27 +13,18 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({
   checked,
   onToggle,
 }) => {
-  const onChange = useCallback(() => {
-    onToggle(id, checked);
-  }, [onToggle, checked, id]);
 
   return (
     <div
-      className={`bg-white py-2 mt-4 rounded border my-2 px-2 hover:font-bold hover:shadow-md cursor-pointer my-2 text-center border-gray-500 border-2 ${
-        checked ? ` ${SELECTED_CARD_BACKGROUND}` : ""
-      }`}
+      className="bg-black text-white flex py-2 mt-2.5 px-2 cursor-pointer hover:font-bold hover:shadow-md"
       data-testid={`expansion-${id}`}
-      onClick={onChange}
+      onClick={() => onToggle(id)}
     >
-      <input
-        className="mr-2"
-        type="checkbox"
-        data-testid={`checkbox-${id}`}
-        checked={checked}
-        readOnly={true}
-        onChange={() => {}}
+      <KAHCheckbox
+        value={checked}
+        className="bg-white text-black mr-2 h-8 w-8"
       />
-      {name}
+      <span className="flex flex-wrap">{name}</span>
     </div>
   );
 };

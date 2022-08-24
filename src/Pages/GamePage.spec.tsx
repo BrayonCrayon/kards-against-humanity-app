@@ -422,24 +422,17 @@ describe("Submitting cards", () => {
     });
   });
 
-  it("will not allow api to be called when no cards are selected", async () => {
+  it("will not show submit card button when no cards are selected", async () => {
     const wrapper = await kardsRender(<GamePage />);
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
-    });
-
-    await waitFor(() => {
-      expect(service.submitCards).not.toHaveBeenCalled();
+      expect(wrapper.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
     });
   });
 
-  it("will make submit white card button disabled when user has submitted their cards", async () => {
+  it("will hide submit white card button when user has submitted their cards", async () => {
     const wrapper = await kardsRender(<GamePage />);
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-      0,
-      gameStateExampleResponse.data.blackCard.pick
-    );
+    const cardsToSelect = gameStateExampleResponse.data.hand.slice(0, gameStateExampleResponse.data.blackCard.pick);
 
     await selectWhiteCards(cardsToSelect);
 
@@ -447,16 +440,7 @@ describe("Submitting cards", () => {
     userEvent.click(submitButton);
 
     await waitFor(() => {
-      expect(submitButton).toBeDisabled();
-      expect(submitButton).toHaveClass(
-        "shadow-inner opacity-70 cursor-not-allowed"
-      );
-    });
-
-    userEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(service.submitCards).not.toBeCalledTimes(2);
+      expect(submitButton).not.toBeInTheDocument();
     });
   });
 
@@ -495,25 +479,15 @@ describe("Submitting cards", () => {
     });
   });
 
-  it("will not allow user to submit white cards when they are already submitted before refresh", async () => {
+  it("will not show submit card button when they have already submitted", async () => {
     service.fetchState.mockResolvedValueOnce(
       gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
     );
 
     const wrapper = await kardsRender(<GamePage />);
 
-    const submitButton = await waitFor(() => {
-      return wrapper.getByTestId("white-card-submit-btn");
-    });
-
     await waitFor(() => {
-      expect(submitButton).toBeDisabled();
-    });
-
-    userEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(service.submitCards).not.toHaveBeenCalled();
+      expect(wrapper.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
     });
   });
 
