@@ -1,6 +1,6 @@
 export interface Expansion {
   id: number;
   name: string;
-  created_at?: Date;
+  createdAt?: Date;
   deleted_at?: Date;
 }

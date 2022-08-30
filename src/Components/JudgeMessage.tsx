@@ -1,16 +1,16 @@
-import { User } from "../Types/User";
+import { User } from "Types/User";
 import { FC, useMemo } from "react";
 
 interface JudgeMessageProps {
   user: User;
-  judge: User;
+  judgeId: number;
   users: User[];
   className?: string;
 }
 
 const JudgeMessage: FC<JudgeMessageProps> = ({
   user,
-  judge,
+  judgeId,
   users,
   className = "",
 }) => {
@@ -19,11 +19,11 @@ const JudgeMessage: FC<JudgeMessageProps> = ({
       users.filter((item) => item.hasSubmittedWhiteCards).length !==
       users.length - 1
     );
-  }, [users, judge]);
+  }, [users, judgeId]);
 
   return (
     <>
-      {user.id === judge.id && allPlayersSubmitted && (
+      {user.id === judgeId && allPlayersSubmitted && (
         <div
           data-testid="judge-message"
           className={`flex flex-col w-full ${className}`}

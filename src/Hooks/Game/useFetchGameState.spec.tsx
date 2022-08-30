@@ -1,106 +1,42 @@
 import React from "react";
 import useFetchGameState from "./useFetchGameState";
-import {apiClient} from "../../Api/apiClient";
-import {
-  gameStateSubmittedWhiteCardsExampleResponse
-} from "../../Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import {transformWhiteCardArray} from "../../Types/WhiteCard";
-import {transformUser, transformUsers} from "../../Types/User";
-import {kardsHookRender} from "../../Tests/testRenders";
-import {expectDispatch} from "../../Tests/testHelpers";
-
-jest.mock("../../Api/apiClient");
-const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import { transformWhiteCardArray } from "Types/WhiteCard";
+import { transformUser, transformUsers } from "Types/User";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
+import { usePlayers } from "State/Players/usePlayers";
+import { renderHook } from "@testing-library/react-hooks";
+import { initialHandState } from "State/Hand/HandState";
+import { initialPlayersState } from "State/Players/PlayersState";
+import { initialAuthState } from "State/Auth/AuthState";
+import { initialGameState } from "State/Game/GameState";
+import { service } from "setupTests";
+import { AxiosResponse } from "axios";
+import { fetchState } from "Services/GameService";
 
 let mockedDispatch = jest.fn();
 
-jest.mock("../../State/Users/UsersContext", () => ({
-  ...jest.requireActual("../../State/Users/UsersContext"),
-  useUsers: () => ({
-    dispatch: mockedDispatch,
-    state: {
-      users: [],
-    },
-  }),
-}));
-
-jest.mock("../../State/Hand/HandContext", () => ({
-  ...jest.requireActual("../../State/Hand/HandContext"),
-  useHand: () => ({
-    dispatch: mockedDispatch,
-    state: {
-      hand: [],
-    },
-  }),
-}));
-
-jest.mock("../../State/User/UserContext", () => ({
-  ...jest.requireActual("../../State/User/UserContext"),
-  useUser: () => ({
-    dispatch: mockedDispatch,
-    state: {
-      user: {
-        id: 0,
-        name: "",
-        whiteCards: [],
-        hasSubmittedWhiteCards: false,
-      },
-      hasSubmittedCards: false,
-    },
-  }),
-}));
-
-jest.mock("../../State/Game/GameContext", () => ({
-  ...jest.requireActual("../../State/Game/GameContext"),
-  useGame: () => ({
-    dispatch: mockedDispatch,
-    state: {
-      judge: {
-        id: 0,
-        name: "",
-        whiteCards: [],
-        hasSubmittedWhiteCards: false,
-      },
-      game: {
-        id: "",
-        name: "",
-        judge_id: 0,
-        code: "",
-      },
-      blackCard: {
-        id: 0,
-        text: "",
-        pick: 0,
-        expansion_id: 0,
-      },
-    },
-  }),
-}));
-
 describe("useFetchGameState", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValueOnce(
-      gameStateSubmittedWhiteCardsExampleResponse
+    spyOnUseHand(mockedDispatch, initialHandState);
+    spyOnUsePlayers(mockedDispatch, initialPlayersState);
+    spyOnUseAuth(mockedDispatch, initialAuthState);
+    spyOnUseGame(mockedDispatch, initialGameState);
+    service.fetchState.mockResolvedValueOnce(
+      gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
     );
   });
 
   it("returns correct data", async () => {
-    const { result } = kardsHookRender(useFetchGameState);
+    const { result } = renderHook(useFetchGameState);
     const gameId = "123";
     await result.current(gameId);
 
     const { data } = gameStateSubmittedWhiteCardsExampleResponse;
 
-    expect(mockedAxios.get).toHaveBeenCalledWith(`/api/game/${gameId}`);
-
-    expectDispatch(mockedDispatch, transformUsers(data.users));
-    expectDispatch(mockedDispatch, {
-      id: data.id,
-      judge_id: data.judge.id,
-      name: data.name,
-      code: data.code,
-      redrawLimit: data.redrawLimit,
-    });
+    expect(fetchState).toHaveBeenCalledWith(gameId);
+    expectDispatch(usePlayers().dispatch, transformUsers(data.users));
+    expectDispatch(mockedDispatch, data.game);
 
     expectDispatch(
       mockedDispatch,
@@ -111,12 +47,8 @@ describe("useFetchGameState", () => {
         )
     );
 
-    expectDispatch(mockedDispatch, transformUser(data.current_user));
-
+    expectDispatch(mockedDispatch, transformUser(data.currentUser));
     expectDispatch(mockedDispatch, data.hasSubmittedWhiteCards);
-
-    expectDispatch(mockedDispatch, data.current_black_card);
-
-    expectDispatch(mockedDispatch, transformUser(data.judge));
+    expectDispatch(mockedDispatch, data.blackCard);
   });
 });

@@ -1,9 +1,9 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { User } from "Types/User";
-import { useGame } from "State/Game/GameContext";
 import useKickPlayer from "Hooks/Game/useKickPlayer";
 import Swal from "sweetalert2";
-import { useUser } from "State/User/UserContext";
+import { useAuth } from "State/Auth/useAuth";
+import { useGame } from "State/Game/useGame";
 
 interface PlayerListItemProps {
   player: User;
@@ -11,12 +11,12 @@ interface PlayerListItemProps {
 
 const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   const {
-    state: { judge, game },
+    state: { game },
   } = useGame();
 
   const {
-    state: { user },
-  } = useUser();
+    state: { auth },
+  } = useAuth();
 
   const kick = useKickPlayer();
 
@@ -39,8 +39,8 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   );
 
   const canKickPeople = useMemo(() => {
-    return user.id === judge.id && user.id !== player.id;
-  }, [user, judge]);
+    return auth.id === game.judgeId && auth.id !== player.id;
+  }, [auth, game]);
 
   return (
     <>
@@ -51,12 +51,12 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
         >
           - {player.name}
         </p>
-        {user.id === player.id && (
+        {auth.id === player.id && (
           <i className="fas fa-user-check ml-4 text-gray-400" />
         )}
       </div>
       <div>
-        {judge.id === player.id && (
+        {game.judgeId === player.id && (
           <div data-testid={`user-${player.id}-judge`} className="mr-2">
             <i className="fas fa-gavel text-2xl" />
           </div>

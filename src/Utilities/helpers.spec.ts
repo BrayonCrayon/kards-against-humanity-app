@@ -13,7 +13,7 @@ const blackCard: BlackCard = {
 const cardWinner: SubmittedCard = {
   id: 1,
   text: "I am a piglet",
-  expansion_id: 1,
+  expansionId: 1,
   order: 1,
 };
 

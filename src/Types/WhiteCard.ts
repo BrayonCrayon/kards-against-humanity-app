@@ -1,32 +1,32 @@
 export interface IWhiteCard {
   id: number;
   text: string;
-  expansion_id: number;
+  expansionId: number;
   selected: boolean;
   order: number;
-  created_at?: Date;
+  createdAt?: Date;
   deleted_at?: Date;
 }
 
 export class WhiteCard implements IWhiteCard {
   id: number;
   text: string;
-  expansion_id: number;
+  expansionId: number;
   selected: boolean;
   order: number;
-  created_at?: Date;
+  createdAt?: Date;
   deleted_at?: Date;
 
   constructor(
     id: number = 0,
     text: string = "",
-    expansion_id: number = 0,
+    expansionId: number = 0,
     selected = false,
     order = 0
   ) {
     this.id = id;
     this.text = text;
-    this.expansion_id = expansion_id;
+    this.expansionId = expansionId;
     this.selected = selected;
     this.order = order;
   }
@@ -34,8 +34,8 @@ export class WhiteCard implements IWhiteCard {
 
 export const transformWhiteCardArray = (
     cards: WhiteCard[],
-    hasSubmittedWhiteCards: boolean,
-    submittedWhiteCardIds: number[]
+    hasSubmittedWhiteCards: boolean = false,
+    submittedWhiteCardIds: number[] = []
 ) => {
   return cards.map((item: IWhiteCard) => {
     const alreadySubmitted =
@@ -46,9 +46,9 @@ export const transformWhiteCardArray = (
     return new WhiteCard(
       item.id,
       item.text,
-      item.expansion_id,
+      item.expansionId,
       alreadySubmitted,
-      item.order
+      item.order,
     );
   });
 };

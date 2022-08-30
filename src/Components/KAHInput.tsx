@@ -13,9 +13,12 @@ interface KAHInputProps {
   minLength?: number;
   maxLength?: number;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  ariaRole?: string;
 }
 
+
 const KAHInput: FC<KAHInputProps> = ({
+  ariaRole= "input",
   type = "text",
   label = "",
   dataTestid = "",
@@ -33,6 +36,7 @@ const KAHInput: FC<KAHInputProps> = ({
     <label className={`mb-4 pl-2 mt-4 flex ${labelClass}`}>
       {label}:
       <input
+        role={ariaRole}
         placeholder={placeholder}
         type={type}
         data-testid={dataTestid}

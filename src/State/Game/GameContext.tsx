@@ -1,9 +1,5 @@
 import { createContext, FC } from "react";
-import {
-  BaseContext,
-  useGenericContext,
-  useGenericReducer,
-} from "../GeneralContext";
+import { BaseContext, useGenericReducer } from "../GeneralContext";
 import { IGameState, initialGameState } from "./GameState";
 import { GameActions } from "./GameActions";
 
@@ -26,8 +22,4 @@ const GameProvider: FC = ({ children }) => {
   );
 };
 
-function useGame() {
-  return useGenericContext(GameContext);
-}
-
-export { useGame, GameProvider };
+export { GameProvider };

@@ -4,8 +4,9 @@ import { RenderResult, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { transformUser } from "Types/User";
+import { spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
 
-const { data } = gameStateExampleResponse;
+const { data: {game, users, blackCard} } = gameStateExampleResponse;
 const mockKickPlayer = jest.fn();
 jest.mock("Hooks/Game/useKickPlayer", () => {
   return () => {
@@ -13,47 +14,19 @@ jest.mock("Hooks/Game/useKickPlayer", () => {
   };
 });
 
-const mockUser = transformUser(data.judge);
-
-jest.mock("State/User/UserContext", () => ({
-  ...jest.requireActual("State/User/UserContext"),
-  useUser: () => ({
-    state: {
-      user: mockUser,
-      hasSubmittedWhiteCards: false,
-    },
-    dispatch: () => {},
-  }),
-}));
-
-const mockGame = {
-  id: data.id,
-  name: data.name,
-  code: data.code,
-  judge_id: data.judge.id,
-};
-const mockJudge = transformUser(data.judge);
-const mockBlackCard = data.current_black_card;
-
-jest.mock("State/Game/GameContext", () => ({
-  ...jest.requireActual("State/Game/GameContext"),
-  useGame: () => ({
-    state: {
-      game: mockGame,
-      judge: mockJudge,
-      blackCard: mockBlackCard,
-    },
-    dispatch: () => {},
-  }),
-}));
-
-const player = transformUser(gameStateExampleResponse.data.users[0]);
+const player = transformUser(users[0]);
+const [auth] = users.filter(user => user.id === game.judgeId);
 
 const renderer = (user = player): RenderResult => {
   return kardsRender(<PlayerListItem player={user} />);
 };
 
 describe("PlayerListItem", () => {
+  beforeEach(() => {
+    spyOnUseGame(jest.fn(), { game, blackCard });
+    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
+  });
+
   it("will show prompt when a user is being kicked from the game", async () => {
     const wrapper = renderer();
 
@@ -62,14 +35,14 @@ describe("PlayerListItem", () => {
     });
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(mockGame.id, player.id);
+      expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);
       expect(wrapper.queryByText("Yes, kick!")).toBeInTheDocument();
     });
 
     userEvent.click(wrapper.getByText("Yes, kick!"));
 
     await waitFor(() => {
-      expect(mockKickPlayer).toHaveBeenCalledWith(mockGame.id, player.id);
+      expect(mockKickPlayer).toHaveBeenCalledWith(game.id, player.id);
     });
   });
 
@@ -81,33 +54,33 @@ describe("PlayerListItem", () => {
     });
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(mockGame.id, player.id);
+      expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);
       expect(wrapper.queryByText("Cancel")).toBeInTheDocument();
     });
 
     userEvent.click(wrapper.getByText("Cancel"));
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(mockGame.id, player.id);
+      expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);
     });
   });
 
   it("will show icon on user that is signed in from the users list", async () => {
-    const wrapper = renderer(mockUser);
+    const wrapper = renderer(auth);
 
     await waitFor(() => {
       const isUserLoggedIn =
-        wrapper.getByTestId(`user-${mockUser.id}`).getElementsByTagName("i")
+        wrapper.getByTestId(`user-${auth.id}`).getElementsByTagName("i")
           .length > 0;
       expect(isUserLoggedIn).toBeTruthy();
     });
   });
 
   it("will display the user's score", async () => {
-    const wrapper = renderer(mockUser);
+    const wrapper = renderer(auth);
 
     await waitFor(() => {
-      wrapper.getByText(`${mockUser.score}`);
+      wrapper.getByText(`${auth.score}`);
     });
   });
 });

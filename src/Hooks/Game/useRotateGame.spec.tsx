@@ -1,14 +1,12 @@
-import { apiClient } from "../../Api/apiClient";
-import { gameFixture } from "../../Api/fixtures/gameFixture";
+import { gameFixture } from "Api/fixtures/gameFixture";
 import { renderHook } from "@testing-library/react-hooks";
 import useRotateGame from "./useRotateGame";
-
-jest.mock("../../Api/apiClient");
-const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+import { service } from "setupTests";
 
 describe("useRotateGame", () => {
   beforeEach(() => {
-    mockedAxios.post.mockResolvedValue({});
+    // @ts-ignore
+    service.rotate.mockResolvedValue({});
   });
 
   it("will call round rotation api endpoint", async () => {
@@ -17,7 +15,7 @@ describe("useRotateGame", () => {
 
     await result.current(gameId);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${gameId}/rotate`);
+    expect(service.rotate).toHaveBeenCalledWith(gameId);
   });
 
   it("will catch api call error", async () => {
@@ -25,7 +23,7 @@ describe("useRotateGame", () => {
       code: 500,
       message: "server error",
     };
-    mockedAxios.post.mockRejectedValueOnce(mockErrorMessage);
+    service.rotate.mockRejectedValueOnce(mockErrorMessage);
     const spyConsole = jest
       .spyOn(console, "error")
       .mockImplementation(jest.fn());
@@ -34,7 +32,7 @@ describe("useRotateGame", () => {
 
     await result.current(gameId);
 
-    expect(mockedAxios.post).toHaveBeenCalledWith(`/api/game/${gameId}/rotate`);
+    expect(service.rotate).toHaveBeenCalledWith(gameId);
     expect(spyConsole).toHaveBeenCalledWith(mockErrorMessage);
     spyConsole.mockRestore();
   });

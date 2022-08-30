@@ -1,14 +1,14 @@
-import {useHand} from "State/Hand/HandContext";
 import {WhiteKard} from "./WhiteKard";
 import {useCallback, useMemo} from "react";
-import {useUser} from "State/User/UserContext";
-import {useGame} from "State/Game/GameContext";
-import {SetHandAction} from "State/Hand/HandActionts";
+import {SetHandAction} from "State/Hand/HandActions";
 import {WhiteCard} from "Types/WhiteCard";
 import {decrementPreviouslySelectedCardPositions} from "Utilities/helpers";
 import Swal from "sweetalert2";
 import useRedrawPlayerHand from "Hooks/Game/useRedrawPlayerHand";
 import {errorToast} from "Utilities/toasts";
+import {useHand} from "State/Hand/useHand";
+import {useGame} from "State/Game/useGame";
+import {useAuth} from "State/Auth/useAuth";
 
 const Hand = () => {
     const {
@@ -21,17 +21,17 @@ const Hand = () => {
     } = useGame();
 
     const {
-        state: {user, hasSubmittedCards},
-    } = useUser();
+        state: {auth, hasSubmittedCards},
+    } = useAuth();
 
     const redrawHand = useRedrawPlayerHand();
 
     const redrawText = useMemo(() => {
-        return `${game.redrawLimit - user.redrawCount} Redraws Left`;
-    }, [user, game]);
+        return `${game.redrawLimit - auth.redrawCount} Redraws Left`;
+    }, [auth, game]);
 
     const redraw = useCallback(async () => {
-        if (user.redrawCount === game.redrawLimit) {
+        if (auth.redrawCount === game.redrawLimit) {
             errorToast("Cannot redraw, please wait until next round.");
             return;
         }
@@ -45,10 +45,12 @@ const Hand = () => {
             confirmButtonText: "Yes",
         });
 
-        if (!result) return;
+        if (result.isDismissed || result.isDenied) {
+            return;
+        }
 
         await redrawHand(game.id);
-    }, [game, user]);
+    }, [game, auth]);
 
     const positionOfLastSelectedCard = useMemo(() => {
         return Math.max(...hand.map((item) => item.order));
