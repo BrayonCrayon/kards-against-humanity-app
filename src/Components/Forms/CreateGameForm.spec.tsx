@@ -2,7 +2,6 @@ import { screen, waitFor } from "@testing-library/react";
 import { CreateGameForm } from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
 import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
-import { SELECTED_CARD_BACKGROUND } from "Components/ExpansionCard";
 import { kardsRender } from "Tests/testRenders";
 import { mockedAxios } from "setupTests";
 
@@ -23,15 +22,15 @@ describe("CreateGameForm", () => {
   });
 
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
-    renderer();
+    const wrapper = renderer();
 
-    const expansion = getExpansionsExampleResponse.data[0];
+    await waitFor(() => {
+      userEvent.click(wrapper.getByRole('expansion-menu-button'));
+    });
 
-    const expansionCard = await screen.findByTestId(
-      `expansion-${expansion.id}`
-    );
+    const expansionCard = await wrapper.container.querySelectorAll("i[class*='fa-check']");
 
-    expect(expansionCard).toHaveClass(SELECTED_CARD_BACKGROUND);
+    expect(expansionCard).toHaveLength(getExpansionsExampleResponse.data.length);
   });
 
   it("handles form submit with selected expansions only", async () => {
@@ -40,13 +39,9 @@ describe("CreateGameForm", () => {
 
     renderer();
 
-    const expansionCard = await screen.findByTestId(`expansion-${expansionToExclude.id}`);
+    userEvent.click(screen.getByRole('expansion-menu-button'));
 
-    userEvent.click(expansionCard);
-
-    await waitFor(() => {
-      expect(expansionCard).not.toHaveClass(SELECTED_CARD_BACKGROUND);
-    });
+    userEvent.click(await screen.findByTestId(`expansion-${expansionToExclude.id}`));
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, name);
@@ -75,23 +70,38 @@ describe("CreateGameForm", () => {
     });
   });
 
-  it("toggle all expansion packs", async () => {
+  describe('toggle expansions', () => {
+
+    it("will unselect all expansions", async () => {
+      const wrapper = renderer();
+
+      userEvent.click(wrapper.getByRole('expansion-menu-button'));
+
+      const expansion = getExpansionsExampleResponse.data[0];
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(`expansion-${expansion.id}`));
+      });
+
+      userEvent.click(wrapper.getByRole("toggle-all-expansions"));
+
+      await waitFor(() => {
+        expect(
+          wrapper.container.querySelectorAll("i[class*='fa-checked']")
+        ).toHaveLength(0);
+      });
+    }
+    );
+  })
+
+
+  it("will open expansion menu", async () => {
     const wrapper = renderer();
 
-    const toggle = await waitFor(() => {
-      return wrapper.getByTestId("toggle-all-expansions");
-    });
-
-    expect(
-      wrapper.container.querySelectorAll("input[type=checkbox]:checked")
-    ).toHaveLength(2);
-
-    userEvent.click(toggle);
+    userEvent.click(wrapper.getByRole('expansion-menu-button'));
 
     await waitFor(() => {
-      expect(
-        wrapper.container.querySelectorAll("input[type=checkbox]:not(:checked)")
-      ).toHaveLength(2);
-    });
+      expect(wrapper.queryByRole('expansion-menu-button')).toBeInTheDocument();
+    })
   });
 });

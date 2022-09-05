@@ -51,6 +51,10 @@ const GamePage = () => {
     );
   }, [hand, hasSubmittedCards]);
 
+  const submitStyles = useMemo(() => {
+    return !canSubmitCards ? "shadow-inner opacity-70 cursor-not-allowed" : "";
+  }, [canSubmitCards]);
+
   const onSubmit = useCallback(async () => {
     if (hasSubmittedCards) return;
 
@@ -74,19 +78,17 @@ const GamePage = () => {
       {game.judgeId !== auth.id && !showVotingSection && (
         <>
           <Hand />
-          <div className="flex justify-center">
-            <Button
-              text="Submit"
-              onClick={onSubmit}
-              dataTestid="white-card-submit-btn"
-              className={
-                !canSubmitCards
-                  ? "shadow-inner opacity-70 cursor-not-allowed"
-                  : ""
-              }
-              disabled={!canSubmitCards}
-            />
-          </div>
+          {
+            canSubmitCards ?
+            <div className="flex justify-center">
+              <Button
+                text="Submit"
+                onClick={onSubmit}
+                dataTestid="white-card-submit-btn"
+                className={submitStyles}
+              />
+            </div> : null
+          }
         </>
       )}
       {showVotingSection && <VotingSection />}

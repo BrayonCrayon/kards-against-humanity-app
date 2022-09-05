@@ -11,7 +11,7 @@ import { act } from "react-dom/test-utils";
 import { kardsRender } from "Tests/testRenders";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "Tests/testHelpers";
 import { initialVoteState } from "State/Vote/VoteState";
-import { mockedAxios, service } from "setupTests";
+import { service } from "setupTests";
 import gameService, { fetchSubmittedCards } from "Services/GameService";
 import { AxiosResponse } from "axios";
 
@@ -93,21 +93,6 @@ describe("VotingSection", () => {
       await waitFor(() => {
         expect(gameService.submitWinner).toHaveBeenCalledWith(mockProps.game.id, user_id);
         expect(happyToast).toHaveBeenCalledWith("Winner Selected!", "top");
-      });
-    });
-
-    it("will not allow user to submit winner without selecting a winner first", async () => {
-      const wrapper = await renderer();
-
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId("submit-selected-winner"));
-      });
-
-      await waitFor(() => {
-        expect(wrapper.queryByTestId(`submit-selected-winner`)).toHaveClass(
-          "disabled cursor-not-allowed opacity-75"
-        );
-        expect(mockedAxios.post).not.toHaveBeenCalled();
       });
     });
   });

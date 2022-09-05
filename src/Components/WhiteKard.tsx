@@ -21,7 +21,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
 
   return (
     <div
-      className={`relative rounded shadow-md p-8 text-xl md:text-3xl font-weight-800 flex flex-wrap cursor-pointer hover:bg-gray-100 
+      className={`bg-white relative rounded shadow-md p-8 text-xl font-weight-800 flex flex-wrap cursor-pointer hover:bg-gray-100 md:text-3xl  
         ${
           card.selected
             ? "border-2 border-blue-400 bg-gray-100"
