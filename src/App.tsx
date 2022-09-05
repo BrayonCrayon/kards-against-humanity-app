@@ -5,6 +5,7 @@ import Navigation from "./Layouts/Navigation";
 import HomePage from "./Pages/HomePage";
 import { apiClient } from "./Api/apiClient";
 import { SpectatorPage } from "Pages/SpectatorPage";
+import { CreateGameForm } from "Components/Forms/CreateGameForm";
 
 export default function App() {
   useEffect(() => {
@@ -15,7 +16,7 @@ export default function App() {
 
   return (
     <Router>
-      <div className="h-screen ">
+      <div className="h-screen">
         <Navigation />
 
         {/* A <Switch> looks through its children <Route>s and
@@ -27,6 +28,10 @@ export default function App() {
 
           <Route path="/game/:id">
             <GamePage />
+          </Route>
+
+          <Route path="/create">
+            <CreateGameForm />
           </Route>
 
           <Route path="/">

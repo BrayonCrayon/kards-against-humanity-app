@@ -26,7 +26,7 @@ export const KAHCheckbox: FC<KAHCheckboxProps> = ({
     return `fa-regular ${size} ${checked ? 'fa-square-check' : 'fa-square'}`;
   }, [checked]);
 
-  return (<div className={classNames} data-testid={dataTestid} onClick={toggle}>
+  return (<div className={`flex items-center ${classNames} cursor-pointer`} data-testid={dataTestid} onClick={toggle}>
     <i className={iconClass}/>
     <span className="m-2">{text}</span>
   </div>);

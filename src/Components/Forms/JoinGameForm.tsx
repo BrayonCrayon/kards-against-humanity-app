@@ -4,11 +4,13 @@ import useJoinAsSpectator from "Hooks/Game/useJoinAsSpectator";
 import KAHInput from "Components/KAHInput";
 import { KAHCheckbox } from "Components/KAHCheckbox";
 import useJoinGame from "Hooks/Game/useJoinGame";
+import { KAHCard } from "Components/KAHCard";
+import { CreateGameBanner } from "Components/CreateGameBanner";
 
 const JoinGameForm: React.FC = () => {
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
-  const [spectator, setSpectator] = useState(false)
+  const [spectator, setSpectator] = useState(false);
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
@@ -16,7 +18,7 @@ const JoinGameForm: React.FC = () => {
       event.preventDefault();
 
       if (spectator) {
-        await joinAsSpectator(code)
+        await joinAsSpectator(code);
         return;
       }
 
@@ -26,42 +28,44 @@ const JoinGameForm: React.FC = () => {
   );
 
   return (
-    <div className="flex justify-center" data-testid="join-game-section">
-      <form
-        data-testid="join-game-form"
-        onSubmit={submitToApi}
-        className="flex flex-col p-4 shadow-lg rounded border md:w-4/5 xl:w-1/2"
-      >
-        <div className="text-2xl font-semibold mb-4 mt-2">Join Game</div>
-        <KAHInput
-          label="Code"
-          placeholder="ex: A3D5"
-          name="code"
-          dataTestid="join-game-code-input"
-          inputClass="flex-grow"
-          required
-          onChange={(e) => setCode(e.target.value)}
-        />
-        {!spectator ? <KAHInput
-          ariaRole="user-name"
-          label="Player Name"
-          placeholder="Bob's your uncle"
-          name="name"
-          dataTestid="join-game-name-input"
-          inputClass="flex-grow"
-          minLength={3}
-          maxLength={17}
-          required
-          onChange={(e) => setUserName(e.target.value)}
-        /> : null}
-        <KAHCheckbox dataTestid="is-spectator"
-                     classNames="flex items-center p-2"
-                     size="text-4xl"
-                     text="Spectate"
-                     onClick={(value) => setSpectator(value)}
-        />
-        <Button type="submit" text="Join" dataTestid="join-game-form-submit" />
-      </form>
+    <div className="flex flex-col w-full" data-testid="join-game-section">
+      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
+        <form
+          data-testid="join-game-form"
+          onSubmit={submitToApi}
+          className={"flex flex-col"}
+        >
+          <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
+          <KAHInput
+            label="Code"
+            placeholder="ex: A3D5"
+            name="code"
+            dataTestid="join-game-code-input"
+            inputClass="flex-grow"
+            required
+            onChange={(e) => setCode(e.target.value)}
+          />
+          {!spectator ? <KAHInput
+            ariaRole="user-name"
+            label="Player Name"
+            placeholder="Bob's your uncle"
+            name="name"
+            dataTestid="join-game-name-input"
+            inputClass="flex-grow"
+            minLength={3}
+            maxLength={17}
+            required
+            onChange={(e) => setUserName(e.target.value)}
+          /> : null}
+          <KAHCheckbox dataTestid="is-spectator"
+                       size="text-2xl"
+                       text="Spectator"
+                       onClick={(value) => setSpectator(value)}
+          />
+          <Button className="w-full md:w-1/2 md:mx-auto" type="submit" text="Join Now" dataTestid="join-game-form-submit"/>
+        </form>
+      </KAHCard>
+      <CreateGameBanner/>
     </div>
   );
 };
