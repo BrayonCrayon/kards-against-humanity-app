@@ -22,7 +22,7 @@ export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions
 {
   const [selectAll, setSelectAll] = useState(true);
 
-  const test = useCallback(() => {
+  const onChange = useCallback(() => {
     setSelectAll(!selectAll);
     toggleAll(!selectAll);
   }, [selectAll, setSelectAll]);
@@ -41,7 +41,7 @@ export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions
       <>
         <div className="h-full">
           <div className="flex justify-end h-5% px-5 py-2 my-1 shadow-md">
-            <KAHToggler role="toggle-all-expansions" on={selectAll} onText='Select All' offText='Select All' onClick={test} />
+            <KAHToggler role="toggle-all-expansions" on={selectAll} onText='Select All' offText='Select All' onClick={onChange} />
           </div>
           <div className="overflow-y-scroll px-2 rounded h-95%" >
             {expansions.map(({ expansion, isSelected }) => {

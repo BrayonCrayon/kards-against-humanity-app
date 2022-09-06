@@ -66,6 +66,10 @@ export const kick = (gameId: string, userId: number) => {
   return apiClient.post(`/api/game/${gameId}/player/${userId}/kick`);
 };
 
+export const fetchExpansions = () => {
+  return apiClient.get(`/api/expansions`);
+}
+
 export default {
   submitCards,
   fetchState,
@@ -79,5 +83,6 @@ export default {
   joinGame,
   createGame,
   fetchSpectatorState,
-  submitWinner
+  submitWinner,
+  fetchExpansions
 };
