@@ -1,44 +1,21 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Expansion } from "Types/Expansion";
-import { apiClient } from "Api/apiClient";
 import { Button } from "Components/Button";
 import KAHInput from "Components/KAHInput";
 import useCreateGame from "Hooks/Game/useCreateGame";
 import { CreateGameBanner } from "Components/CreateGameBanner";
 import { KAHCard } from "Components/KAHCard";
 import { ExpansionSelector } from "Components/Sidebars/ExpansionSelector";
-
-type ExpansionOption = {
-  expansion: Expansion;
-  isSelected: boolean;
-};
+import useExpansions from "Hooks/Game/Expansions/useExpansions";
 
 export const CreateGameForm: React.FC = () => {
-  const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
   const [userName, setUserName] = useState("");
   const createGame = useCreateGame();
-
-  const fetchExpansions = useCallback(async () => {
-    try {
-      const { data } = await apiClient.get(`/api/expansions`);
-
-      setExpansions(
-        data.map((item: Expansion) => {
-          return {
-            expansion: item,
-            isSelected: true
-          };
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  }, []);
+  const {expansions, getExpansions, setExpansions} = useExpansions();
 
   useEffect(() => {
     if (expansions.length > 0) return;
-    fetchExpansions();
-  }, [fetchExpansions, expansions]);
+    getExpansions();
+  }, []);
 
   const submitToApi = useCallback(async (event: any) => {
       event.preventDefault();

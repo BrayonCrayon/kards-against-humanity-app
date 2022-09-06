@@ -3,7 +3,7 @@ import { CreateGameForm } from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
 import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
 import { kardsRender } from "Tests/testRenders";
-import { mockedAxios } from "setupTests";
+import gameService from "Services/GameService";
 
 const {data} = getExpansionsExampleResponse;
 
@@ -18,7 +18,8 @@ const renderer = () => {
 
 describe("CreateGameForm", () => {
   beforeEach(() => {
-    mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
+    // @ts-ignore
+    gameService.fetchExpansions.mockResolvedValue(getExpansionsExampleResponse);
   });
 
   it("renders expansion cards with blue background to indicate that it is selected", async () => {
