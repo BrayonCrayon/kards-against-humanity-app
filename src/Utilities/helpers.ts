@@ -1,6 +1,7 @@
 import { SubmittedCard } from "../Types/ResponseTypes";
 import { BlackCard } from "../Types/BlackCard";
 import { WhiteCard } from "../Types/WhiteCard";
+import { Expansion, ExpansionOption } from "Types/Expansion";
 
 export const fillOutBlackCard = (
   blackCard: BlackCard,
@@ -35,3 +36,14 @@ export const decrementPreviouslySelectedCardPositions = (
     item.selected = item.order !== 0;
   });
 };
+
+export const ExpansionToExpansionOption = (expansion: Expansion) : ExpansionOption => {
+  return {
+    expansion,
+    isSelected: true,
+  }
+}
+
+export const ExpansionsToExpansionOptions = (expansions: Expansion[]) : ExpansionOption[] => {
+  return expansions.map(item => ExpansionToExpansionOption(item));
+}
