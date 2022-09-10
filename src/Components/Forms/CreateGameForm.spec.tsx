@@ -5,7 +5,7 @@ import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleR
 import { kardsRender } from "Tests/testRenders";
 import gameService from "Services/GameService";
 
-const {data} = getExpansionsExampleResponse;
+const { data: expansions } = getExpansionsExampleResponse;
 
 const mockCreateGame = jest.fn();
 jest.mock("Hooks/Game/useCreateGame", () => {
@@ -26,21 +26,21 @@ describe("CreateGameForm", () => {
     const wrapper = renderer();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole('expansion-menu-button'));
+      userEvent.click(wrapper.getByRole("expansion-menu-button"));
     });
 
     const expansionCard = await wrapper.container.querySelectorAll("i[class*='fa-check']");
 
-    expect(expansionCard).toHaveLength(getExpansionsExampleResponse.data.length);
+    expect(expansionCard).toHaveLength(expansions.length);
   });
 
   it("handles form submit with selected expansions only", async () => {
     const name = "Slim Shady";
-    const expansionToExclude = data[0];
+    const [expansionToExclude] = expansions;
 
     renderer();
 
-    userEvent.click(screen.getByRole('expansion-menu-button'));
+    userEvent.click(screen.getByRole("expansion-menu-button"));
 
     userEvent.click(await screen.findByTestId(`expansion-${expansionToExclude.id}`));
 
@@ -52,8 +52,7 @@ describe("CreateGameForm", () => {
 
     expect(mockCreateGame).toHaveBeenCalledWith(
       name,
-      data.filter(e => e.id !== expansionToExclude.id)
-        .map(e => e.id)
+      expansions.filter(e => e.id !== expansionToExclude.id).map(e => e.id)
     );
   });
 
@@ -67,42 +66,49 @@ describe("CreateGameForm", () => {
     userEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(mockCreateGame).toHaveBeenCalledWith("Chewy", data.map(e => e.id));
+      expect(mockCreateGame).toHaveBeenCalledWith("Chewy", expansions.map(e => e.id));
     });
   });
 
-  describe('toggle expansions', () => {
+  it("will unselect all expansions", async () => {
+    const wrapper = renderer();
 
-    it("will unselect all expansions", async () => {
-      const wrapper = renderer();
+    userEvent.click(wrapper.getByRole("expansion-menu-button"));
 
-      userEvent.click(wrapper.getByRole('expansion-menu-button'));
+    const expansion = getExpansionsExampleResponse.data[0];
 
-      const expansion = getExpansionsExampleResponse.data[0];
+    await waitFor(() => {
+      userEvent.click(wrapper.getByTestId(`expansion-${expansion.id}`));
+    });
 
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`expansion-${expansion.id}`));
-      });
+    userEvent.click(wrapper.getByRole("toggle-all-expansions"));
 
-      userEvent.click(wrapper.getByRole("toggle-all-expansions"));
+    await waitFor(() => {
+      expect(
+        wrapper.container.querySelectorAll("i[class*='fa-checked']")
+      ).toHaveLength(0);
+    });
+  });
 
-      await waitFor(() => {
-        expect(
-          wrapper.container.querySelectorAll("i[class*='fa-checked']")
-        ).toHaveLength(0);
-      });
-    }
-    );
-  })
+  it("will show white card count on expansions", async () => {
+    const wrapper = renderer();
 
+    userEvent.click(wrapper.getByRole("expansion-menu-button"));
+
+    await waitFor(() => {
+      expansions.forEach(item =>
+        expect(wrapper.queryByRole(`white-card-count-${item.id}`)?.textContent).toContain(item.whiteCardCount)
+      );
+    })
+  });
 
   it("will open expansion menu", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole('expansion-menu-button'));
+    userEvent.click(wrapper.getByRole("expansion-menu-button"));
 
     await waitFor(() => {
-      expect(wrapper.queryByRole('expansion-menu-button')).toBeInTheDocument();
-    })
+      expect(wrapper.queryByRole("expansion-menu-button")).toBeInTheDocument();
+    });
   });
 });

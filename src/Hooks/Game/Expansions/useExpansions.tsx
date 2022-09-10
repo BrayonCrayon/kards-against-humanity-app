@@ -1,11 +1,7 @@
-import { Expansion } from "Types/Expansion";
+import { ExpansionOption } from "Types/Expansion";
 import { fetchExpansions } from "Services/GameService";
 import { useState } from "react";
-
-export type ExpansionOption = {
-  expansion: Expansion;
-  isSelected: boolean;
-};
+import { ExpansionsToExpansionOptions } from "Utilities/helpers";
 
 function useExpansions() {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);
@@ -16,15 +12,7 @@ function useExpansions() {
     getExpansions: async () => {
       try {
           const { data } = await fetchExpansions();
-
-          setExpansions(
-            data.map((item: Expansion) => {
-              return {
-                expansion: item,
-                isSelected: true
-              };
-            })
-          );
+          setExpansions(ExpansionsToExpansionOptions(data));
         } catch (error) {
           console.error(error);
         }
