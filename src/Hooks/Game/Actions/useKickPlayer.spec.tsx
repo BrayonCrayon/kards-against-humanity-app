@@ -1,4 +1,4 @@
-import useKickPlayer from "./useKickPlayer";
+import useKickPlayer from "Hooks/Game/Actions/useKickPlayer";
 import { gameFixture } from "Api/fixtures/gameFixture";
 import { act } from "react-dom/test-utils";
 import { kardsHookRender } from "Tests/testRenders";

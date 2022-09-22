@@ -8,7 +8,7 @@ import { spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
 
 const { data: {game, users, blackCard} } = gameStateExampleResponse;
 const mockKickPlayer = jest.fn();
-jest.mock("Hooks/Game/useKickPlayer", () => {
+jest.mock("Hooks/Game/Actions/useKickPlayer", () => {
   return () => {
     return mockKickPlayer;
   };

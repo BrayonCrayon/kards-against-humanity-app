@@ -1,22 +1,24 @@
 import React, { useCallback, useState } from "react";
 import { Button } from "Components/Button";
-import useJoinAsSpectator from "Hooks/Game/useJoinAsSpectator";
+import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
 import KAHInput from "Components/KAHInput";
 import { KAHCheckbox } from "Components/KAHCheckbox";
-import useJoinGame from "Hooks/Game/useJoinGame";
+import useJoinGame from "Hooks/Game/Join/useJoinGame";
 import { KAHCard } from "Components/KAHCard";
 import { JoinGameBanner } from "Components/JoinGameBanner";
+import useLoading from "Hooks/Game/Shared/useLoading";
 
 const JoinGameForm: React.FC = () => {
   const [code, setCode] = useState("");
   const [userName, setUserName] = useState("");
   const [spectator, setSpectator] = useState(false);
+  const {loading, setLoading} = useLoading();
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
   const submitToApi = useCallback(async (event) => {
       event.preventDefault();
-
+      setLoading(true);
       if (spectator) {
         await joinAsSpectator(code);
         return;
@@ -64,7 +66,13 @@ const JoinGameForm: React.FC = () => {
             />
             <span>Spectator</span>
           </div>
-          <Button className="w-full md:w-1/2 md:mx-auto" type="submit" text="Join Now" dataTestid="join-game-form-submit"/>
+          <Button
+            isLoading={loading}
+            className="w-full md:w-1/2 md:mx-auto"
+            type="submit"
+            text="Join Now"
+            dataTestid="join-game-form-submit"
+          />
         </form>
       </KAHCard>
       <JoinGameBanner/>

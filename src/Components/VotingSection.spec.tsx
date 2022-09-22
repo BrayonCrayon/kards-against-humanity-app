@@ -18,9 +18,9 @@ import { AxiosResponse } from "axios";
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock("../Utilities/toasts");
-jest.mock("../Services/PusherService");
-jest.mock("../Hooks/Game/UseFetchRoundWinner", () => {
+jest.mock("Utilities/toasts");
+jest.mock("Services/PusherService");
+jest.mock("Hooks/Game/State/UseFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 

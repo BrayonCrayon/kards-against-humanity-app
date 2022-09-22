@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { ClearStateAction } from "State/Vote/VoteActions";
 import { Button } from "./Button";
 import { useGame } from "State/Game/useGame";
-import useRotateGame from "Hooks/Game/useRotateGame";
+import useRotateGame from "Hooks/Game/Actions/useRotateGame";
 import { usePlayers } from "State/Players/usePlayers";
 import { useAuth } from "State/Auth/useAuth";
 

@@ -1,16 +1,12 @@
 import { kardsHookRender } from "Tests/testRenders";
 import { gameFixture } from "Api/fixtures/gameFixture";
-import {
-  listenWhenGameRotates,
-  listenWhenUserJoinsGame,
-  listenWhenUserSubmittedCards,
-} from "Services/PusherService";
+import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "Services/PusherService";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 
 jest.mock("Services/PusherService");
 
 const mockCallback = jest.fn();
-jest.mock("Hooks/Game/useGameStateCallback", () => {
+jest.mock("Hooks/Game/State/useGameStateCallback", () => {
   return () => mockCallback;
 });
 

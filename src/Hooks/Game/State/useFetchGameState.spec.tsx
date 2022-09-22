@@ -1,5 +1,5 @@
 import React from "react";
-import useFetchGameState from "./useFetchGameState";
+import useFetchGameState from "Hooks/Game/State/useFetchGameState";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { transformWhiteCardArray } from "Types/WhiteCard";
 import { transformUser, transformUsers } from "Types/User";
