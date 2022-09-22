@@ -39,6 +39,10 @@ export const joinAsSpectator = (gameId: string) => {
   return apiClient.post(`/api/game/${gameId}/spectate`);
 };
 
+export const leaveGame = (gameId: string) => {
+  return apiClient.post(`/api/game/${gameId}/leave`);
+}
+
 export const rotate = (gameId: string) => {
   return apiClient.post(`/api/game/${gameId}/rotate`);
 };
@@ -84,5 +88,6 @@ export default {
   createGame,
   fetchSpectatorState,
   submitWinner,
-  fetchExpansions
+  fetchExpansions,
+  leaveGame,
 };

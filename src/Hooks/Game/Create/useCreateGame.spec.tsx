@@ -3,7 +3,7 @@ import { service } from "setupTests";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { AxiosResponse } from "axios";
 import { history, kardsHookRender } from "Tests/testRenders";
-import useCreateGame from "Hooks/Game/useCreateGame";
+import useCreateGame from "Hooks/Game/Create/useCreateGame";
 import { transformUser, transformUsers } from "Types/User";
 
 const dispatchSpy = jest.fn();

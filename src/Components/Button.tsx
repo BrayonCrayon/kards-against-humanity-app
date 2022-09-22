@@ -14,6 +14,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   variant?: ButtonVariant;
+  isLoading?: boolean;
   role?: string;
 }
 
@@ -25,6 +26,7 @@ export const Button: FC<ButtonProps> = ({
   className = "",
   disabled = false,
   variant= ButtonVariant.primary,
+  isLoading = false,
   role= 'button',
 }) => {
 
@@ -39,9 +41,14 @@ export const Button: FC<ButtonProps> = ({
       onClick={(e) => onClick(e)}
       data-testid={dataTestid}
       className={style}
-      disabled={disabled}
+      disabled={disabled || isLoading}
     >
       {text}
+      {
+        isLoading
+          ? <i className="ml-2 fa-solid fa-spinner animate-spin"/>
+          : null
+      }
     </button>
   );
 };

@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react-hooks";
-import useFetchSpectatorState from "Hooks/Game/useFetchSpectatorState";
+import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";
 import { fetchSpectatorState } from "Services/GameService";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "Tests/testHelpers";

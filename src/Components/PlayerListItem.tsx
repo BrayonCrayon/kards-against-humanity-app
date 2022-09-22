@@ -1,6 +1,6 @@
 import React, { FC, useCallback, useMemo } from "react";
 import { User } from "Types/User";
-import useKickPlayer from "Hooks/Game/useKickPlayer";
+import useKickPlayer from "Hooks/Game/Actions/useKickPlayer";
 import Swal from "sweetalert2";
 import { useAuth } from "State/Auth/useAuth";
 import { useGame } from "State/Game/useGame";
@@ -44,7 +44,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <div className="flex text-2xl" data-testid={`user-${player.id}`}>
+      <div className="flex text-2xl items-center" data-testid={`user-${player.id}`}>
         <p className="mr-1 w-8">{player.score}</p>
         <p
           className={`${player.hasSubmittedWhiteCards ? "text-green-500" : ""}`}

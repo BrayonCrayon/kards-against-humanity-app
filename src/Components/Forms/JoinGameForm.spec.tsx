@@ -10,10 +10,10 @@ import userEvent from "@testing-library/user-event";
 
 const mockJoinAsSpectator = jest.fn();
 const mockJoinGame = jest.fn();
-jest.mock("Hooks/Game/useJoinAsSpectator", () => {
+jest.mock("Hooks/Game/Join/useJoinAsSpectator", () => {
   return () => mockJoinAsSpectator
 })
-jest.mock("Hooks/Game/useJoinGame", () => {
+jest.mock("Hooks/Game/Join/useJoinGame", () => {
   return () => mockJoinGame
 });
 

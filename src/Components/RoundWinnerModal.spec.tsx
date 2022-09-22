@@ -11,14 +11,14 @@ import { fillOutBlackCard } from "Utilities/helpers";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "Tests/testHelpers";
 
 const mockRotateGame = jest.fn();
-jest.mock("Hooks/Game/useRotateGame", () => {
+jest.mock("Hooks/Game/Actions/useRotateGame", () => {
   return () => {
     return mockRotateGame;
   };
 });
 
 const mockFetchGameState = jest.fn();
-jest.mock("Hooks/Game/useFetchGameState", () => {
+jest.mock("Hooks/Game/State/useFetchGameState", () => {
   return () => {
     return mockFetchGameState;
   };
