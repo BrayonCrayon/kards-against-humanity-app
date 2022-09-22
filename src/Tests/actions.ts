@@ -35,8 +35,8 @@ export const setupAndSubmitForm = (userName: string, gameCode: string, spectate:
 
 export const togglePlayerList = async () => {
   await waitFor(() => {
-    expect(screen.queryByTestId("players-sidebar")).toBeInTheDocument();
+    expect(screen.queryByRole("game-settings")).toBeInTheDocument();
 
-    userEvent.click(screen.getByTestId("players-sidebar"));
+    userEvent.click(screen.getByRole("game-settings"));
   });
 };

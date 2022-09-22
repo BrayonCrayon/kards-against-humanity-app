@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "State/Game/useGame";
-import useFetchGameState from "Hooks/Game/useFetchGameState";
+import useFetchGameState from "Hooks/Game/State/useFetchGameState";
 import GameInfo from "Components/GameInfo";
 import { VotingSection } from "Components/VotingSection";
 import { RoundWinnerModal } from "Components/RoundWinnerModal";
@@ -11,7 +11,7 @@ import { useHand } from "State/Hand/useHand";
 import { useAuth } from "State/Auth/useAuth";
 import Hand from "Components/Hand";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
-import useSubmitCards from "Hooks/Game/useSubmitCards";
+import useSubmitCards from "Hooks/Game/Actions/useSubmitCards";
 
 const GamePage = () => {
   const {

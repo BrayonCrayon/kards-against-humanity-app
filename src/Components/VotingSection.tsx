@@ -3,13 +3,13 @@ import { useGame } from "State/Game/useGame";
 import { useVote } from "State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import { listenWhenWinnerIsSelected } from "Services/PusherService";
-import useFetchRoundWinner from "Hooks/Game/useFetchRoundWinner";
+import useFetchRoundWinner from "Hooks/Game/State/useFetchRoundWinner";
 import { Button } from "./Button";
 import { Selectable } from "./Selectable";
 import { SelectWinnerAction } from "State/Vote/VoteActions";
 import { useAuth } from "State/Auth/useAuth";
-import useSubmittedCards from "Hooks/Game/useSubmittedCards";
-import useSubmitWinner from "Hooks/Game/useSubmitWinner";
+import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
+import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
 
 export const VotingSection: FC = () => {
   const { state: { game, blackCard }, } = useGame();

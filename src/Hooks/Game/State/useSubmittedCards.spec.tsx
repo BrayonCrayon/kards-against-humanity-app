@@ -1,5 +1,5 @@
 import { kardsHookRender } from "Tests/testRenders";
-import useSubmittedCards from "Hooks/Game/useSubmittedCards";
+import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import { service } from "setupTests";
 import { AxiosResponse } from "axios";
 import { act } from "@testing-library/react-hooks";

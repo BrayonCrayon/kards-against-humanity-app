@@ -8,7 +8,7 @@ import gameService from "Services/GameService";
 const { data: expansions } = getExpansionsExampleResponse;
 
 const mockCreateGame = jest.fn();
-jest.mock("Hooks/Game/useCreateGame", () => {
+jest.mock("Hooks/Game/Create/useCreateGame", () => {
   return () => mockCreateGame;
 });
 

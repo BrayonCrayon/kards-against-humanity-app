@@ -1,4 +1,4 @@
-import useFetchRoundWinner from "Hooks/Game/useFetchRoundWinner";
+import useFetchRoundWinner from "Hooks/Game/State/useFetchRoundWinner";
 import { RoundWinner } from "Types/ResponseTypes";
 import { gameFixture } from "Api/fixtures/gameFixture";
 import { blackCardFixture } from "Api/fixtures/blackcardFixture";

@@ -1,6 +1,6 @@
 import { kardsHookRender } from "Tests/testRenders";
 import { service } from "setupTests";
-import useSubmitWinner from "Hooks/Game/useSubmitWinner";
+import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
 import { happyToast } from "Utilities/toasts";
 
 const gameId = "1j1j";

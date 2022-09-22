@@ -9,7 +9,7 @@ interface PlayerListProps {
 const PlayerList: FC<PlayerListProps> = ({ users = [] }) => {
   return (
     <div className="p-2">
-      <div className="text-xl text-center font-semibold text-gray-500 border-b-2 border-gray-300 pb-1">
+      <div className="text-sm font-semibold text-gray-500 border-b-2 border-gray-300 pb-1 md:text-md">
         Players
       </div>
       {users.map((player) => (

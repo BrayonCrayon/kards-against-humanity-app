@@ -32,7 +32,7 @@ jest.mock("react-router-dom", () => ({
 
 const mockUseUpdateGameState = jest.fn();
 
-jest.mock("../Hooks/Game/useGameStateCallback", () => {
+jest.mock("Hooks/Game/State/useGameStateCallback", () => {
   return () => mockUseUpdateGameState;
 });
 
@@ -310,9 +310,7 @@ describe("GamePage", () => {
       const { users, currentUser } = gameStateJudgeExampleResponse.data;
       const wrapper = await kardsRender(<GamePage />);
 
-      const playerToKick = users.filter(
-        (item) => item.id !== currentUser.id
-      )[0];
+      const [playerToKick] = users.filter((item) => item.id !== currentUser.id);
 
       await togglePlayerList();
 

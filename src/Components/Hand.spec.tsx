@@ -14,7 +14,7 @@ const hand = transformWhiteCardArray(handResponse, false, []);
 const auth = transformUser(currentUser);
 
 const mockRedraw = jest.fn();
-jest.mock("Hooks/Game/useRedrawPlayerHand", () => () => mockRedraw);
+jest.mock("Hooks/Game/Actions/useRedrawPlayerHand", () => () => mockRedraw);
 jest.mock("Utilities/toasts");
 
 describe("Hand", () => {
