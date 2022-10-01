@@ -37,11 +37,7 @@ const GamePage = () => {
 
   const showVotingSection = useMemo(() => {
     const currentPlayers = players.filter((item) => item.id !== game.judgeId);
-    return (
-      currentPlayers.length > 0 &&
-      currentPlayers.filter((item) => item.hasSubmittedWhiteCards).length ===
-        currentPlayers.length
-    );
+    return currentPlayers.length > 0 && currentPlayers.every(user => user.hasSubmittedWhiteCards);
   }, [players, game]);
 
   const onSubmit = useCallback(async () => {

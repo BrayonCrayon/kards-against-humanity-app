@@ -21,17 +21,16 @@ export const selectAndSubmitWhiteCards = async (cards: WhiteCard[]) => {
 export const setupAndSubmitForm = (userName: string, gameCode: string, spectate: boolean = false) => {
   expect(screen.queryByTestId("join-game-form")).not.toBeNull();
 
-  const nameInput = screen.queryByTestId("join-game-name-input");
-  expect(nameInput).not.toBeNull();
-  userEvent.type(nameInput!, userName);
+  const nameInput = screen.getByRole("user-name");
+  userEvent.type(nameInput, userName);
 
-  const codeInput = screen.queryByTestId("join-game-code-input");
-  expect(codeInput).not.toBeNull();
-  userEvent.type(codeInput!, gameCode);
+  const codeInput = screen.getByRole("game-code-input");
+  userEvent.clear(codeInput);
+  userEvent.type(codeInput, gameCode);
 
   if(spectate) userEvent.click(screen.getByTestId("is-spectator"));
 
-  const submit = screen.getByTestId("join-game-form-submit");
+  const submit = screen.getByRole("submit-form");
   userEvent.click(submit);
 };
 
