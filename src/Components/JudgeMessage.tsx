@@ -15,15 +15,12 @@ const JudgeMessage: FC<JudgeMessageProps> = ({
   className = "",
 }) => {
   const allPlayersSubmitted = useMemo(() => {
-    return (
-      users.filter((item) => item.hasSubmittedWhiteCards).length !==
-      users.length - 1
-    );
+    return users.filter(user => user.id !== judgeId).every(user => user.hasSubmittedWhiteCards);
   }, [users, judgeId]);
 
   return (
     <>
-      {user.id === judgeId && allPlayersSubmitted && (
+      {user.id === judgeId && !allPlayersSubmitted && (
         <div
           data-testid="judge-message"
           className={`flex flex-col w-full ${className}`}

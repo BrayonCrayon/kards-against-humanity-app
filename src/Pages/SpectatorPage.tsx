@@ -24,7 +24,7 @@ export const SpectatorPage: React.FC = () => {
   }, [players, game.judgeId]);
 
   const setup = useCallback(async () => {
-    await fetchSpectatorState(id)
+    await fetchSpectatorState(id);
     await listenOnEvents(id);
   }, [id]);
 
@@ -48,8 +48,9 @@ export const SpectatorPage: React.FC = () => {
     <div className="flex justify-around">
       <BlackKard card={blackCard} />
     </div>
-    { haveAllPlayersSubmitted &&
-      <DisplaySubmittedCard cards={submittedCards} />
+    { haveAllPlayersSubmitted
+      ? <DisplaySubmittedCard cards={submittedCards} />
+      : null
     }
   </>
 }

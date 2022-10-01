@@ -32,7 +32,8 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "craco-test": "craco test",
+    "test": "react-scripts test --watchAll=false",
     "compile-ts": "tsc --project tsconfig.json",
     "eject": "react-scripts eject"
   },
@@ -61,6 +62,7 @@
     "laravel-echo": "^1.11.2",
     "postcss": "^7.0.35",
     "prettier": "2.4.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.4"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.4",
+    "ts-node": "^10.9.1"
   }
 }

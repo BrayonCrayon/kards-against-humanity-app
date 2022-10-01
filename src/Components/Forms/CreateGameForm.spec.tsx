@@ -22,7 +22,7 @@ describe("CreateGameForm", () => {
     gameService.fetchExpansions.mockResolvedValue(getExpansionsExampleResponse);
   });
 
-  it("renders expansion cards with blue background to indicate that it is selected", async () => {
+  it("renders all expansion cards to be initially checked", async () => {
     const wrapper = renderer();
 
     await waitFor(() => {
@@ -48,7 +48,7 @@ describe("CreateGameForm", () => {
     userEvent.type(nameInput, name);
 
     const submitBtn = await screen.findByTestId("create-game-submit-button");
-    userEvent.click(submitBtn);
+    await waitFor(() => userEvent.click(submitBtn));
 
     await waitFor(() => {
       expect(mockCreateGame).toHaveBeenCalledWith(

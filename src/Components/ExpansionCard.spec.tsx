@@ -8,6 +8,7 @@ describe("Expansion Cards", function () {
     <ExpansionCard
       id={expansionId}
       checked={isChecked}
+      whiteCardCount={0}
       name="Some good expansion"
       onToggle={() => {}}
     />

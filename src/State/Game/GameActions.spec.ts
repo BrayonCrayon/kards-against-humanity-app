@@ -9,7 +9,7 @@ describe("GameActions", () => {
     const game: Game = {
       code: "hi",
       id: "sanchy",
-      judge_id: 1,
+      judgeId: 1,
       name: "Sanchy",
       redrawLimit: 1
     };

@@ -58,6 +58,7 @@ export const CreateGameForm: React.FC = () => {
           <KAHInput
             type="text"
             dataTestid="user-name"
+            value={userName}
             name="name"
             label="Player Name"
             placeholder="Bob's your uncle"

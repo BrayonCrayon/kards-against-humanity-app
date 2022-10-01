@@ -34,7 +34,11 @@ export default function App() {
             <CreateGameForm />
           </Route>
 
-          <Route path="/">
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+
+          <Route exact path="/:code">
             <HomePage />
           </Route>
         </Switch>
