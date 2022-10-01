@@ -4,6 +4,7 @@ interface KAHInputProps {
   type?: string;
   label?: string;
   name?: string;
+  value?: string;
   dataTestid?: string;
   required?: boolean;
   labelClass?: string;
@@ -23,6 +24,7 @@ const KAHInput: FC<KAHInputProps> = ({
   label = "",
   dataTestid = "",
   name = "",
+  value = "",
   required = false,
   labelClass = "",
   inputClass = "",
@@ -36,6 +38,7 @@ const KAHInput: FC<KAHInputProps> = ({
     <label className={`my-4 flex flex-wrap font-sans ${labelClass}`}>
       {label}
       <input
+        value={value}
         role={ariaRole}
         placeholder={placeholder}
         type={type}

@@ -20,7 +20,7 @@ const mockDispatch = jest.fn();
 
 jest.mock("Utilities/toasts");
 jest.mock("Services/PusherService");
-jest.mock("Hooks/Game/State/UseFetchRoundWinner", () => {
+jest.mock("Hooks/Game/State/useFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 

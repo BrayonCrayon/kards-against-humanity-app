@@ -1,7 +1,7 @@
-import { kardsRender } from "../Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import JudgeMessage from "./JudgeMessage";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { transformUser, transformUsers, User } from "../Types/User";
+import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { transformUser, transformUsers, User } from "Types/User";
 
 const { data: { currentUser, users, game } } = gameStateExampleResponse;
 
@@ -23,9 +23,10 @@ describe("JudgeMessage", () => {
     expect(wrapper).toBeTruthy();
   });
 
-  it("will show judge message current user is a judge", () => {
-    const user = transformUsers(users).find((item) => item.id === game.judgeId);
-    const wrapper = renderComponent(user);
+  it("will show judge message when user is a judge and not all players have submitted", () => {
+    const players = transformUsers(users);
+    const user = players.find((item) => item.id === game.judgeId);
+    const wrapper = renderComponent(user, players);
 
     expect(wrapper.getByTestId("judge-message").textContent).toEqual(
       "You are judging!"
@@ -38,16 +39,13 @@ describe("JudgeMessage", () => {
   });
 
   it("will not show message if all users have submitted their cards", () => {
-    const user = transformUsers(users).find((item) => item.id === game.judgeId);
-    const allPlayersHaveSubmitted = transformUsers(
-      users.map((item) => {
-        if (item.id !== game.judgeId) {
+    const players = transformUsers(users);
+    const user = players.find((item) => item.id === game.judgeId);
+    players.forEach((item) => {
+        if (item.id !== game.judgeId)
           item.hasSubmittedWhiteCards = true;
-        }
-        return item;
-      })
-    );
-    const wrapper = renderComponent(user, allPlayersHaveSubmitted);
+    });
+    const wrapper = renderComponent(user, players, user!.id);
 
     expect(wrapper.queryByTestId("judge-message")).not.toBeInTheDocument();
   });

@@ -30,11 +30,7 @@ export function RoundWinnerModal() {
       return user.id === selectedRoundWinner?.user_id;
     });
 
-    if (!user) {
-      return undefined;
-    }
-
-    return user.name;
+    return !user ? undefined : user.name;
   }, [players, selectedRoundWinner]);
 
   const close = useCallback(() => {
