@@ -20,8 +20,8 @@ export const CreateGameForm: React.FC = () => {
   }, []);
 
   const submitToApi = useCallback(async (event: any) => {
-      await setLoading(true);
       event.preventDefault();
+      await setLoading(true);
       await createGame(
         userName,
         expansions

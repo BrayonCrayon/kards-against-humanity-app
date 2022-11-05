@@ -5,7 +5,6 @@ import useFetchGameState from "Hooks/Game/State/useFetchGameState";
 import GameInfo from "Components/GameInfo";
 import { VotingSection } from "Components/VotingSection";
 import { RoundWinnerModal } from "Components/RoundWinnerModal";
-import { Button } from "Components/Button";
 import { usePlayers } from "State/Players/usePlayers";
 import { useHand } from "State/Hand/useHand";
 import { useAuth } from "State/Auth/useAuth";
@@ -45,16 +44,6 @@ const GamePage = () => {
     );
   }, [players, game]);
 
-  const canSubmitCards = useMemo(() => {
-    return (
-      hand.filter((item) => item.selected).length > 0 && !hasSubmittedCards
-    );
-  }, [hand, hasSubmittedCards]);
-
-  const submitStyles = useMemo(() => {
-    return !canSubmitCards ? "shadow-inner opacity-70 cursor-not-allowed" : "";
-  }, [canSubmitCards]);
-
   const onSubmit = useCallback(async () => {
     if (hasSubmittedCards) return;
 
@@ -75,22 +64,18 @@ const GamePage = () => {
   return (
     <div>
       <GameInfo />
-      {game.judgeId !== auth.id && !showVotingSection && (
-        <>
-          <Hand />
-          {
-            canSubmitCards ?
-            <div className="flex justify-center">
-              <Button
-                text="Submit"
-                onClick={onSubmit}
-                dataTestid="white-card-submit-btn"
-                className={submitStyles}
-              />
-            </div> : null
-          }
-        </>
+      {game.judgeId !== auth.id && !hasSubmittedCards && (
+          <Hand onSubmit={onSubmit} />
       )}
+      { !showVotingSection && hasSubmittedCards
+        ? <div className="flex flex-col justify-center items-center mt-10 px-4">
+            <p className="text-lg font-bold text-center self-center">
+              You have submitted your cards, sit tight for judging.
+            </p>
+            <i className="fa-solid fa-mug-hot text-4xl pb-2 ml-2"></i>
+          </div>
+        : null
+      }
       {showVotingSection && <VotingSection />}
       <RoundWinnerModal />
     </div>

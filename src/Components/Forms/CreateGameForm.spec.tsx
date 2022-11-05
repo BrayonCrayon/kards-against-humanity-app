@@ -50,10 +50,12 @@ describe("CreateGameForm", () => {
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     userEvent.click(submitBtn);
 
-    expect(mockCreateGame).toHaveBeenCalledWith(
-      name,
-      expansions.filter(e => e.id !== expansionToExclude.id).map(e => e.id)
-    );
+    await waitFor(() => {
+      expect(mockCreateGame).toHaveBeenCalledWith(
+        name,
+        expansions.filter(e => e.id !== expansionToExclude.id).map(e => e.id)
+      );
+    })
   });
 
   it("calls create game hook", async () => {
