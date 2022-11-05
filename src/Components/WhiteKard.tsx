@@ -33,6 +33,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
       onClick={(e) => {
         onClick(card);
       }}
+      role={`white-card-${card.id}`}
       data-testid={`white-card-${card.id}`}
     >
       {card.order > 0 && (
