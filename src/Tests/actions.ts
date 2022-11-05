@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { whiteCardTestId } from "./selectors";
+import { getCardSubmitButton, whiteCardTestId } from "./selectors";
 import { WhiteCard } from "Types/WhiteCard";
 import { screen, waitFor } from "@testing-library/react";
 
@@ -13,7 +13,9 @@ export const selectWhiteCards = async (cards: WhiteCard[]) => {
 
 export const selectAndSubmitWhiteCards = async (cards: WhiteCard[]) => {
   await selectWhiteCards(cards);
-  userEvent.click(screen.getByTestId("white-card-submit-btn"));
+  const submitButton = getCardSubmitButton(cards[cards.length - 1].id);
+  expect(submitButton).not.toBeNull();
+  userEvent.click(submitButton!);
 };
 
 export const setupAndSubmitForm = (userName: string, gameCode: string, spectate: boolean = false) => {
