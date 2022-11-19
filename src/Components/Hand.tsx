@@ -120,7 +120,7 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
             showButton={showSubmitButton && positionOfLastSelectedCard === card.order}
             onClick={onSubmit}
           >
-            <WhiteKard card={card} onClick={select} />
+            <WhiteKard card={card} onClick={select} className="h-full" />
           </FloatingButton>
         ))}
       </div>
