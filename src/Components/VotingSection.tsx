@@ -3,17 +3,18 @@ import { useGame } from "State/Game/useGame";
 import { useVote } from "State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import { listenWhenWinnerIsSelected } from "Services/PusherService";
-import useFetchRoundWinner from "Hooks/Game/useFetchRoundWinner";
-import { Button } from "./Button";
+import useFetchRoundWinner from "Hooks/Game/State/useFetchRoundWinner";
 import { Selectable } from "./Selectable";
 import { SelectWinnerAction } from "State/Vote/VoteActions";
 import { useAuth } from "State/Auth/useAuth";
-import useSubmittedCards from "Hooks/Game/useSubmittedCards";
-import useSubmitWinner from "Hooks/Game/useSubmitWinner";
+import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
+import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
+import FloatingButton from "Components/Atoms/FloatingButton";
+import { ButtonVariant } from "Components/Button";
 
 export const VotingSection: FC = () => {
   const { state: { game, blackCard }, } = useGame();
-  const { state: { selectedPlayerId, selectedRoundWinner }, dispatch, } = useVote();
+  const { state: { selectedPlayerId }, dispatch, } = useVote();
   const { state: { auth }, } = useAuth();
 
   const {submittedCards, getSubmittedCards} = useSubmittedCards();
@@ -41,28 +42,26 @@ export const VotingSection: FC = () => {
       </div>
       <div className="grid grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-cols-4">
         {submittedCards.map((submission) => (
-          <Selectable
+          <FloatingButton
             key={submission.user_id}
-            dataTestid={`selectable-${submission.user_id}`}
-            isSelected={submission.user_id === selectedPlayerId}
-            onClick={() => selectCard(submission.user_id)}
-          >
-            <PlayerSubmittedCCard
-              playerSubmission={submission}
-              blackCard={blackCard}
-            />
-          </Selectable>
-        ))}
-      </div>
-      <div className="flex justify-center">
-        {auth.id === game.judgeId && !selectedRoundWinner && (
-          <Button
-            text="Submit Winner"
+            role="submit-selected-winner"
+            variant={ButtonVariant['light-outline']}
+            showButton={auth.id === game.judgeId && selectedPlayerId === submission.user_id}
             onClick={() => submitWinner(game.id, selectedPlayerId)}
-            className={selectedPlayerId > 0 ? "disabled cursor-not-allowed opacity-75" : ""}
-            dataTestid="submit-selected-winner"
-          />
-        )}
+          >
+            <Selectable
+              dataTestid={`selectable-${submission.user_id}`}
+              role={`selectable-${submission.user_id}`}
+              isSelected={submission.user_id === selectedPlayerId}
+              onClick={() => selectCard(submission.user_id)}
+            >
+              <PlayerSubmittedCCard
+                playerSubmission={submission}
+                blackCard={blackCard}
+              />
+            </Selectable>
+          </FloatingButton>
+        ))}
       </div>
     </div>
   );

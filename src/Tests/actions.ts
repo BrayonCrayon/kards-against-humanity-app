@@ -1,5 +1,5 @@
 import userEvent from "@testing-library/user-event";
-import { whiteCardTestId } from "./selectors";
+import { getCardSubmitButton, whiteCardTestId } from "./selectors";
 import { WhiteCard } from "Types/WhiteCard";
 import { screen, waitFor } from "@testing-library/react";
 
@@ -13,30 +13,31 @@ export const selectWhiteCards = async (cards: WhiteCard[]) => {
 
 export const selectAndSubmitWhiteCards = async (cards: WhiteCard[]) => {
   await selectWhiteCards(cards);
-  userEvent.click(screen.getByTestId("white-card-submit-btn"));
+  const submitButton = getCardSubmitButton(cards[cards.length - 1].id);
+  expect(submitButton).not.toBeNull();
+  userEvent.click(submitButton!);
 };
 
 export const setupAndSubmitForm = (userName: string, gameCode: string, spectate: boolean = false) => {
   expect(screen.queryByTestId("join-game-form")).not.toBeNull();
 
-  const nameInput = screen.queryByTestId("join-game-name-input");
-  expect(nameInput).not.toBeNull();
-  userEvent.type(nameInput!, userName);
+  const nameInput = screen.getByRole("user-name");
+  userEvent.type(nameInput, userName);
 
-  const codeInput = screen.queryByTestId("join-game-code-input");
-  expect(codeInput).not.toBeNull();
-  userEvent.type(codeInput!, gameCode);
+  const codeInput = screen.getByRole("game-code-input");
+  userEvent.clear(codeInput);
+  userEvent.type(codeInput, gameCode);
 
   if(spectate) userEvent.click(screen.getByTestId("is-spectator"));
 
-  const submit = screen.getByTestId("join-game-form-submit");
+  const submit = screen.getByRole("submit-form");
   userEvent.click(submit);
 };
 
 export const togglePlayerList = async () => {
   await waitFor(() => {
-    expect(screen.queryByTestId("players-sidebar")).toBeInTheDocument();
+    expect(screen.queryByRole("game-settings")).toBeInTheDocument();
 
-    userEvent.click(screen.getByTestId("players-sidebar"));
+    userEvent.click(screen.getByRole("game-settings"));
   });
 };

@@ -1,22 +1,23 @@
 import { screen, waitFor } from "@testing-library/react";
 import GamePage from "./GamePage";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { blackCardFixture } from "Api/fixtures/blackcardFixture";
 import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "Services/PusherService";
 import userEvent from "@testing-library/user-event";
 import { happyToast } from "Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { cannotSelectCardClass, getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "Tests/selectors";
+import { getCardSubmitButton, getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "Tests/actions";
 import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
 import { kardsRender } from "Tests/testRenders";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
-import { mockedAxios, service } from "setupTests";
+import { service } from "setupTests";
 import { fetchState } from "Services/GameService";
 import { AxiosResponse } from "axios";
 import { spyOnUseVote } from "Tests/testHelpers";
+import { blackCardFixture } from "Api/fixtures/blackcardFixture";
+import { gameStatePickTwoExampleResponse } from "Api/fixtures/gameStatePickTwoExampleResponse";
 
 jest.mock("../Services/PusherService");
 jest.mock("../Utilities/toasts");
@@ -32,7 +33,7 @@ jest.mock("react-router-dom", () => ({
 
 const mockUseUpdateGameState = jest.fn();
 
-jest.mock("../Hooks/Game/useGameStateCallback", () => {
+jest.mock("Hooks/Game/State/useGameStateCallback", () => {
   return () => mockUseUpdateGameState;
 });
 
@@ -224,7 +225,7 @@ describe("GamePage", () => {
 
   describe("Selecting Cards", () => {
     beforeEach(() => {
-      mockedAxios.get.mockResolvedValue(gameStateExampleResponse);
+      service.fetchState.mockResolvedValue(gameStateExampleResponse as AxiosResponse);
     });
 
     it("shows all cards visibly", async () => {
@@ -258,23 +259,16 @@ describe("GamePage", () => {
     });
 
     it("sets next selected card to the last pick order when select limit is reached", async () => {
-      gameStateExampleResponse.data.blackCard.pick = 2;
-      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-        0,
-        gameStateExampleResponse.data.blackCard.pick
-      );
-      const nextCardToSelect =
-        gameStateExampleResponse.data.hand[
-          gameStateExampleResponse.data.blackCard.pick
-        ];
+      service.fetchState.mockResolvedValueOnce(gameStatePickTwoExampleResponse as AxiosResponse);
+      const { hand, blackCard } = gameStatePickTwoExampleResponse.data;
+      const cardsToSelect = hand.slice(0, blackCard.pick);
+      const nextCardToSelect = hand[blackCard.pick];
       const wrapper = await kardsRender(<GamePage />);
 
       await selectWhiteCards(cardsToSelect);
 
       await waitFor(() => {
-        userEvent.click(
-          wrapper.getByTestId(whiteCardTestId(nextCardToSelect.id))
-        );
+        userEvent.click(getWhiteCardElement(nextCardToSelect.id)!);
       });
 
       await waitFor(() => {
@@ -310,9 +304,7 @@ describe("GamePage", () => {
       const { users, currentUser } = gameStateJudgeExampleResponse.data;
       const wrapper = await kardsRender(<GamePage />);
 
-      const playerToKick = users.filter(
-        (item) => item.id !== currentUser.id
-      )[0];
+      const [playerToKick] = users.filter((item) => item.id !== currentUser.id);
 
       await togglePlayerList();
 
@@ -352,260 +344,178 @@ describe("GamePage", () => {
       });
     });
   });
-});
 
-describe("Submitting cards", () => {
-  beforeEach(() => {
-    service.fetchState.mockResolvedValue(gameStateExampleResponse as AxiosResponse);
-    service.submitCards.mockResolvedValue({} as AxiosResponse);
-  });
-
-  it("can submit white card selection", async () => {
-    const wrapper = await kardsRender(<GamePage />);
-    const {data: { game, blackCard, hand}} = gameStateExampleResponse;
-    const [cardToSelect] = hand;
-
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
+  describe("Submitting cards", () => {
+    beforeEach(() => {
+      service.fetchState.mockResolvedValue(gameStateExampleResponse as AxiosResponse);
+      service.submitCards.mockResolvedValue({} as AxiosResponse);
     });
 
-    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
+    it("can submit white card selection", async () => {
+      const wrapper = await kardsRender(<GamePage />);
+      const {data: { game, blackCard, hand}} = gameStateExampleResponse;
+      const [cardToSelect] = hand;
 
-    await waitFor(() => {
-      expect(service.submitCards).toHaveBeenCalledWith(
-        game.id,
-        blackCard.pick,
-        [cardToSelect.id]
-      );
-    });
-  });
-
-  it("visually disables cards when selected cards are submitted", async () => {
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-      0,
-      blackCardFixture.pick
-    );
-    const wrapper = await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      userEvent.click(
-        wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
-      );
-    });
-
-    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
-
-    await waitFor(() => {
-      expect(
-        wrapper.getByTestId(whiteCardTestId(cardsToSelect[1].id))
-      ).toHaveClass(cannotSelectCardClass);
-    });
-  });
-
-  it("will console error when submit white cards api call fails", async () => {
-    const apiFailedResponse = { message: "500 error" };
-    service.submitCards.mockRejectedValueOnce(apiFailedResponse);
-    const wrapper = await kardsRender(<GamePage />);
-    const [cardToSelect] = gameStateExampleResponse.data.hand;
-    const consoleSpy = jest
-      .spyOn(console, "error")
-      .mockImplementation(() => {});
-
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
-    });
-
-    userEvent.click(wrapper.getByTestId("white-card-submit-btn"));
-
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(apiFailedResponse);
-    });
-  });
-
-  it("will not show submit card button when no cards are selected", async () => {
-    const wrapper = await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      expect(wrapper.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
-    });
-  });
-
-  it("will hide submit white card button when user has submitted their cards", async () => {
-    const wrapper = await kardsRender(<GamePage />);
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(0, gameStateExampleResponse.data.blackCard.pick);
-
-    await selectWhiteCards(cardsToSelect);
-
-    const submitButton = wrapper.getByTestId("white-card-submit-btn");
-    userEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(submitButton).not.toBeInTheDocument();
-    });
-  });
-
-  it("will not allow user to toggle white cards after they have submitted their cards", async () => {
-    const wrapper = await kardsRender(<GamePage />);
-    const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-      0,
-      gameStateExampleResponse.data.blackCard.pick
-    );
-    const notSelectedCards = gameStateExampleResponse.data.hand.slice(
-      gameStateExampleResponse.data.blackCard.pick,
-      gameStateExampleResponse.data.hand.length - 1
-    );
-
-    await selectWhiteCards(cardsToSelect);
-
-    await waitFor(() => {
-      const submitButton = wrapper.getByTestId("white-card-submit-btn");
-      userEvent.click(submitButton);
-    });
-
-    await selectWhiteCards(cardsToSelect);
-
-    cardsToSelect.forEach((item) => {
-      expect(wrapper.getByTestId(whiteCardTestId(item.id))).toHaveClass(
-        selectedCardClass
-      );
-    });
-
-    await selectWhiteCards(notSelectedCards);
-
-    notSelectedCards.forEach((item) => {
-      expect(wrapper.getByTestId(whiteCardTestId(item.id))).toHaveClass(
-        cannotSelectCardClass
-      );
-    });
-  });
-
-  it("will not show submit card button when they have already submitted", async () => {
-    service.fetchState.mockResolvedValueOnce(
-      gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-    );
-
-    const wrapper = await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      expect(wrapper.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
-    });
-  });
-
-  it("will toggle already submitted white cards after user refresh", async () => {
-    service.fetchState.mockResolvedValue(
-      gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-    );
-    const alreadySubmittedCardIds =
-      gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds;
-
-    const wrapper = await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      alreadySubmittedCardIds.forEach((cardId) => {
-        expect(wrapper.getByTestId(whiteCardTestId(cardId))).toHaveClass(
-          selectedCardClass
-        );
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
       });
-    });
-  });
 
-  it("shows selected cards as not selectable when cards are submitted", async () => {
-    service.fetchState.mockResolvedValueOnce(
-      gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-    );
-    const cards = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
-
-    await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      cards.forEach((item) => {
-        expect(getWhiteCardElement(item.id)).toHaveClass("cursor-not-allowed");
-      });
-    });
-  });
-
-  it("fades unselected cards when cards are submitted", async () => {
-    service.fetchState.mockResolvedValueOnce(
-      gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-    );
-    const cards = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
-
-    await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      cards
-        .filter((card) =>
-          gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds.includes(
-            card.id
-          )
-        )
-        .forEach((card) =>
-          expect(getWhiteCardElement(card.id)).toHaveClass(selectedCardClass)
-        );
-
-      cards
-        .filter(
-          (card) =>
-            !gameStateSubmittedWhiteCardsExampleResponse.data.submittedWhiteCardIds.includes(
-              card.id
-            )
-        )
-        .forEach((card) =>
-          expect(getWhiteCardElement(card.id)).toHaveClass(
-            cannotSelectCardClass
-          )
-        );
-    });
-  });
-
-  describe("Selecting cards", () => {
-    const cardsToSelect = gameStateExampleResponse.data.hand
-      .slice(0, 2)
-      .reverse();
-
-    beforeAll(() => {
-      gameStateExampleResponse.data.blackCard.pick = 2;
-    });
-
-    it("when submitting two white cards the order is maintained", async () => {
-      const {data: {game}} = gameStateExampleResponse;
-      await kardsRender(<GamePage />);
-
-      await selectAndSubmitWhiteCards(cardsToSelect);
+      userEvent.click(getCardSubmitButton(cardToSelect.id)!);
 
       await waitFor(() => {
         expect(service.submitCards).toHaveBeenCalledWith(
           game.id,
-          cardsToSelect.length,
-          cardsToSelect.map(item => item.id)
+          blackCard.pick,
+          [cardToSelect.id]
         );
       });
     });
-    it("when selecting and deselecting cards, order is properly updated", async () => {
-      const {data: {game}} = gameStateExampleResponse;
-      await kardsRender(<GamePage />);
 
-      await selectAndSubmitWhiteCards(cardsToSelect);
-
-      await waitFor(() => {
-        expect(service.submitCards).toHaveBeenCalledWith(
-          game.id,
-          cardsToSelect.length,
-          cardsToSelect.map(item => item.id)
-        );
-      });
-    });
-    it("indicator of card matches card order", async () => {
+    it("will not show cards when user has submitted", async () => {
+      const hand = gameStateExampleResponse.data.hand;
+      const [cardToSelect] = hand;
       const wrapper = await kardsRender(<GamePage />);
 
-      await selectWhiteCards(cardsToSelect);
+      await waitFor(() => {
+        userEvent.click(
+          wrapper.getByTestId(whiteCardTestId(cardToSelect.id))
+        );
+      });
 
-      let order = 1;
-      cardsToSelect.forEach((card) => {
-        expect(
-          wrapper.queryByTestId(whiteCardOrderTestId(card.id))
-        ).toHaveTextContent(order.toString());
-        ++order;
+      userEvent.click(getCardSubmitButton(cardToSelect.id)!);
+
+      await waitFor(() => {
+        hand.forEach(card => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument())
+      });
+    });
+
+    it("will console error when submit white cards api call fails", async () => {
+      const apiFailedResponse = { message: "500 error" };
+      service.submitCards.mockRejectedValueOnce(apiFailedResponse);
+      const wrapper = await kardsRender(<GamePage />);
+      const [cardToSelect] = gameStateExampleResponse.data.hand;
+      const consoleSpy = jest
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      await waitFor(() => {
+        userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
+      });
+
+      userEvent.click(getCardSubmitButton(cardToSelect.id)!);
+
+      await waitFor(() => {
+        expect(consoleSpy).toHaveBeenCalledWith(apiFailedResponse);
+      });
+    });
+
+    it("will not show submit card button when no cards are selected", async () => {
+      const wrapper = await kardsRender(<GamePage />);
+
+      await waitFor(() => {
+        expect(wrapper.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
+      });
+    });
+
+    it("will not show submit card button when they have already submitted", async () => {
+      service.fetchState.mockResolvedValueOnce(
+        gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
+      );
+
+      const wrapper = await kardsRender(<GamePage />);
+
+      await waitFor(() => {
+        expect(wrapper.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
+      });
+    });
+
+    it("will not show hand after user refresh", async () => {
+      service.fetchState.mockResolvedValue(
+        gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
+      );
+      const hand = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
+
+      await kardsRender(<GamePage />);
+
+      await waitFor(() => {
+        hand.forEach(card => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument());
+      });
+    });
+
+    it("will tell user they have submitted their cards", async () => {
+      service.fetchState.mockResolvedValueOnce(
+        gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
+      );
+      const wrapper = await waitFor(() => {
+        return kardsRender(<GamePage />);
+      });
+
+      expect(wrapper.queryByText('You have submitted your cards, sit tight for judging.')).toBeInTheDocument();
+    });
+
+    it("will hide submitted message when all players have submitted their cards", async () => {
+      const state = {
+        ...gameStateAllPlayerSubmittedCardsExampleResponse.data,
+        currentUser: gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0]
+      }
+      service.fetchState.mockResolvedValueOnce({ data: state } as AxiosResponse);
+      service.fetchSubmittedCards.mockResolvedValueOnce(submittedCardsResponse as AxiosResponse);
+      const wrapper = await waitFor(() => {
+        return kardsRender(<GamePage />);
+      });
+
+      expect(wrapper.queryByText('You have submitted your cards, sit tight for judging.')).toBeNull();
+    });
+
+    describe("Selecting cards", () => {
+      const cardsToSelect = gameStateExampleResponse.data.hand
+        .slice(0, 2)
+        .reverse();
+
+      beforeAll(() => {
+        gameStateExampleResponse.data.blackCard.pick = 2;
+      });
+
+      it("when submitting two white cards the order is maintained", async () => {
+        const {data: {game}} = gameStateExampleResponse;
+        await kardsRender(<GamePage />);
+
+        await selectAndSubmitWhiteCards(cardsToSelect);
+
+        await waitFor(() => {
+          expect(service.submitCards).toHaveBeenCalledWith(
+            game.id,
+            cardsToSelect.length,
+            cardsToSelect.map(item => item.id)
+          );
+        });
+      });
+      it("when selecting and deselecting cards, order is properly updated", async () => {
+        const {data: {game}} = gameStateExampleResponse;
+        await kardsRender(<GamePage />);
+
+        await selectAndSubmitWhiteCards(cardsToSelect);
+
+        await waitFor(() => {
+          expect(service.submitCards).toHaveBeenCalledWith(
+            game.id,
+            cardsToSelect.length,
+            cardsToSelect.map(item => item.id)
+          );
+        });
+      });
+      it("indicator of card matches card order", async () => {
+        const wrapper = await kardsRender(<GamePage />);
+
+        await selectWhiteCards(cardsToSelect);
+
+        let order = 1;
+        cardsToSelect.forEach((card) => {
+          expect(
+            wrapper.queryByTestId(whiteCardOrderTestId(card.id))
+          ).toHaveTextContent(order.toString());
+          ++order;
+        });
       });
     });
   });

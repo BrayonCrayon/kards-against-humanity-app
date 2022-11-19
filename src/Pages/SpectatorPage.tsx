@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { usePlayers } from "State/Players/usePlayers";
 import { useGame } from "State/Game/useGame";
-import useFetchSpectatorState from "Hooks/Game/useFetchSpectatorState";
+import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import { useParams } from "react-router-dom";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
 import { BlackKard } from "Components/BlackKard";
 import DisplaySubmittedCard from "Components/DisplaySubmittedCard";
-import useSubmittedCards from "Hooks/Game/useSubmittedCards";
+import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 
 export const SpectatorPage: React.FC = () => {
   const { state: { players } } = usePlayers();
@@ -24,7 +24,7 @@ export const SpectatorPage: React.FC = () => {
   }, [players, game.judgeId]);
 
   const setup = useCallback(async () => {
-    await fetchSpectatorState(id)
+    await fetchSpectatorState(id);
     await listenOnEvents(id);
   }, [id]);
 
@@ -48,8 +48,9 @@ export const SpectatorPage: React.FC = () => {
     <div className="flex justify-around">
       <BlackKard card={blackCard} />
     </div>
-    { haveAllPlayersSubmitted &&
-      <DisplaySubmittedCard cards={submittedCards} />
+    { haveAllPlayersSubmitted
+      ? <DisplaySubmittedCard cards={submittedCards} />
+      : null
     }
   </>
 }

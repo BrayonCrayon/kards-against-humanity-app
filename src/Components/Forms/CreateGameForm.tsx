@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "Components/Button";
 import KAHInput from "Components/KAHInput";
-import useCreateGame from "Hooks/Game/useCreateGame";
+import useCreateGame from "Hooks/Game/Create/useCreateGame";
 import { CreateGameBanner } from "Components/CreateGameBanner";
 import { KAHCard } from "Components/KAHCard";
 import { ExpansionSelector } from "Components/Sidebars/ExpansionSelector";
 import useExpansions from "Hooks/Game/Expansions/useExpansions";
+import useLoading from "Hooks/Game/Shared/useLoading";
 
 export const CreateGameForm: React.FC = () => {
   const [userName, setUserName] = useState("");
   const createGame = useCreateGame();
   const {expansions, getExpansions, setExpansions} = useExpansions();
+  const {loading, setLoading} = useLoading();
 
   useEffect(() => {
     if (expansions.length > 0) return;
@@ -19,7 +21,7 @@ export const CreateGameForm: React.FC = () => {
 
   const submitToApi = useCallback(async (event: any) => {
       event.preventDefault();
-
+      await setLoading(true);
       await createGame(
         userName,
         expansions
@@ -36,14 +38,14 @@ export const CreateGameForm: React.FC = () => {
         return item;
       }));
     },
-    [expansions, setExpansions]
+    [expansions]
   );
 
   const toggleExpansions = useCallback((toggledState: boolean) => {
     setExpansions((prev) => {
       return prev.map((ex) => ({ ...ex, isSelected: toggledState}));
     });
-  }, [expansions, setExpansions]);
+  }, [expansions]);
 
   return (
     <div className="flex flex-col w-full">
@@ -56,6 +58,7 @@ export const CreateGameForm: React.FC = () => {
           <KAHInput
             type="text"
             dataTestid="user-name"
+            value={userName}
             name="name"
             label="Player Name"
             placeholder="Bob's your uncle"
@@ -66,6 +69,7 @@ export const CreateGameForm: React.FC = () => {
           />
           <ExpansionSelector expansions={expansions} onToggle={onToggle} toggleAll={toggleExpansions} />
           <Button
+            isLoading={loading}
             text="Create"
             dataTestid="create-game-submit-button"
             type="submit"

@@ -61,8 +61,8 @@ export const spyOnUseVote = (
   mockedDispatch = jest.fn(),
   state: IVoteState = initialVoteState,
 ) => {
-  spyOnState(state, mockedDispatch, useVote, "useVote");
-  return mockedDispatch;
+  const spy = spyOnState(state, mockedDispatch, useVote, "useVote");
+  return { spy, mockedDispatch };
 }
 
 export const spyOnUsePlayers = (

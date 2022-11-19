@@ -4,18 +4,28 @@ import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleR
 import JoinGameForm from "./JoinGameForm";
 import { kardsRender } from "Tests/testRenders";
 import { setupAndSubmitForm } from "Tests/actions";
-import { spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
 import { mockedAxios } from "setupTests";
 import userEvent from "@testing-library/user-event";
 
 const mockJoinAsSpectator = jest.fn();
 const mockJoinGame = jest.fn();
-jest.mock("Hooks/Game/useJoinAsSpectator", () => {
+jest.mock("Hooks/Game/Join/useJoinAsSpectator", () => {
   return () => mockJoinAsSpectator
 })
-jest.mock("Hooks/Game/useJoinGame", () => {
+jest.mock("Hooks/Game/Join/useJoinGame", () => {
   return () => mockJoinGame
 });
+
+const mockGameCode = "3H8K";
+jest.mock("react-router-dom", () => {
+  return {
+    ...jest.requireActual("react-router-dom"),
+    useParams: () => ({
+      code: mockGameCode
+    })
+  }
+});
+
 
 const {data} = gameStateExampleResponse;
 const userName = "Joe";
@@ -27,10 +37,6 @@ const renderer = () => {
 
 describe("JoinGameForm", () => {
   beforeEach(() => {
-    spyOnUseGame();
-    spyOnUsePlayers();
-    spyOnUseAuth();
-    spyOnUseHand();
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
   });
 
@@ -65,7 +71,7 @@ describe("JoinGameForm", () => {
     const gameCode = "1j1j";
     const wrapper = renderer();
 
-    const codeInput = wrapper.queryByTestId("join-game-code-input");
+    const codeInput = wrapper.queryByRole("game-code-input");
     expect(codeInput).not.toBeNull();
     userEvent.type(codeInput!, gameCode);
 
@@ -73,5 +79,11 @@ describe("JoinGameForm", () => {
     userEvent.click(wrapper.getByTestId("is-spectator"));
 
     expect(wrapper.queryByRole('user-name')).not.toBeInTheDocument();
+  });
+
+  it("will set game code when it is coming from url params", () => {
+    const wrapper = renderer();
+
+    expect(wrapper.queryByRole("game-code-input")).toHaveValue(mockGameCode);
   });
 });

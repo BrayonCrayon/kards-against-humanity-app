@@ -1,10 +1,10 @@
 {
   "name": "kards-against-humanity-app",
-  "version": "1.7.1",
+  "version": "1.10.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
-    "@fortawesome/fontawesome-free": "^6.1.1",
+    "@fortawesome/fontawesome-free": "^6.2.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/react-hooks": "^7.0.2",
@@ -32,7 +32,8 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "craco-test": "craco test",
+    "test": "react-scripts test --watchAll=false",
     "compile-ts": "tsc --project tsconfig.json",
     "eject": "react-scripts eject"
   },
@@ -61,6 +62,7 @@
     "laravel-echo": "^1.11.2",
     "postcss": "^7.0.35",
     "prettier": "2.4.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.4"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.4",
+    "ts-node": "^10.9.1"
   }
 }

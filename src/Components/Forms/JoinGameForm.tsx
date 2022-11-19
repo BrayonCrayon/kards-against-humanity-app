@@ -1,22 +1,26 @@
-import React, { useCallback, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Button } from "Components/Button";
-import useJoinAsSpectator from "Hooks/Game/useJoinAsSpectator";
+import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
 import KAHInput from "Components/KAHInput";
 import { KAHCheckbox } from "Components/KAHCheckbox";
-import useJoinGame from "Hooks/Game/useJoinGame";
+import useJoinGame from "Hooks/Game/Join/useJoinGame";
 import { KAHCard } from "Components/KAHCard";
 import { JoinGameBanner } from "Components/JoinGameBanner";
+import useLoading from "Hooks/Game/Shared/useLoading";
+import { useParams } from "react-router-dom";
 
-const JoinGameForm: React.FC = () => {
-  const [code, setCode] = useState("");
+const JoinGameForm: FC = () => {
+  const { code: sharedCode } = useParams<{ code: string | undefined }>();
+  const [code, setCode] = useState(sharedCode ?? "");
   const [userName, setUserName] = useState("");
   const [spectator, setSpectator] = useState(false);
+  const {loading, setLoading} = useLoading();
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
   const submitToApi = useCallback(async (event) => {
       event.preventDefault();
-
+      setLoading(true);
       if (spectator) {
         await joinAsSpectator(code);
         return;
@@ -37,10 +41,11 @@ const JoinGameForm: React.FC = () => {
         >
           <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput
+            value={code}
+            ariaRole="game-code-input"
             label="Code"
             placeholder="ex: A3D5"
             name="code"
-            dataTestid="join-game-code-input"
             inputClass="flex-grow"
             required
             onChange={(e) => setCode(e.target.value)}
@@ -48,9 +53,9 @@ const JoinGameForm: React.FC = () => {
           {!spectator ? <KAHInput
             ariaRole="user-name"
             label="Player Name"
+            value={userName}
             placeholder="Bob's your uncle"
             name="name"
-            dataTestid="join-game-name-input"
             inputClass="flex-grow"
             minLength={3}
             maxLength={17}
@@ -64,7 +69,14 @@ const JoinGameForm: React.FC = () => {
             />
             <span>Spectator</span>
           </div>
-          <Button className="w-full md:w-1/2 md:mx-auto" type="submit" text="Join Now" dataTestid="join-game-form-submit"/>
+          <Button
+            isLoading={loading}
+            className="w-full md:w-1/2 md:mx-auto"
+            type="submit"
+            text="Join Now"
+            role="submit-form"
+            dataTestid="join-game-form-submit"
+          />
         </form>
       </KAHCard>
       <JoinGameBanner/>

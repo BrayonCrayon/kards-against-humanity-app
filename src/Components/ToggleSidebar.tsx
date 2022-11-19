@@ -28,17 +28,17 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
       </div>
       {show && (
         <div
-          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white bg-opacity-75 flex"
+          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white bg-opacity-75 flex cursor-pointer"
           data-testid="sidebar"
         >
           <div
             onClick={() => setShow(!show)}
             data-testid="sidebar-background"
-            className="w-1/4 h-screen md:w-1/2"
+            className="h-screen flex-1"
           />
-          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative md:w-1/2 ${sideBarStyles}`}>
+          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative max-w-xs cursor-auto ${sideBarStyles}`}>
             <button
-              className="absolute top-1 left-2 text-black hover:text-gray-500 cursor-pointer"
+              className="absolute top-1 left-2 text-black cursor-pointer z-60 hover:text-gray-500"
               data-testid="close-button"
               onClick={() => setShow(!show)}
             >

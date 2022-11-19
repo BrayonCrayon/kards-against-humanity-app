@@ -8,7 +8,7 @@ import gameService from "Services/GameService";
 const { data: expansions } = getExpansionsExampleResponse;
 
 const mockCreateGame = jest.fn();
-jest.mock("Hooks/Game/useCreateGame", () => {
+jest.mock("Hooks/Game/Create/useCreateGame", () => {
   return () => mockCreateGame;
 });
 
@@ -22,7 +22,7 @@ describe("CreateGameForm", () => {
     gameService.fetchExpansions.mockResolvedValue(getExpansionsExampleResponse);
   });
 
-  it("renders expansion cards with blue background to indicate that it is selected", async () => {
+  it("renders all expansion cards to be initially checked", async () => {
     const wrapper = renderer();
 
     await waitFor(() => {
@@ -48,12 +48,14 @@ describe("CreateGameForm", () => {
     userEvent.type(nameInput, name);
 
     const submitBtn = await screen.findByTestId("create-game-submit-button");
-    userEvent.click(submitBtn);
+    await waitFor(() => userEvent.click(submitBtn));
 
-    expect(mockCreateGame).toHaveBeenCalledWith(
-      name,
-      expansions.filter(e => e.id !== expansionToExclude.id).map(e => e.id)
-    );
+    await waitFor(() => {
+      expect(mockCreateGame).toHaveBeenCalledWith(
+        name,
+        expansions.filter(e => e.id !== expansionToExclude.id).map(e => e.id)
+      );
+    })
   });
 
   it("calls create game hook", async () => {

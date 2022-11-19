@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import ToggleSidebar from "Components/ToggleSidebar";
 import ExpansionCard from "Components/ExpansionCard";
 import { ExpansionOption } from "Types/Expansion";
@@ -15,11 +15,6 @@ type ExpansionSelectorProps = {
 export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions, onToggle, toggleAll, className = "" }) =>
 {
   const [selectAll, setSelectAll] = useState(true);
-
-  const selectedCount = useMemo(() => {
-    return expansions.reduce((sum, item) =>
-      sum + (item.isSelected ? item.expansion.whiteCardCount : 0), 0);
-  }, [expansions]);
 
   const onChange = useCallback(() => {
     setSelectAll(!selectAll);
@@ -39,11 +34,7 @@ export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions
     >
       <>
         <div className="h-full">
-          <div className="flex h-5% px-5 py-2 my-1 shadow-md items-center">
-            <h5 className="w-1/2 text-right text-sm" role="total-white-card-count">
-              total: {selectedCount}
-            </h5>
-            <div className="w-1/2 flex justify-end">
+          <div className="flex h-5% px-5 py-2 my-1 shadow-md items-center justify-end">
               <KAHToggler
                 role="toggle-all-expansions"
                 on={selectAll}
@@ -52,7 +43,6 @@ export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions
                 onClick={onChange}
               />
             </div>
-          </div>
           <div className="overflow-y-scroll px-2 rounded h-95%" >
             {expansions.map(({ expansion, isSelected }) => {
               return (

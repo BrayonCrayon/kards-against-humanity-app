@@ -1,5 +1,5 @@
 import { history, kardsHookRender } from "Tests/testRenders";
-import useJoinAsSpectator from "Hooks/Game/useJoinAsSpectator";
+import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "Tests/testHelpers";
 import { transformUser, transformUsers } from "Types/User";
 import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";

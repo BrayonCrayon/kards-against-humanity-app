@@ -1,5 +1,7 @@
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { RenderResult, waitFor } from "@testing-library/react";
 import { transformUser, transformUsers } from "Types/User";
 import { VotingSection } from "./VotingSection";
@@ -10,17 +12,17 @@ import { listenWhenWinnerIsSelected } from "Services/PusherService";
 import { act } from "react-dom/test-utils";
 import { kardsRender } from "Tests/testRenders";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "Tests/testHelpers";
-import { initialVoteState } from "State/Vote/VoteState";
 import { service } from "setupTests";
 import gameService, { fetchSubmittedCards } from "Services/GameService";
 import { AxiosResponse } from "axios";
+import { initialVoteState } from "State/Vote/VoteState";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock("../Utilities/toasts");
-jest.mock("../Services/PusherService");
-jest.mock("../Hooks/Game/UseFetchRoundWinner", () => {
+jest.mock("Utilities/toasts");
+jest.mock("Services/PusherService");
+jest.mock("Hooks/Game/State/useFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 
@@ -79,21 +81,17 @@ describe("VotingSection", () => {
 
     it("submits selected winner to api", async () => {
       const { user_id } = submittedCardsResponse.data[0];
+      const {spy} = spyOnUseVote(jest.fn(), { selectedPlayerId: user_id });
 
-      const wrapper = await renderer();
+      const wrapper = await waitFor(() => renderer());
 
-      await waitFor(() => {
-        userEvent.click(
-          wrapper.getByTestId(`player-submitted-response-${user_id}`)
-        );
-      });
-
-      userEvent.click(wrapper.getByTestId("submit-selected-winner"));
+      userEvent.click(wrapper.getByRole("submit-selected-winner"));
 
       await waitFor(() => {
         expect(gameService.submitWinner).toHaveBeenCalledWith(mockProps.game.id, user_id);
         expect(happyToast).toHaveBeenCalledWith("Winner Selected!", "top");
       });
+      spy.mockRestore();
     });
   });
 
@@ -123,12 +121,12 @@ describe("VotingSection", () => {
       const { user_id } = submittedCardsResponse.data[0];
 
       const submittedCardElement = await waitFor(() => {
-        return wrapper.getByTestId(`selectable-${user_id}`);
+        return wrapper.getByRole(`selectable-${user_id}`);
       });
       userEvent.click(submittedCardElement);
 
       await waitFor(() => {
-        expect(submittedCardElement).toHaveClass("opacity-75");
+        expect(submittedCardElement).toHaveClass("border-2 border-black p-0.5 rounded");
       });
     });
 
@@ -141,7 +139,7 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(
-          wrapper.queryByTestId("submit-selected-winner")
+          wrapper.queryByRole("submit-selected-winner")
         ).not.toBeInTheDocument();
       });
     });
@@ -171,7 +169,7 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(
-          wrapper.queryByTestId("submit-selected-winner")
+          wrapper.queryByRole("submit-selected-winner")
         ).not.toBeInTheDocument();
       });
     });
