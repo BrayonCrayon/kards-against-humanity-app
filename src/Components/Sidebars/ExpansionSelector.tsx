@@ -49,7 +49,7 @@ export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions
                 <ExpansionCard
                   key={`expansion-${expansion.id}`}
                   id={expansion.id}
-                  whiteCardCount={expansion.whiteCardCount}
+                  cardCount={expansion.cardCount}
                   name={expansion.name}
                   checked={isSelected}
                   onToggle={onToggle}

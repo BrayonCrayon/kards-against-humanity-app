@@ -9,12 +9,12 @@ export const getExpansionsExampleResponse: IGetExpansionsExampleResponse = {
     {
       id: 1,
       name: "Base set",
-      whiteCardCount: 255,
+      cardCount: 255,
     },
     {
       id: 2,
       name: "Christmas Set",
-      whiteCardCount: 20,
+      cardCount: 20,
     },
   ],
 };
