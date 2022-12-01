@@ -99,7 +99,7 @@ describe("CreateGameForm", () => {
 
     await waitFor(() => {
       expansions.forEach(item =>
-        expect(wrapper.queryByRole(`white-card-count-${item.id}`)?.textContent).toContain(item.whiteCardCount)
+        expect(wrapper.queryByRole(`white-card-count-${item.id}`)?.textContent).toContain(item.cardCount)
       );
     })
   });

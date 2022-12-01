@@ -1,7 +1,7 @@
 export interface Expansion {
   id: number;
   name: string;
-  whiteCardCount: number;
+  cardCount: number;
   createdAt?: Date;
   deleted_at?: Date;
 }

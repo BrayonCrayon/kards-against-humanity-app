@@ -2,7 +2,7 @@ import React from "react";
 import { Expansion } from "Types/Expansion";
 import { KAHCheckbox } from "Components/KAHCheckbox";
 
-interface ExpansionCardProps extends Pick<Expansion, "id" | "name" | "whiteCardCount"> {
+interface ExpansionCardProps extends Pick<Expansion, "id" | "name" | "cardCount"> {
   checked: boolean;
   onToggle: (id: number) => void;
 }
@@ -10,7 +10,7 @@ interface ExpansionCardProps extends Pick<Expansion, "id" | "name" | "whiteCardC
 const ExpansionCard: React.FC<ExpansionCardProps> = ({
    id,
    name,
-   whiteCardCount,
+   cardCount,
    checked,
    onToggle
  }) => {
@@ -30,7 +30,7 @@ const ExpansionCard: React.FC<ExpansionCardProps> = ({
         role={`white-card-count-${id}`}
         className="font-normal absolute bottom-0.5 right-2.5 text-xs"
       >
-        Cards: {whiteCardCount}
+        Cards: {cardCount}
       </span>
     </div>
   );
