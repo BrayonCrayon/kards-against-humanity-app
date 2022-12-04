@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Button, ButtonVariant } from "Components/Button";
+import { Button, ButtonVariant } from "Components/Atoms/Button";
 import { useHistory } from "react-router-dom";
 
 

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useGame } from "State/Game/useGame";
 import useFetchGameState from "Hooks/Game/State/useFetchGameState";
-import GameInfo from "Components/GameInfo";
+import GameInfo from "Components/GameInformation/GameInfo";
 import { VotingSection } from "Components/VotingSection";
 import { RoundWinnerModal } from "Components/RoundWinnerModal";
 import { usePlayers } from "State/Players/usePlayers";

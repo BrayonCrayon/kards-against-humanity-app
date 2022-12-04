@@ -5,6 +5,7 @@ interface SelectableProps {
   onClick: () => void;
   dataTestid: string;
   role?: string;
+  selectedClass?: string;
 }
 
 export const Selectable: React.FC<SelectableProps> = ({
@@ -13,10 +14,11 @@ export const Selectable: React.FC<SelectableProps> = ({
   dataTestid,
   children,
   role = "",
+  selectedClass= ""
 }) => {
   return (
     <div
-      className={`cursor-pointer ${isSelected ? "border-2 border-black p-0.5 rounded" : ""} `}
+      className={`cursor-pointer ${isSelected ? selectedClass : ""} `}
       data-testid={dataTestid}
       role={role}
       onClick={onClick}

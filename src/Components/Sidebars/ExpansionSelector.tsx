@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import ToggleSidebar from "Components/ToggleSidebar";
 import ExpansionCard from "Components/ExpansionCard";
 import { ExpansionOption } from "Types/Expansion";
-import { Button, ButtonVariant } from "Components/Button";
+import { Button, ButtonVariant } from "Components/Atoms/Button";
 import { KAHToggler } from "Components/KAHToggler";
 
 type ExpansionSelectorProps = {

@@ -20,7 +20,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
   return (
     <div
       role={'playerSubmittedCard'}
-      className={`bg-black text-white rounded shadow-md p-8`}
+      className={`bg-black text-white shadow-md px-4 py-2 min-h-72 max-w-64 `}
       data-testid={`player-submitted-response-${user_id}`}
     >
       <div

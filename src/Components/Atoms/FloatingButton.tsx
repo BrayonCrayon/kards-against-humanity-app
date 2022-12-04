@@ -1,8 +1,9 @@
 import { FC, useCallback, useState } from "react";
-import { Button, ButtonVariant } from "Components/Button";
+import { Button, ButtonVariant } from "Components/Atoms/Button";
 
 interface FloatingButtonProps {
   className?: string;
+  buttonClass?: string;
   role?: string;
   showButton: boolean;
   variant?: ButtonVariant;
@@ -12,6 +13,7 @@ interface FloatingButtonProps {
 const FloatingButton: FC<FloatingButtonProps> = ({
  children,
  className = "",
+ buttonClass = "",
  role = "button",
  variant = ButtonVariant.primary,
  showButton = false,
@@ -26,7 +28,7 @@ const FloatingButton: FC<FloatingButtonProps> = ({
   }, [onClick]);
 
   return (
-    <div className={`w-full h-full relative ${className}`}>
+    <div className={`relative ${className}`}>
       {children}
       {
         showButton
@@ -37,7 +39,7 @@ const FloatingButton: FC<FloatingButtonProps> = ({
             role={role}
             dataTestid={role}
             text="submit"
-            className="absolute -top-6 -right-1 rounded-full text-xs shadow-xl"
+            className={`absolute rounded-full text-xs shadow-xl ${buttonClass}`}
           />
           : null
       }
