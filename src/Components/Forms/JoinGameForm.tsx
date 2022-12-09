@@ -1,5 +1,5 @@
 import { FC, useCallback, useState } from "react";
-import { Button } from "Components/Button";
+import { Button } from "Components/Atoms/Button";
 import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
 import KAHInput from "Components/KAHInput";
 import { KAHCheckbox } from "Components/KAHCheckbox";

@@ -11,3 +11,9 @@ jest.mock("Services/GameService");
 export const service = gameService as jest.Mocked<typeof gameService>;
 
 jest.mock("Utilities/toasts");
+
+Object.assign(navigator, {
+  clipboard: {
+    writeText: () => {},
+  },
+});

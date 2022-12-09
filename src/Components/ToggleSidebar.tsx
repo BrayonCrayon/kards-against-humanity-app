@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Button } from "./Button";
+import { Button } from "Components/Atoms/Button";
 
 interface ToggleSidebarProps {
   toggleElement?: JSX.Element;

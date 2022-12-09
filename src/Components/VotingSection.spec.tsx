@@ -126,7 +126,7 @@ describe("VotingSection", () => {
       userEvent.click(submittedCardElement);
 
       await waitFor(() => {
-        expect(submittedCardElement).toHaveClass("border-2 border-black p-0.5 rounded");
+        expect(wrapper.getByRole("submit-selected-winner")).toBeInTheDocument();
       });
     });
 

@@ -26,7 +26,7 @@ const PlayerNotificationBar: FC<PlayerNotificationBarProps> = ({
   }, [nonJudgeUsers, totalSubmittedAmount]);
 
   return (
-    <div className="w-full flex justify-center my-1 mx-2 py-1 rounded-full bg-gray-800 text-white font-semibold">
+    <div className="w-full flex justify-center bg-gray-800 text-white font-semibold py-1">
       <div data-testid="player-submitted-info">{infoMessage}</div>
     </div>
   );

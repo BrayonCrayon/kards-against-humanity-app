@@ -3,7 +3,9 @@ import React, { FC, useMemo } from "react";
 export enum ButtonVariant {
   "primary" = "bg-black py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 ",
   "light-outline" = "bg-black border-2 border-white py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 ",
+  "light-compact" = "bg-black px-2 py-1 text-white font-bold shadow mt-4 mb-4 capitalize hover:bg-gray-800 ",
   "dark-outline" = "bg-white py-3 px-4 text-black border-2 border-black font-bold mt-4 mb-4 hover:bg-gray-100 ",
+  "dark-compact" = "bg-white shadow-2xl px-2 py-1 capitalize text-black border-2 border-black font-bold mt-4 mb-4 hover:bg-gray-100 ",
 }
 
 interface ButtonProps {

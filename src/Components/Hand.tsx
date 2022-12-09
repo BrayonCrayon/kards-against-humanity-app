@@ -10,6 +10,7 @@ import { useHand } from "State/Hand/useHand";
 import { useGame } from "State/Game/useGame";
 import { useAuth } from "State/Auth/useAuth";
 import FloatingButton from "Components/Atoms/FloatingButton";
+import { ButtonVariant } from "Components/Atoms/Button";
 
 interface HandProps {
   onSubmit?: () => void;
@@ -112,13 +113,16 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
           {redrawText}
         </button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
+      <div className="grid place-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         {hand.map((card) => (
           <FloatingButton
+            variant={ButtonVariant['light-compact']}
             key={card.id}
             role={`submit-${card.id}`}
             showButton={showSubmitButton && positionOfLastSelectedCard === card.order}
             onClick={onSubmit}
+            className="min-w-64"
+            buttonClass="-top-6 -right-2"
           >
             <WhiteKard card={card} onClick={select} className="h-full" />
           </FloatingButton>
