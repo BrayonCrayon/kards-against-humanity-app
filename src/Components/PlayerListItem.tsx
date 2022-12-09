@@ -44,16 +44,18 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   return (
     <>
-      <div className="flex text-2xl items-center" data-testid={`user-${player.id}`}>
-        <p className="mr-1 w-8">{player.score}</p>
+      <div
+        className="flex text-2xl items-center"
+        data-testid={`user-${player.id}`}
+        role={`user-${player.id}`}
+      >
+        <p className="mr-3 w-7 border-r border-black">{player.score}</p>
+        <i className="fa-solid fa-user mr-1 text-base self-center"></i>
         <p
           className={`${player.hasSubmittedWhiteCards ? "text-green-500" : ""}`}
         >
-          - {player.name}
+          {player.name}
         </p>
-        {auth.id === player.id && (
-          <i className="fas fa-user-check ml-4 text-gray-400" />
-        )}
       </div>
       <div>
         {game.judgeId === player.id && (

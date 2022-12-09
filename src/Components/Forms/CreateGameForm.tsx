@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Button } from "Components/Button";
+import { Button } from "Components/Atoms/Button";
 import KAHInput from "Components/KAHInput";
 import useCreateGame from "Hooks/Game/Create/useCreateGame";
 import { CreateGameBanner } from "Components/CreateGameBanner";

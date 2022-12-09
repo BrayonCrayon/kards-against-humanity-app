@@ -6,7 +6,9 @@ import { service } from "setupTests";
 import { AxiosResponse } from "axios";
 import { fetchSubmittedCards } from "Services/GameService";
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { gameSpectatorAllPlayersSubmittedExampleResponse } from "Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
+import {
+  gameSpectatorAllPlayersSubmittedExampleResponse
+} from "Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
 
 const {data} = gameSpectatorExampleResponse;
 
@@ -50,7 +52,7 @@ describe('SpectatorPage', () => {
     const spectatorPage = await waitFor(() => {
       return kardsRender(<SpectatorPage />);
     });
-    spectatorPage.getByText(data.blackCard.text);
+    spectatorPage.getByText(`K.${data.blackCard.text}`);
   });
 
   it("will display submitted white cards", async () => {

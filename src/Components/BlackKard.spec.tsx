@@ -12,6 +12,6 @@ describe("BlackCards", function () {
     };
 
     const { getByText } = render(<BlackKard card={card} />);
-    getByText(card.text);
+    getByText(`K.${card.text}`);
   });
 });

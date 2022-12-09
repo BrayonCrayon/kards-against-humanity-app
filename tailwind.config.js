@@ -21,7 +21,9 @@ module.exports = {
       gray: colors.gray,
       red: colors.red,
       yellow: colors.amber,
-      green: colors.emerald,
+      green: {
+        500: '#95D860',
+      },
       blue: colors.blue,
       indigo: colors.indigo,
       purple: colors.violet,
@@ -125,6 +127,7 @@ module.exports = {
       0: "0px",
       2: "2px",
       4: "4px",
+      5: "5px",
       8: "8px",
     },
     boxShadow: {
@@ -455,6 +458,7 @@ module.exports = {
       screen: "100vh",
     }),
     maxWidth: (theme, { breakpoints }) => ({
+      ...theme("spacing"),
       none: "none",
       0: "0rem",
       xs: "20rem",
@@ -474,11 +478,12 @@ module.exports = {
       prose: "65ch",
       ...breakpoints(theme("screens")),
     }),
-    minHeight: {
+    minHeight: (theme) => ({
+      ...theme('spacing'),
       0: "0px",
       full: "100%",
       screen: "100vh",
-    },
+    }),
     minWidth: (theme) => ({
       ...theme('spacing'),
       0: "0px",

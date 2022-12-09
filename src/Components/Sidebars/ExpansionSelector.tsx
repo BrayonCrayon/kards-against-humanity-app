@@ -2,7 +2,7 @@ import React, { useCallback, useState } from "react";
 import ToggleSidebar from "Components/ToggleSidebar";
 import ExpansionCard from "Components/ExpansionCard";
 import { ExpansionOption } from "Types/Expansion";
-import { Button, ButtonVariant } from "Components/Button";
+import { Button, ButtonVariant } from "Components/Atoms/Button";
 import { KAHToggler } from "Components/KAHToggler";
 
 type ExpansionSelectorProps = {
@@ -49,7 +49,7 @@ export const ExpansionSelector: React.FC<ExpansionSelectorProps> = ({ expansions
                 <ExpansionCard
                   key={`expansion-${expansion.id}`}
                   id={expansion.id}
-                  whiteCardCount={expansion.whiteCardCount}
+                  cardCount={expansion.cardCount}
                   name={expansion.name}
                   checked={isSelected}
                   onToggle={onToggle}

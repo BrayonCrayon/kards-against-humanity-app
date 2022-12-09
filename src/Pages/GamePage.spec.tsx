@@ -3,13 +3,20 @@ import GamePage from "./GamePage";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "Services/PusherService";
 import userEvent from "@testing-library/user-event";
-import { happyToast } from "Utilities/toasts";
 import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { getCardSubmitButton, getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "Tests/selectors";
+import {
+  getCardSubmitButton,
+  getWhiteCardElement,
+  selectedCardClass,
+  whiteCardOrderTestId,
+  whiteCardTestId
+} from "Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "Tests/actions";
 import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
 import { kardsRender } from "Tests/testRenders";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
 import { service } from "setupTests";
@@ -37,12 +44,6 @@ jest.mock("Hooks/Game/State/useGameStateCallback", () => {
   return () => mockUseUpdateGameState;
 });
 
-Object.assign(navigator, {
-  clipboard: {
-    writeText: () => {},
-  },
-});
-
 describe("GamePage", () => {
   beforeEach(() => {
     // @ts-ignore
@@ -65,35 +66,6 @@ describe("GamePage", () => {
           );
           expect(whiteCardElement).not.toBeNull();
         });
-      });
-    });
-
-    it("shows game code", async () => {
-      const { game } = gameStateExampleResponse.data;
-      const wrapper = await kardsRender(<GamePage />);
-
-      await waitFor(() => {
-        const gameCodeDisplayElement = wrapper.queryByTestId(
-          `game-${game.id}`
-        ) as HTMLElement;
-        expect(gameCodeDisplayElement).not.toBeNull();
-        expect(gameCodeDisplayElement).toHaveTextContent(game.code);
-      });
-    });
-
-    it("displays notification when game code is clicked", async () => {
-      const { game } = gameStateExampleResponse.data;
-      const wrapper = await kardsRender(<GamePage />);
-
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`game-${game.id}`));
-      });
-
-      await waitFor(() => {
-        expect(happyToast).toHaveBeenCalledWith(
-          "Game code copied!",
-          "top-start"
-        );
       });
     });
 
@@ -157,21 +129,6 @@ describe("GamePage", () => {
           expect(userElement.textContent).toContain(user.name);
         });
       });
-    });
-  });
-
-  it("copies game code to clipboard when clicked", async () => {
-    const { game } = gameStateExampleResponse.data;
-    jest.spyOn(navigator.clipboard, "writeText");
-
-    const wrapper = await kardsRender(<GamePage />);
-
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`game-${game.id}`));
-    });
-
-    await waitFor(() => {
-      expect(navigator.clipboard.writeText).toBeCalledWith(game.code);
     });
   });
 
