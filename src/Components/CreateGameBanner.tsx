@@ -1,6 +1,6 @@
-import { FC } from "react";
-import { Button, ButtonVariant } from "Components/Atoms/Button";
-import { useHistory } from "react-router-dom";
+import {FC} from "react";
+import {Button, ButtonVariant} from "Components/Atoms/Button";
+import {useHistory} from "react-router-dom";
 
 
 export const CreateGameBanner: FC = () => {
@@ -10,7 +10,7 @@ export const CreateGameBanner: FC = () => {
     history.push('/');
   }
 
-  return <div className="bg-black text-white py-7 md:mx-16 md:mt-8 md:mb-16">
+  return <div className="fixed bottom-0 bg-black text-white py-7 w-full">
     <h3 className="font-bold text-3xl text-center leading-relaxed">
       Looking To <br />Join A Game?
     </h3>

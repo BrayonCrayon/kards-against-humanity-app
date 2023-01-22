@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
-import { WhiteCard } from "Types/WhiteCard";
-import { useAuth } from "State/Auth/useAuth";
+import React, {useMemo} from "react";
+import {WhiteCard} from "Types/WhiteCard";
+import {useAuth} from "State/Auth/useAuth";
 
 interface WhiteKardProps {
   card: WhiteCard;
@@ -48,9 +48,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
         </div>
       )}
       <span>{card.text}</span>
-      <div className="absolute text-xs bottom-1 right-1">
-        Kards Against Humanity
-      </div>
+      <div className="absolute text-base bottom-1 right-1">K.</div>
     </div>
   );
 };
