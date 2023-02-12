@@ -1,5 +1,5 @@
 import React from "react";
-import { BlackCard } from "Types/BlackCard";
+import {BlackCard} from "Types/BlackCard";
 
 interface BlackCardProps {
   card: BlackCard;

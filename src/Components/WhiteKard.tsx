@@ -1,6 +1,6 @@
-import React, { useMemo } from "react";
-import { WhiteCard } from "Types/WhiteCard";
-import { useAuth } from "State/Auth/useAuth";
+import React, {useMemo} from "react";
+import {WhiteCard} from "Types/WhiteCard";
+import {useAuth} from "State/Auth/useAuth";
 
 interface WhiteKardProps {
   card: WhiteCard;
