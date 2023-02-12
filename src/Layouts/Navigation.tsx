@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, {useEffect, useState} from "react";
+import {Link, useLocation} from "react-router-dom";
 
 interface GameLink {
   path: '/' | '/create';
@@ -36,7 +36,7 @@ const Navigation: React.FC = () => {
           show
             ?
             <div className="flex flex-col w-full justify-center border-t border-gray-800 pt-4 md:hidden">
-              <Link to={link.path} className="font-bold self-center">{ link.text }</Link>
+              <Link onClick={() => setShow(!show)} to={link.path} className="font-bold self-center">{ link.text }</Link>
             </div>
             : null
         }

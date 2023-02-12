@@ -18,7 +18,8 @@ describe("Settings", () => {
     const gameId = "alsdf8asdfoi43jo3i4";
     const wrapper = renderComponent(gameId);
 
-    userEvent.click(wrapper.getByRole("game-settings"));
+    userEvent.click(wrapper.getByTestId("game-settings"));
+    userEvent.click(wrapper.getByTestId("game-tab"))
     userEvent.click(wrapper.getByRole("leave-game-button"));
 
     expect(mockedLeaveGame).toHaveBeenCalled();
@@ -28,9 +29,9 @@ describe("Settings", () => {
     const { data: { game, users } } = gameStateExampleResponse;
     const wrapper = renderComponent(game.id, users);
 
-    userEvent.click(wrapper.getByRole("game-settings"));
+    userEvent.click(wrapper.getByTestId("game-settings"));
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole("players-tab"));
+      userEvent.click(wrapper.getByTestId("players-tab"));
     });
 
     users.forEach((user) => {

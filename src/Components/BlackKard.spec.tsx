@@ -1,6 +1,6 @@
-import { render } from "@testing-library/react";
-import { BlackCard } from "Types/BlackCard";
-import { BlackKard } from "./BlackKard";
+import {render} from "@testing-library/react";
+import {BlackCard} from "Types/BlackCard";
+import {BlackKard} from "./BlackKard";
 
 describe("BlackCards", function () {
   it("can render a card", () => {
@@ -12,6 +12,6 @@ describe("BlackCards", function () {
     };
 
     const { getByText } = render(<BlackKard card={card} />);
-    getByText(`K.${card.text}`);
+    getByText(`${card.text}`);
   });
 });

@@ -52,7 +52,7 @@ describe('SpectatorPage', () => {
     const spectatorPage = await waitFor(() => {
       return kardsRender(<SpectatorPage />);
     });
-    spectatorPage.getByText(`K.${data.blackCard.text}`);
+    spectatorPage.getByText(`${data.blackCard.text}`);
   });
 
   it("will display submitted white cards", async () => {
