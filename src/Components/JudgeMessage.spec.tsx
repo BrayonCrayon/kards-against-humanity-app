@@ -1,7 +1,7 @@
-import { kardsRender } from "Tests/testRenders";
+import {kardsRender} from "Tests/testRenders";
 import JudgeMessage from "./JudgeMessage";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { transformUser, transformUsers, User } from "Types/User";
+import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
+import {transformUser, transformUsers, User} from "Types/User";
 
 const { data: { currentUser, users, game } } = gameStateExampleResponse;
 
@@ -48,5 +48,13 @@ describe("JudgeMessage", () => {
     const wrapper = renderComponent(user, players, user!.id);
 
     expect(wrapper.queryByTestId("judge-message")).not.toBeInTheDocument();
+  });
+
+  it('will show the icon when the only player in the game is the judge', () => {
+    const players = transformUsers(users);
+    const user = players.find((item) => item.id === game.judgeId);
+    const wrapper = renderComponent(user, [user!]);
+
+    wrapper.getByTestId("judge-message");
   });
 });
