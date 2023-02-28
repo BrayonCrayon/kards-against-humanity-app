@@ -1,6 +1,6 @@
-import {FC} from "react";
-import {Button, ButtonVariant} from "Components/Atoms/Button";
-import {useHistory} from "react-router-dom";
+import { FC } from "react";
+import { Button, ButtonVariant } from "Components/Atoms/Button";
+import { useHistory } from "react-router-dom";
 
 
 export const CreateGameBanner: FC = () => {
