@@ -1,5 +1,5 @@
-import { User } from "Types/User";
-import { FC, useMemo } from "react";
+import {User} from "Types/User";
+import {FC, useMemo} from "react";
 
 interface JudgeMessageProps {
   user: User;
@@ -20,7 +20,7 @@ const JudgeMessage: FC<JudgeMessageProps> = ({
 
   return (
     <>
-      {user.id === judgeId && !allPlayersSubmitted && (
+      {user.id === judgeId && (!allPlayersSubmitted || users.length === 1) && (
         <div
           data-testid="judge-message"
           className={`flex flex-col w-full ${className}`}

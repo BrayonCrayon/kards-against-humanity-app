@@ -10,7 +10,7 @@ export const CreateGameBanner: FC = () => {
     history.push('/');
   }
 
-  return <div className="bg-black text-white py-7 md:mx-16 md:mt-8 md:mb-16">
+  return <div className="mt-auto bg-black text-white py-7 w-full">
     <h3 className="font-bold text-3xl text-center leading-relaxed">
       Looking To <br />Join A Game?
     </h3>

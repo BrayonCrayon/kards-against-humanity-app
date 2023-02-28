@@ -32,7 +32,7 @@ const JoinGameForm: FC = () => {
   );
 
   return (
-    <div className="flex flex-col w-full" data-testid="join-game-section">
+    <div className="flex flex-col w-full h-full" data-testid="join-game-section">
       <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
         <form
           data-testid="join-game-form"

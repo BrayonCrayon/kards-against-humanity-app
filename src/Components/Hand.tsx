@@ -105,7 +105,7 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
     <>
       <div className="w-full flex justify-center">
         <button
-          className="w-1/2 py-1 bg-gray-300 text-gray-900 rounded-full"
+          className="w-1/2 py-1 bg-gray-300 text-gray-900 rounded-full mb-5"
           data-testid="redraw-button"
           onClick={redraw}
         >
