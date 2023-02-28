@@ -1,6 +1,6 @@
-import {render} from "@testing-library/react";
-import {BlackCard} from "Types/BlackCard";
-import {BlackKard} from "./BlackKard";
+import { render } from "@testing-library/react";
+import { BlackCard } from "Types/BlackCard";
+import { BlackKard } from "./BlackKard";
 
 describe("BlackCards", function () {
   it("can render a card", () => {
