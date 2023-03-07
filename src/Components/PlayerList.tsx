@@ -8,12 +8,9 @@ interface PlayerListProps {
 
 const PlayerList: FC<PlayerListProps> = ({ users = [] }) => {
   return (
-    <div className="p-2">
+    <div>
       {users.map((player) => (
-        <div
-          className="font-semibold flex py-2 pl-2 border-b flex justify-between"
-          key={player.id}
-        >
+        <div className="font-semibold flex py-4 pl-2 flex justify-between" key={player.id}>
           <PlayerListItem player={player} />
         </div>
       ))}

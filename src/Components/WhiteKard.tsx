@@ -23,12 +23,12 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
 
   return (
     <div
-      className={`bg-white relative shadow-md p-4 text-xl font-weight-800 flex flex-wrap cursor-pointer min-h-72 max-w-64 leading-normal hover:bg-gray-100 md:text-3xl 
+      className={`bg-white font-bold relative px-6 py-7 text-3xl flex flex-wrap cursor-pointer min-h-72 max-w-64 leading-normal hover:bg-gray-100
         ${className} 
         ${
           card.selected
             ? "border-5 border-green-500"
-            : "border border-black"
+            : ""
         } 
         ${hasSubmittedCards ? "cursor-not-allowed" : ""} 
         ${nonSubmittedCards ? "opacity-25" : ""}
@@ -48,7 +48,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
         </div>
       )}
       <span>{card.text}</span>
-      <div className="absolute text-base bottom-1 right-1">K.</div>
+      <div className="absolute text-2xl font-bold text-gray-200 bottom-1 right-1">K.</div>
     </div>
   );
 };

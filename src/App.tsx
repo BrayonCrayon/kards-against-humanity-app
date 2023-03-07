@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import GamePage from "./Pages/GamePage";
 import Navigation from "./Layouts/Navigation";
+import Footer from "./Layouts/Footer";
 import HomePage from "./Pages/HomePage";
 import { apiClient } from "./Api/apiClient";
 import { SpectatorPage } from "Pages/SpectatorPage";
@@ -16,32 +17,34 @@ export default function App() {
 
   return (
     <Router>
-      <div>
+      <div className="min-h-screen flex flex-col">
         <Navigation />
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/game/:id/spectate">
-            <SpectatorPage />
-          </Route>
+        <div className="flex-1">
+          <Switch>
+            <Route path="/game/:id/spectate">
+              <SpectatorPage />
+            </Route>
 
-          <Route path="/game/:id">
-            <GamePage />
-          </Route>
+            <Route path="/game/:id">
+              <GamePage />
+            </Route>
 
-          <Route path="/create">
-            <CreateGameForm />
-          </Route>
+            <Route path="/create">
+              <CreateGameForm />
+            </Route>
 
-          <Route exact path="/">
-            <HomePage />
-          </Route>
+            <Route exact path="/">
+              <HomePage />
+            </Route>
 
-          <Route exact path="/:code">
-            <HomePage />
-          </Route>
-        </Switch>
+            <Route exact path="/:code">
+              <HomePage />
+            </Route>
+          </Switch>
+        </div>
+
+        <Footer />
       </div>
     </Router>
   );

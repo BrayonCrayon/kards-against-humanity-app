@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect } from "react";
+import React, { FC, useCallback, useEffect } from "react";
 import { useGame } from "State/Game/useGame";
 import { useVote } from "State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
@@ -9,15 +9,21 @@ import { SelectWinnerAction } from "State/Vote/VoteActions";
 import { useAuth } from "State/Auth/useAuth";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
-import FloatingButton from "Components/Atoms/FloatingButton";
-import { ButtonVariant } from "Components/Atoms/Button";
+import SubmitButton from "./SubmitButton";
 
 export const VotingSection: FC = () => {
-  const { state: { game, blackCard }, } = useGame();
-  const { state: { selectedPlayerId }, dispatch, } = useVote();
-  const { state: { auth }, } = useAuth();
+  const {
+    state: { game, blackCard },
+  } = useGame();
+  const {
+    state: { selectedPlayerId },
+    dispatch,
+  } = useVote();
+  const {
+    state: { auth },
+  } = useAuth();
 
-  const {submittedCards, getSubmittedCards} = useSubmittedCards();
+  const { submittedCards, getSubmittedCards } = useSubmittedCards();
   const submitWinner = useSubmitWinner();
 
   const fetchRoundWinner = useFetchRoundWinner();
@@ -30,39 +36,48 @@ export const VotingSection: FC = () => {
     getSubmittedCards(game.id);
   }, []);
 
-  const selectCard = useCallback((user_id) => {
+  const selectCard = useCallback(
+    (user_id) => {
       if (game.judgeId !== auth.id) return;
       dispatch(new SelectWinnerAction(user_id));
-  }, [dispatch, game, auth]);
+    },
+    [dispatch, game, auth]
+  );
 
   return (
-    <div data-testid="voting-section">
-      <div className="mt-6 border-b-2  border-gray-500 mx-2 text-xl font-semibold text-center">
-        Submitted cards
+    <div data-testid="voting-section" className="bg-lukewarmGray-300 py-4">
+      <div className="grid md:grid-cols-5 h-24 ">
+        <div className="col-start-3">
+          <SubmitButton
+            show={auth.id === game.judgeId && selectedPlayerId > 0}
+            transitionClassName="submit-button"
+            buttonClass="submit-button w-full"
+            onSubmit={() => submitWinner(game.id, selectedPlayerId)}
+          />
+        </div>
       </div>
-      <div className="grid place-items-center grid-cols-1 gap-4 p-4 justify-items-center md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid place-items-center grid-cols-1 justify-items-center md:grid-cols-2 md:gap-4 lg:grid-cols-4 lg:px-6">
         {submittedCards.map((submission) => (
-          <FloatingButton
-            key={submission.user_id}
-            role="submit-selected-winner"
-            variant={ButtonVariant['dark-compact']}
-            showButton={auth.id === game.judgeId && selectedPlayerId === submission.user_id}
-            onClick={() => submitWinner(game.id, selectedPlayerId)}
-            buttonClass="-top-7 -right-2"
-          >
+          <div className="w-full flex flex-col" key={submission.user_id}>
             <Selectable
               dataTestid={`selectable-${submission.user_id}`}
               role={`selectable-${submission.user_id}`}
               isSelected={submission.user_id === selectedPlayerId}
+              className="max-w-64 self-center"
               selectedClass="border-5 border-green-500"
               onClick={() => selectCard(submission.user_id)}
             >
-              <PlayerSubmittedCCard
-                playerSubmission={submission}
-                blackCard={blackCard}
-              />
+              <PlayerSubmittedCCard playerSubmission={submission} blackCard={blackCard} />
             </Selectable>
-          </FloatingButton>
+            <SubmitButton
+              show={auth.id === game.judgeId && selectedPlayerId === submission.user_id}
+              timeout={400}
+              transitionClassName="submit-button-slide"
+              buttonClass="white-card-submit-button"
+              onSubmit={() => submitWinner(game.id, selectedPlayerId)}
+              dataTestId="submit-selected-winner"
+            />
+          </div>
         ))}
       </div>
     </div>

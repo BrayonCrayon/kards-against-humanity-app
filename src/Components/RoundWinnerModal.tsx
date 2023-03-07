@@ -52,18 +52,14 @@ export function RoundWinnerModal() {
       data-testid="round-winner-modal"
       className="w-screen h-screen fixed top-0 left-0 flex flex-col items-center justify-center bg-white bg-opacity-75"
     >
-      <div className="bg-white p-2 shadow-md border-2 rounded flex flex-col">
-        <h1 className="text-4xl text-center pb-1">The winner is: {name}</h1>
+      <div className="bg-white p-8 shadow-md border-2 rounded flex flex-col justify-center">
+        <h1 className="text-4xl text-center pb-4">The winner is: {name}</h1>
         <PlayerSubmittedCCard
+          className="self-center"
           playerSubmission={selectedRoundWinner}
           blackCard={selectedRoundWinner.black_card}
         />
-        <Button
-          text="Close"
-          onClick={close}
-          dataTestid="round-winner-modal-close-button"
-          className="self-center"
-        />
+        <Button text="Close" onClick={close} dataTestid="round-winner-modal-close-button" className="self-center" />
       </div>
     </div>
   );

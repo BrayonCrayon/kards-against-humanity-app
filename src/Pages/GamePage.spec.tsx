@@ -9,14 +9,12 @@ import {
   getWhiteCardElement,
   selectedCardClass,
   whiteCardOrderTestId,
-  whiteCardTestId
+  whiteCardTestId,
 } from "Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "Tests/actions";
 import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
 import { kardsRender } from "Tests/testRenders";
-import {
-  gameStateAllPlayerSubmittedCardsExampleResponse
-} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
 import { service } from "setupTests";
@@ -55,15 +53,12 @@ describe("GamePage", () => {
   });
 
   describe("Displaying game features", () => {
-
     it("shows users hand of seven white cards", async () => {
       const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => {
         cardsInHand.forEach((card) => {
-          const whiteCardElement = wrapper.getByTestId(
-            whiteCardTestId(card.id)
-          );
+          const whiteCardElement = wrapper.getByTestId(whiteCardTestId(card.id));
           expect(whiteCardElement).not.toBeNull();
         });
       });
@@ -74,24 +69,17 @@ describe("GamePage", () => {
       const wrapper = await kardsRender(<GamePage />);
 
       await waitFor(() => {
-        expect(
-          wrapper.queryByTestId(`black-card-${blackCard.id}`)
-        ).toBeInTheDocument();
-        expect(
-          wrapper.queryByTestId(`black-card-${blackCard.id}`)
-        ).toHaveTextContent(blackCard.text);
+        expect(wrapper.queryByTestId(`black-card-${blackCard.id}`)).toBeInTheDocument();
+        expect(wrapper.queryByTestId(`black-card-${blackCard.id}`)).toHaveTextContent(blackCard.text);
       });
     });
   });
 
   describe("Api call", () => {
-
     it("performs an api call to get game state data to be loaded on refresh", async () => {
       // @ts-ignore
       service.fetchState.mockResolvedValueOnce(gameStateExampleResponse);
-      const consoleSpy = jest
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
       await kardsRender(<GamePage />);
 
@@ -106,9 +94,7 @@ describe("GamePage", () => {
       const errorResponse = { message: "No Api" };
       service.fetchState.mockRejectedValueOnce(errorResponse);
       console.error = jest.fn();
-      const consoleSpy = jest
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
       await kardsRender(<GamePage />);
 
@@ -196,22 +182,15 @@ describe("GamePage", () => {
     });
 
     it("applies correct class when a white card is selected", async () => {
-      const cardsToSelect = gameStateExampleResponse.data.hand.slice(
-        0,
-        blackCardFixture.pick
-      );
+      const cardsToSelect = gameStateExampleResponse.data.hand.slice(0, blackCardFixture.pick);
       const wrapper = await kardsRender(<GamePage />);
 
       await waitFor(() => {
-        userEvent.click(
-          wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
-        );
+        userEvent.click(wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id)));
       });
 
       await waitFor(() => {
-        expect(
-          wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))
-        ).toHaveClass(selectedCardClass);
+        expect(wrapper.getByTestId(whiteCardTestId(cardsToSelect[0].id))).toHaveClass(selectedCardClass);
       });
     });
 
@@ -229,32 +208,19 @@ describe("GamePage", () => {
       });
 
       await waitFor(() => {
-        expect(getWhiteCardElement(cardsToSelect[0].id)).not.toHaveClass(
-          selectedCardClass
-        );
-        expect(
-          wrapper.queryByTestId(whiteCardOrderTestId(cardsToSelect[0].id))
-        ).toBeNull();
+        expect(getWhiteCardElement(cardsToSelect[0].id)).not.toHaveClass(selectedCardClass);
+        expect(wrapper.queryByTestId(whiteCardOrderTestId(cardsToSelect[0].id))).toBeNull();
 
-        expect(getWhiteCardElement(cardsToSelect[1].id)).toHaveClass(
-          selectedCardClass
-        );
-        expect(
-          wrapper.getByTestId(whiteCardOrderTestId(cardsToSelect[1].id))
-        ).toHaveTextContent("1");
+        expect(getWhiteCardElement(cardsToSelect[1].id)).toHaveClass(selectedCardClass);
+        expect(wrapper.getByTestId(whiteCardOrderTestId(cardsToSelect[1].id))).toHaveTextContent("1");
 
-        expect(getWhiteCardElement(nextCardToSelect.id)).toHaveClass(
-          selectedCardClass
-        );
-        expect(
-          wrapper.getByTestId(whiteCardOrderTestId(nextCardToSelect.id))
-        ).toHaveTextContent("2");
+        expect(getWhiteCardElement(nextCardToSelect.id)).toHaveClass(selectedCardClass);
+        expect(wrapper.getByTestId(whiteCardOrderTestId(nextCardToSelect.id))).toHaveTextContent("2");
       });
     });
   });
 
   describe("Judging", () => {
-
     it("will remove player from players list when kicked", async () => {
       // @ts-ignore
       service.fetchState.mockResolvedValueOnce(gameStateJudgeExampleResponse);
@@ -273,9 +239,7 @@ describe("GamePage", () => {
         userEvent.click(wrapper.getByText("Yes, kick!"));
       });
 
-      expect(
-        wrapper.queryByTestId(`user-${playerToKick.id}`)
-      ).not.toBeInTheDocument();
+      expect(wrapper.queryByTestId(`user-${playerToKick.id}`)).not.toBeInTheDocument();
     });
 
     it("will not display white cards when current user is judge", async () => {
@@ -310,7 +274,9 @@ describe("GamePage", () => {
 
     it("can submit white card selection", async () => {
       const wrapper = await kardsRender(<GamePage />);
-      const {data: { game, blackCard, hand}} = gameStateExampleResponse;
+      const {
+        data: { game, blackCard, hand },
+      } = gameStateExampleResponse;
       const [cardToSelect] = hand;
 
       await waitFor(() => {
@@ -320,11 +286,7 @@ describe("GamePage", () => {
       userEvent.click(getCardSubmitButton(cardToSelect.id)!);
 
       await waitFor(() => {
-        expect(service.submitCards).toHaveBeenCalledWith(
-          game.id,
-          blackCard.pick,
-          [cardToSelect.id]
-        );
+        expect(service.submitCards).toHaveBeenCalledWith(game.id, blackCard.pick, [cardToSelect.id]);
       });
     });
 
@@ -334,15 +296,13 @@ describe("GamePage", () => {
       const wrapper = await kardsRender(<GamePage />);
 
       await waitFor(() => {
-        userEvent.click(
-          wrapper.getByTestId(whiteCardTestId(cardToSelect.id))
-        );
+        userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
       });
 
       userEvent.click(getCardSubmitButton(cardToSelect.id)!);
 
       await waitFor(() => {
-        hand.forEach(card => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument())
+        hand.forEach((card) => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument());
       });
     });
 
@@ -351,9 +311,7 @@ describe("GamePage", () => {
       service.submitCards.mockRejectedValueOnce(apiFailedResponse);
       const wrapper = await kardsRender(<GamePage />);
       const [cardToSelect] = gameStateExampleResponse.data.hand;
-      const consoleSpy = jest
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
@@ -375,9 +333,7 @@ describe("GamePage", () => {
     });
 
     it("will not show submit card button when they have already submitted", async () => {
-      service.fetchState.mockResolvedValueOnce(
-        gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-      );
+      service.fetchState.mockResolvedValueOnce(gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse);
 
       const wrapper = await kardsRender(<GamePage />);
 
@@ -387,54 +343,50 @@ describe("GamePage", () => {
     });
 
     it("will not show hand after user refresh", async () => {
-      service.fetchState.mockResolvedValue(
-        gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-      );
+      service.fetchState.mockResolvedValue(gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse);
       const hand = gameStateSubmittedWhiteCardsExampleResponse.data.hand;
 
       await kardsRender(<GamePage />);
 
       await waitFor(() => {
-        hand.forEach(card => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument());
+        hand.forEach((card) => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument());
       });
     });
 
     it("will tell user they have submitted their cards", async () => {
-      service.fetchState.mockResolvedValueOnce(
-        gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse
-      );
+      service.fetchState.mockResolvedValueOnce(gameStateSubmittedWhiteCardsExampleResponse as AxiosResponse);
       const wrapper = await waitFor(() => {
         return kardsRender(<GamePage />);
       });
 
-      expect(wrapper.queryByText('You have submitted your cards, sit tight for judging.')).toBeInTheDocument();
+      expect(wrapper.queryByText("You have submitted your cards, sit tight for judging.")).toBeInTheDocument();
     });
 
     it("will hide submitted message when all players have submitted their cards", async () => {
       const state = {
         ...gameStateAllPlayerSubmittedCardsExampleResponse.data,
-        currentUser: gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0]
-      }
+        currentUser: gameStateAllPlayerSubmittedCardsExampleResponse.data.users[0],
+      };
       service.fetchState.mockResolvedValueOnce({ data: state } as AxiosResponse);
       service.fetchSubmittedCards.mockResolvedValueOnce(submittedCardsResponse as AxiosResponse);
       const wrapper = await waitFor(() => {
         return kardsRender(<GamePage />);
       });
 
-      expect(wrapper.queryByText('You have submitted your cards, sit tight for judging.')).toBeNull();
+      expect(wrapper.queryByText("You have submitted your cards, sit tight for judging.")).toBeNull();
     });
 
     describe("Selecting cards", () => {
-      const cardsToSelect = gameStateExampleResponse.data.hand
-        .slice(0, 2)
-        .reverse();
+      const cardsToSelect = gameStateExampleResponse.data.hand.slice(0, 2).reverse();
 
       beforeAll(() => {
         gameStateExampleResponse.data.blackCard.pick = 2;
       });
 
       it("when submitting two white cards the order is maintained", async () => {
-        const {data: {game}} = gameStateExampleResponse;
+        const {
+          data: { game },
+        } = gameStateExampleResponse;
         await kardsRender(<GamePage />);
 
         await selectAndSubmitWhiteCards(cardsToSelect);
@@ -443,12 +395,14 @@ describe("GamePage", () => {
           expect(service.submitCards).toHaveBeenCalledWith(
             game.id,
             cardsToSelect.length,
-            cardsToSelect.map(item => item.id)
+            cardsToSelect.map((item) => item.id)
           );
         });
       });
       it("when selecting and deselecting cards, order is properly updated", async () => {
-        const {data: {game}} = gameStateExampleResponse;
+        const {
+          data: { game },
+        } = gameStateExampleResponse;
         await kardsRender(<GamePage />);
 
         await selectAndSubmitWhiteCards(cardsToSelect);
@@ -457,7 +411,7 @@ describe("GamePage", () => {
           expect(service.submitCards).toHaveBeenCalledWith(
             game.id,
             cardsToSelect.length,
-            cardsToSelect.map(item => item.id)
+            cardsToSelect.map((item) => item.id)
           );
         });
       });
@@ -468,9 +422,7 @@ describe("GamePage", () => {
 
         let order = 1;
         cardsToSelect.forEach((card) => {
-          expect(
-            wrapper.queryByTestId(whiteCardOrderTestId(card.id))
-          ).toHaveTextContent(order.toString());
+          expect(wrapper.queryByTestId(whiteCardOrderTestId(card.id))).toHaveTextContent(order.toString());
           ++order;
         });
       });
@@ -479,11 +431,8 @@ describe("GamePage", () => {
 });
 
 describe("Voting section", () => {
-
   it("should not be visible if judge player is the only player in game", async () => {
-    service.fetchState.mockResolvedValueOnce(
-      gameStateOnePlayerInGameExampleResponse as AxiosResponse
-    );
+    service.fetchState.mockResolvedValueOnce(gameStateOnePlayerInGameExampleResponse as AxiosResponse);
 
     await kardsRender(<GamePage />);
 
@@ -494,9 +443,7 @@ describe("Voting section", () => {
 
   it("is shown when all players have submitted their cards", async () => {
     service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
-    service.fetchState.mockResolvedValueOnce(
-      gameStateAllPlayerSubmittedCardsExampleResponse as AxiosResponse
-    );
+    service.fetchState.mockResolvedValueOnce(gameStateAllPlayerSubmittedCardsExampleResponse as AxiosResponse);
 
     const wrapper = await kardsRender(<GamePage />);
 
@@ -524,12 +471,8 @@ describe("Voting section", () => {
     await kardsRender(<GamePage />);
 
     await waitFor(() => {
-      data.hand.forEach((card) =>
-        expect(getWhiteCardElement(card.id)).not.toBeInTheDocument()
-      );
-      expect(
-        screen.queryByTestId("white-card-submit-btn")
-      ).not.toBeInTheDocument();
+      data.hand.forEach((card) => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument());
+      expect(screen.queryByTestId("white-card-submit-btn")).not.toBeInTheDocument();
     });
   });
 
@@ -543,12 +486,10 @@ describe("Voting section", () => {
         submitted_cards: [submittedCard],
         black_card: gameStateExampleResponse.data.blackCard,
       },
-    })
+    });
 
     const wrapper = await kardsRender(<GamePage />);
 
-    expect(
-      await wrapper.findByTestId("round-winner-modal")
-    ).toBeInTheDocument();
+    expect(await wrapper.findByTestId("round-winner-modal")).toBeInTheDocument();
   });
 });
