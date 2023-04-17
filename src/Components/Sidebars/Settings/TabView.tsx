@@ -20,22 +20,24 @@ const TabView: FC<INavContainer> = ({ tabs }) => {
 
   return (
     <>
-      <nav className="flex pb-1.5 mb-4 border-b-2 w-full relative h-8">
-        <div className="absolute top-0 flex gap-4">
+      <nav className="flex pb-1.5 mb-2 w-full h-8">
+        <div className="flex w-full">
           {tabs.map((tab) => (
-            <p
+            <div
               key={`${tab.key}-tab`}
               data-testid={tab.key}
-              className={`capitalize cursor-pointer ${tab.key === selectedTab ? "border-b-4 border-black pb-1" : ""}`}
+              className={`capitalize cursor-pointer flex-1 text-center ${
+                tab.key === selectedTab ? "border-b-4 border-black pb-1" : "border-b-2"
+              }`}
               onClick={() => setSelectedTab(tab.key)}
             >
               {tab.key}
-            </p>
+            </div>
           ))}
         </div>
       </nav>
       {tabs.map((tab) => (
-        <div key={tab.key}>{renderTab(tab)}</div>
+        <>{renderTab(tab)}</>
       ))}
     </>
   );

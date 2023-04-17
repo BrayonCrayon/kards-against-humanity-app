@@ -1,18 +1,14 @@
 import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
 import { kardsRender } from "Tests/testRenders";
-import { ExpansionSelector } from "Components/Sidebars/ExpansionSelector";
+import { GameOptions } from "Components/Sidebars/GameOptions";
 import { ExpansionsToExpansionOptions } from "Utilities/helpers";
 
-const {data: expansions} = getExpansionsExampleResponse;
+const { data: expansions } = getExpansionsExampleResponse;
 const expansionOptions = ExpansionsToExpansionOptions(expansions);
 const renderComponent = () => {
-  return kardsRender(<ExpansionSelector
-    expansions={expansionOptions}
-    onToggle={jest.fn()}
-    toggleAll={jest.fn()}
-  />);
-}
+  return kardsRender(<GameOptions expansions={expansionOptions} onToggle={jest.fn()} toggleAll={jest.fn()} />);
+};
 
-describe("ExpansionSelector", () => {
+describe("GameOptions", () => {
   it.todo("make a test for stuff");
 });
