@@ -65,14 +65,14 @@ describe("Hand", () => {
     auth.redrawCount = 1;
     const wrapper = kardsRender(<Hand />);
 
-    wrapper.getByText(`${auth.redrawCount} Redraws Left`);
+    wrapper.getByText(auth.redrawCount);
   });
 
   it("will show different text when user reaches limit of redraws", () => {
     auth.redrawCount = game.redrawLimit;
     const wrapper = kardsRender(<Hand />);
 
-    wrapper.getByText("0 Redraws Left");
+    wrapper.getByText(0);
   });
 
   it("will not allow user to redraw when they reach their limit", () => {

@@ -1,5 +1,5 @@
-import { User } from "Types/User";
-import { FC, useMemo } from "react";
+import {User} from "Types/User";
+import {FC, useMemo} from "react";
 
 interface PlayerNotificationBarProps {
   users: User[];
@@ -26,7 +26,7 @@ const PlayerNotificationBar: FC<PlayerNotificationBarProps> = ({
   }, [nonJudgeUsers, totalSubmittedAmount]);
 
   return (
-    <div className="w-full flex justify-center bg-gray-800 text-white font-semibold py-1">
+    <div className="w-full flex justify-center bg-black text-white font-semibold py-3">
       <div data-testid="player-submitted-info">{infoMessage}</div>
     </div>
   );

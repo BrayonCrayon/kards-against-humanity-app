@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, {FC, useMemo} from "react";
 
 export enum ButtonVariant {
   "primary" = "bg-black py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 ",
@@ -6,6 +6,7 @@ export enum ButtonVariant {
   "light-compact" = "bg-black px-2 py-1 text-white font-bold shadow mt-4 mb-4 capitalize hover:bg-gray-800 ",
   "dark-outline" = "bg-white py-3 px-4 text-black border-2 border-black font-bold mt-4 mb-4 hover:bg-gray-100 ",
   "dark-compact" = "bg-white shadow-2xl px-2 py-1 capitalize text-black border-2 border-black font-bold mt-4 mb-4 hover:bg-gray-100 ",
+  "submit-test" = "bg-white p-3 text-black flex gap-3 items-center text-base w-1/2",
 }
 
 interface ButtonProps {
@@ -18,6 +19,8 @@ interface ButtonProps {
   variant?: ButtonVariant;
   isLoading?: boolean;
   role?: string;
+  iconClass?: string;
+  beforeLoadingClass?: string;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -27,11 +30,13 @@ export const Button: FC<ButtonProps> = ({
   dataTestid = "",
   className = "",
   disabled = false,
-  variant= ButtonVariant.primary,
+  variant = ButtonVariant.primary,
   isLoading = false,
-  role= 'button',
+  role = "button",
+  iconClass = "",
+  beforeLoadingClass = "",
+  children,
 }) => {
-
   const style = useMemo(() => {
     return `${variant} ${className}`;
   }, [variant]);
@@ -45,12 +50,11 @@ export const Button: FC<ButtonProps> = ({
       className={style}
       disabled={disabled || isLoading}
     >
-      {text}
-      {
-        isLoading
-          ? <i className="ml-2 fa-solid fa-spinner animate-spin"/>
-          : null
-      }
+      <span className={beforeLoadingClass}>
+        {children}
+        {text}
+      </span>
+      {isLoading ? <i className={`ml-2 fa-solid fa-spinner animate-spin ${iconClass}`} /> : null}
     </button>
   );
 };
