@@ -3,10 +3,7 @@ import { BlackCard } from "../Types/BlackCard";
 import { WhiteCard } from "../Types/WhiteCard";
 import { Expansion, ExpansionOption } from "Types/Expansion";
 
-export const fillOutBlackCard = (
-  blackCard: BlackCard,
-  cards: Array<SubmittedCard>
-): string => {
+export const fillOutBlackCard = (blackCard: BlackCard, cards: Array<SubmittedCard>): string => {
   let blackCardText = blackCard.text;
 
   if (!blackCard.text.includes("_")) {
@@ -18,17 +15,12 @@ export const fillOutBlackCard = (
     .forEach((card) => {
       if (blackCardText.indexOf("_", 0) < 0) return;
 
-      blackCardText = blackCardText.replace(
-        "_",
-        `<strong>${card.text.replace(/\.$/, "")}</strong>`
-      );
+      blackCardText = blackCardText.replace("_", `<strong>${card.text.replace(/\.$/, "")}</strong>`);
     });
   return blackCardText;
 };
 
-export const decrementPreviouslySelectedCardPositions = (
-  clone: WhiteCard[]
-) => {
+export const decrementPreviouslySelectedCardPositions = (clone: WhiteCard[]) => {
   clone.forEach((item) => {
     if (item.order > 0) {
       item.order -= 1;
@@ -37,13 +29,19 @@ export const decrementPreviouslySelectedCardPositions = (
   });
 };
 
-export const ExpansionToExpansionOption = (expansion: Expansion) : ExpansionOption => {
+export const ExpansionToExpansionOption = (expansion: Expansion): ExpansionOption => {
   return {
     expansion,
     isSelected: true,
-  }
-}
+  };
+};
 
-export const ExpansionsToExpansionOptions = (expansions: Expansion[]) : ExpansionOption[] => {
-  return expansions.map(item => ExpansionToExpansionOption(item));
-}
+export const ExpansionsToExpansionOptions = (expansions: Expansion[]): ExpansionOption[] => {
+  return expansions.map((item) => ExpansionToExpansionOption(item));
+};
+
+export const canSubmit = (hand: WhiteCard[], pickAmount: number): boolean => {
+  if (hand.length === 0 || pickAmount === 0) return false;
+
+  return hand.filter((card) => card.selected).length === pickAmount;
+};

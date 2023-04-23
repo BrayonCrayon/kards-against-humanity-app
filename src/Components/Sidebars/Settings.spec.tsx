@@ -13,29 +13,30 @@ const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
 };
 
 describe("Settings", () => {
-
   it("will allow players to leave game", () => {
     const gameId = "alsdf8asdfoi43jo3i4";
     const wrapper = renderComponent(gameId);
 
     userEvent.click(wrapper.getByTestId("game-settings"));
-    userEvent.click(wrapper.getByTestId("game-tab"))
+    userEvent.click(wrapper.getByTestId("game"));
     userEvent.click(wrapper.getByRole("leave-game-button"));
 
     expect(mockedLeaveGame).toHaveBeenCalled();
   });
 
-  it("will allow players to see other players", async function() {
-    const { data: { game, users } } = gameStateExampleResponse;
+  it("will allow players to see other players", async function () {
+    const {
+      data: { game, users },
+    } = gameStateExampleResponse;
     const wrapper = renderComponent(game.id, users);
 
     userEvent.click(wrapper.getByTestId("game-settings"));
     await waitFor(() => {
-      userEvent.click(wrapper.getByTestId("players-tab"));
+      userEvent.click(wrapper.getByTestId("players"));
     });
 
     users.forEach((user) => {
       expect(wrapper.getByRole(`user-${user.id}`)).toBeInTheDocument();
-    })
+    });
   });
 });

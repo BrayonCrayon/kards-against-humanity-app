@@ -1,16 +1,13 @@
 import { WhiteKard } from "./WhiteKard";
-import { FC, useCallback, useMemo } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import { SetHandAction } from "State/Hand/HandActions";
 import { WhiteCard } from "Types/WhiteCard";
-import { decrementPreviouslySelectedCardPositions } from "Utilities/helpers";
-import Swal from "sweetalert2";
-import useRedrawPlayerHand from "Hooks/Game/Actions/useRedrawPlayerHand";
-import { errorToast } from "Utilities/toasts";
+import { canSubmit, decrementPreviouslySelectedCardPositions } from "Utilities/helpers";
 import { useHand } from "State/Hand/useHand";
 import { useGame } from "State/Game/useGame";
 import { useAuth } from "State/Auth/useAuth";
-import FloatingButton from "Components/Atoms/FloatingButton";
-import { ButtonVariant } from "Components/Atoms/Button";
+import Redraw from "./Redraw";
+import SubmitButton from "./SubmitButton";
 
 interface HandProps {
   onSubmit?: () => void;
@@ -30,34 +27,6 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
     state: { auth, hasSubmittedCards },
   } = useAuth();
 
-  const redrawHand = useRedrawPlayerHand();
-
-  const redrawText = useMemo(() => {
-    return `${game.redrawLimit - auth.redrawCount} Redraws Left`;
-  }, [auth, game]);
-
-  const redraw = useCallback(async () => {
-    if (auth.redrawCount === game.redrawLimit) {
-      errorToast("Cannot redraw, please wait until next round.");
-      return;
-    }
-
-    const result = await Swal.fire({
-      title: `Are you sure you want to redraw?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-    });
-
-    if (result.isDismissed || result.isDenied) {
-      return;
-    }
-
-    await redrawHand(game.id);
-  }, [game, auth]);
-
   const positionOfLastSelectedCard = useMemo(() => {
     return Math.max(...hand.map((item) => item.order));
   }, [hand]);
@@ -69,6 +38,11 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
   const nextCardPosition = useMemo(() => {
     return hasSelectedAmountReached ? positionOfLastSelectedCard : positionOfLastSelectedCard + 1;
   }, [hasSelectedAmountReached, positionOfLastSelectedCard]);
+
+  // TODO: Come back to find an easier way to approaching this
+  const showSubmitButton = useMemo(() => {
+    return canSubmit(hand, blackCard.pick);
+  }, [hand, blackCard]);
 
   const select = useCallback(
     (card: WhiteCard) => {
@@ -97,35 +71,42 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
     ]
   );
 
-  const showSubmitButton = useMemo(() => {
-    return hand.filter((card) => card.selected).length === blackCard.pick;
-  }, [hand, blackCard]);
-
   return (
     <>
-      <div className="w-full flex justify-center">
-        <button
-          className="w-1/2 py-1 bg-gray-300 text-gray-900 rounded-full mb-5"
-          data-testid="redraw-button"
-          onClick={redraw}
-        >
-          <i className="fas fa-sync-alt pr-2" />
-          {redrawText}
-        </button>
+      <div className="grid place-items-center md:grid-cols-6">
+        <SubmitButton
+          onSubmit={() => onSubmit()}
+          show={showSubmitButton}
+          transitionClassName="submit-button"
+          buttonClass="submit-button"
+          dataTestId="submit"
+        />
+        <Redraw
+          game={game}
+          redrawsUsed={auth.redrawCount}
+          className="flex flex-col pb-4 pt-10 items-center gap-4 md:mr-4 md:col-start-6"
+          buttonClass="w-full min-w-64 py-3 mb-5 md:min-w-0 md:py-0.5 md:px-3"
+        />
       </div>
-      <div className="grid place-items-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
+      <div className="grid place-items-center grid-cols-1 pb-10 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
         {hand.map((card) => (
-          <FloatingButton
-            variant={ButtonVariant['light-compact']}
-            key={card.id}
-            role={`submit-${card.id}`}
-            showButton={showSubmitButton && positionOfLastSelectedCard === card.order}
-            onClick={onSubmit}
-            className="min-w-64"
-            buttonClass="-top-6 -right-2"
-          >
-            <WhiteKard card={card} onClick={select} className="h-full" />
-          </FloatingButton>
+          <div className="w-full flex flex-col" key={card.id}>
+            <WhiteKard
+              card={card}
+              onClick={select}
+              className={`h-full min-w-64 self-center md:m-0 ${
+                showSubmitButton && positionOfLastSelectedCard === card.order ? "" : "mb-16"
+              }`}
+            />
+            <SubmitButton
+              show={showSubmitButton && positionOfLastSelectedCard === card.order}
+              timeout={400}
+              onSubmit={() => onSubmit()}
+              transitionClassName="submit-button-slide"
+              buttonClass="white-card-submit-button"
+              dataTestId={`submit-${card.id}`}
+            />
+          </div>
         ))}
       </div>
     </>

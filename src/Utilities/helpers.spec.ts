@@ -1,8 +1,10 @@
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { BlackCard } from "../Types/BlackCard";
 import { SubmittedCard } from "../Types/ResponseTypes";
-import { fillOutBlackCard } from "./helpers";
+import { canSubmit, fillOutBlackCard } from "./helpers";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,
@@ -33,9 +35,43 @@ describe("Helpers", () => {
     const expectedCardText = fillOutBlackCard(blackCardFixture, selectedCards);
 
     selectedCards.forEach((card) => {
-      expect(expectedCardText).toContain(
-        `<strong>${card.text.replace(/\.$/, "")}</strong>`
-      );
+      expect(expectedCardText).toContain(`<strong>${card.text.replace(/\.$/, "")}</strong>`);
     });
+  });
+
+  it("will return false when player has no submitted cards", () => {
+    const {
+      data: { hand, blackCard },
+    } = gameStateExampleResponse;
+
+    expect(canSubmit(hand, blackCard.pick)).toBeFalsy();
+  });
+
+  it("will return true when player has required submitted amount", () => {
+    const data = gameStateAllPlayerSubmittedCardsExampleResponse;
+    const hand: WhiteCard[] = transformWhiteCardArray(data.data.hand);
+
+    for (let i = 0; i < data.data.blackCard.pick; ++i) {
+      hand[i].selected = true;
+    }
+
+    expect(canSubmit(hand, data.data.blackCard.pick)).toBeTruthy();
+  });
+
+  it("will return false when player does not have a hand", () => {
+    const {
+      data: { blackCard },
+    } = gameStateExampleResponse;
+
+    expect(canSubmit([], blackCard.pick)).toBeFalsy();
+  });
+
+  it("will return false when player is loading in the game", () => {
+    expect(canSubmit([], 0)).toBeFalsy();
+  });
+
+  it("will return false when player has not submitted any cards and pick amount is 0", () => {
+    const { data } = gameStateExampleResponse;
+    expect(canSubmit(data.hand, 0)).toBeFalsy();
   });
 });
