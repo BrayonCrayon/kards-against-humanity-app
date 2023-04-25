@@ -37,7 +37,7 @@ const GamePage = () => {
 
   const showVotingSection = useMemo(() => {
     const currentPlayers = players.filter((item) => item.id !== game.judgeId);
-    return currentPlayers.length > 0 && currentPlayers.every(user => user.hasSubmittedWhiteCards);
+    return currentPlayers.length > 0 && currentPlayers.every((user) => user.hasSubmittedWhiteCards);
   }, [players, game]);
 
   const onSubmit = useCallback(async () => {
@@ -61,17 +61,18 @@ const GamePage = () => {
     <div>
       <GameInfo />
       {game.judgeId !== auth.id && !hasSubmittedCards && (
+        <div className="bg-lukewarmGray-300">
           <Hand onSubmit={onSubmit} />
+        </div>
       )}
-      { !showVotingSection && hasSubmittedCards
-        ? <div className="flex flex-col justify-center items-center mt-10 px-4">
-            <p className="text-lg font-bold text-center self-center">
-              You have submitted your cards, sit tight for judging.
-            </p>
-            <i className="fa-solid fa-mug-hot text-4xl pb-2 ml-2"></i>
-          </div>
-        : null
-      }
+      {!showVotingSection && hasSubmittedCards ? (
+        <div className="flex flex-col justify-center items-center mt-10 px-4">
+          <p className="text-lg font-bold text-center self-center">
+            You have submitted your cards, sit tight for judging.
+          </p>
+          <i className="fa-solid fa-mug-hot text-4xl pb-2 ml-2"></i>
+        </div>
+      ) : null}
       {showVotingSection && <VotingSection />}
       <RoundWinnerModal />
     </div>

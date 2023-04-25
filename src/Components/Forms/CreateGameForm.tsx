@@ -76,7 +76,6 @@ export const CreateGameForm: React.FC = () => {
           />
         </form>
       </KAHCard>
-      <CreateGameBanner />
     </div>
   );
 };

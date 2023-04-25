@@ -1,8 +1,10 @@
 import "@testing-library/jest-dom";
 import { apiClient } from "Api/apiClient";
 import gameService from "Services/GameService";
+import { config } from "react-transition-group";
 
 window.scrollTo = jest.fn();
+config.disabled = true;
 
 jest.mock("Api/apiClient");
 export const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;

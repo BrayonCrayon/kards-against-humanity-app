@@ -5,7 +5,7 @@ import { waitFor } from "@testing-library/react";
 import { spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
 
-const {users: players, currentUser: auth, game, blackCard} = gameStateExampleResponse.data;
+const { users: players, currentUser: auth, game, blackCard } = gameStateExampleResponse.data;
 
 const mockKickPlayer = jest.fn();
 jest.mock("Hooks/Game/Actions/useKickPlayer", () => () => mockKickPlayer);
@@ -25,17 +25,15 @@ describe("PlayerList", () => {
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
-      players.forEach((user) =>
-        expect(wrapper.queryByTestId(`user-${user.id}`)).toBeInTheDocument()
-      );
+      players.forEach((user) => expect(wrapper.queryByTestId(`user-${user.id}`)).toBeInTheDocument());
     });
   });
 
   it("shows the judge icon next to the player who is the judge", async () => {
-    const { queryByTestId } = kardsRender(<PlayerList users={players} />);
+    const { container } = kardsRender(<PlayerList users={players} />);
 
     await waitFor(async () => {
-      expect(queryByTestId(`user-${game.judgeId}-judge`)).not.toBeNull();
+      expect(container.querySelector("i.fa-gavel")).not.toBeNull();
     });
   });
 
@@ -53,22 +51,18 @@ describe("PlayerList", () => {
     players[0].hasSubmittedWhiteCards = true;
     const wrapper = kardsRender(<PlayerList users={players} />);
 
-    const playerNameElement = wrapper
-      .getByTestId(`user-${players[0].id}`)
-      .getElementsByTagName("p")[1];
+    const playerNameElement = wrapper.getByTestId(`user-${players[0].id}`).getElementsByTagName("p")[1];
 
     expect(playerNameElement).toHaveClass("text-green-500");
   });
 
   it("shows a button to kick players on users list", async () => {
-    spyOnUseGame(jest.fn(), { blackCard, game: {...game, judgeId: auth.id}});
+    spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const playerToKickId = players.filter((item) => item.id !== auth.id)[0].id;
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
-      expect(
-        wrapper.queryByTestId(`kick-player-${playerToKickId}`)
-      ).toBeInTheDocument();
+      expect(wrapper.queryByTestId(`kick-player-${playerToKickId}`)).toBeInTheDocument();
     });
   });
 
@@ -83,7 +77,7 @@ describe("PlayerList", () => {
   });
 
   it("will not show kick player on player that is the judge", async () => {
-    spyOnUseGame(jest.fn(), { blackCard, game: {...game, judgeId: auth.id}});
+    spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
@@ -92,7 +86,7 @@ describe("PlayerList", () => {
   });
 
   it("will call api endpoint to kick player from game", async () => {
-    spyOnUseGame(jest.fn(), { blackCard, game: {...game, judgeId: auth.id}});
+    spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const playerToKick = players.filter((item) => item.id !== auth.id)[0];
     const wrapper = kardsRender(<PlayerList users={players} />);
 

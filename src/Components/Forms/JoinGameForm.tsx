@@ -14,11 +14,12 @@ const JoinGameForm: FC = () => {
   const [code, setCode] = useState(sharedCode ?? "");
   const [userName, setUserName] = useState("");
   const [spectator, setSpectator] = useState(false);
-  const {loading, setLoading} = useLoading();
+  const { loading, setLoading } = useLoading();
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
-  const submitToApi = useCallback(async (event) => {
+  const submitToApi = useCallback(
+    async (event) => {
       event.preventDefault();
       setLoading(true);
       if (spectator) {
@@ -34,11 +35,7 @@ const JoinGameForm: FC = () => {
   return (
     <div className="flex flex-col w-full h-full" data-testid="join-game-section">
       <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
-        <form
-          data-testid="join-game-form"
-          onSubmit={submitToApi}
-          className="flex flex-col"
-        >
+        <form data-testid="join-game-form" onSubmit={submitToApi} className="flex flex-col">
           <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput
             value={code}
@@ -50,22 +47,25 @@ const JoinGameForm: FC = () => {
             required
             onChange={(e) => setCode(e.target.value)}
           />
-          {!spectator ? <KAHInput
-            ariaRole="user-name"
-            label="Player Name"
-            value={userName}
-            placeholder="Bob's your uncle"
-            name="name"
-            inputClass="flex-grow"
-            minLength={3}
-            maxLength={17}
-            required
-            onChange={(e) => setUserName(e.target.value)}
-          /> : null}
+          {!spectator ? (
+            <KAHInput
+              ariaRole="user-name"
+              label="Player Name"
+              value={userName}
+              placeholder="Bob's your uncle"
+              name="name"
+              inputClass="flex-grow"
+              minLength={3}
+              maxLength={17}
+              required
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          ) : null}
           <div className="flex items-center">
-            <KAHCheckbox dataTestid="is-spectator"
-                         className="text-2xl border-2 border-black h-8 w-8 mr-2"
-                         onClick={(value) => setSpectator(value)}
+            <KAHCheckbox
+              dataTestid="is-spectator"
+              className="text-2xl border-2 border-black h-8 w-8 mr-2"
+              onClick={(value) => setSpectator(value)}
             />
             <span>Spectator</span>
           </div>
@@ -79,7 +79,6 @@ const JoinGameForm: FC = () => {
           />
         </form>
       </KAHCard>
-      <JoinGameBanner/>
     </div>
   );
 };

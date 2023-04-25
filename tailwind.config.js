@@ -15,10 +15,23 @@ module.exports = {
     colors: {
       transparent: "transparent",
       current: "currentColor",
-
-      black: '#1A1A1A',
+      black: colors.black,
+      lightBlack: '#1a1a1a',
       white: colors.white,
       gray: colors.gray,
+      warmGray: colors.warmGray,
+      lukewarmGray: {
+        '50': '#f8f8f8',
+        '100': '#f0f0f0',
+        '200': '#e4e4e4',
+        '300': '#d3d3d3',
+        '400': '#b4b4b4',
+        '500': '#9a9a9a',
+        '600': '#818181',
+        '700': '#6a6a6a',
+        '800': '#5a5a5a',
+        '900': '#4e4e4e',
+      },
       red: colors.red,
       yellow: colors.amber,
       green: {

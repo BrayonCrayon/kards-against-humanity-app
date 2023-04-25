@@ -1,9 +1,10 @@
-import { FC, useCallback, useState } from "react";
-import { Button, ButtonVariant } from "Components/Atoms/Button";
+import {FC, useCallback, useState} from "react";
+import {Button, ButtonVariant} from "Components/Atoms/Button";
 
 interface FloatingButtonProps {
   className?: string;
   buttonClass?: string;
+  iconClass?: string;
   role?: string;
   showButton: boolean;
   variant?: ButtonVariant;
@@ -14,6 +15,7 @@ const FloatingButton: FC<FloatingButtonProps> = ({
  children,
  className = "",
  buttonClass = "",
+ iconClass = "",
  role = "button",
  variant = ButtonVariant.primary,
  showButton = false,
@@ -38,8 +40,9 @@ const FloatingButton: FC<FloatingButtonProps> = ({
             isLoading={loading}
             role={role}
             dataTestid={role}
-            text="submit"
-            className={`absolute rounded-full text-xs shadow-xl ${buttonClass}`}
+            iconClass={iconClass}
+            text="Submit"
+            className={`absolute bg-white text-black text-xs shadow-xl ${buttonClass}`}
           />
           : null
       }
