@@ -45,3 +45,11 @@ export const canSubmit = (hand: WhiteCard[], pickAmount: number): boolean => {
 
   return hand.filter((card) => card.selected).length === pickAmount;
 };
+
+export const toMinutesSeconds = (seconds: number) => {
+  const date = new Date(seconds * 1000);
+
+  const formattedSeconds = date.getSeconds() > 9 ? date.getSeconds() : `0${date.getSeconds()}`;
+  const formattedMinutes = date.getMinutes() === 0 ? "00" : date.getMinutes();
+  return `${formattedMinutes}:${formattedSeconds}`;
+};

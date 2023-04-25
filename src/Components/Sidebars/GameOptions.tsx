@@ -4,6 +4,7 @@ import { ExpansionOption } from "Types/Expansion";
 import { Button, ButtonVariant } from "Components/Atoms/Button";
 import { ExpansionsTab } from "./Settings/ExpansionsTab";
 import TabView, { Tab } from "./Settings/TabView";
+import { TimerTab } from "./Settings/TimerTab";
 
 type GameOptions = {
   expansions: ExpansionOption[];
@@ -21,7 +22,10 @@ export const GameOptions: React.FC<GameOptions> = ({ expansions, onToggle, toggl
         key: "Expansions",
         element: <ExpansionsTab toggleAll={toggleAll} onToggle={onToggle} expansions={expansions}></ExpansionsTab>,
       },
-      { key: "Settings", element: <p>World</p> },
+      {
+        key: "Timer",
+        element: <TimerTab onChange={() => {}} />,
+      },
     ]);
   }, [expansions]);
 
@@ -33,7 +37,7 @@ export const GameOptions: React.FC<GameOptions> = ({ expansions, onToggle, toggl
           className="w-full"
           variant={ButtonVariant["dark-outline"]}
           role="expansion-menu-button"
-          text="Game Setup"
+          text="Settings"
         />
       }
     >
