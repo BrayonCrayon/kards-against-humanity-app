@@ -80,7 +80,7 @@ describe("Helpers", () => {
     ["4:59", 299],
     ["2:30", 150],
     ["1:01", 61],
-    ["00:00", 0],
+    ["0:00", 0],
   ])("will return %s from %d", (expected, seconds) => {
     expect(toMinutesSeconds(seconds)).toEqual(expected);
   });

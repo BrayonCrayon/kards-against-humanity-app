@@ -6,14 +6,23 @@ import { ExpansionsTab } from "./Settings/ExpansionsTab";
 import TabView, { Tab } from "./Settings/TabView";
 import { TimerTab } from "./Settings/TimerTab";
 
-type GameOptions = {
+interface IGameOptions {
   expansions: ExpansionOption[];
   onToggle: (id: number) => void;
   toggleAll: (toggledState: boolean) => void;
+  onTimerChange: (timer: number) => void;
   className?: string;
-};
+  timer: number | null;
+}
 
-export const GameOptions: React.FC<GameOptions> = ({ expansions, onToggle, toggleAll, className = "" }) => {
+export const GameOptions: React.FC<IGameOptions> = ({
+  expansions,
+  onToggle,
+  toggleAll,
+  onTimerChange,
+  className = "",
+  timer = null,
+}) => {
   const [tabs, setTabs] = useState<Tab[]>([]);
 
   useEffect(() => {
@@ -21,13 +30,14 @@ export const GameOptions: React.FC<GameOptions> = ({ expansions, onToggle, toggl
       {
         key: "Expansions",
         element: <ExpansionsTab toggleAll={toggleAll} onToggle={onToggle} expansions={expansions}></ExpansionsTab>,
+        className: "h-screen",
       },
       {
         key: "Timer",
-        element: <TimerTab onChange={() => {}} />,
+        element: <TimerTab onChange={onTimerChange} timer={timer} />,
       },
     ]);
-  }, [expansions]);
+  }, [expansions, timer]);
 
   return (
     <ToggleSidebar
@@ -36,7 +46,7 @@ export const GameOptions: React.FC<GameOptions> = ({ expansions, onToggle, toggl
         <Button
           className="w-full"
           variant={ButtonVariant["dark-outline"]}
-          role="expansion-menu-button"
+          role="settings-menu-button"
           text="Settings"
         />
       }

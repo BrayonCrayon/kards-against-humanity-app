@@ -6,4 +6,6 @@ export const gameFixture: Game = {
   judgeId: 1,
   code: "1234",
   redrawLimit: 2,
+  judgeTimer: null,
+  selectionTimer: null,
 };

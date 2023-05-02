@@ -1,23 +1,46 @@
 import { fireEvent, render, waitFor } from "@testing-library/react";
 import { TimerTab } from "./TimerTab";
-import { call, random } from "lodash";
+import { random } from "lodash";
 import userEvent from "@testing-library/user-event";
+import { act } from "react-dom/test-utils";
+import { toMinutesSeconds } from "../../../Utilities/helpers";
 
 describe("TimerTab", () => {
-  it("will show time in minutes/seconds for initial slider value", async () => {
+  it("will disable time by default", () => {
     const wrapper = render(<TimerTab onChange={() => {}} />);
 
-    const initialValue = wrapper.getByTestId("range-timer").getAttribute("value") ?? "0";
-    const date = new Date(Number.parseInt(initialValue) * 1000);
+    expect(wrapper.queryByText("0:00")).toBeInTheDocument();
+  });
+
+  it.each([
+    [0, 60],
+    [30, 90],
+    [60, 180],
+    [75, 199],
+  ])("will change time to between %s and %s when enabled", async (min, max) => {
+    const onChange = jest.fn();
+    const wrapper = render(<TimerTab onChange={onChange} min={min} max={max} />);
+
+    act(() => {
+      userEvent.click(wrapper.getByRole("toggle-timer"));
+    });
 
     await waitFor(() => {
-      expect(wrapper.queryByText(`${date.getMinutes()}:${date.getSeconds()}`)).toBeInTheDocument();
+      expect(wrapper.queryByText(toMinutesSeconds((max + min) / 2))).toBeInTheDocument();
+      expect(wrapper.getByTestId("range-timer").getAttribute("value")).toEqual(((max + min) / 2).toString());
+      expect(onChange).toHaveBeenCalledWith((max + min) / 2);
     });
   });
 
   it("will adjust visual time(minutes:seconds) when slider value changes", async () => {
-    const seconds = random(1, 299);
-    const wrapper = render(<TimerTab onChange={() => {}} />);
+    const min = 61;
+    const max = 299;
+    const seconds = random(min, max);
+    const wrapper = render(<TimerTab onChange={() => {}} min={min} max={max} />);
+
+    act(() => {
+      userEvent.click(wrapper.getByRole("toggle-timer"));
+    });
 
     fireEvent.change(wrapper.getByTestId("range-timer"), {
       target: {
@@ -35,24 +58,34 @@ describe("TimerTab", () => {
     const callback = jest.fn();
     const wrapper = render(<TimerTab onChange={callback} />);
 
+    await waitFor(() => {
+      userEvent.click(wrapper.getByRole("toggle-timer"));
+    });
     userEvent.click(wrapper.getByRole("toggle-timer"));
 
     await waitFor(() => {
       expect(callback).toHaveBeenCalledWith(0);
-      expect(wrapper.getByText("00:00")).toBeInTheDocument();
+      expect(wrapper.getByText("0:00")).toBeInTheDocument();
     });
   });
 
   it("will reset timer back to original state when user toggles back on timer", async () => {
     const callback = jest.fn();
-    const wrapper = render(<TimerTab onChange={callback} />);
+    const max = 60;
+    const min = 0;
+    const wrapper = render(<TimerTab onChange={callback} min={min} max={max} />);
 
-    userEvent.click(wrapper.getByRole("toggle-timer"));
     userEvent.click(wrapper.getByRole("toggle-timer"));
 
     await waitFor(() => {
-      expect(callback).toHaveBeenCalledWith(150);
-      expect(wrapper.getByText("2:30")).toBeInTheDocument();
+      expect(callback).toHaveBeenCalledWith(max / 2);
+      expect(wrapper.getByText("0:30")).toBeInTheDocument();
     });
+  });
+
+  it("shows the slider with prop value if available", function () {
+    const wrapper = render(<TimerTab onChange={() => {}} timer={69} />);
+
+    expect(wrapper.queryByTestId("range-timer")).not.toBeDisabled();
   });
 });

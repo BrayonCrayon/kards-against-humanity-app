@@ -2,13 +2,35 @@ import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleR
 import { kardsRender } from "Tests/testRenders";
 import { GameOptions } from "Components/Sidebars/GameOptions";
 import { ExpansionsToExpansionOptions } from "Utilities/helpers";
+import userEvent from "@testing-library/user-event";
+import { waitFor } from "@testing-library/react";
 
 const { data: expansions } = getExpansionsExampleResponse;
 const expansionOptions = ExpansionsToExpansionOptions(expansions);
-const renderComponent = () => {
-  return kardsRender(<GameOptions expansions={expansionOptions} onToggle={jest.fn()} toggleAll={jest.fn()} />);
+const renderComponent = (options: { timer: number | null } = { timer: null }) => {
+  return kardsRender(
+    <GameOptions
+      expansions={expansionOptions}
+      onToggle={jest.fn()}
+      toggleAll={jest.fn()}
+      onTimerChange={jest.fn()}
+      timer={options.timer}
+    />
+  );
 };
 
 describe("GameOptions", () => {
-  it.todo("make a test for stuff");
+  it("accepts the timer values as props", async () => {
+    const component = renderComponent({ timer: 69 });
+
+    userEvent.click(await component.getByRole("settings-menu-button"));
+
+    await waitFor(async () => {
+      userEvent.click(await component.findByTestId("Timer"));
+    });
+
+    await waitFor(() => {
+      component.getByText("1:09");
+    });
+  });
 });

@@ -2,16 +2,14 @@ import { apiClient } from "Api/apiClient";
 import { PlayerCard, PlayerSubmittedCard, Resource, RoundWinner } from "Types/ResponseTypes";
 
 export const fetchSubmittedCards = (gameId: string) => {
-  return apiClient.get<Array<PlayerSubmittedCard>>(
-    `/api/game/${gameId}/submitted-cards`
-  );
+  return apiClient.get<Array<PlayerSubmittedCard>>(`/api/game/${gameId}/submitted-cards`);
 };
 
 export const submitWinner = (gameId: string, playerId: number) => {
   return apiClient.post(`/api/game/${gameId}/winner`, {
     user_id: playerId,
   });
-}
+};
 
 export const fetchState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}`);
@@ -19,19 +17,19 @@ export const fetchState = (gameId: string) => {
 
 export const fetchSpectatorState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}/spectate`);
-}
+};
 
 export const fetchPlayers = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}/players`);
 };
 
-export const createGame = (name: string, expansionIds: number[]) => {
-  return apiClient.post(`/api/game`, { name, expansionIds, });
-}
+export const createGame = (params: { name: string; expansionIds: number[]; timer: number }) => {
+  return apiClient.post(`/api/game`, params);
+};
 
 export const joinGame = (code: string, userName: string) => {
   return apiClient.post(`/api/game/${code.toUpperCase()}/join`, {
-    name: userName
+    name: userName,
   });
 };
 
@@ -41,20 +39,16 @@ export const joinAsSpectator = (gameId: string) => {
 
 export const leaveGame = (gameId: string) => {
   return apiClient.post(`/api/game/${gameId}/leave`);
-}
+};
 
 export const rotate = (gameId: string) => {
   return apiClient.post(`/api/game/${gameId}/rotate`);
 };
 
-export const submitCards = (
-  gameId: string,
-  blackCardPickAmount: number,
-  cardIds: number[]
-) => {
+export const submitCards = (gameId: string, blackCardPickAmount: number, cardIds: number[]) => {
   return apiClient.post(`/api/game/${gameId}/select`, {
     submitAmount: blackCardPickAmount,
-    whiteCardIds: cardIds
+    whiteCardIds: cardIds,
   });
 };
 
@@ -72,7 +66,7 @@ export const kick = (gameId: string, userId: number) => {
 
 export const fetchExpansions = () => {
   return apiClient.get(`/api/expansions`);
-}
+};
 
 export default {
   submitCards,

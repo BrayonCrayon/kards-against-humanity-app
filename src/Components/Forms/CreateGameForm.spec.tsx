@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
 import { kardsRender } from "Tests/testRenders";
 import gameService from "Services/GameService";
+import { act } from "react-dom/test-utils";
 
 const { data: expansions } = getExpansionsExampleResponse;
 
@@ -26,7 +27,7 @@ describe("CreateGameForm", () => {
     const wrapper = renderer();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole("expansion-menu-button"));
+      userEvent.click(wrapper.getByRole("settings-menu-button"));
     });
 
     const expansionCard = await wrapper.container.querySelectorAll("i[class*='fa-check']");
@@ -40,7 +41,7 @@ describe("CreateGameForm", () => {
 
     renderer();
 
-    userEvent.click(screen.getByRole("expansion-menu-button"));
+    userEvent.click(screen.getByRole("settings-menu-button"));
 
     userEvent.click(await screen.findByTestId(`expansion-${expansionToExclude.id}`));
 
@@ -53,29 +54,38 @@ describe("CreateGameForm", () => {
     await waitFor(() => {
       expect(mockCreateGame).toHaveBeenCalledWith(
         name,
-        expansions.filter(e => e.id !== expansionToExclude.id).map(e => e.id)
+        expansions.filter((e) => e.id !== expansionToExclude.id).map((e) => e.id),
+        0
       );
-    })
+    });
   });
 
   it("calls create game hook", async () => {
-    renderer();
+    const wrapper = renderer();
 
     const nameInput = await screen.findByTestId("user-name");
     userEvent.type(nameInput, "Chewy");
+
+    act(() => userEvent.click(wrapper.getByRole("settings-menu-button")));
+    await waitFor(() => userEvent.click(wrapper.getByTestId("Timer")));
+    act(() => userEvent.click(wrapper.getByRole("toggle-timer")));
 
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     userEvent.click(submitBtn);
 
     await waitFor(() => {
-      expect(mockCreateGame).toHaveBeenCalledWith("Chewy", expansions.map(e => e.id));
+      expect(mockCreateGame).toHaveBeenCalledWith(
+        "Chewy",
+        expansions.map((e) => e.id),
+        180
+      );
     });
   });
 
   it("will unselect all expansions", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole("expansion-menu-button"));
+    userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     const expansion = getExpansionsExampleResponse.data[0];
 
@@ -86,31 +96,29 @@ describe("CreateGameForm", () => {
     userEvent.click(wrapper.getByRole("toggle-all-expansions"));
 
     await waitFor(() => {
-      expect(
-        wrapper.container.querySelectorAll("i[class*='fa-checked']")
-      ).toHaveLength(0);
+      expect(wrapper.container.querySelectorAll("i[class*='fa-checked']")).toHaveLength(0);
     });
   });
 
   it("will show white card count on expansions", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole("expansion-menu-button"));
+    userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     await waitFor(() => {
-      expansions.forEach(item =>
+      expansions.forEach((item) =>
         expect(wrapper.queryByRole(`white-card-count-${item.id}`)?.textContent).toContain(item.cardCount)
       );
-    })
+    });
   });
 
   it("will open expansion menu", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole("expansion-menu-button"));
+    userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     await waitFor(() => {
-      expect(wrapper.queryByRole("expansion-menu-button")).toBeInTheDocument();
+      expect(wrapper.queryByRole("settings-menu-button")).toBeInTheDocument();
     });
   });
 });

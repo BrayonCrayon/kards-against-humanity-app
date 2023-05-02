@@ -1,19 +1,23 @@
 import React, { FC, ReactNode, useCallback, useState } from "react";
 
-export type Tab = { key: string; element: ReactNode };
+export type Tab = { key: string; element: ReactNode; className?: string };
 
-export interface INavContainer {
+export interface ITabView {
   tabs: Tab[];
 }
 
-const TabView: FC<INavContainer> = ({ tabs }) => {
+const TabView: FC<ITabView> = ({ tabs }) => {
   const [selectedTab, setSelectedTab] = useState(tabs.length ? tabs[0].key : "");
 
   const renderTab = useCallback(
     (tab: Tab) => {
       if (Boolean(tab.element) && tab.key !== selectedTab) return null;
 
-      return tab.element instanceof Function ? tab.element() : tab.element;
+      return (
+        <div key={tab.key} className={tab.className}>
+          {tab.element instanceof Function ? tab.element() : tab.element}
+        </div>
+      );
     },
     [selectedTab]
   );
@@ -36,9 +40,7 @@ const TabView: FC<INavContainer> = ({ tabs }) => {
           ))}
         </div>
       </nav>
-      {tabs.map((tab) => (
-        <>{renderTab(tab)}</>
-      ))}
+      {tabs.map((tab) => renderTab(tab))}
     </>
   );
 };

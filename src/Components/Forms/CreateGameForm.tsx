@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "Components/Atoms/Button";
 import KAHInput from "Components/KAHInput";
 import useCreateGame from "Hooks/Game/Create/useCreateGame";
-import { CreateGameBanner } from "Components/CreateGameBanner";
 import { KAHCard } from "Components/KAHCard";
 import { GameOptions } from "Components/Sidebars/GameOptions";
 import useExpansions from "Hooks/Game/Expansions/useExpansions";
@@ -10,6 +9,7 @@ import useLoading from "Hooks/Game/Shared/useLoading";
 
 export const CreateGameForm: React.FC = () => {
   const [userName, setUserName] = useState("");
+  const [timer, setTimer] = useState(0);
   const createGame = useCreateGame();
   const { expansions, getExpansions, setExpansions } = useExpansions();
   const { loading, setLoading } = useLoading();
@@ -25,10 +25,11 @@ export const CreateGameForm: React.FC = () => {
       await setLoading(true);
       await createGame(
         userName,
-        expansions.filter((e) => e.isSelected).map((e) => e.expansion.id)
+        expansions.filter((e) => e.isSelected).map((e) => e.expansion.id),
+        timer
       );
     },
-    [expansions, userName]
+    [expansions, userName, timer]
   );
 
   const onToggle = useCallback(
@@ -52,6 +53,13 @@ export const CreateGameForm: React.FC = () => {
     [expansions]
   );
 
+  const onTimerChanged = useCallback(
+    (seconds: number) => {
+      setTimer(seconds);
+    },
+    [timer]
+  );
+
   return (
     <div className="flex flex-col w-full">
       <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
@@ -69,7 +77,13 @@ export const CreateGameForm: React.FC = () => {
             maxLength={17}
             onChange={(event) => setUserName(event.target.value)}
           />
-          <GameOptions expansions={expansions} onToggle={onToggle} toggleAll={toggleExpansions} />
+          <GameOptions
+            expansions={expansions}
+            onToggle={onToggle}
+            toggleAll={toggleExpansions}
+            onTimerChange={onTimerChanged}
+            timer={timer}
+          />
           <Button isLoading={loading} text="Create" dataTestid="create-game-submit-button" type="submit" />
         </form>
       </KAHCard>

@@ -50,6 +50,6 @@ export const toMinutesSeconds = (seconds: number) => {
   const date = new Date(seconds * 1000);
 
   const formattedSeconds = date.getSeconds() > 9 ? date.getSeconds() : `0${date.getSeconds()}`;
-  const formattedMinutes = date.getMinutes() === 0 ? "00" : date.getMinutes();
+  const formattedMinutes = date.getMinutes();
   return `${formattedMinutes}:${formattedSeconds}`;
 };

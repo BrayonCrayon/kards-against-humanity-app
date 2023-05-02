@@ -1,12 +1,8 @@
+import { gameFactory } from "../../Tests/Factories/GameFactory";
+
 export const gameStateJudgeExampleResponse = {
   data: {
-    game: {
-      id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-      code: "1234",
-      name: "Puzzled Penguin",
-      judgeId: 1,
-      redrawLimit: 2,
-    },
+    game: gameFactory({ judgeId: 1 }),
     hasSubmittedWhiteCards: false,
     submittedWhiteCardIds: [],
     users: [
@@ -15,21 +11,21 @@ export const gameStateJudgeExampleResponse = {
         name: "brady",
         score: 0,
         hasSubmittedWhiteCards: false,
-        redrawCount: 0
+        redrawCount: 0,
       },
       {
         id: 2,
         name: "Rick",
         score: 0,
         hasSubmittedWhiteCards: false,
-        redrawCount: 0
+        redrawCount: 0,
       },
       {
         id: 3,
         name: "Morty",
         score: 0,
         hasSubmittedWhiteCards: false,
-        redrawCount: 0
+        redrawCount: 0,
       },
     ],
     currentUser: {
@@ -37,7 +33,7 @@ export const gameStateJudgeExampleResponse = {
       name: "brady",
       score: 0,
       hasSubmittedWhiteCards: false,
-      redrawCount: 0
+      redrawCount: 0,
     },
     blackCard: {
       id: 4624,

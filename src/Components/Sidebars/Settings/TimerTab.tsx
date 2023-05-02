@@ -7,15 +7,18 @@ import { toMinutesSeconds } from "../../../Utilities/helpers";
 
 interface TimerTabProps {
   onChange: (seconds: number) => void;
+  timer?: number | null;
+  min?: number;
+  max?: number;
 }
 
-export const TimerTab: FC<TimerTabProps> = ({ onChange }) => {
-  const [timerOn, setTimerOn] = useState(true);
-  const [seconds, setSeconds] = useState(150);
+export const TimerTab: FC<TimerTabProps> = ({ onChange, min = 60, max = 300, timer = 0 }) => {
+  const [timerOn, setTimerOn] = useState(!!timer);
+  const [seconds, setSeconds] = useState(timer ?? 0);
 
   const onToggle = useCallback(async () => {
-    await onChange(timerOn ? 0 : 150);
-    await setSeconds(timerOn ? 0 : 150);
+    await onChange(timerOn ? 0 : (max + min) / 2);
+    await setSeconds(timerOn ? 0 : (max + min) / 2);
 
     setTimerOn(!timerOn);
   }, [timerOn, setTimerOn]);
@@ -26,8 +29,20 @@ export const TimerTab: FC<TimerTabProps> = ({ onChange }) => {
         <KAHToggler role="toggle-timer" on={timerOn} onText="Use Timer" offText="Use Timer" onClick={onToggle} />
       </div>
       <div className="overflow-y-scroll px-2 rounded">
-        <p className="text-6xl text-center font-bold mb-4">{toMinutesSeconds(seconds)}</p>
-        <KAHRange name="timer" dataTestid="range-timer" onChange={(value) => setSeconds(value)} max={300} />
+        <p className={`text-6xl text-center font-bold mb-4 ${!timerOn ? "opacity-25" : ""}`}>
+          {toMinutesSeconds(seconds)}
+        </p>
+        <KAHRange
+          disabled={!timerOn}
+          name="timer"
+          dataTestid="range-timer"
+          onChange={(value) => {
+            setSeconds(value);
+            onChange(value);
+          }}
+          max={max}
+          min={min}
+        />
         <p className="text-sm text-gray-500 text-center mt-4">Max. 5 Minutes</p>
       </div>
     </>

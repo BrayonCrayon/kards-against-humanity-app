@@ -7,7 +7,7 @@ import useCreateGame from "Hooks/Game/Create/useCreateGame";
 import { transformUser, transformUsers } from "Types/User";
 
 const dispatchSpy = jest.fn();
-const {data} = gameStateExampleResponse;
+const { data } = gameStateExampleResponse;
 
 describe("useCreateGame", () => {
   beforeEach(() => {
@@ -15,17 +15,18 @@ describe("useCreateGame", () => {
     spyOnUseAuth(dispatchSpy);
     spyOnUsePlayers(dispatchSpy);
     spyOnUseHand(dispatchSpy);
-  })
+  });
 
   it("will create game and set state", async () => {
     service.createGame.mockResolvedValue(gameStateExampleResponse as AxiosResponse);
     const userName = "Frodo";
     const expansionIds = [1, 2];
+    const timer = 180;
     const { result } = kardsHookRender(useCreateGame);
 
-    await result.current(userName, expansionIds);
+    await result.current(userName, expansionIds, timer);
 
-    expect(service.createGame).toHaveBeenCalledWith(userName, expansionIds);
+    expect(service.createGame).toHaveBeenCalledWith({ name: userName, expansionIds, timer });
     expect(history.push).toHaveBeenCalledWith(`/game/${data.game.id}`);
     expectDispatch(dispatchSpy, data.game);
     expectDispatch(dispatchSpy, data.blackCard);
@@ -34,7 +35,6 @@ describe("useCreateGame", () => {
     expectDispatch(dispatchSpy, false);
     expectDispatch(dispatchSpy, data.hand);
   });
-
 
   it("will handle server error", async () => {
     const errorMsg = { status: 500 };

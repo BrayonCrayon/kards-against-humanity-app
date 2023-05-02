@@ -28,7 +28,7 @@ export const ExpansionsTab: FC<ExpansionsTabProps> = ({ expansions, onToggle, to
           onClick={onChange}
         />
       </div>
-      <div className="overflow-y-scroll px-2 rounded">
+      <div className="h-5/6 overflow-y-scroll px-2 rounded">
         {expansions.map(({ expansion, isSelected }) => {
           return (
             <ExpansionCard
