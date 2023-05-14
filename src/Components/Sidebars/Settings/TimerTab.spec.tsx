@@ -2,8 +2,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { TimerTab } from "./TimerTab";
 import { random } from "lodash";
 import userEvent from "@testing-library/user-event";
-import { act } from "react-dom/test-utils";
-import { toMinutesSeconds } from "../../../Utilities/helpers";
+import { toMinutesSeconds } from "Utilities/helpers";
 
 describe("TimerTab", () => {
   it("will disable time by default", () => {
@@ -21,9 +20,7 @@ describe("TimerTab", () => {
     const onChange = jest.fn();
     const wrapper = render(<TimerTab onChange={onChange} min={min} max={max} />);
 
-    act(() => {
-      userEvent.click(wrapper.getByRole("toggle-timer"));
-    });
+    await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     await waitFor(() => {
       expect(wrapper.queryByText(toMinutesSeconds((max + min) / 2))).toBeInTheDocument();
@@ -38,9 +35,7 @@ describe("TimerTab", () => {
     const seconds = random(min, max);
     const wrapper = render(<TimerTab onChange={() => {}} min={min} max={max} />);
 
-    act(() => {
-      userEvent.click(wrapper.getByRole("toggle-timer"));
-    });
+    await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     fireEvent.change(wrapper.getByTestId("range-timer"), {
       target: {
@@ -58,10 +53,8 @@ describe("TimerTab", () => {
     const callback = jest.fn();
     const wrapper = render(<TimerTab onChange={callback} />);
 
-    await waitFor(() => {
-      userEvent.click(wrapper.getByRole("toggle-timer"));
-    });
-    userEvent.click(wrapper.getByRole("toggle-timer"));
+    await userEvent.click(wrapper.getByRole("toggle-timer"));
+    await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     await waitFor(() => {
       expect(callback).toHaveBeenCalledWith(0);
@@ -75,7 +68,7 @@ describe("TimerTab", () => {
     const min = 0;
     const wrapper = render(<TimerTab onChange={callback} min={min} max={max} />);
 
-    userEvent.click(wrapper.getByRole("toggle-timer"));
+    await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     await waitFor(() => {
       expect(callback).toHaveBeenCalledWith(max / 2);

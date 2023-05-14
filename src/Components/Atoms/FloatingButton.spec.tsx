@@ -13,21 +13,21 @@ describe("FloatingButton", function() {
   it("will not show button on initial load", () => {
     const wrapper = renderComponent();
 
-    expect(wrapper.queryByRole('button')).not.toBeInTheDocument();
+    expect(wrapper.queryByRole("button")).not.toBeInTheDocument();
   });
 
   it("will show button when toggle is true", () => {
     const wrapper = renderComponent({ ...initialProps, showButton: true });
 
-    expect(wrapper.queryByRole('button')).toBeInTheDocument();
+    expect(wrapper.queryByRole("button")).toBeInTheDocument();
   });
 
-  it("will call passed in click handler when button is pressed", () => {
+  it("will call passed in click handler when button is pressed", async () => {
     const onClick = jest.fn();
     const wrapper = renderComponent({ showButton: true, onClick });
 
-    userEvent.click(wrapper.getByRole('button'));
-    
+    await userEvent.click(wrapper.getByRole("button"));
+
     expect(onClick).toHaveBeenCalled();
   });
 });

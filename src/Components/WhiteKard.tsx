@@ -27,7 +27,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
         ${className} 
         ${
           card.selected
-            ? "border-5 border-green-500"
+            ? "border-5 border-emerald-500"
             : ""
         } 
         ${hasSubmittedCards ? "cursor-not-allowed" : ""} 

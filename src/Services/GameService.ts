@@ -24,7 +24,7 @@ export const fetchPlayers = (gameId: string) => {
 };
 
 export const createGame = (params: { name: string; expansionIds: number[]; timer: number }) => {
-  return apiClient.post(`/api/game`, params);
+  return apiClient.post("/api/game", params);
 };
 
 export const joinGame = (code: string, userName: string) => {
@@ -65,7 +65,7 @@ export const kick = (gameId: string, userId: number) => {
 };
 
 export const fetchExpansions = () => {
-  return apiClient.get(`/api/expansions`);
+  return apiClient.get("/api/expansions");
 };
 
 export default {

@@ -1,23 +1,23 @@
-import React, {FC, useState} from "react";
-import {BlackKard} from "Components/BlackKard";
-import {usePlayers} from "State/Players/usePlayers";
+import React, { FC, useState } from "react";
+import { BlackKard } from "Components/BlackKard";
+import { usePlayers } from "State/Players/usePlayers";
 import PlayerNotificationBar from "Components/PlayerNotificationBar";
 import JudgeMessage from "Components/JudgeMessage";
-import {useAuth} from "State/Auth/useAuth";
-import {useGame} from "State/Game/useGame";
+import { useAuth } from "State/Auth/useAuth";
+import { useGame } from "State/Game/useGame";
 import Settings from "Components/Sidebars/Settings";
 import CopyIcon from "Components/Icons/CopyIcon";
 import ClipBoard from "Components/Atoms/ClipBoard";
 import ShareButton from "Components/Atoms/ShareButton";
-import {ShareData} from "Types/WebShare";
+import { ShareData } from "Types/WebShare";
 
 const GameInfo: FC = () => {
   const { state: { game, blackCard }, } = useGame();
   const { state: { players }, } = usePlayers();
   const { state: { auth }, } = useAuth();
   const [data] = useState<ShareData>({
-    title: 'Kards Against Humanity',
-    text: 'Come join my game!',
+    title: "Kards Against Humanity",
+    text: "Come join my game!",
     url: `https://kardsagainsthumanity.ca/${game.code}`
   });
 
@@ -36,7 +36,7 @@ const GameInfo: FC = () => {
             <span className="text-gray-700 px-1 inline-block align-middle">Code: {game.code}</span>
           </ClipBoard>
         </div>
-        <Settings className="flex-grow md:flex-grow-0 md:mr-5" gameId={game.id} players={players} />
+        <Settings className="flex-grow md:grow-0 md:mr-5" gameId={game.id} players={players} />
       </div>
       <div className="pb-12 mx-auto my-2 pt-4 w-full px-6 flex flex-col items-center md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />

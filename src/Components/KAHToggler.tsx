@@ -15,7 +15,7 @@ export const KAHToggler: React.FC<KAHTogglerProps> = ({
   on,
   offText = "Off",
   onClick,
-  role = 'toggle-button',
+  role = "toggle-button",
   className = "",
 }) => {
 

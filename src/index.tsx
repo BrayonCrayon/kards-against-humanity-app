@@ -1,15 +1,21 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { VoteProvider } from "./State/Vote/VoteContext";
+import { VoteProvider } from "State/Vote/VoteContext";
 import { PlayersProvider } from "State/Players/PlayersContext";
-import { HandProvider } from "./State/Hand/HandContext";
+import { HandProvider } from "State/Hand/HandContext";
 import { AuthProvider } from "State/Auth/AuthContext";
-import { GameProvider } from "./State/Game/GameContext";
+import { GameProvider } from "State/Game/GameContext";
+import { createRoot } from "react-dom/client";
 
-ReactDOM.render(
+const container = document.getElementById("root");
+
+if (!container) throw Error("Cannot have empty container.");
+
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
     <AuthProvider>
       <HandProvider>
@@ -22,8 +28,7 @@ ReactDOM.render(
         </PlayersProvider>
       </HandProvider>
     </AuthProvider>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -88,7 +88,7 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
           buttonClass="w-full min-w-64 py-3 mb-5 md:min-w-0 md:py-0.5 md:px-3"
         />
       </div>
-      <div className="grid place-items-center grid-cols-1 pb-10 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 pb-10 md:grid-cols-2 md:gap-4 lg:grid-cols-3 xl:grid-cols-4">
         {hand.map((card) => (
           <div className="w-full flex flex-col" key={card.id}>
             <WhiteKard

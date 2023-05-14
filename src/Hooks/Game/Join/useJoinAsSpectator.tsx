@@ -7,13 +7,13 @@ import { SetPlayersAction } from "State/Players/PlayersActions";
 import { usePlayers } from "State/Players/usePlayers";
 import { useAuth } from "State/Auth/useAuth";
 import { SetAuthAction } from "State/Auth/AuthActions";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function useJoinAsSpectator() {
   const { dispatch: usersDispatch } = usePlayers();
   const { dispatch: userDispatch } = useAuth();
   const { dispatch: gameDispatch } = useGame();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return useCallback(async (gameCode: string) => {
       try {
@@ -23,7 +23,7 @@ function useJoinAsSpectator() {
         usersDispatch(new SetPlayersAction(transformUsers(data.users)));
         gameDispatch(new SetGameAction(data.game));
         gameDispatch(new SetBlackCardAction(data.blackCard));
-        history.push(`/game/${data.game.id}/spectate`);
+        navigate(`/game/${data.game.id}/spectate`);
       } catch (error) {
         console.error(error);
       }

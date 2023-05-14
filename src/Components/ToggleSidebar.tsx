@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import {FC, useState, JSX, PropsWithChildren} from "react";
 import { Button } from "Components/Atoms/Button";
 
-interface ToggleSidebarProps {
+interface ToggleSidebarProps extends PropsWithChildren {
   toggleElement?: JSX.Element;
   dataTestId?: string;
   className?: string;
@@ -28,7 +28,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
       </div>
       {show && (
         <div
-          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white bg-opacity-75 flex cursor-pointer"
+          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white/75 flex cursor-pointer"
           data-testid="sidebar"
         >
           <div

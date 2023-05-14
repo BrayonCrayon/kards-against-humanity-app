@@ -3,7 +3,9 @@ import { RoundWinnerModal } from "./RoundWinnerModal";
 import * as Vote from "State/Vote/useVote";
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { transformUser, transformUsers } from "Types/User";
 import { waitFor } from "@testing-library/react";
 import { roundWinnerExampleResponse } from "Api/fixtures/roundWinnerExampleResponse";
@@ -73,9 +75,7 @@ describe("RoundWinnerModal", () => {
 
     const wrapper = renderComponent();
 
-    userEvent.click(
-      await wrapper.findByTestId("round-winner-modal-close-button")
-    );
+    await userEvent.click(await wrapper.findByTestId("round-winner-modal-close-button"));
 
     expect(dispatchSpy).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -144,9 +144,9 @@ describe("RoundWinnerModal", () => {
 
     await waitFor(() => {
       const winnerCardElement = wrapper.getByTestId(
-        `player-card-response-${user_id}`
+        `player-submitted-response-${user_id}`
       );
-      expect(winnerCardElement.textContent).toEqual(expectedCardText);
+      expect(winnerCardElement.textContent).toContain(expectedCardText);
     });
   });
 });

@@ -20,7 +20,7 @@ describe("TabView", () => {
     expect(component.container.querySelector(".test")).toBeInTheDocument();
   });
 
-  it("will render out jsx elements conditionally", () => {
+  it("will render out jsx elements conditionally", async () => {
     const tabs: Tab[] = [
       {
         key: "tab-key-1",
@@ -41,7 +41,7 @@ describe("TabView", () => {
     expect(wrapper.queryByTestId("tab-1")).toBeInTheDocument();
     expect(wrapper.queryByTestId("tab-2")).not.toBeInTheDocument();
 
-    userEvent.click(wrapper.getByText("tab-key-2"));
+    await userEvent.click(wrapper.getByText("tab-key-2"));
 
     expect(wrapper.queryByTestId("tab-1")).not.toBeInTheDocument();
     expect(wrapper.queryByTestId("tab-2")).toBeInTheDocument();

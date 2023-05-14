@@ -1,5 +1,5 @@
 import { JoinGameBanner } from "../Components/JoinGameBanner";
-import { CreateGameBanner } from "../Components/CreateGameBanner";
+import CreateGameBanner from "../Components/CreateGameBanner";
 import React, { useMemo } from "react";
 import { useLocation } from "react-router-dom";
 

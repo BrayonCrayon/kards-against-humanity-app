@@ -29,7 +29,6 @@ jest.mock("react-router-dom", () => {
 
 const {data} = gameStateExampleResponse;
 const userName = "Joe";
-const code = "1234";
 
 const renderer = () => {
   return kardsRender(<JoinGameForm />);
@@ -50,16 +49,16 @@ describe("JoinGameForm", () => {
 
   it("allows user to join game as a player", async () => {
     renderer();
-    setupAndSubmitForm(userName, code);
+    await setupAndSubmitForm(userName, data.game.code);
 
     await waitFor(() => {
-      expect(mockJoinGame).toHaveBeenCalledWith(code, userName);
+      expect(mockJoinGame).toHaveBeenCalledWith(data.game.code, userName);
     });
   });
 
-  it('allows a user to join as a spectator', async () => {
+  it("allows a user to join as a spectator", async () => {
     renderer()
-    setupAndSubmitForm(userName, code, true);
+    await setupAndSubmitForm(userName, data.game.code, true);
 
     await waitFor(async () => {
       expect(mockJoinAsSpectator).toHaveBeenCalledWith( data.game.code );
@@ -67,18 +66,18 @@ describe("JoinGameForm", () => {
     });
   })
 
-  it("will hide user name input when spectator is checked", () => {
+  it("will hide user name input when spectator is checked", async () => {
     const gameCode = "1j1j";
     const wrapper = renderer();
 
     const codeInput = wrapper.queryByRole("game-code-input");
     expect(codeInput).not.toBeNull();
-    userEvent.type(codeInput!, gameCode);
+    await userEvent.type(codeInput!, gameCode);
 
-    expect(wrapper.queryByRole('user-name')).toBeInTheDocument();
-    userEvent.click(wrapper.getByTestId("is-spectator"));
+    expect(wrapper.queryByRole("user-name")).toBeInTheDocument();
+    await userEvent.click(wrapper.getByTestId("is-spectator"));
 
-    expect(wrapper.queryByRole('user-name')).not.toBeInTheDocument();
+    expect(wrapper.queryByRole("user-name")).not.toBeInTheDocument();
   });
 
   it("will set game code when it is coming from url params", () => {

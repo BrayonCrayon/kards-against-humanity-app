@@ -19,8 +19,7 @@ export const CreateGameForm: React.FC = () => {
     getExpansions();
   }, []);
 
-  const submitToApi = useCallback(
-    async (event: any) => {
+  const submitToApi = useCallback(async (event: any) => {
       event.preventDefault();
       await setLoading(true);
       await createGame(
@@ -32,8 +31,7 @@ export const CreateGameForm: React.FC = () => {
     [expansions, userName, timer]
   );
 
-  const onToggle = useCallback(
-    (id: number) => {
+  const onToggle = useCallback((id: number) => {
       setExpansions(
         expansions.map((item) => {
           if (item.expansion.id === id) item.isSelected = !item.isSelected;
@@ -44,8 +42,7 @@ export const CreateGameForm: React.FC = () => {
     [expansions]
   );
 
-  const toggleExpansions = useCallback(
-    (toggledState: boolean) => {
+  const toggleExpansions = useCallback((toggledState: boolean) => {
       setExpansions((prev) => {
         return prev.map((ex) => ({ ...ex, isSelected: toggledState }));
       });
@@ -53,8 +50,7 @@ export const CreateGameForm: React.FC = () => {
     [expansions]
   );
 
-  const onTimerChanged = useCallback(
-    (seconds: number) => {
+  const onTimerChanged = useCallback((seconds: number) => {
       setTimer(seconds);
     },
     [timer]

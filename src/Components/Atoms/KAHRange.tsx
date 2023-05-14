@@ -21,8 +21,7 @@ export const KAHRange: FC<KAHRangeProps> = ({
 }) => {
   const [value, setValue] = useState(min);
 
-  const onValueChange = useCallback(
-    (value) => {
+  const onValueChange = useCallback((value: number) => {
       setValue(value);
       onChange(value);
     },
@@ -39,7 +38,7 @@ export const KAHRange: FC<KAHRangeProps> = ({
     <input
       className={disabled ? "opacity-25" : ""}
       data-testid={dataTestid}
-      onChange={(event) => onValueChange(event.target.value)}
+      onChange={(event) => onValueChange(Number.parseInt(event.target.value))}
       disabled={disabled}
       type="range"
       min={min}

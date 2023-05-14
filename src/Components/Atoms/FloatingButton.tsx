@@ -1,7 +1,7 @@
-import {FC, useCallback, useState} from "react";
+import {FC, PropsWithChildren, useCallback, useState} from "react";
 import {Button, ButtonVariant} from "Components/Atoms/Button";
 
-interface FloatingButtonProps {
+interface FloatingButtonProps extends PropsWithChildren {
   className?: string;
   buttonClass?: string;
   iconClass?: string;
@@ -24,7 +24,7 @@ const FloatingButton: FC<FloatingButtonProps> = ({
 
   const [loading, setLoading] = useState(false);
 
-  const clickHandler = useCallback((e) => {
+  const clickHandler = useCallback(() => {
     setLoading(true);
     onClick();
   }, [onClick]);

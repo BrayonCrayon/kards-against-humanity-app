@@ -28,7 +28,7 @@ export const KAHCheckbox: FC<KAHCheckboxProps> = ({
   }, [checked]);
 
   const iconClass = useMemo(() => {
-    return `fa-solid ${size} ${checked ? 'fa-check' : '' }`;
+    return `fa-solid ${size} ${checked ? "fa-check" : "" }`;
   }, [checked]);
 
   return (<div className={`flex items-center justify-center ${className} cursor-pointer`} data-testid={dataTestid} onClick={toggle}>

@@ -1,9 +1,9 @@
 import { kardsHookRender } from "Tests/testRenders";
 import { service } from "setupTests";
 import { AxiosResponse } from "axios";
-import { act } from "@testing-library/react-hooks";
 import useExpansions from "Hooks/Game/Expansions/useExpansions";
 import gameService from "Services/GameService";
+import {act} from "react-dom/test-utils";
 
 
 describe("useFetchExpansions", () => {
@@ -12,7 +12,7 @@ describe("useFetchExpansions", () => {
 
     expect(result.current.expansions).toEqual([]);
     expect(result.current.expansions).toBeInstanceOf(Array);
-    expect(typeof result.current.getExpansions).toBe('function');
+    expect(typeof result.current.getExpansions).toBe("function");
   });
 
   it("will call endpoint", async () => {

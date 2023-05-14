@@ -1,6 +1,6 @@
-import React from "react";
+import React, {PropsWithChildren} from "react";
 
-interface SelectableProps {
+interface SelectableProps extends PropsWithChildren {
   isSelected: boolean;
   onClick: () => void;
   dataTestid: string;

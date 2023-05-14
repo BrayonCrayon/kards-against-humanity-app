@@ -26,13 +26,12 @@ describe("CreateGameForm", () => {
   it("renders all expansion cards to be initially checked", async () => {
     const wrapper = renderer();
 
+    await userEvent.click(wrapper.getByRole("settings-menu-button"));
+
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole("settings-menu-button"));
-    });
-
-    const expansionCard = await wrapper.container.querySelectorAll("i[class*='fa-check']");
-
-    expect(expansionCard).toHaveLength(expansions.length);
+      const expansionCard = wrapper.container.querySelectorAll("i[class*='fa-check']");
+      expect(expansionCard).toHaveLength(expansions.length);
+    })
   });
 
   it("handles form submit with selected expansions only", async () => {
@@ -41,12 +40,12 @@ describe("CreateGameForm", () => {
 
     renderer();
 
-    userEvent.click(screen.getByRole("settings-menu-button"));
+    await userEvent.click(screen.getByRole("settings-menu-button"));
 
-    userEvent.click(await screen.findByTestId(`expansion-${expansionToExclude.id}`));
+    await userEvent.click(await screen.findByTestId(`expansion-${expansionToExclude.id}`));
 
     const nameInput = await screen.findByTestId("user-name");
-    userEvent.type(nameInput, name);
+    await userEvent.type(nameInput, name);
 
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     await waitFor(() => userEvent.click(submitBtn));
@@ -64,14 +63,14 @@ describe("CreateGameForm", () => {
     const wrapper = renderer();
 
     const nameInput = await screen.findByTestId("user-name");
-    userEvent.type(nameInput, "Chewy");
+    await userEvent.type(nameInput, "Chewy");
 
-    act(() => userEvent.click(wrapper.getByRole("settings-menu-button")));
-    await waitFor(() => userEvent.click(wrapper.getByTestId("Timer")));
-    act(() => userEvent.click(wrapper.getByRole("toggle-timer")));
+    await userEvent.click(wrapper.getByRole("settings-menu-button"));
+    await userEvent.click(wrapper.getByTestId("Timer"));
+    await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     const submitBtn = await screen.findByTestId("create-game-submit-button");
-    userEvent.click(submitBtn);
+    await userEvent.click(submitBtn);
 
     await waitFor(() => {
       expect(mockCreateGame).toHaveBeenCalledWith(
@@ -85,15 +84,13 @@ describe("CreateGameForm", () => {
   it("will unselect all expansions", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole("settings-menu-button"));
+    await userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     const expansion = getExpansionsExampleResponse.data[0];
 
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`expansion-${expansion.id}`));
-    });
+    await userEvent.click(wrapper.getByTestId(`expansion-${expansion.id}`));
 
-    userEvent.click(wrapper.getByRole("toggle-all-expansions"));
+    await userEvent.click(wrapper.getByRole("toggle-all-expansions"));
 
     await waitFor(() => {
       expect(wrapper.container.querySelectorAll("i[class*='fa-checked']")).toHaveLength(0);
@@ -103,11 +100,12 @@ describe("CreateGameForm", () => {
   it("will show white card count on expansions", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole("settings-menu-button"));
+    await userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     await waitFor(() => {
       expansions.forEach((item) =>
-        expect(wrapper.queryByRole(`white-card-count-${item.id}`)?.textContent).toContain(item.cardCount)
+        expect(wrapper.queryByRole(`white-card-count-${item.id}`)?.textContent)
+            .toContain(item.cardCount.toString())
       );
     });
   });
@@ -115,7 +113,7 @@ describe("CreateGameForm", () => {
   it("will open expansion menu", async () => {
     const wrapper = renderer();
 
-    userEvent.click(wrapper.getByRole("settings-menu-button"));
+    await userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     await waitFor(() => {
       expect(wrapper.queryByRole("settings-menu-button")).toBeInTheDocument();

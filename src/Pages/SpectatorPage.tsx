@@ -24,8 +24,8 @@ export const SpectatorPage: React.FC = () => {
   }, [players, game.judgeId]);
 
   const setup = useCallback(async () => {
-    await fetchSpectatorState(id);
-    await listenOnEvents(id);
+    await fetchSpectatorState(id ?? "");
+    await listenOnEvents(id ?? "");
   }, [id]);
 
   useEffect(() => {

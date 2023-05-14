@@ -1,18 +1,20 @@
-import {FC} from "react";
-import {Button, ButtonVariant} from "Components/Atoms/Button";
-import {useHistory} from "react-router-dom";
+import { FC } from "react";
+import { Button, ButtonVariant } from "Components/Atoms/Button";
+import { useNavigate } from "react-router-dom";
 
-export const CreateGameBanner: FC = () => {
-  const history = useHistory();
+const CreateGameBanner: FC = () => {
+  const navigate = useNavigate();
 
   function joinGame() {
-    history.push("/");
+    navigate("/");
   }
 
   return (
     <div className="mt-auto bg-black text-white py-7 w-full ">
       <h3 className="font-bold text-3xl text-center leading-relaxed">
-        Looking To <br />
+        Looking To
+        {" "}
+        <br />
         Join A Game?
       </h3>
       <div className="flex justify-center mt-4">
@@ -26,3 +28,5 @@ export const CreateGameBanner: FC = () => {
     </div>
   );
 };
+
+export default CreateGameBanner;

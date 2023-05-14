@@ -11,7 +11,7 @@ interface RedrawProps {
     buttonClass?: string;
 }
 
-const Redraw: FC<RedrawProps> = ({ game, redrawsUsed, className = '', buttonClass = ''}) => {
+const Redraw: FC<RedrawProps> = ({ game, redrawsUsed, className = "", buttonClass = ""}) => {
 
 
     const redrawHand = useRedrawPlayerHand();
@@ -27,7 +27,7 @@ const Redraw: FC<RedrawProps> = ({ game, redrawsUsed, className = '', buttonClas
         }
 
         const result = await Swal.fire({
-            title: `Are you sure you want to redraw?`,
+            title: "Are you sure you want to redraw?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

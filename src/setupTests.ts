@@ -19,3 +19,12 @@ Object.assign(navigator, {
     writeText: () => {},
   },
 });
+
+jest.mock("pusher-js");
+jest.mock("sweetalert2");
+
+export const mockedUsedNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom") as any,
+  useNavigate: () => mockedUsedNavigate,
+}));

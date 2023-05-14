@@ -1,7 +1,7 @@
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
-export const pusher = new Pusher("80e06980f526e21fc058");
+export const pusher = new Pusher("80e06980f526e21fc058", { cluster: "us2"});
 // @ts-ignore
 window.Pusher = require("pusher-js");
 // @ts-ignore

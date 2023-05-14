@@ -36,13 +36,10 @@ export const VotingSection: FC = () => {
     getSubmittedCards(game.id);
   }, []);
 
-  const selectCard = useCallback(
-    (user_id) => {
+  const selectCard = useCallback((user_id: number) => {
       if (game.judgeId !== auth.id) return;
       dispatch(new SelectWinnerAction(user_id));
-    },
-    [dispatch, game, auth]
-  );
+  }, [dispatch, game, auth]);
 
   return (
     <div data-testid="voting-section" className="bg-lukewarmGray-300 py-4">
@@ -53,6 +50,7 @@ export const VotingSection: FC = () => {
             transitionClassName="submit-button"
             buttonClass="submit-button w-full"
             onSubmit={() => submitWinner(game.id, selectedPlayerId)}
+            dataTestId="submit-selected-winner"
           />
         </div>
       </div>
@@ -64,7 +62,7 @@ export const VotingSection: FC = () => {
               role={`selectable-${submission.user_id}`}
               isSelected={submission.user_id === selectedPlayerId}
               className="max-w-64 self-center"
-              selectedClass="border-5 border-green-500"
+              selectedClass="border-5 border-emerald-500"
               onClick={() => selectCard(submission.user_id)}
             >
               <PlayerSubmittedCCard playerSubmission={submission} blackCard={blackCard} />

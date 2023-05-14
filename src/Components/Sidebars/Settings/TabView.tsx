@@ -1,6 +1,6 @@
-import React, { FC, ReactNode, useCallback, useState } from "react";
+import { FC, JSX, ReactNode, useCallback, useState } from "react";
 
-export type Tab = { key: string; element: ReactNode; className?: string };
+export type Tab = { key: string; element: (ReactNode | (() => JSX.Element)); className?: string };
 
 export interface ITabView {
   tabs: Tab[];
@@ -9,8 +9,7 @@ export interface ITabView {
 const TabView: FC<ITabView> = ({ tabs }) => {
   const [selectedTab, setSelectedTab] = useState(tabs.length ? tabs[0].key : "");
 
-  const renderTab = useCallback(
-    (tab: Tab) => {
+  const renderTab = useCallback((tab: Tab) => {
       if (Boolean(tab.element) && tab.key !== selectedTab) return null;
 
       return (
@@ -18,9 +17,7 @@ const TabView: FC<ITabView> = ({ tabs }) => {
           {tab.element instanceof Function ? tab.element() : tab.element}
         </div>
       );
-    },
-    [selectedTab]
-  );
+  }, [selectedTab]);
 
   return (
     <>

@@ -52,8 +52,8 @@ const GamePage = () => {
       return;
     }
 
-    fetchGameState(id).then(() => {
-      listenOnEvents(id);
+    fetchGameState(id ?? "").then(() => {
+      listenOnEvents(id ?? "");
     });
   }, [id]);
 
