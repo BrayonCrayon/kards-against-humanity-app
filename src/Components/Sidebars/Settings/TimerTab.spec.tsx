@@ -82,4 +82,21 @@ describe("TimerTab", () => {
 
     expect(wrapper.queryByTestId("range-timer")).not.toBeDisabled();
   });
+
+  it("will call callback when update button is clicked", async () => {
+    const callback = jest.fn();
+    const wrapper = render(
+        <TimerTab onChange={() => {}} onUpdate={callback} timer={69}/>
+    );
+
+    await userEvent.click(wrapper.getByTestId("update-timer"));
+
+    expect(callback).toHaveBeenCalled();
+  });
+
+  it("will not display update button when callback not provided", () => {
+    const wrapper = render(<TimerTab onChange={() => {}} timer={69}/>);
+
+    expect(wrapper.queryByTestId("update-timer")).not.toBeInTheDocument();
+  });
 });
