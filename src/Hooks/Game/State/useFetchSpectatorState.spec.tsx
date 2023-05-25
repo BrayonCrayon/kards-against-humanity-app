@@ -1,4 +1,3 @@
-import { renderHook } from "@testing-library/react-hooks";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";
 import { fetchSpectatorState } from "Services/GameService";
@@ -8,6 +7,7 @@ import { service } from "setupTests";
 import { AxiosResponse } from "axios";
 import { initialPlayersState } from "State/Players/PlayersState";
 import { initialGameState } from "State/Game/GameState";
+import {renderHook} from "@testing-library/react";
 
 let mockedDispatch = jest.fn();
 const gameId = "tacoGameId";

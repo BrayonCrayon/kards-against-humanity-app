@@ -1,6 +1,5 @@
-import { renderHook } from "@testing-library/react-hooks";
 import useLoading from "Hooks/Game/Shared/useLoading";
-import { waitFor } from "@testing-library/react";
+import {renderHook, waitFor} from "@testing-library/react";
 import { act } from "react-dom/test-utils";
 import { errorToast } from "Utilities/toasts";
 
@@ -10,7 +9,7 @@ describe("useLoading", () => {
     const {result} = renderHook(useLoading);
 
     expect(result.current.loading).toEqual(false);
-    expect(typeof result.current.handleLoad).toBe('function');
+    expect(typeof result.current.handleLoad).toBe("function");
   });
 
   it("will call passed function into handleLoad", async () => {

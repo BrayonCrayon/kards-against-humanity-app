@@ -1,8 +1,8 @@
-import React, { FC, useCallback } from "react";
+import React, {FC, PropsWithChildren, useCallback} from "react";
 import { happyToast } from "Utilities/toasts";
 import { SweetAlertPosition } from "sweetalert2";
 
-interface ClipboardProps {
+interface ClipboardProps extends PropsWithChildren{
   copy: string;
   className?: string;
   role?: string;
@@ -18,7 +18,6 @@ const ClipBoard: FC<ClipboardProps> = ({
                                          successMessage = "Text Copied!",
                                          messagePosition = "top-start"
                                        }) => {
-
 
   const copyText = useCallback(async () => {
     try {

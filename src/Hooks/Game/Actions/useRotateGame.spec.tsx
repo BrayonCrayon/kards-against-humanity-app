@@ -1,7 +1,7 @@
 import { gameFixture } from "Api/fixtures/gameFixture";
-import { renderHook } from "@testing-library/react-hooks";
 import useRotateGame from "Hooks/Game/Actions/useRotateGame";
 import { service } from "setupTests";
+import {renderHook} from "@testing-library/react";
 
 describe("useRotateGame", () => {
   beforeEach(() => {

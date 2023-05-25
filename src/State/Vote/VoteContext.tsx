@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, {FC, PropsWithChildren} from "react";
 import { VoteActionTypes } from "./VoteActions";
 import { BaseContext, useGenericReducer } from "../GeneralContext";
 import { initialVoteState, IVoteState } from "./VoteState";
@@ -14,7 +14,7 @@ function voteReducer(state: IVoteState, action: VoteActionTypes): IVoteState {
   return action.execute(state);
 }
 
-const VoteProvider: FC = ({ children }) => {
+const VoteProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <VoteContext.Provider
       value={useGenericReducer(voteReducer, initialVoteState)}

@@ -1,7 +1,7 @@
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
-import { history, kardsHookRender } from "Tests/testRenders";
+import { kardsHookRender } from "Tests/testRenders";
 import useJoinGame from "Hooks/Game/Join/useJoinGame";
-import { service } from "setupTests";
+import { mockedUsedNavigate, service } from "setupTests";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { AxiosResponse } from "axios";
 import { transformUser, transformUsers } from "Types/User";
@@ -30,7 +30,7 @@ describe("useJoinGame", () => {
     expectDispatch(dispatchSpy, transformUser(data.currentUser));
     expectDispatch(dispatchSpy, transformUsers(data.users));
     expectDispatch(dispatchSpy, data.hand);
-    expect(history.push).toHaveBeenCalledWith(`/game/${data.game.id}`);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith(`/game/${data.game.id}`);
   });
 
   it("will catch server error", async () => {

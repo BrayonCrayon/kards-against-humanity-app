@@ -3,7 +3,6 @@ import { kardsRender } from "Tests/testRenders";
 import Settings from "Components/Sidebars/Settings";
 import { User } from "Types/User";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { waitFor } from "@testing-library/react";
 
 const mockedLeaveGame = jest.fn();
 jest.mock("Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
@@ -13,13 +12,13 @@ const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
 };
 
 describe("Settings", () => {
-  it("will allow players to leave game", () => {
+  it("will allow players to leave game", async () => {
     const gameId = "alsdf8asdfoi43jo3i4";
     const wrapper = renderComponent(gameId);
 
-    userEvent.click(wrapper.getByTestId("game-settings"));
-    userEvent.click(wrapper.getByTestId("game"));
-    userEvent.click(wrapper.getByRole("leave-game-button"));
+    await userEvent.click(wrapper.getByTestId("game-settings"));
+    await userEvent.click(wrapper.getByTestId("game"));
+    await userEvent.click(wrapper.getByRole("leave-game-button"));
 
     expect(mockedLeaveGame).toHaveBeenCalled();
   });
@@ -30,10 +29,7 @@ describe("Settings", () => {
     } = gameStateExampleResponse;
     const wrapper = renderComponent(game.id, users);
 
-    userEvent.click(wrapper.getByTestId("game-settings"));
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId("players"));
-    });
+    await userEvent.click(wrapper.getByTestId("game-settings"));
 
     users.forEach((user) => {
       expect(wrapper.getByRole(`user-${user.id}`)).toBeInTheDocument();

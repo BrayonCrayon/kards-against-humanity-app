@@ -1,6 +1,6 @@
-import { FC } from "react";
+import {FC, PropsWithChildren} from "react";
 
-interface KAHCardProps {
+interface KAHCardProps extends PropsWithChildren {
   className?: string
 }
 

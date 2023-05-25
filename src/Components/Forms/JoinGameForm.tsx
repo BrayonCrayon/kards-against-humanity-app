@@ -1,11 +1,10 @@
-import { FC, useCallback, useState } from "react";
+import { FC, FormEvent, useCallback, useState } from "react";
 import { Button } from "Components/Atoms/Button";
 import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
 import KAHInput from "Components/KAHInput";
 import { KAHCheckbox } from "Components/KAHCheckbox";
 import useJoinGame from "Hooks/Game/Join/useJoinGame";
 import { KAHCard } from "Components/KAHCard";
-import { JoinGameBanner } from "Components/JoinGameBanner";
 import useLoading from "Hooks/Game/Shared/useLoading";
 import { useParams } from "react-router-dom";
 
@@ -18,8 +17,7 @@ const JoinGameForm: FC = () => {
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
-  const submitToApi = useCallback(
-    async (event) => {
+  const submitToApi = useCallback(async (event: FormEvent) => {
       event.preventDefault();
       setLoading(true);
       if (spectator) {
@@ -28,9 +26,7 @@ const JoinGameForm: FC = () => {
       }
 
       await joinGame(code, userName);
-    },
-    [userName, code, spectator]
-  );
+  }, [userName, code, spectator]);
 
   return (
     <div className="flex flex-col w-full h-full" data-testid="join-game-section">

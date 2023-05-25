@@ -2,7 +2,7 @@ import { kardsHookRender } from "Tests/testRenders";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import { service } from "setupTests";
 import { AxiosResponse } from "axios";
-import { act } from "@testing-library/react-hooks";
+import {act} from "react-dom/test-utils";
 
 
 describe("useSubmittedCards", () => {
@@ -10,7 +10,7 @@ describe("useSubmittedCards", () => {
     const {result} = kardsHookRender(useSubmittedCards);
 
     expect(result.current.submittedCards).toEqual([]);
-    expect(typeof result.current.getSubmittedCards).toBe('function');
+    expect(typeof result.current.getSubmittedCards).toBe("function");
   });
 
   it("will call endpoint", async () => {

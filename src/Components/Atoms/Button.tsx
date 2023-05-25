@@ -1,4 +1,4 @@
-import React, {FC, useMemo} from "react";
+import React, {FC, PropsWithChildren, useMemo} from "react";
 
 export enum ButtonVariant {
   "primary" = "bg-black py-3 px-4 text-white font-bold shadow mt-4 mb-4 hover:bg-gray-800 ",
@@ -9,7 +9,7 @@ export enum ButtonVariant {
   "submit-test" = "bg-white p-3 text-black flex gap-3 items-center text-base w-1/2",
 }
 
-interface ButtonProps {
+interface ButtonProps extends PropsWithChildren {
   text: string;
   type?: "button" | "reset" | "submit" | undefined;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;

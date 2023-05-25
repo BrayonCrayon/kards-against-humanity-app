@@ -25,7 +25,7 @@ jest.mock("Hooks/Helpers/useListenOnEvents", () => {
   return () => mockListenOnEvents;
 });
 
-describe('SpectatorPage', () => {
+describe("SpectatorPage", () => {
   beforeEach(() => {
     service.fetchSpectatorState.mockResolvedValue(gameSpectatorExampleResponse  as AxiosResponse);
     service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
@@ -57,13 +57,14 @@ describe('SpectatorPage', () => {
 
   it("will display submitted white cards", async () => {
     const {data: {game}} = gameSpectatorAllPlayersSubmittedExampleResponse;
+    const userIds: number[] = submittedCardsResponse.data.map((item) => item.user_id);
     service.fetchSpectatorState.mockResolvedValueOnce(gameSpectatorAllPlayersSubmittedExampleResponse as AxiosResponse);
 
     const wrapper = kardsRender(<SpectatorPage />);
 
     await waitFor(() => {
       expect(fetchSubmittedCards).toHaveBeenCalledWith(game.id);
-      expect(wrapper.queryAllByRole('playerSubmittedCard')).toHaveLength(3)
+      userIds.forEach(id => expect(wrapper.queryByTestId(`player-submitted-response-${id}`)).toBeInTheDocument())
     });
   });
 
@@ -72,7 +73,7 @@ describe('SpectatorPage', () => {
       return kardsRender(<SpectatorPage />);
     });
 
-    expect(wrapper.queryByRole('playerSubmittedCard')).not.toBeInTheDocument()
+    expect(wrapper.queryByRole("playerSubmittedCard")).not.toBeInTheDocument()
     expect(fetchSubmittedCards).not.toHaveBeenCalled();
   });
 })

@@ -1,4 +1,4 @@
-import { createContext, FC } from "react";
+import {createContext, FC, PropsWithChildren} from "react";
 import { BaseContext, useGenericReducer } from "../GeneralContext";
 import { IGameState, initialGameState } from "./GameState";
 import { GameActions } from "./GameActions";
@@ -12,7 +12,7 @@ function gameReducer(state: IGameState, action: GameActions) {
   return action.execute(state);
 }
 
-const GameProvider: FC = ({ children }) => {
+const GameProvider: FC<PropsWithChildren> = ({ children }) => {
   return (
     <GameContext.Provider
       value={useGenericReducer(gameReducer, initialGameState)}

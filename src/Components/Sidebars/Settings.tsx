@@ -25,10 +25,10 @@ const Settings: FC<SettingsProps> = ({ gameId, players, className = "" }) => {
     <>
       <ToggleSidebar
         className={`flex justify-end items-center mr-3 ${className}`}
+        dataTestId="game-settings"
         toggleElement={
           <div className="flex flex-col hover:text-gray-700">
             <i
-              data-testid="game-settings"
               aria-roledescription="Game settings"
               className="fa-solid fa-gear text-4xl cursor-pointer self-center"
             />

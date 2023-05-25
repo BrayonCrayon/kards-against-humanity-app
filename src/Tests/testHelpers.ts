@@ -8,6 +8,7 @@ import * as useHand from "State/Hand/useHand";
 import * as useVote from "State/Vote/useVote";
 import { IHandState, initialHandState } from "State/Hand/HandState";
 import { initialVoteState, IVoteState } from "State/Vote/VoteState";
+import Swal from "sweetalert2";
 
 export const expectDispatch = <TFunction, TPayload>(
   mockFunction: TFunction,
@@ -73,7 +74,7 @@ export const spyOnUsePlayers = (
   return mockedDispatch;
 };
 
-export const spyOnState = <T>(
+export const spyOnState = <T extends object>(
   state: any = {},
   mockedDispatch = jest.fn(),
   hook: T,
@@ -86,4 +87,22 @@ export const spyOnState = <T>(
     },
     dispatch: mockedDispatch
   }))
+}
+
+export const confirmedSweetAlert = (confirmed: boolean) => {
+  return jest.spyOn(Swal, "fire")
+    .mockResolvedValueOnce({
+        isConfirmed: confirmed,
+        isDenied: false,
+        isDismissed: false,
+    })
+}
+
+export const dismissSweetAlert = () => {
+  return jest.spyOn(Swal, "fire")
+    .mockResolvedValueOnce({
+      isConfirmed: false,
+      isDenied: false,
+      isDismissed: true
+    })
 }

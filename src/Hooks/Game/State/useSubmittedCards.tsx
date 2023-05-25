@@ -5,7 +5,7 @@ import gameService from "Services/GameService";
 function useSubmittedCards() {
   const [submittedCards, setSubmittedCards] = useState<Array<PlayerSubmittedCard>>([]);
 
-  const getSubmittedCards =  useCallback(async (gameId) => {
+  const getSubmittedCards =  useCallback(async (gameId: string) => {
     try {
       const { data } = await gameService.fetchSubmittedCards(gameId);
       setSubmittedCards(data);

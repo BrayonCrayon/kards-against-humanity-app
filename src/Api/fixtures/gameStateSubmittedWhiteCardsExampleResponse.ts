@@ -1,12 +1,8 @@
+import { gameFactory } from "../../Tests/Factories/GameFactory";
+
 export const gameStateSubmittedWhiteCardsExampleResponse = {
   data: {
-    game: {
-      id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-      code: "1234",
-      name: "Puzzled Penguin",
-      redrawLimit: 2,
-      judgeId: 4,
-    },
+    game: gameFactory({ judgeId: 4 }),
     hasSubmittedWhiteCards: true,
     submittedWhiteCardIds: [76],
     users: [
@@ -17,7 +13,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
         hasSubmittedWhiteCards: true,
         redrawCount: 0,
         createdAt: "2021-10-27T19:33:43.000000Z",
-        updatedAt: "2021-10-27T19:33:43.000000Z"
+        updatedAt: "2021-10-27T19:33:43.000000Z",
       },
       {
         id: 2,
@@ -26,7 +22,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
         hasSubmittedWhiteCards: false,
         redrawCount: 0,
         createdAt: "2021-10-27T19:33:43.000000Z",
-        updatedAt: "2021-10-27T19:33:43.000000Z"
+        updatedAt: "2021-10-27T19:33:43.000000Z",
       },
       {
         id: 3,
@@ -35,8 +31,8 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
         hasSubmittedWhiteCards: false,
         redrawCount: 0,
         createdAt: "2021-10-27T19:33:43.000000Z",
-        updatedAt: "2021-10-27T19:33:43.000000Z"
-      }
+        updatedAt: "2021-10-27T19:33:43.000000Z",
+      },
     ],
     currentUser: {
       id: 1,
@@ -45,12 +41,12 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
       hasSubmittedWhiteCards: true,
       redrawCount: 0,
       createdAt: "2021-10-27T19:33:43.000000Z",
-      updatedAt: "2021-10-27T19:33:43.000000Z"
+      updatedAt: "2021-10-27T19:33:43.000000Z",
     },
     blackCard: {
       id: 4624,
       pick: 1,
-      text: "_ is the key to recovery."
+      text: "_ is the key to recovery.",
     },
     hand: [
       {
@@ -58,50 +54,50 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
         text: "A little boy who won't shut the fuck up about dinosaurs.",
         expansionId: 1,
         selected: true,
-        order: 1
+        order: 1,
       },
       {
         id: 3732,
         text: "Slapping a racist old lady.",
         expansionId: 26,
         selected: false,
-        order: 0
+        order: 0,
       },
       {
         id: 14182,
         text: "Staying off the fucking grass!",
         expansionId: 137,
         selected: false,
-        order: 0
+        order: 0,
       },
       {
         id: 4866,
         text: "A car seat.",
         expansionId: 73,
         selected: false,
-        order: 0
+        order: 0,
       },
       {
         id: 16856,
         text: "Tampon taxes.",
         expansionId: 152,
         selected: false,
-        order: 0
+        order: 0,
       },
       {
         id: 11786,
         text: "September 11th.",
         expansionId: 123,
         selected: false,
-        order: 0
+        order: 0,
       },
       {
         id: 8197,
         text: "The biggest booty shakin' float at Caribana",
         expansionId: 94,
         selected: false,
-        order: 0
-      }
-    ]
-  }
+        order: 0,
+      },
+    ],
+  },
 };

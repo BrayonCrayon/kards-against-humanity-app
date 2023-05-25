@@ -2,7 +2,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import "~Styles/SubmitButton.scss";
+@import "./Styles/SubmitButton.scss";
+@import "./Styles/RangeInput.scss";
 
 body {
   margin: 0;

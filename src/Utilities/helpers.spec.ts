@@ -1,7 +1,7 @@
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { BlackCard } from "../Types/BlackCard";
 import { SubmittedCard } from "../Types/ResponseTypes";
-import { canSubmit, fillOutBlackCard } from "./helpers";
+import { canSubmit, fillOutBlackCard, toMinutesSeconds } from "./helpers";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
@@ -73,5 +73,15 @@ describe("Helpers", () => {
   it("will return false when player has not submitted any cards and pick amount is 0", () => {
     const { data } = gameStateExampleResponse;
     expect(canSubmit(data.hand, 0)).toBeFalsy();
+  });
+
+  it.each([
+    ["5:00", 300],
+    ["4:59", 299],
+    ["2:30", 150],
+    ["1:01", 61],
+    ["0:00", 0],
+  ])("will return %s from %d", (expected, seconds) => {
+    expect(toMinutesSeconds(seconds)).toEqual(expected);
   });
 });
