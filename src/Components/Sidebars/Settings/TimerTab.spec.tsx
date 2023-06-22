@@ -45,7 +45,8 @@ describe("TimerTab", () => {
     const date = new Date(seconds * 1000);
 
     await waitFor(() => {
-      expect(wrapper.queryByText(`${date.getMinutes()}:${date.getSeconds()}`)).toBeInTheDocument();
+      const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds();
+      expect(wrapper.queryByText(`${date.getMinutes()}:${seconds}`)).toBeInTheDocument();
     });
   });
 

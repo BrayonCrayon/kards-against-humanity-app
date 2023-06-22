@@ -11,6 +11,7 @@ import { useAuth } from "State/Auth/useAuth";
 import Hand from "Components/Hand";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 import useSubmitCards from "Hooks/Game/Actions/useSubmitCards";
+import {PreGameModal} from "Components/PreGameModal";
 
 const GamePage = () => {
   const {
@@ -75,6 +76,7 @@ const GamePage = () => {
       ) : null}
       {showVotingSection && <VotingSection />}
       <RoundWinnerModal />
+      <PreGameModal />
     </div>
   );
 };
