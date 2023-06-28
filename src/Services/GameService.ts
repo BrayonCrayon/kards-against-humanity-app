@@ -33,6 +33,10 @@ export const joinGame = (code: string, userName: string) => {
   });
 };
 
+export const startGame = (gameId: string) => {
+  return apiClient.post(`/api/game/${gameId}/start`);
+}
+
 export const joinAsSpectator = (gameId: string) => {
   return apiClient.post(`/api/game/${gameId}/spectate`);
 };
@@ -84,4 +88,5 @@ export default {
   submitWinner,
   fetchExpansions,
   leaveGame,
+  startGame,
 };

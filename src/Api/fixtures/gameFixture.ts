@@ -8,4 +8,5 @@ export const gameFixture: Game = {
   redrawLimit: 2,
   judgeTimer: null,
   selectionTimer: null,
+  selectionEndsAt: null,
 };

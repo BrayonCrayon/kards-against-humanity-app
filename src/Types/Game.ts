@@ -8,6 +8,7 @@ export interface Game {
   redrawLimit: number;
   judgeTimer: number | null;
   selectionTimer: number | null;
+  selectionEndsAt: number | null;
 }
 
 export const initialGameObject = (): Game => {
@@ -19,5 +20,6 @@ export const initialGameObject = (): Game => {
     redrawLimit: 2,
     judgeTimer: null,
     selectionTimer: null,
+    selectionEndsAt: null,
   };
 };

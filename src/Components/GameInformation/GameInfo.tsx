@@ -6,10 +6,9 @@ import JudgeMessage from "Components/JudgeMessage";
 import { useAuth } from "State/Auth/useAuth";
 import { useGame } from "State/Game/useGame";
 import Settings from "Components/Sidebars/Settings";
-import CopyIcon from "Components/Icons/CopyIcon";
-import ClipBoard from "Components/Atoms/ClipBoard";
 import ShareButton from "Components/Atoms/ShareButton";
 import { ShareData } from "Types/WebShare";
+import CopyGameCode from "Components/Molecules/CopyGameCode";
 
 const GameInfo: FC = () => {
   const { state: { game, blackCard }, } = useGame();
@@ -29,12 +28,7 @@ const GameInfo: FC = () => {
           <ShareButton data={data} />
         </div>
         <div className="shadow-md p-2 m-2 md:w-auto">
-          <ClipBoard copy={game.code} successMessage="Game code copied!" messagePosition="center">
-            <span className="inline-block align-middle">
-              <CopyIcon />
-            </span>
-            <span className="text-gray-700 px-1 inline-block align-middle">Code: {game.code}</span>
-          </ClipBoard>
+          <CopyGameCode code={game.code} />
         </div>
         <Settings className="flex-grow md:grow-0 md:mr-5" gameId={game.id} players={players} />
       </div>

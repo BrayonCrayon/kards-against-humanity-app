@@ -17,31 +17,28 @@ function useFetchGameState() {
     const {dispatch: userDispatch} = useAuth();
     const {dispatch: gameDispatch} = useGame();
 
-    return useCallback(
-        async (gameId: string) => {
-            try {
-        const { data } = await fetchState(gameId);
+    return useCallback(async (gameId: string) => {
+        try {
+            const { data } = await fetchState(gameId);
 
-        userDispatch(new SetAuthAction(transformUser(data.currentUser)));
-        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
-        gameDispatch(new SetGameAction(data.game));
-        userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
-        handDispatch(
-          new SetHandAction(
-              transformWhiteCardArray(
-                  data.hand,
-                  data.hasSubmittedWhiteCards,
-                  data.submittedWhiteCardIds
+            userDispatch(new SetAuthAction(transformUser(data.currentUser)));
+            usersDispatch(new SetPlayersAction(transformUsers(data.users)));
+            gameDispatch(new SetGameAction(data.game));
+            userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
+            handDispatch(
+              new SetHandAction(
+                  transformWhiteCardArray(
+                      data.hand,
+                      data.hasSubmittedWhiteCards,
+                      data.submittedWhiteCardIds
+                  )
               )
-          )
-        );
-        gameDispatch(new SetBlackCardAction(data.blackCard));
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    [handDispatch, userDispatch, usersDispatch, gameDispatch]
-  );
+            );
+            gameDispatch(new SetBlackCardAction(data.blackCard));
+        } catch (error) {
+            console.error(error);
+        }
+    }, [handDispatch, userDispatch, usersDispatch, gameDispatch]);
 }
 
 export default useFetchGameState;

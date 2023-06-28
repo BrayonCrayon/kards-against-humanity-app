@@ -10,6 +10,7 @@ export const gameFactory = (overrides?: Partial<Game>): Game => {
     redrawLimit: 2,
     selectionTimer: null,
     judgeTimer: null,
+    selectionEndsAt: null,
     ...overrides
   };
 };
