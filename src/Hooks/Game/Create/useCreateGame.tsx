@@ -19,7 +19,7 @@ function useCreateGame() {
   const { dispatch: userDispatch } = useAuth();
   const { dispatch: gameDispatch } = useGame();
 
-  return useCallback(async (userName: string, expansionIds: number[], timer = 0) => {
+  return useCallback(async (userName: string, expansionIds: number[], timer: number|null = null) => {
     try {
       const { data } = await gameService.createGame({ name: userName, expansionIds, timer });
 

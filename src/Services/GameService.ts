@@ -23,7 +23,7 @@ export const fetchPlayers = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}/players`);
 };
 
-export const createGame = (params: { name: string; expansionIds: number[]; timer: number }) => {
+export const createGame = (params: { name: string; expansionIds: number[]; timer: number|null }) => {
   return apiClient.post("/api/game", params);
 };
 
