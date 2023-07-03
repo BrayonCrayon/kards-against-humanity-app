@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className="min-h-screen flex flex-col">
+      <div className="h-screen flex flex-col">
         <Navigation />
 
         <div className="flex-1">
