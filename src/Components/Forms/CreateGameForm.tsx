@@ -9,7 +9,7 @@ import useLoading from "Hooks/Game/Shared/useLoading";
 
 export const CreateGameForm: React.FC = () => {
   const [userName, setUserName] = useState("");
-  const [timer, setTimer] = useState(0);
+  const [timer, setTimer] = useState<null|number>(null);
   const createGame = useCreateGame();
   const { expansions, getExpansions, setExpansions } = useExpansions();
   const { loading, setLoading } = useLoading();

@@ -54,7 +54,7 @@ describe("CreateGameForm", () => {
       expect(mockCreateGame).toHaveBeenCalledWith(
         name,
         expansions.filter((e) => e.id !== expansionToExclude.id).map((e) => e.id),
-        0
+        null
       );
     });
   });
