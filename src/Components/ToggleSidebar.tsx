@@ -36,7 +36,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
             data-testid="sidebar-background"
             className="h-screen flex-1"
           />
-          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative max-w-xs cursor-auto ${sideBarStyles}`}>
+          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative max-w-xs cursor-auto md:w-1/2 xl:w-1/4 ${sideBarStyles}`}>
             <button
               className="absolute top-1 left-2 text-black cursor-pointer z-60 hover:text-gray-500"
               data-testid="close-button"
