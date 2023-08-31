@@ -1,12 +1,13 @@
 import React from "react";
-import { RenderResult, waitFor } from "@testing-library/react";
+import {fireEvent, RenderResult, waitFor} from "@testing-library/react";
 import GameInfo from "Components/GameInformation/GameInfo";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
-import { transformUser, transformUsers } from "Types/User";
-import { kardsRender } from "Tests/testRenders";
-import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "Tests/testHelpers";
+import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
+import {transformUser, transformUsers} from "Types/User";
+import {kardsRender} from "Tests/testRenders";
+import {spyOnUseAuth, spyOnUseGame, spyOnUsePlayers} from "Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
-import { happyToast } from "Utilities/toasts";
+import {happyToast} from "Utilities/toasts";
+import {gameFactory} from "Tests/Factories/GameFactory";
 
 const { data: {game, users, currentUser, blackCard} } = gameStateJudgeExampleResponse;
 const players = transformUsers(users);
@@ -24,6 +25,13 @@ jest.mock("Hooks/Game/Actions/useKickPlayer", () => {
   };
 });
 
+const mockUpdateGameSettings = jest.fn();
+jest.mock("Hooks/Game/State/useUpdateGameSettings", () => {
+  return () => {
+    return mockUpdateGameSettings;
+  }
+})
+
 jest.mock("Utilities/toasts");
 
 describe("GameInfo", () => {
@@ -37,7 +45,7 @@ describe("GameInfo", () => {
     const wrapper = await renderer();
 
     await waitFor(() => {
-      const gameCodeDisplayElement = wrapper.queryByRole('copy') as HTMLElement;
+      const gameCodeDisplayElement = wrapper.queryByRole("copy") as HTMLElement;
       expect(gameCodeDisplayElement).not.toBeNull();
       expect(gameCodeDisplayElement).toHaveTextContent(game.code);
     });
@@ -48,7 +56,7 @@ describe("GameInfo", () => {
     const wrapper = await renderer();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole('copy'));
+      userEvent.click(wrapper.getByRole("copy"));
     });
 
     await waitFor(() => {
@@ -60,7 +68,7 @@ describe("GameInfo", () => {
     const wrapper = await renderer();
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole('copy'));
+      userEvent.click(wrapper.getByRole("copy"));
     });
 
     await waitFor(() => {
@@ -68,6 +76,33 @@ describe("GameInfo", () => {
         "Game code copied!",
         "center"
       );
+    });
+  });
+
+  it("will update game settings when user clicks update in timer settings", async () => {
+    const seconds = 300;
+    const callbackSpy = spyOnUseGame(
+        jest.fn(),
+        {game: gameFactory({selectionTimer: 200, selectionEndsAt: 5000}), blackCard}
+    );
+    const wrapper = await renderer();
+
+    await userEvent.click(wrapper.getByTestId("game-settings"));
+    await userEvent.click(wrapper.getByTestId("timer"));
+
+    await waitFor(() => {
+      fireEvent.change(wrapper.getByTestId("range-timer"), {
+        target: {
+          value: seconds.toString(),
+        },
+      });
+    });
+
+    await userEvent.click(wrapper.getByTestId("update-timer"));
+
+    await waitFor(() => {
+      expect(mockUpdateGameSettings).toHaveBeenCalled();
+      callbackSpy.mockRestore();
     });
   });
 });

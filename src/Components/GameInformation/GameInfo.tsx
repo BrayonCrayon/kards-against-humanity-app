@@ -1,14 +1,16 @@
-import React, { FC, useState } from "react";
-import { BlackKard } from "Components/BlackKard";
-import { usePlayers } from "State/Players/usePlayers";
+import React, {FC, useCallback, useState} from "react";
+import {BlackKard} from "Components/BlackKard";
+import {usePlayers} from "State/Players/usePlayers";
 import PlayerNotificationBar from "Components/PlayerNotificationBar";
 import JudgeMessage from "Components/JudgeMessage";
-import { useAuth } from "State/Auth/useAuth";
-import { useGame } from "State/Game/useGame";
+import {useAuth} from "State/Auth/useAuth";
+import {useGame} from "State/Game/useGame";
 import Settings from "Components/Sidebars/Settings";
 import ShareButton from "Components/Atoms/ShareButton";
-import { ShareData } from "Types/WebShare";
+import {ShareData} from "Types/WebShare";
 import CopyGameCode from "Components/Molecules/CopyGameCode";
+import useUpdateGameSettings from "Hooks/Game/State/useUpdateGameSettings";
+import {happyToast} from "Utilities/toasts";
 
 const GameInfo: FC = () => {
   const { state: { game, blackCard }, } = useGame();
@@ -19,6 +21,12 @@ const GameInfo: FC = () => {
     text: "Come join my game!",
     url: `https://kardsagainsthumanity.ca/${game.code}`
   });
+  const update = useUpdateGameSettings();
+
+  const updateSettings = useCallback(async (seconds: number) => {
+      await update(game.id, seconds);
+      happyToast("Game updated!");
+  }, []);
 
   return (
     <div>
@@ -30,7 +38,13 @@ const GameInfo: FC = () => {
         <div className="shadow-md p-2 m-2 md:w-auto">
           <CopyGameCode code={game.code} />
         </div>
-        <Settings className="flex-grow md:grow-0 md:mr-5" gameId={game.id} players={players} />
+        <Settings
+            className="flex-grow md:grow-0 md:mr-5"
+            gameId={game.id}
+            players={players}
+            timer={game.selectionTimer}
+            onSettingsUpdate={updateSettings}
+        />
       </div>
       <div className="pb-12 mx-auto my-2 pt-4 w-full px-6 flex flex-col items-center md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />

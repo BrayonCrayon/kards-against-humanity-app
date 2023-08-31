@@ -1,24 +1,24 @@
-import { screen, waitFor } from "@testing-library/react";
+import {screen, waitFor} from "@testing-library/react";
 import GamePage from "./GamePage";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "Services/PusherService";
+import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
+import {listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards} from "Services/PusherService";
 import userEvent from "@testing-library/user-event";
-import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "Tests/selectors";
-import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "Tests/actions";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
-import { kardsRender } from "Tests/testRenders";
+import {gameStateSubmittedWhiteCardsExampleResponse} from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import {getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId} from "Tests/selectors";
+import {selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList} from "Tests/actions";
+import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
+import {kardsRender} from "Tests/testRenders";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
 } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { gameStateOnePlayerInGameExampleResponse } from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
-import { service } from "setupTests";
-import { fetchState } from "Services/GameService";
-import { AxiosResponse } from "axios";
-import { confirmedSweetAlert, spyOnUseVote } from "Tests/testHelpers";
-import { blackCardFixture } from "Api/fixtures/blackcardFixture";
-import { gameStatePickTwoExampleResponse } from "Api/fixtures/gameStatePickTwoExampleResponse";
+import {submittedCardsResponse} from "Api/fixtures/submittedCardsResponse";
+import {gameStateOnePlayerInGameExampleResponse} from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
+import {service} from "setupTests";
+import {fetchState} from "Services/GameService";
+import {AxiosResponse} from "axios";
+import {confirmedSweetAlert, spyOnUseVote} from "Tests/testHelpers";
+import {blackCardFixture} from "Api/fixtures/blackcardFixture";
+import {gameStatePickTwoExampleResponse} from "Api/fixtures/gameStatePickTwoExampleResponse";
 
 jest.mock("../Services/PusherService");
 jest.mock("../Utilities/toasts");
@@ -32,10 +32,8 @@ jest.mock("react-router-dom", () => ({
   }),
 }));
 
-const mockUseUpdateGameState = jest.fn();
-
 jest.mock("Hooks/Game/State/useGameStateCallback", () => {
-  return () => mockUseUpdateGameState;
+  return () => jest.fn();
 });
 
 describe("GamePage", () => {

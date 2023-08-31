@@ -27,6 +27,14 @@ export const listenWhenUserJoinsGame = (
   echo.channel(`game-${gameId}`).listen(".game.joined", callback);
 };
 
+export const listenWhenGameStart = (
+    userId: number,
+    callback: (data: gameCallbackData) => void
+) =>{
+  echo.channel(`user-${userId}`).stopListening(".game.started");
+  echo.channel(`user-${userId}`).listen(".game.started", callback);
+};
+
 export const listenWhenUserSubmittedCards = (
   gameId: string,
   callback: (data: gameCallbackData) => void

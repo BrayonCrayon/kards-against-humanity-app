@@ -1,5 +1,5 @@
-import { apiClient } from "Api/apiClient";
-import { PlayerCard, PlayerSubmittedCard, Resource, RoundWinner } from "Types/ResponseTypes";
+import {apiClient} from "Api/apiClient";
+import {PlayerCard, PlayerSubmittedCard, Resource, RoundWinner} from "Types/ResponseTypes";
 
 export const fetchSubmittedCards = (gameId: string) => {
   return apiClient.get<Array<PlayerSubmittedCard>>(`/api/game/${gameId}/submitted-cards`);
@@ -14,6 +14,10 @@ export const submitWinner = (gameId: string, playerId: number) => {
 export const fetchState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}`);
 };
+
+export const updateSettings = (gameId: string, timer: number) => {
+  return apiClient.post(`/api/game/${gameId}/settings`, { selection_timer: timer });
+}
 
 export const fetchSpectatorState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}/spectate`);
@@ -75,6 +79,7 @@ export const fetchExpansions = () => {
 export default {
   submitCards,
   fetchState,
+  updateSettings,
   fetchPlayers,
   rotate,
   redraw,

@@ -8,9 +8,11 @@ import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
 import { BlackKard } from "Components/BlackKard";
 import DisplaySubmittedCard from "Components/DisplaySubmittedCard";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
+import {useAuth} from "../State/Auth/useAuth";
 
 export const SpectatorPage: React.FC = () => {
   const { state: { players } } = usePlayers();
+  const { state: { auth } } = useAuth();
   const { state: { game, blackCard } } = useGame();
   const { id } = useParams<{ id: string }>();
 
@@ -25,12 +27,12 @@ export const SpectatorPage: React.FC = () => {
 
   const setup = useCallback(async () => {
     await fetchSpectatorState(id ?? "");
-    await listenOnEvents(id ?? "");
+    await listenOnEvents(id ?? "", auth.id);
   }, [id]);
 
   useEffect(() => {
     if (game.id) {
-      listenOnEvents(game.id);
+      listenOnEvents(game.id, auth.id);
       return;
     }
 
