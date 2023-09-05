@@ -1,9 +1,9 @@
-import React, {FC, useCallback, useMemo} from "react";
-import {User} from "Types/User";
+import React, { FC, useCallback, useMemo } from "react";
+import { User } from "Types/User";
 import useKickPlayer from "Hooks/Game/Actions/useKickPlayer";
 import Swal from "sweetalert2";
-import {useAuth} from "State/Auth/useAuth";
-import {useGame} from "State/Game/useGame";
+import { useAuth } from "State/Auth/useAuth";
+import { useGame } from "State/Game/useGame";
 import KickPlayerIcon from "./Icons/KickPlayerIcon";
 
 interface PlayerListItemProps {
@@ -21,8 +21,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
 
   const kick = useKickPlayer();
 
-  const kickPlayer = useCallback(
-    async (player) => {
+  const kickPlayer = useCallback(async (player: User) => {
       const result = await Swal.fire({
         title: `Are you sure you want to kick ${player.name}`,
         icon: "warning",
@@ -58,16 +57,16 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
           <span className="w-8 mx-2 flex justify-center">
             <i className={`${playerIcon} text-xl`}></i>
           </span>
-        <p className={`${player.hasSubmittedWhiteCards ? "text-green-500" : ""}`}>
+        <p className={`${player.hasSubmittedWhiteCards ? "text-emerald-500" : ""}`}>
           {player.name}
         </p>
       </div>
-        <div>
-            {canKickPeople && (
-                <div onClick={() => kickPlayer(player)} data-testid={`kick-player-${player.id}`}>
-                    <KickPlayerIcon className="w-8 cursor-pointer mx-2" />
-                </div>
-            )}
+      <div>
+          {canKickPeople && (
+              <div onClick={() => kickPlayer(player)} data-testid={`kick-player-${player.id}`}>
+                  <KickPlayerIcon className="w-8 cursor-pointer mx-2" />
+              </div>
+          )}
       </div>
     </>
   );

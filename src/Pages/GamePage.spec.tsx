@@ -1,28 +1,24 @@
-import { screen, waitFor } from "@testing-library/react";
+import {screen, waitFor} from "@testing-library/react";
 import GamePage from "./GamePage";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "Services/PusherService";
+import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
+import {listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards} from "Services/PusherService";
 import userEvent from "@testing-library/user-event";
-import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import {gameStateSubmittedWhiteCardsExampleResponse} from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import {getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId} from "Tests/selectors";
+import {selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList} from "Tests/actions";
+import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
+import {kardsRender} from "Tests/testRenders";
 import {
-  getCardSubmitButton,
-  getWhiteCardElement,
-  selectedCardClass,
-  whiteCardOrderTestId,
-  whiteCardTestId,
-} from "Tests/selectors";
-import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "Tests/actions";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
-import { kardsRender } from "Tests/testRenders";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { gameStateOnePlayerInGameExampleResponse } from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
-import { service } from "setupTests";
-import { fetchState } from "Services/GameService";
-import { AxiosResponse } from "axios";
-import { spyOnUseVote } from "Tests/testHelpers";
-import { blackCardFixture } from "Api/fixtures/blackcardFixture";
-import { gameStatePickTwoExampleResponse } from "Api/fixtures/gameStatePickTwoExampleResponse";
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {submittedCardsResponse} from "Api/fixtures/submittedCardsResponse";
+import {gameStateOnePlayerInGameExampleResponse} from "Api/fixtures/gameStateOnePlayerInGameExampleResponse";
+import {service} from "setupTests";
+import {fetchState} from "Services/GameService";
+import {AxiosResponse} from "axios";
+import {confirmedSweetAlert, spyOnUseVote} from "Tests/testHelpers";
+import {blackCardFixture} from "Api/fixtures/blackcardFixture";
+import {gameStatePickTwoExampleResponse} from "Api/fixtures/gameStatePickTwoExampleResponse";
 
 jest.mock("../Services/PusherService");
 jest.mock("../Utilities/toasts");
@@ -36,10 +32,8 @@ jest.mock("react-router-dom", () => ({
   }),
 }));
 
-const mockUseUpdateGameState = jest.fn();
-
 jest.mock("Hooks/Game/State/useGameStateCallback", () => {
-  return () => mockUseUpdateGameState;
+  return () => jest.fn();
 });
 
 describe("GamePage", () => {
@@ -225,21 +219,16 @@ describe("GamePage", () => {
       // @ts-ignore
       service.fetchState.mockResolvedValueOnce(gameStateJudgeExampleResponse);
       const { users, currentUser } = gameStateJudgeExampleResponse.data;
+      const [playerToKick] = users.filter((item) => item.id !== currentUser.id);
+      const sweetSpy = confirmedSweetAlert(true);
       const wrapper = await kardsRender(<GamePage />);
 
-      const [playerToKick] = users.filter((item) => item.id !== currentUser.id);
+      await waitFor(() => togglePlayerList());
 
-      await togglePlayerList();
-
-      await waitFor(() => {
-        userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
-      });
-
-      await waitFor(() => {
-        userEvent.click(wrapper.getByText("Yes, kick!"));
-      });
+      await waitFor(() => userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`)));
 
       expect(wrapper.queryByTestId(`user-${playerToKick.id}`)).not.toBeInTheDocument();
+      sweetSpy.mockReset();
     });
 
     it("will not display white cards when current user is judge", async () => {
@@ -283,7 +272,7 @@ describe("GamePage", () => {
         userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
       });
 
-      userEvent.click(getCardSubmitButton(cardToSelect.id)!);
+      await waitFor(() => userEvent.click(wrapper.getByTestId("submit")));
 
       await waitFor(() => {
         expect(service.submitCards).toHaveBeenCalledWith(game.id, blackCard.pick, [cardToSelect.id]);
@@ -299,7 +288,7 @@ describe("GamePage", () => {
         userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
       });
 
-      userEvent.click(getCardSubmitButton(cardToSelect.id)!);
+      await waitFor(() => userEvent.click(wrapper.getByTestId("submit")));
 
       await waitFor(() => {
         hand.forEach((card) => expect(getWhiteCardElement(card.id)).not.toBeInTheDocument());
@@ -317,7 +306,7 @@ describe("GamePage", () => {
         userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
       });
 
-      userEvent.click(getCardSubmitButton(cardToSelect.id)!);
+      await waitFor(() => userEvent.click(wrapper.getByTestId("submit")));
 
       await waitFor(() => {
         expect(consoleSpy).toHaveBeenCalledWith(apiFailedResponse);
@@ -420,11 +409,13 @@ describe("GamePage", () => {
 
         await selectWhiteCards(cardsToSelect);
 
-        let order = 1;
-        cardsToSelect.forEach((card) => {
-          expect(wrapper.queryByTestId(whiteCardOrderTestId(card.id))).toHaveTextContent(order.toString());
-          ++order;
-        });
+        await waitFor(() => {
+          let order = 1;
+          cardsToSelect.forEach((card) => {
+            expect(wrapper.queryByTestId(whiteCardOrderTestId(card.id))).toHaveTextContent(order.toString());
+            ++order;
+          });
+        })
       });
     });
   });

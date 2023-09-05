@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { leaveGame } from "Services/GameService";
 import { useHand } from "State/Hand/useHand";
 import { useVote } from "State/Vote/useVote";
@@ -16,7 +16,7 @@ import { SetHandAction } from "State/Hand/HandActions";
 import { ClearStateAction } from "State/Vote/VoteActions";
 
 function useLeaveGame() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { dispatch: authDispatch } = useAuth();
   const { dispatch: gameDispatch } = useGame();
   const { dispatch: playerDispatch } = usePlayers();
@@ -34,7 +34,7 @@ function useLeaveGame() {
       handDispatch(new SetHandAction(initialHandState.hand));
       voteDispatch(new ClearStateAction());
 
-      history.push("/");
+      navigate("/");
     } catch (e) {
       console.error(e);
     }

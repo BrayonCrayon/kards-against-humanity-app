@@ -17,22 +17,23 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
     state: { hasSubmittedCards },
   } = useAuth();
 
+  const baseStyles = `bg-white font-bold relative px-6 py-7 text-3xl flex flex-wrap cursor-pointer min-h-72 max-w-64 leading-normal hover:bg-gray-100 ${className} `;
+
   const nonSubmittedCards = useMemo(() => {
     return !card.selected && hasSubmittedCards;
   }, [card, hasSubmittedCards]);
 
+  const cardStyles = useMemo(() => {
+      const selectedStyles = card.selected ? "border-4 border-emerald-500" : "";
+      const alreadySubmittedStyles = hasSubmittedCards ? "cursor-not-allowed" : "";
+      const hideOtherCards = nonSubmittedCards ? "opacity-25" : "";
+
+    return `${baseStyles} ${selectedStyles} ${alreadySubmittedStyles} ${hideOtherCards}`;
+  }, [card.selected, nonSubmittedCards, hasSubmittedCards]);
+
   return (
     <div
-      className={`bg-white font-bold relative px-6 py-7 text-3xl flex flex-wrap cursor-pointer min-h-72 max-w-64 leading-normal hover:bg-gray-100
-        ${className} 
-        ${
-          card.selected
-            ? "border-5 border-green-500"
-            : ""
-        } 
-        ${hasSubmittedCards ? "cursor-not-allowed" : ""} 
-        ${nonSubmittedCards ? "opacity-25" : ""}
-      `}
+      className={cardStyles}
       onClick={(e) => {
         onClick(card);
       }}

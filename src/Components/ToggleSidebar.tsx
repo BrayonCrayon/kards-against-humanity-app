@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import {FC, useState, JSX, PropsWithChildren} from "react";
 import { Button } from "Components/Atoms/Button";
 
-interface ToggleSidebarProps {
+interface ToggleSidebarProps extends PropsWithChildren {
   toggleElement?: JSX.Element;
   dataTestId?: string;
   className?: string;
@@ -28,7 +28,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
       </div>
       {show && (
         <div
-          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white bg-opacity-75 flex cursor-pointer"
+          className="w-screen h-screen fixed z-50 top-0 left-0 bg-white/75 flex cursor-pointer"
           data-testid="sidebar"
         >
           <div
@@ -36,7 +36,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
             data-testid="sidebar-background"
             className="h-screen flex-1"
           />
-          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative max-w-xs cursor-auto ${sideBarStyles}`}>
+          <div className={`w-3/4 border-l border-black shadow-md bg-white h-screen relative max-w-xs cursor-auto md:w-1/2 xl:w-1/4 ${sideBarStyles}`}>
             <button
               className="absolute top-1 left-2 text-black cursor-pointer z-60 hover:text-gray-500"
               data-testid="close-button"

@@ -1,12 +1,8 @@
+import { gameFactory } from "../../Tests/Factories/GameFactory";
+
 export const gameSpectatorExampleResponse = {
   data: {
-    game: {
-      id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-      code: "1234",
-      name: "Puzzled Penguin",
-      redrawLimit: 2,
-      judgeId: 1,
-    },
+    game: gameFactory({ judgeId: 1 }),
     user: {
       id: 5,
       name: "SpectatorX",
@@ -51,7 +47,7 @@ export const gameSpectatorExampleResponse = {
       id: 4624,
       pick: 1,
       text: "_ is the key to recovery.",
-      expansionId: 1
+      expansionId: 1,
     },
   },
 };

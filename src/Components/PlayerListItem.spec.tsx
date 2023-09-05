@@ -4,7 +4,7 @@ import { RenderResult, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { transformUser } from "Types/User";
-import { spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
+import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
 
 const { data: {game, users, blackCard} } = gameStateExampleResponse;
 const mockKickPlayer = jest.fn();
@@ -23,30 +23,26 @@ const renderer = (user = player): RenderResult => {
 
 describe("PlayerListItem", () => {
   beforeEach(() => {
+    jest.clearAllMocks();
     spyOnUseGame(jest.fn(), { game, blackCard });
     spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
   });
 
   it("will show prompt when a user is being kicked from the game", async () => {
+    const sweetSpy = confirmedSweetAlert(true);
     const wrapper = renderer();
 
-    await waitFor(() => {
-      userEvent.click(wrapper.getByTestId(`kick-player-${player.id}`));
-    });
+    await userEvent.click(wrapper.getByTestId(`kick-player-${player.id}`));
 
     await waitFor(() => {
-      expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);
-      expect(wrapper.queryByText("Yes, kick!")).toBeInTheDocument();
-    });
-
-    userEvent.click(wrapper.getByText("Yes, kick!"));
-
-    await waitFor(() => {
+      expect(sweetSpy).toHaveBeenCalled();
       expect(mockKickPlayer).toHaveBeenCalledWith(game.id, player.id);
     });
+    sweetSpy.mockReset();
   });
 
   it("will not kick the player if the judge declines kicking the player", async () => {
+    const sweetSpy = confirmedSweetAlert(false);
     const wrapper = renderer();
 
     await waitFor(() => {
@@ -55,10 +51,8 @@ describe("PlayerListItem", () => {
 
     await waitFor(() => {
       expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);
-      expect(wrapper.queryByText("Cancel")).toBeInTheDocument();
+      expect(sweetSpy).toHaveBeenCalled();
     });
-
-    userEvent.click(wrapper.getByText("Cancel"));
 
     await waitFor(() => {
       expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);

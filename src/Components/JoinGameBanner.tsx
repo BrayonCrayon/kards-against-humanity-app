@@ -1,12 +1,12 @@
 import { FC } from "react";
 import { Button, ButtonVariant } from "Components/Atoms/Button";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const JoinGameBanner: FC = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   function createGame() {
-    history.push("/create");
+    navigate("/create");
   }
 
   return (

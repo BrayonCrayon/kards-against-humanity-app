@@ -1,12 +1,8 @@
+import { gameFactory } from "../../Tests/Factories/GameFactory";
+
 export const gameStateAllPlayerSubmittedCardsExampleResponse = {
   data: {
-    game: {
-      id: "063a4fa2-7ab7-46d5-b59f-f0d15bb17f65",
-      code: "1234",
-      name: "Puzzled Penguin",
-      redrawLimit: 2,
-      judgeId: 4,
-    },
+    game: gameFactory({ judgeId: 4 }),
     hasSubmittedWhiteCards: false,
     submittedWhiteCardIds: [],
     users: [

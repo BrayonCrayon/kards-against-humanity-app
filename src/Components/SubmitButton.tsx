@@ -33,7 +33,7 @@ const SubmitButton: FC<SubmitButtonProps> = ({
         variant={ButtonVariant["submit-test"]}
         text="Submit"
         className={buttonClass}
-        iconClass="text-green-500 justify-self-end"
+        iconClass="text-emerald-500 justify-self-end"
         beforeLoadingClass="flex w-3/4 gap-2 items-center"
         isLoading={loading}
         onClick={() => onClick()}

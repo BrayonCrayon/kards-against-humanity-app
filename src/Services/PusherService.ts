@@ -1,7 +1,7 @@
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
-export const pusher = new Pusher("80e06980f526e21fc058");
+export const pusher = new Pusher("80e06980f526e21fc058", { cluster: "us2"});
 // @ts-ignore
 window.Pusher = require("pusher-js");
 // @ts-ignore
@@ -25,6 +25,14 @@ export const listenWhenUserJoinsGame = (
 ) => {
   echo.channel(`game-${gameId}`).stopListening(".game.joined");
   echo.channel(`game-${gameId}`).listen(".game.joined", callback);
+};
+
+export const listenWhenGameStart = (
+    userId: number,
+    callback: (data: gameCallbackData) => void
+) =>{
+  echo.channel(`user-${userId}`).stopListening(".game.started");
+  echo.channel(`user-${userId}`).listen(".game.started", callback);
 };
 
 export const listenWhenUserSubmittedCards = (

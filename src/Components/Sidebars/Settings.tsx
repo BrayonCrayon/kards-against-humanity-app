@@ -1,34 +1,44 @@
-import React, { FC, useEffect, useState } from "react";
+import React, {FC, useEffect, useState} from "react";
 import ToggleSidebar from "Components/ToggleSidebar";
 import PlayerList from "Components/PlayerList";
-import { User } from "Types/User";
-import TabView, { Tab } from "./Settings/TabView";
+import {User} from "Types/User";
+import TabView, {Tab} from "./Settings/TabView";
 import GameTab from "Components/Sidebars/Settings/GameTab";
+import {TimerTab} from "./Settings/TimerTab";
 
 interface SettingsProps {
   gameId: string;
   players: User[];
+  timer?: number | null;
+  onSettingsUpdate?: (seconds: number) => void;
   className?: string;
 }
 
-const Settings: FC<SettingsProps> = ({ gameId, players, className = "" }) => {
+const Settings: FC<SettingsProps> = ({
+     gameId,
+     players,
+     className = "",
+     timer = null,
+     onSettingsUpdate = undefined
+}) => {
   const [tabs, setTabs] = useState<Tab[]>([]);
 
   useEffect(() => {
     setTabs([
       { key: "players", element: <PlayerList users={players} /> },
       { key: "game", element: <GameTab gameId={gameId} /> },
+      { key: "timer", element: <TimerTab onChange={() => {}} timer={timer} onUpdate={onSettingsUpdate} /> },
     ]);
-  }, [gameId, players]);
+  }, [gameId, players, timer]);
 
   return (
     <>
       <ToggleSidebar
         className={`flex justify-end items-center mr-3 ${className}`}
+        dataTestId="game-settings"
         toggleElement={
           <div className="flex flex-col hover:text-gray-700">
             <i
-              data-testid="game-settings"
               aria-roledescription="Game settings"
               className="fa-solid fa-gear text-4xl cursor-pointer self-center"
             />

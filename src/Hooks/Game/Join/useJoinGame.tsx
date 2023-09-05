@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { usePlayers } from "State/Players/usePlayers";
 import { useHand } from "State/Hand/useHand";
 import { useAuth } from "State/Auth/useAuth";
@@ -14,7 +14,7 @@ import { errorToast } from "Utilities/toasts";
 import { joinGame } from "Services/GameService";
 
 function useJoinGame () {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { dispatch } = usePlayers();
   const { dispatch: handDispatch } = useHand();
   const { dispatch: userDispatch } = useAuth();
@@ -31,7 +31,7 @@ function useJoinGame () {
       gameDispatch(new SetBlackCardAction(data.blackCard));
       userDispatch(new SetHasSubmittedCards(data.hasSubmittedWhiteCards));
 
-      history.push(`/game/${data.game.id}`);
+      navigate(`/game/${data.game.id}`);
     } catch (e) {
       console.error(e);
       errorToast("Game does not exist");

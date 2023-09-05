@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
-import { useGame } from "State/Game/useGame";
+import React, {useCallback, useEffect, useMemo} from "react";
+import {useParams} from "react-router-dom";
+import {useGame} from "State/Game/useGame";
 import useFetchGameState from "Hooks/Game/State/useFetchGameState";
 import GameInfo from "Components/GameInformation/GameInfo";
-import { VotingSection } from "Components/VotingSection";
-import { RoundWinnerModal } from "Components/RoundWinnerModal";
-import { usePlayers } from "State/Players/usePlayers";
-import { useHand } from "State/Hand/useHand";
-import { useAuth } from "State/Auth/useAuth";
+import {VotingSection} from "Components/VotingSection";
+import {RoundWinnerModal} from "Components/RoundWinnerModal";
+import {usePlayers} from "State/Players/usePlayers";
+import {useHand} from "State/Hand/useHand";
+import {useAuth} from "State/Auth/useAuth";
 import Hand from "Components/Hand";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 import useSubmitCards from "Hooks/Game/Actions/useSubmitCards";
+import {PreGameModal} from "Components/PreGameModal";
+import SelectionRoundTimer from "../Components/Molecules/SelectionRoundTimer";
 
 const GamePage = () => {
   const {
@@ -48,17 +50,17 @@ const GamePage = () => {
 
   useEffect(() => {
     if (game.id) {
-      listenOnEvents(game.id);
+      listenOnEvents(game.id, auth.id);
       return;
     }
 
-    fetchGameState(id).then(() => {
-      listenOnEvents(id);
+    fetchGameState(id ?? "").then(() => {
+      listenOnEvents(id ?? "", auth.id);
     });
   }, [id]);
 
   return (
-    <div>
+    <div className="h-full relative">
       <GameInfo />
       {game.judgeId !== auth.id && !hasSubmittedCards && (
         <div className="bg-lukewarmGray-300">
@@ -75,6 +77,8 @@ const GamePage = () => {
       ) : null}
       {showVotingSection && <VotingSection />}
       <RoundWinnerModal />
+      <PreGameModal />
+      {!showVotingSection && <SelectionRoundTimer className="fixed bottom-2 left-2 w-20" />}
     </div>
   );
 };

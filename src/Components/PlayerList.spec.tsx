@@ -2,7 +2,7 @@ import { kardsRender } from "Tests/testRenders";
 import PlayerList from "./PlayerList";
 import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
 import { waitFor } from "@testing-library/react";
-import { spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
+import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
 
 const { users: players, currentUser: auth, game, blackCard } = gameStateExampleResponse.data;
@@ -53,7 +53,7 @@ describe("PlayerList", () => {
 
     const playerNameElement = wrapper.getByTestId(`user-${players[0].id}`).getElementsByTagName("p")[1];
 
-    expect(playerNameElement).toHaveClass("text-green-500");
+    expect(playerNameElement).toHaveClass("text-emerald-500");
   });
 
   it("shows a button to kick players on users list", async () => {
@@ -86,16 +86,13 @@ describe("PlayerList", () => {
   });
 
   it("will call api endpoint to kick player from game", async () => {
+    confirmedSweetAlert(true);
     spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const playerToKick = players.filter((item) => item.id !== auth.id)[0];
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
       userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
-    });
-
-    await waitFor(() => {
-      userEvent.click(wrapper.getByText("Yes, kick!"));
     });
 
     await waitFor(() => {
