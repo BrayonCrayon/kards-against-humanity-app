@@ -1,12 +1,12 @@
-import { FC, FormEvent, useCallback, useState } from "react";
-import { Button } from "Components/Atoms/Button";
+import {FC, FormEvent, useCallback, useState} from "react";
+import {Button} from "Components/Atoms/Button";
 import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
 import KAHInput from "Components/KAHInput";
-import { KAHCheckbox } from "Components/KAHCheckbox";
+import {KAHCheckbox} from "Components/KAHCheckbox";
 import useJoinGame from "Hooks/Game/Join/useJoinGame";
-import { KAHCard } from "Components/KAHCard";
+import {KAHCard} from "Components/KAHCard";
 import useLoading from "Hooks/Game/Shared/useLoading";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 
 const JoinGameForm: FC = () => {
   const { code: sharedCode } = useParams<{ code: string | undefined }>();
@@ -30,7 +30,7 @@ const JoinGameForm: FC = () => {
 
   return (
     <div className="flex flex-col w-full h-full" data-testid="join-game-section">
-      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto">
+      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto lg:w-1/3">
         <form data-testid="join-game-form" onSubmit={submitToApi} className="flex flex-col">
           <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput
