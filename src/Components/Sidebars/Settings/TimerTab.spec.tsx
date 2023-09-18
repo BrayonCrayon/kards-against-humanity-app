@@ -1,8 +1,8 @@
-import { fireEvent, render, waitFor } from "@testing-library/react";
-import { TimerTab } from "./TimerTab";
-import { random } from "lodash";
+import {fireEvent, render, waitFor} from "@testing-library/react";
+import {TimerTab} from "./TimerTab";
+import {random} from "lodash";
 import userEvent from "@testing-library/user-event";
-import { toMinutesSeconds } from "Utilities/helpers";
+import {toMinutesSeconds} from "Utilities/helpers";
 
 describe("TimerTab", () => {
   it("will disable time by default", () => {
@@ -81,6 +81,8 @@ describe("TimerTab", () => {
     const wrapper = render(<TimerTab onChange={() => {}} timer={69} />);
 
     expect(wrapper.queryByTestId("range-timer")).not.toBeDisabled();
+    expect(wrapper.queryByText("1:09")).toBeInTheDocument();
+    expect(parseInt(wrapper.getByTestId("range-timer").getAttribute("value")!)).toEqual(69);
   });
 
   it("will call callback when update button is clicked", async () => {

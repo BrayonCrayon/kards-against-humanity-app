@@ -40,6 +40,7 @@ export const TimerTab: FC<TimerTabProps> = ({ onChange, onUpdate, min = 60, max 
             setSeconds(value);
             onChange(value);
           }}
+          timeLimit={seconds}
           max={max}
           min={min}
         />
