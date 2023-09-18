@@ -3,23 +3,26 @@ const defaultColors = require("tailwindcss/colors");
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
-    minHeight: {
-      64: "16rem",
-      72: '18rem',
-    },
-    maxHeight: {
-      64: "16rem",
-      72: '18rem',
-    },
-    maxWidth: {
-      64: "16rem",
-      72: '18rem',
-    },
-    minWidth: {
-      64: "16rem",
-      72: '18rem',
-    },
     extend: {
+      backgroundImage: {
+        'footer-adjacent-pattern': "url('../public/images/about-us-image.svg')",
+      },
+      minHeight: {
+        64: "16rem",
+        72: '18rem',
+      },
+      maxHeight: {
+        64: "16rem",
+        72: '18rem',
+      },
+      maxWidth: {
+        64: "16rem",
+        72: '18rem',
+      },
+      minWidth: {
+        64: "16rem",
+        72: '18rem',
+      },
       colors: {
         lightBlack: "#1a1a1a",
         lukewarmGray: {
