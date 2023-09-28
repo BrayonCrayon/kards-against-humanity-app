@@ -10,13 +10,19 @@ import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 
 jest.mock("Services/PusherService");
 
-const mockCallback = jest.fn();
+const mockGameStateCallback = jest.fn();
 jest.mock("Hooks/Game/State/useGameStateCallback", () => {
-  return () => mockCallback;
+  return () => mockGameStateCallback;
 });
 
+const mockJoinCallback = jest.fn();
 jest.mock("Hooks/Helpers/useUserJoinsGameCallback", () => {
-  return () => mockCallback;
+  return () => mockJoinCallback;
+});
+
+const mockRefreshPlayersCallback = jest.fn();
+jest.mock("Hooks/Game/State/useRefreshPlayersStateCallback", () => {
+  return () => mockRefreshPlayersCallback;
 });
 
 describe("useListenOnEvents", () => {
@@ -27,12 +33,9 @@ describe("useListenOnEvents", () => {
 
     result.current(gameId, userId);
 
-    expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(gameId, mockCallback);
-    expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(
-      gameId,
-      mockCallback
-    );
-    expect(listenWhenGameRotates).toHaveBeenCalledWith(gameId, mockCallback);
-    expect(listenWhenGameStart).toHaveBeenCalledWith(userId, mockCallback)
+    expect(listenWhenUserJoinsGame).toHaveBeenCalledWith(gameId, mockJoinCallback);
+    expect(listenWhenUserSubmittedCards).toHaveBeenCalledWith(gameId, mockRefreshPlayersCallback);
+    expect(listenWhenGameRotates).toHaveBeenCalledWith(gameId, mockGameStateCallback);
+    expect(listenWhenGameStart).toHaveBeenCalledWith(userId, mockGameStateCallback);
   });
 });
