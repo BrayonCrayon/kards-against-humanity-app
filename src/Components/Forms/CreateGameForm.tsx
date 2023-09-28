@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { Button } from "Components/Atoms/Button";
+import React, {useCallback, useEffect, useState} from "react";
+import {Button} from "Components/Atoms/Button";
 import KAHInput from "Components/KAHInput";
 import useCreateGame from "Hooks/Game/Create/useCreateGame";
-import { KAHCard } from "Components/KAHCard";
-import { GameOptions } from "Components/Sidebars/GameOptions";
+import {KAHCard} from "Components/KAHCard";
+import {GameOptions} from "Components/Sidebars/GameOptions";
 import useExpansions from "Hooks/Game/Expansions/useExpansions";
 import useLoading from "Hooks/Game/Shared/useLoading";
 
@@ -58,7 +58,7 @@ export const CreateGameForm: React.FC = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <KAHCard className="flex-grow mx-3 my-6 sm:w-1/2 sm:mx-auto lg:w-1/3">
+      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto lg:w-1/3">
         <form onSubmit={submitToApi} className="flex flex-col">
           <h2 className="text-2xl font-semibold mb-4 mt-2">Create Game</h2>
           <KAHInput
