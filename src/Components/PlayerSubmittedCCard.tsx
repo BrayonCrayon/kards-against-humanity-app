@@ -1,7 +1,7 @@
-import React, { FC, useMemo } from "react";
-import { PlayerSubmittedCard } from "../Types/ResponseTypes";
-import { BlackCard } from "../Types/BlackCard";
-import { fillOutBlackCard } from "../Utilities/helpers";
+import React, {FC, useMemo} from "react";
+import {PlayerSubmittedCard} from "../Types/ResponseTypes";
+import {BlackCard} from "../Types/BlackCard";
+import {fillOutBlackCard} from "../Utilities/helpers";
 import parser from "html-react-parser";
 
 interface PlayerSubmittedCCardProps {
@@ -25,7 +25,7 @@ export const PlayerSubmittedCCard: FC<PlayerSubmittedCCardProps> = ({
       data-testid={`player-submitted-response-${user_id}`}
     >
       <span>{parser(playerResponse)}</span>
-      <div className="absolute bottom-1 right-1 text-2xl self-end pt-3 text-gray-600">K.</div>
+      <div className="absolute bottom-1 right-1 font-bold text-2xl self-end pt-3 text-gray-600">K.</div>
     </div>
   );
 };
