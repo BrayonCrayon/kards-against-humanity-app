@@ -1,5 +1,6 @@
 import React from "react";
 import {BlackCard} from "Types/BlackCard";
+import PlayButton from "./Molecules/PlayButton";
 
 interface BlackCardProps {
   card: BlackCard;
@@ -12,6 +13,7 @@ export const BlackKard: React.FC<BlackCardProps> = ({ card }) => {
       data-testid={`black-card-${card.id}`}
     >
       <span>{card.text}</span>
+      <PlayButton text={card.text} />
       <div className="absolute bottom-1 right-1 text-2xl self-end pt-3 text-gray-600">K.</div>
     </div>
   );
