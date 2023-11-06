@@ -1,5 +1,5 @@
-import React, { FC, useMemo } from "react";
-import { User } from "Types/User";
+import React, {FC, useMemo} from "react";
+import {User} from "Types/User";
 
 interface SpectatePlayerListItemProps {
   player: User,
@@ -9,14 +9,18 @@ interface SpectatePlayerListItemProps {
 const SpectatePlayerListItem: FC<SpectatePlayerListItemProps> = ({ player , isJudge}) => {
 
   const submittedStatus = useMemo(() => {
-    return player.hasSubmittedWhiteCards ? "Submitted" : "Not Submitted";
+    return player.hasSubmittedWhiteCards ? "Submitted Card" : "";
   }, [player]);
 
-  return <div className="flex text-2xl m-5 align-center border-2 border-gray-300 shadow-md rounded-md">
-    <div data-testid={player.id} className="p-2">
-      <span className="w-full">{player.name}</span>
-      <i className={`fas ${isJudge ? "fa-gavel" : "fa-user"} text-2xl mx-2`} />
-      <p className="text-sm text-gray-600 ml-1 mt-1">Status: <span className="text-gray-800 font-semibold">{ submittedStatus }</span></p>
+  return <div className="w-full">
+    <div data-testid={player.id} className="flex text-lg items-center">
+      <p className="border-r-2 border-black pr-2 mr-2">{player.score}</p>
+      <i className={`fas ${isJudge ? "fa-gavel" : "fa-user"} text-xl mr-2`} />
+      <span className="mr-1">{player.name}</span>
+      { player.hasSubmittedWhiteCards
+          ? <p className="">- { submittedStatus }</p>
+          : null
+      }
     </div>
   </div>
 }

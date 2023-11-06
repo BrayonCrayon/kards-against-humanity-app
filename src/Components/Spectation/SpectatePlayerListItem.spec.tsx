@@ -1,6 +1,6 @@
-import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";
-import { transformUsers, User } from "Types/User";
-import { kardsRender } from "Tests/testRenders";
+import {gameSpectatorExampleResponse} from "Api/fixtures/gameSpectatorExampleResponse";
+import {transformUsers, User} from "Types/User";
+import {kardsRender} from "Tests/testRenders";
 import SpectatePlayerListItem from "Components/Spectation/SpectatePlayerListItem";
 
 const {data: {users, game}} = gameSpectatorExampleResponse;
@@ -24,6 +24,6 @@ describe("SpectatePlayerListItem", () => {
     player.hasSubmittedWhiteCards = false;
     const wrapper = renderComponent();
 
-    expect(wrapper.queryByTestId(player.id)?.textContent).toContain("Status: Not Submitted");
+    expect(wrapper.queryByTestId(player.id)?.textContent).not.toContain("Submitted");
   });
 });
