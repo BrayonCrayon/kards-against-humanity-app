@@ -1,10 +1,9 @@
 import React, {FC, useEffect, useState} from "react";
 import ToggleSidebar from "Components/ToggleSidebar";
-import PlayerList from "Components/PlayerList";
 import {User} from "Types/User";
 import TabView, {Tab} from "./Settings/TabView";
-import GameTab from "Components/Sidebars/Settings/GameTab";
-import {TimerTab} from "./Settings/TimerTab";
+import GameSettingsTab from "./Settings/GameSettingsTab";
+import PlayerList from "Components/PlayerList";
 
 interface SettingsProps {
   gameId: string;
@@ -26,8 +25,7 @@ const Settings: FC<SettingsProps> = ({
   useEffect(() => {
     setTabs([
       { key: "players", element: <PlayerList users={players} /> },
-      { key: "game", element: <GameTab gameId={gameId} /> },
-      { key: "timer", element: <TimerTab onChange={() => {}} timer={timer} onUpdate={onSettingsUpdate} /> },
+      { key: "settings", element: <GameSettingsTab players={players} gameId={gameId} timer={timer} onSettingsUpdate={onSettingsUpdate} />, className: "h-full"}
     ]);
   }, [gameId, players, timer]);
 
@@ -45,7 +43,7 @@ const Settings: FC<SettingsProps> = ({
           </div>
         }
       >
-        <div className="flex flex-col h-full w-full relative px-6">
+        <div className="flex flex-col h-full w-full relative">
           <h1 className="w-full text-center self-center font-bold text-lg py-2">Settings</h1>
           <TabView tabs={tabs} />
         </div>
