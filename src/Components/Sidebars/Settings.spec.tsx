@@ -1,14 +1,14 @@
 import userEvent from "@testing-library/user-event";
-import { kardsRender } from "Tests/testRenders";
+import {kardsRender} from "Tests/testRenders";
 import Settings from "Components/Sidebars/Settings";
-import { User } from "Types/User";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import {User} from "Types/User";
+import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
 
 const mockedLeaveGame = jest.fn();
 jest.mock("Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
 
 const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
-  return kardsRender(<Settings gameId={gameId} players={players} />);
+  return kardsRender(<Settings players={players} />);
 };
 
 describe("Settings", () => {
@@ -17,7 +17,7 @@ describe("Settings", () => {
     const wrapper = renderComponent(gameId);
 
     await userEvent.click(wrapper.getByTestId("game-settings"));
-    await userEvent.click(wrapper.getByTestId("game"));
+    await userEvent.click(wrapper.getByTestId("settings"));
     await userEvent.click(wrapper.getByRole("leave-game-button"));
 
     expect(mockedLeaveGame).toHaveBeenCalled();

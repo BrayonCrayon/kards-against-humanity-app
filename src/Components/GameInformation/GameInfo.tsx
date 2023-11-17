@@ -38,13 +38,7 @@ const GameInfo: FC = () => {
         <div className="shadow-md p-2 m-2 md:w-auto">
           <CopyGameCode code={game.code} />
         </div>
-        <Settings
-            className="flex-grow md:grow-0 md:mr-5"
-            gameId={game.id}
-            players={players}
-            timer={game.selectionTimer}
-            onSettingsUpdate={updateSettings}
-        />
+        <Settings className="flex-grow md:grow-0 md:mr-5" players={players}/>
       </div>
       <div className="pb-12 mx-auto my-2 pt-4 w-full px-6 flex flex-col items-center md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />

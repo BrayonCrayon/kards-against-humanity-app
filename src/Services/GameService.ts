@@ -15,7 +15,7 @@ export const fetchState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}`);
 };
 
-export const updateSettings = (gameId: string, timer: number) => {
+export const updateSettings = (gameId: string, timer: number|null) => {
   return apiClient.post(`/api/game/${gameId}/settings`, { selection_timer: timer });
 }
 

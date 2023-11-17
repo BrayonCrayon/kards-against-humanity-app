@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import ToggleSidebar from "Components/ToggleSidebar";
-import { ExpansionOption } from "Types/Expansion";
-import { Button, ButtonVariant } from "Components/Atoms/Button";
-import { ExpansionsTab } from "./Settings/ExpansionsTab";
-import TabView, { Tab } from "./Settings/TabView";
-import { TimerTab } from "./Settings/TimerTab";
+import {ExpansionOption} from "Types/Expansion";
+import {Button, ButtonVariant} from "Components/Atoms/Button";
+import {ExpansionsTab} from "./Settings/ExpansionsTab";
+import TabView, {Tab} from "./Settings/TabView";
+import {TimerSetting} from "./Settings/TimerSetting";
 
 interface IGameOptions {
   expansions: ExpansionOption[];
@@ -34,7 +34,7 @@ export const GameOptions: React.FC<IGameOptions> = ({
       },
       {
         key: "Timer",
-        element: <TimerTab onChange={onTimerChange} timer={timer} />,
+        element: <TimerSetting onChange={onTimerChange} timer={timer} />,
       },
     ]);
   }, [expansions, timer]);
