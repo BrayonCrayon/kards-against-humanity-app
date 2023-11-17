@@ -88,7 +88,7 @@ describe("GameInfo", () => {
     const wrapper = await renderer();
 
     await userEvent.click(wrapper.getByTestId("game-settings"));
-    await userEvent.click(wrapper.getByTestId("timer"));
+    await userEvent.click(wrapper.getByTestId("settings"));
 
     await waitFor(() => {
       fireEvent.change(wrapper.getByTestId("range-timer"), {
