@@ -24,7 +24,14 @@ export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300,
   return (
     <>
       <div className="flex h-5% px-5 py-2 items-center justify-end">
-        <KAHToggler role="toggle-timer" on={timerOn} onText="Use Timer" offText="Use Timer" onClick={onToggle} />
+        <KAHToggler
+          dataTestId="timer-toggle"
+          role="toggle-timer"
+          on={timerOn}
+          onText="Use Timer"
+          offText="Use Timer"
+          onClick={onToggle}
+        />
       </div>
       <div className="overflow-y-auto px-2 rounded">
         <p className={`text-6xl text-center font-bold mb-4 ${!timerOn ? "opacity-25" : ""}`}>

@@ -4,24 +4,26 @@ import {ExpansionOption} from "Types/Expansion";
 import {Button, ButtonVariant} from "Components/Atoms/Button";
 import {ExpansionsTab} from "./Settings/ExpansionsTab";
 import TabView, {Tab} from "./Settings/TabView";
-import {TimerSetting} from "./Settings/TimerSetting";
+import GameSettingsTab, {Options} from "Components/Sidebars/Settings/GameSettingsTab";
 
 interface IGameOptions {
   expansions: ExpansionOption[];
   onToggle: (id: number) => void;
   toggleAll: (toggledState: boolean) => void;
-  onTimerChange: (timer: number) => void;
+  onSettingsChange: (options: Options) => void;
   className?: string;
   timer: number | null;
+  hasAnimations: boolean;
 }
 
 export const GameOptions: React.FC<IGameOptions> = ({
   expansions,
   onToggle,
   toggleAll,
-  onTimerChange,
+  onSettingsChange,
   className = "",
   timer = null,
+    hasAnimations = false,
 }) => {
   const [tabs, setTabs] = useState<Tab[]>([]);
 
@@ -33,11 +35,11 @@ export const GameOptions: React.FC<IGameOptions> = ({
         className: "h-screen",
       },
       {
-        key: "Timer",
-        element: <TimerSetting onChange={onTimerChange} timer={timer} />,
+        key: "Settings",
+        element: <GameSettingsTab onUpdatedSettings={onSettingsChange} options={{timer, hasAnimations}}  />,
       },
     ]);
-  }, [expansions, timer]);
+  }, [expansions, timer, hasAnimations]);
 
   return (
     <ToggleSidebar

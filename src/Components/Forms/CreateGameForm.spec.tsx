@@ -1,10 +1,9 @@
-import { screen, waitFor } from "@testing-library/react";
-import { CreateGameForm } from "Components/Forms/CreateGameForm";
+import {screen, waitFor} from "@testing-library/react";
+import {CreateGameForm} from "Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
-import { kardsRender } from "Tests/testRenders";
-import gameService from "Services/GameService";
-import { act } from "react-dom/test-utils";
+import {getExpansionsExampleResponse} from "Api/fixtures/getExpansionsExampleResponse";
+import {kardsRender} from "Tests/testRenders";
+import gameService, {ICreateGameOptions} from "Services/GameService";
 
 const { data: expansions } = getExpansionsExampleResponse;
 
@@ -37,6 +36,8 @@ describe("CreateGameForm", () => {
   it("handles form submit with selected expansions only", async () => {
     const name = "Slim Shady";
     const [expansionToExclude] = expansions;
+    const expectedExpansions = expansions.filter((e) => e.id !== expansionToExclude.id).map((e) => e.id);
+    const hasAnimations = false;
 
     renderer();
 
@@ -50,13 +51,8 @@ describe("CreateGameForm", () => {
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     await waitFor(() => userEvent.click(submitBtn));
 
-    await waitFor(() => {
-      expect(mockCreateGame).toHaveBeenCalledWith(
-        name,
-        expansions.filter((e) => e.id !== expansionToExclude.id).map((e) => e.id),
-        null
-      );
-    });
+    const options: ICreateGameOptions = {name, expansionIds: expectedExpansions, timer: null, hasAnimations};
+    await waitFor(() => expect(mockCreateGame).toHaveBeenCalledWith(options));
   });
 
   it("calls create game hook", async () => {
@@ -66,18 +62,20 @@ describe("CreateGameForm", () => {
     await userEvent.type(nameInput, "Chewy");
 
     await userEvent.click(wrapper.getByRole("settings-menu-button"));
-    await userEvent.click(wrapper.getByTestId("Timer"));
+    await userEvent.click(wrapper.getByTestId("Settings"));
     await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     const submitBtn = await screen.findByTestId("create-game-submit-button");
     await userEvent.click(submitBtn);
 
+    const expectedOptions: ICreateGameOptions = {
+      name: "Chewy",
+      expansionIds: expansions.map((e) => e.id),
+      timer: 180,
+      hasAnimations: false
+    };
     await waitFor(() => {
-      expect(mockCreateGame).toHaveBeenCalledWith(
-        "Chewy",
-        expansions.map((e) => e.id),
-        180
-      );
+      expect(mockCreateGame).toHaveBeenCalledWith(expectedOptions);
     });
   });
 

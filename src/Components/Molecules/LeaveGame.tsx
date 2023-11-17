@@ -20,7 +20,7 @@ const LeaveGame: FC<LeaveGameProps> = ({gameId, className = ""}) => {
     return (
         <>
             <Button
-                role="leave-game-button"
+                dataTestid="leave-game"
                 text="Leave Game"
                 className={className}
                 variant={ButtonVariant["dark-outline"]}

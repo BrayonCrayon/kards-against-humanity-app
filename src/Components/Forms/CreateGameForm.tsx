@@ -6,10 +6,12 @@ import {KAHCard} from "Components/KAHCard";
 import {GameOptions} from "Components/Sidebars/GameOptions";
 import useExpansions from "Hooks/Game/Expansions/useExpansions";
 import useLoading from "Hooks/Game/Shared/useLoading";
+import {Options} from "Components/Sidebars/Settings/GameSettingsTab";
 
 export const CreateGameForm: React.FC = () => {
   const [userName, setUserName] = useState("");
   const [timer, setTimer] = useState<null|number>(null);
+  const [hasAnimations, setHasAnimations] = useState<boolean>(false);
   const createGame = useCreateGame();
   const { expansions, getExpansions, setExpansions } = useExpansions();
   const { loading, setLoading } = useLoading();
@@ -22,13 +24,10 @@ export const CreateGameForm: React.FC = () => {
   const submitToApi = useCallback(async (event: any) => {
       event.preventDefault();
       await setLoading(true);
-      await createGame(
-        userName,
-        expansions.filter((e) => e.isSelected).map((e) => e.expansion.id),
-        timer
-      );
+      const expansionIds = expansions.filter((e) => e.isSelected).map((e) => e.expansion.id);
+      await createGame({name: userName, expansionIds, timer, hasAnimations});
     },
-    [expansions, userName, timer]
+    [expansions, userName, timer, hasAnimations]
   );
 
   const onToggle = useCallback((id: number) => {
@@ -50,10 +49,11 @@ export const CreateGameForm: React.FC = () => {
     [expansions]
   );
 
-  const onTimerChanged = useCallback((seconds: number) => {
-      setTimer(seconds);
+  const onSettingsChange = useCallback((options: Options) => {
+      setTimer(options.timer);
+      setHasAnimations(options.hasAnimations);
     },
-    [timer]
+    [timer, hasAnimations]
   );
 
   return (
@@ -77,8 +77,9 @@ export const CreateGameForm: React.FC = () => {
             expansions={expansions}
             onToggle={onToggle}
             toggleAll={toggleExpansions}
-            onTimerChange={onTimerChanged}
+            onSettingsChange={onSettingsChange}
             timer={timer}
+            hasAnimations={hasAnimations}
           />
           <Button isLoading={loading} text="Create" dataTestid="create-game-submit-button" type="submit" />
         </form>
