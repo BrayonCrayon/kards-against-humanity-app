@@ -7,7 +7,7 @@ import {errorToast} from "Utilities/toasts";
 function useUpdateGameSettings() {
     const fetchState = useFetchGameState();
 
-    return useCallback(async (gameId: string, timer: number) => {
+    return useCallback(async (gameId: string, timer: number|null) => {
         try {
             await updateSettings(gameId, timer);
             fetchState(gameId);

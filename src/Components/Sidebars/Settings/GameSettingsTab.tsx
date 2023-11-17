@@ -1,30 +1,32 @@
-import {User} from "Types/User";
-import {FC} from "react";
-import LeaveGame from "../../Molecules/LeaveGame";
+import {FC, useCallback, useState} from "react";
+import LeaveGame from "Components/Molecules/LeaveGame";
 import {TimerSetting} from "./TimerSetting";
-import {Button} from "../../Atoms/Button";
+import {Button} from "Components/Atoms/Button";
+import useUpdateGameSettings from "Hooks/Game/State/useUpdateGameSettings";
+import {happyToast} from "Utilities/toasts";
+import {useGame} from "State/Game/useGame";
 
-interface GameSettingsTabProps {
-    players: User[];
-    gameId: string;
-    timer?: number | null;
-    onSettingsUpdate?: (seconds: number) => void;
-}
+interface GameSettingsTabProps {}
 
-const GameSettingsTab: FC<GameSettingsTabProps> = ({ players, gameId,  timer, onSettingsUpdate }) => {
+const GameSettingsTab: FC<GameSettingsTabProps> = ({}) => {
 
-    // TODO: Maybe store the timer settings update here or in a hook?
+    const { state: { game }} = useGame();
+    const update = useUpdateGameSettings();
+    const [defaultTimer, setDefaultTimer] = useState<number | null>(game.selectionTimer)
+
+    const updateSettings = useCallback(async () => {
+        await update(game.id, defaultTimer);
+        happyToast("Game updated!");
+    }, [defaultTimer]);
 
     return (
         <div className="flex flex-col h-full">
-            {/* TODO: hookup onchange event for timer */}
             <div className="flex-1">
-                <TimerSetting onChange={() => {}} timer={timer} />
+                <TimerSetting onChange={(seconds) => { setDefaultTimer(seconds)}} timer={defaultTimer} />
                 <hr className={"pb-3"}/>
             </div>
-            {/* TODO: hook up settings update on button below */}
-            <Button className="w-full" text="Update Settings" dataTestid="update-timer" />
-            <LeaveGame className="mt-0 mb-0" gameId={gameId} />
+            <Button className="w-full" text="Update Settings" dataTestid="update-timer" onClick={() => updateSettings()} />
+            <LeaveGame className="mt-0 mb-0" gameId={game.id} />
         </div>
     )
 }

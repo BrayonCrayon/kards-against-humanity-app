@@ -6,28 +6,22 @@ import GameSettingsTab from "./Settings/GameSettingsTab";
 import PlayerList from "Components/PlayerList";
 
 interface SettingsProps {
-  gameId: string;
   players: User[];
-  timer?: number | null;
-  onSettingsUpdate?: (seconds: number) => void;
   className?: string;
 }
 
 const Settings: FC<SettingsProps> = ({
-     gameId,
      players,
      className = "",
-     timer = null,
-     onSettingsUpdate = undefined
 }) => {
   const [tabs, setTabs] = useState<Tab[]>([]);
 
   useEffect(() => {
     setTabs([
       { key: "players", element: <PlayerList users={players} /> },
-      { key: "settings", element: <GameSettingsTab players={players} gameId={gameId} timer={timer} onSettingsUpdate={onSettingsUpdate} />, className: "h-full"}
+      { key: "settings", element: <GameSettingsTab />, className: "h-full"}
     ]);
-  }, [gameId, players, timer]);
+  }, [players]);
 
   return (
     <>
