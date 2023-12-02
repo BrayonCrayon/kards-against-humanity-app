@@ -98,7 +98,7 @@ describe("GameInfo", () => {
       });
     });
 
-    await userEvent.click(wrapper.getByTestId("update-timer"));
+    await userEvent.click(wrapper.getByTestId("update-settings"));
 
     await waitFor(() => {
       expect(mockUpdateGameSettings).toHaveBeenCalled();
