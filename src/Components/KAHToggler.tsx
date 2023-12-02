@@ -7,6 +7,7 @@ type KAHTogglerProps = {
   onClick: () => void;
   role?: string;
   className?: string;
+  dataTestId?: string;
 }
 
 
@@ -17,9 +18,10 @@ export const KAHToggler: React.FC<KAHTogglerProps> = ({
   onClick,
   role = "toggle-button",
   className = "",
+  dataTestId= "",
 }) => {
 
-  return (<div role={role} onClick={onClick} className={`flex items-center gap-3 cursor-pointer ${className}`}>
+  return (<div role={role} data-testid={dataTestId} onClick={onClick} className={`flex items-center gap-3 cursor-pointer ${className}`}>
     {on && (
      <>
        {onText}
