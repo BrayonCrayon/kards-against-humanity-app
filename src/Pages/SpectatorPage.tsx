@@ -46,21 +46,26 @@ export const SpectatorPage: React.FC = () => {
   //   }
   // },[game, haveAllPlayersSubmitted]);
 
-  return <div className="flex w-full h-full bg-lukewarmGray-200">
-    {/*<CSSTransition in={show} timeout={300} unmountOnExit classNames={"spectator-card-slide"}>*/}
-    {/*  <WhiteKard card={whiteCard} onClick={() => {}} />*/}
-    {/*</CSSTransition>*/}
-    <div className="spectator-card-animation">
-        <WhiteKard card={whiteCard} onClick={() => {}} />
+  return <div className="flex w-full h-full flex-col bg-lukewarmGray-200">
+    <iframe className="bg-lukewarmGray-200 w-full" src="https://lottie.host/embed/07bd7bac-9b50-4440-b5e1-38a7a9bcced9/oGrv9hk7Kj.json"></iframe>
+    <div className="flex w-full justify-center">
+      {/*<CSSTransition in={show} timeout={300} unmountOnExit classNames={"spectator-card-slide"}>*/}
+      {/*  <WhiteKard card={whiteCard} onClick={() => {}} />*/}
+      {/*</CSSTransition>*/}
+      <div>
+        <div className="spectator-card-animation border-b-4 h-auto border-black">
+          <WhiteKard card={whiteCard} onClick={() => {}} />
+        </div>
+      </div>
+      {/*<button onClick={() => setShow(!show)}>Show</button>*/}
+      {/*<div className="flex flex-grow justify-around">*/}
+      {/*  <BlackKard card={blackCard} />*/}
+      {/*</div>*/}
+      {/*<SpectatePlayerList players={players} judgeId={game.judgeId} />*/}
+      {/*{ haveAllPlayersSubmitted*/}
+      {/*  ? <DisplaySubmittedCard cards={submittedCards} />*/}
+      {/*  : null*/}
+      {/*}*/}
     </div>
-    <button onClick={() => setShow(!show)}>Show</button>
-    {/*<div className="flex flex-grow justify-around">*/}
-    {/*  <BlackKard card={blackCard} />*/}
-    {/*</div>*/}
-    {/*<SpectatePlayerList players={players} judgeId={game.judgeId} />*/}
-    {/*{ haveAllPlayersSubmitted*/}
-    {/*  ? <DisplaySubmittedCard cards={submittedCards} />*/}
-    {/*  : null*/}
-    {/*}*/}
-  </div>
+    </div>
 }
