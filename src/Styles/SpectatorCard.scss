@@ -58,12 +58,47 @@
 //}
 
 @keyframes slide-from-left {
-  from {left: -200px}
-  to {left: 50%}
+  0% {
+    margin-left: 228px;
+    width: 0px;
+  }
+  1% {
+    margin-left: 0px;
+    width: 100%;
+  }
+  10% {
+    transform: rotate(-5deg);
+    transform-origin: bottom left;
+  }
+  20% {
+    transform: rotate(10deg);
+    transform-origin: bottom right;
+  }
+  30% {
+    transform: rotate(-20deg);
+    transform-origin: bottom left;
+  }
+  40% {
+    transform: rotate(360deg);
+    transform-origin: bottom right;
+  }
+  60% {
+    transform: rotate(360deg);
+    margin-left: 0px;
+    width: 100%;
+  }
+  100% {
+    transform: rotate(360deg);
+    margin-left: 228px;
+    width: 0%;
+  }
 }
 
 .spectator-card-animation {
-  position: relative;
-  transform: translateX(-50%);
- animation: slide-from-left 3s infinite;
+  overflow: hidden;
+  animation-timing-function: ease-in;
+  //animation-delay: 2s;
+  animation-fill-mode: forwards;
+  animation-name: slide-from-left;
+  animation-duration: 8s;
 }
