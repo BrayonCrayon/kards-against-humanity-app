@@ -1,4 +1,4 @@
-import React, {FC, useCallback} from "react";
+import React, { FC, useCallback } from "react";
 import useReadText from "Hooks/Helpers/useReadText";
 
 interface PlayButtonProps {
@@ -7,12 +7,12 @@ interface PlayButtonProps {
 }
 const PlayButton: FC<PlayButtonProps> = ({ text, isDark = false }) => {
     const colorStyles = isDark ? "text-black hover:text-gray-900" : "text-white hover:text-gray-200"
-    const readText = useReadText();
+    const { play } = useReadText();
 
     const playMe = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
-        readText(text);
-    }, [readText, text]);
+        play(text);
+    }, [play, text]);
 
     return (
         <div className={`absolute bottom-1 left-2 text-lg cursor-pointer ${colorStyles}`} onClick={playMe}>
