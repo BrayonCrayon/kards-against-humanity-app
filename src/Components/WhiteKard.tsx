@@ -1,6 +1,7 @@
 import React, {useMemo} from "react";
 import {WhiteCard} from "Types/WhiteCard";
 import {useAuth} from "State/Auth/useAuth";
+import PlayButton from "./Molecules/PlayButton";
 
 interface WhiteKardProps {
   card: WhiteCard;
@@ -49,6 +50,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
         </div>
       )}
       <span>{card.text}</span>
+      <PlayButton text={card.text} isDark />
       <div className="absolute text-2xl font-bold text-gray-200 bottom-1 right-1">K.</div>
     </div>
   );

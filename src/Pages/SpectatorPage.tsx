@@ -1,12 +1,11 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import { usePlayers } from "State/Players/usePlayers";
-import { useGame } from "State/Game/useGame";
+import React, {useCallback, useEffect, useMemo} from "react";
+import {usePlayers} from "State/Players/usePlayers";
+import {useGame} from "State/Game/useGame";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
 import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
-import { BlackKard } from "Components/BlackKard";
-import DisplaySubmittedCard from "Components/DisplaySubmittedCard";
+import {BlackKard} from "Components/BlackKard";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import {useAuth} from "../State/Auth/useAuth";
 
@@ -45,14 +44,14 @@ export const SpectatorPage: React.FC = () => {
     }
   },[game, haveAllPlayersSubmitted]);
 
-  return <>
-    <SpectatePlayerList players={players} judgeId={game.judgeId} />
-    <div className="flex justify-around">
+  return <div className="flex w-full h-full bg-lukewarmGray-200">
+    <div className="flex flex-grow justify-around">
       <BlackKard card={blackCard} />
     </div>
-    { haveAllPlayersSubmitted
-      ? <DisplaySubmittedCard cards={submittedCards} />
-      : null
-    }
-  </>
+    <SpectatePlayerList players={players} judgeId={game.judgeId} />
+    {/*{ haveAllPlayersSubmitted*/}
+    {/*  ? <DisplaySubmittedCard cards={submittedCards} />*/}
+    {/*  : null*/}
+    {/*}*/}
+  </div>
 }

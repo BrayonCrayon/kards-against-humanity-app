@@ -1,26 +1,31 @@
 import userEvent from "@testing-library/user-event";
-import { kardsRender } from "Tests/testRenders";
+import {kardsRender} from "Tests/testRenders";
 import Settings from "Components/Sidebars/Settings";
-import { User } from "Types/User";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import {User} from "Types/User";
+import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
+import {spyOnUseGame} from "Tests/testHelpers";
+import {gameFactory} from "Tests/Factories/GameFactory";
+import {blackCardFactory} from "Tests/Factories/BlackCardFactory";
 
 const mockedLeaveGame = jest.fn();
 jest.mock("Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
 
 const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
-  return kardsRender(<Settings gameId={gameId} players={players} />);
+  return kardsRender(<Settings players={players} />);
 };
 
 describe("Settings", () => {
   it("will allow players to leave game", async () => {
-    const gameId = "alsdf8asdfoi43jo3i4";
-    const wrapper = renderComponent(gameId);
+    const game = gameFactory();
+    const gameSpy = spyOnUseGame(jest.fn(), { game, blackCard: blackCardFactory() });
+    const wrapper = renderComponent();
 
     await userEvent.click(wrapper.getByTestId("game-settings"));
-    await userEvent.click(wrapper.getByTestId("game"));
-    await userEvent.click(wrapper.getByRole("leave-game-button"));
+    await userEvent.click(wrapper.getByTestId("settings"));
+    await userEvent.click(wrapper.getByTestId("leave-game"));
 
     expect(mockedLeaveGame).toHaveBeenCalled();
+    gameSpy.mockRestore();
   });
 
   it("will allow players to see other players", async function () {

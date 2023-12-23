@@ -15,7 +15,7 @@ export const fetchState = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}`);
 };
 
-export const updateSettings = (gameId: string, timer: number) => {
+export const updateSettings = (gameId: string, timer: number|null) => {
   return apiClient.post(`/api/game/${gameId}/settings`, { selection_timer: timer });
 }
 
@@ -27,7 +27,14 @@ export const fetchPlayers = (gameId: string) => {
   return apiClient.get(`/api/game/${gameId}/players`);
 };
 
-export const createGame = (params: { name: string; expansionIds: number[]; timer: number|null }) => {
+export interface ICreateGameOptions {
+  name: string;
+  expansionIds: number[];
+  timer: number|null;
+  hasAnimations: boolean;
+}
+
+export const createGame = (params: ICreateGameOptions) => {
   return apiClient.post("/api/game", params);
 };
 
