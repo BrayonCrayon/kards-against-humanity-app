@@ -1,22 +1,22 @@
-import {FC, useCallback, useState} from "react";
-import {KAHToggler} from "Components/KAHToggler";
-import {KAHRange} from "Components/Atoms/KAHRange";
-import {toMinutesSeconds} from "Utilities/helpers";
+import { FC, useCallback, useState } from "react";
+import { KAHToggler } from "Components/KAHToggler";
+import { KAHRange } from "Components/Atoms/KAHRange";
+import { toMinutesSeconds } from "Utilities/helpers";
 
 interface TimerTabProps {
-  onChange: (seconds: number) => void;
+  onChange: (seconds: number | null) => void;
   timer?: number | null;
   min?: number;
   max?: number;
 }
 
-export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300, timer = 0 }) => {
+export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300, timer = null }) => {
   const [timerOn, setTimerOn] = useState(!!timer);
   const [seconds, setSeconds] = useState(timer ?? 0);
 
-  const onToggle = useCallback(async () => {
-    await onChange(timerOn ? 0 : (max + min) / 2);
-    await setSeconds(timerOn ? 0 : (max + min) / 2);
+  const onToggle = useCallback( () => {
+    onChange(timerOn ? null : (max + min) / 2);
+    setSeconds(timerOn ? 0 : (max + min) / 2);
 
     setTimerOn(!timerOn);
   }, [timerOn, setTimerOn]);

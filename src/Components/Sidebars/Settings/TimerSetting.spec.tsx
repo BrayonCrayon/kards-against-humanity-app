@@ -1,8 +1,8 @@
-import {fireEvent, render, waitFor} from "@testing-library/react";
-import {TimerSetting} from "./TimerSetting";
-import {random} from "lodash";
+import { fireEvent, render, waitFor } from "@testing-library/react";
+import { TimerSetting } from "./TimerSetting";
+import { random } from "lodash";
 import userEvent from "@testing-library/user-event";
-import {toMinutesSeconds} from "Utilities/helpers";
+import { toMinutesSeconds } from "Utilities/helpers";
 
 describe("TimerTab", () => {
   it("will disable time by default", () => {
@@ -58,7 +58,7 @@ describe("TimerTab", () => {
     await userEvent.click(wrapper.getByRole("toggle-timer"));
 
     await waitFor(() => {
-      expect(callback).toHaveBeenCalledWith(0);
+      expect(callback).toHaveBeenCalledWith(null);
       expect(wrapper.getByText("0:00")).toBeInTheDocument();
     });
   });
