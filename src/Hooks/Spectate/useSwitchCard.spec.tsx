@@ -2,13 +2,14 @@ import {renderHook} from "@testing-library/react";
 import useSwitchCard from "./useSwitchCard";
 import {whiteCardFactory} from "Tests/Factories/WhiteCardFactory";
 import {act} from "react-dom/test-utils";
+import {WhiteCard} from "../../Types/WhiteCard";
 
 jest.useFakeTimers()
 describe("useSwitchCard", () => {
 
     it("will to set the first card when a list of cards is passed", () => {
         const initialCards = Array(6).fill(whiteCardFactory())
-        const { result } = renderHook(useSwitchCard, {
+        const { result } = renderHook(useSwitchCard<WhiteCard>, {
             initialProps: {initialCards}
         });
 
@@ -21,7 +22,7 @@ describe("useSwitchCard", () => {
         const initialCards = Array(3).fill({}).map(whiteCardFactory);
         const timeout = 3000;
 
-        const { result, rerender } = renderHook(useSwitchCard, {
+        const { result, rerender } = renderHook(useSwitchCard<WhiteCard>, {
             initialProps: {initialCards, timeout}
         });
 
@@ -43,7 +44,7 @@ describe("useSwitchCard", () => {
         const initialCards = Array(3).fill({}).map(whiteCardFactory);
         const timeout = 3000;
 
-        const { result, rerender } = renderHook(useSwitchCard, {
+        const { result, rerender } = renderHook(useSwitchCard<WhiteCard>, {
             initialProps: {initialCards, timeout}
         });
 

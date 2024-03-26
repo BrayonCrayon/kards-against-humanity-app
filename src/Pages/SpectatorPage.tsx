@@ -19,7 +19,7 @@ export const SpectatorPage: React.FC = () => {
     new WhiteCard(2, "3", 0, false),
   ]);
 
-  const {whiteCard} = useSwitchCard({ cards: tempWhiteCards });
+  const {card: whiteCard} = useSwitchCard<WhiteCard>({ initialCards: tempWhiteCards });
 
 //// TODO: Make sure to not remove this piece of the code
   // const haveAllPlayersSubmitted = useMemo(() => {
