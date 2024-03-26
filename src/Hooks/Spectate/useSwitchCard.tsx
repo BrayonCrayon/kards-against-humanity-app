@@ -1,14 +1,20 @@
 import {useCallback, useEffect, useState} from "react";
-import {WhiteCard} from "Types/WhiteCard";
 import EventEmitter from "eventemitter3";
-import {BlackCard} from "Types/BlackCard";
 
-type Card = WhiteCard | BlackCard;
-type UseSwitchCard = ({ initialCards, timeout }: { initialCards: Card[], timeout?: number }) => { card: Card | null }
-const useSwitchCard: UseSwitchCard = ({initialCards, timeout= 5000}) => {
+interface Model {
+    id: number;
+}
+
+interface useSwitchCardProps<T> {
+    initialCards: T[];
+    timeout?: number;
+}
+type ReturnType<T> = { card: T | null }
+
+const useSwitchCard = <T extends Model,>({initialCards, timeout= 5000}: useSwitchCardProps<T>): ReturnType<T> => {
 
     const [cards] = useState(initialCards);
-    const [card, setCard] = useState<null|Card>(initialCards?.length ? initialCards[0] : null);
+    const [card, setCard] = useState<null|T>(initialCards?.length ? initialCards[0] : null);
     const [switchCardTimeout, setSwitchCardTimeout] = useState<NodeJS.Timeout|null>(null);
     const [events] = useState(new EventEmitter());
 
