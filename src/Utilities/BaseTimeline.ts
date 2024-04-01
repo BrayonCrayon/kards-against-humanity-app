@@ -1,12 +1,14 @@
 import {isNull} from "lodash";
 
-export abstract class BaseTimeline<T> {
+export class BaseTimeline<T> {
 
     protected items: T[];
     private currentIdx: number|null;
-    protected timeout = 1000;
+    protected timeout: number;
+    protected onIteratedCallback: () => void = () => {};
 
-    constructor(items: T[] = []) {
+    constructor(items: T[] = [], timeout: number = 1000) {
+        this.timeout = timeout
         this.items = items;
         this.currentIdx = this.items.length > 0 ? 0 : null;
     }
@@ -16,14 +18,20 @@ export abstract class BaseTimeline<T> {
     }
 
     public next(): void {
-        if (isNull(this.currentIdx)) return;
+        setTimeout(() => {
+            if (isNull(this.currentIdx)) return;
 
-        if (this.currentIdx === (this.items.length - 1)) {
-            this.currentIdx = null;
-            return;
-        }
+            if (this.currentIdx === (this.items.length - 1)) {
+                this.currentIdx = null;
+                // TODO: Pass the current data at this time into the callback
+                this.onIteratedCallback();
+                return;
+            }
 
-        this.currentIdx++;
+            this.currentIdx++;
+            // TODO: Pass the current data at this time into the callback
+            this.onIteratedCallback();
+        }, this.timeout)
     }
 
     public getItems(): T[] {
@@ -32,6 +40,10 @@ export abstract class BaseTimeline<T> {
 
     public getTimeout(): number {
         return this.timeout;
+    }
+
+    public setOnIteratedCallback(onIteratedCallback: () => void): void {
+        this.onIteratedCallback = onIteratedCallback;
     }
 
 }
