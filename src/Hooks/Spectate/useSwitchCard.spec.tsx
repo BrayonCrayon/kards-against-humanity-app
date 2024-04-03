@@ -1,8 +1,8 @@
-import {renderHook} from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import useSwitchCard from "./useSwitchCard";
-import {whiteCardFactory} from "Tests/Factories/WhiteCardFactory";
-import {act} from "react-dom/test-utils";
-import {WhiteCard} from "../../Types/WhiteCard";
+import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
+import { act } from "react-dom/test-utils";
+import { WhiteCard } from "Types/WhiteCard";
 
 jest.useFakeTimers()
 describe("useSwitchCard", () => {
