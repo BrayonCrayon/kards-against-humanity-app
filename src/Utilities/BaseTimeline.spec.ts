@@ -12,11 +12,19 @@ describe("BaseTimeline", () => {
     });
 
     it("will be able to iterate over to the next item in the list", () => {
-        const items = Array(3).fill(0).map((_,idx) => idx + 1);
+        const items = Array(3)
+            .fill(0)
+            .map((_,idx) => idx + 1);
         const timeout = 3000;
         const target = new BaseTimeline(items, timeout);
 
         expect(target.getItems()).toEqual(items);
+
+        expect(target.current()).toEqual(null);
+        target.next();
+        jest.advanceTimersByTime(timeout/2);
+        expect(target.current()).toEqual(null);
+        jest.advanceTimersByTime(timeout/2 + 1);
 
         items.forEach((item) => {
             expect(target.current()).toEqual(item);
@@ -41,21 +49,6 @@ describe("BaseTimeline", () => {
         })
 
         expect(callback).toHaveBeenCalledTimes(items.length);
+        items.forEach((item) => expect(callback).toHaveBeenCalledWith(item));
     });
-
-    // it("will be able to iterate over a nested base timeline", ()=>{
-    //     const firstItems = Array(3).fill(0).map((_,idx) => idx + 1);
-    //     const secondItems = Array(3).fill(0).map((_,idx) => idx + 1);
-    //     const callback = jest.fn();
-    //     const firstTarget = new BaseTimeline(firstItems);
-    //     const secondTarget = new BaseTimeline(secondItems);
-    //     const allTarget = new BaseTimeline([firstTarget, secondTarget])
-    //
-    //     allTarget.forEach((item) => {
-    //         allTarget.next();
-    //         jest.advanceTimersByTime(target.getTimeout());
-    //     })
-    //
-    //     expect(callback).toHaveBeenCalledTimes(items.length);
-    // })
 });
