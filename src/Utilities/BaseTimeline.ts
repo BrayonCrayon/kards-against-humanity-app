@@ -5,16 +5,18 @@ export class BaseTimeline<T> {
     protected items: T[];
     private currentIdx: number|null;
     protected timeout: number;
-    protected onIteratedCallback: () => void = () => {};
+    protected onIteratedCallback: (data: T|null) => void = () => {};
 
     constructor(items: T[] = [], timeout: number = 1000) {
         this.timeout = timeout
         this.items = items;
-        this.currentIdx = this.items.length > 0 ? 0 : null;
+        this.currentIdx = -1;
     }
 
     public current(): T|null {
-        return !isNull(this.currentIdx) ? this.items[this.currentIdx] : null;
+        return !isNull(this.currentIdx) && this.currentIdx >= 0 && this.currentIdx < this.items.length
+            ? this.items[this.currentIdx]
+            : null;
     }
 
     public next(): void {
@@ -24,13 +26,13 @@ export class BaseTimeline<T> {
             if (this.currentIdx === (this.items.length - 1)) {
                 this.currentIdx = null;
                 // TODO: Pass the current data at this time into the callback
-                this.onIteratedCallback();
+                this.onIteratedCallback(this.current());
                 return;
             }
 
             this.currentIdx++;
             // TODO: Pass the current data at this time into the callback
-            this.onIteratedCallback();
+            this.onIteratedCallback(this.current());
         }, this.timeout)
     }
 
