@@ -1,51 +1,59 @@
-import {isNull} from "lodash";
+import { delay, isNull } from "lodash";
 
 export class BaseTimeline<T> {
 
-    protected items: T[];
-    private currentIdx: number|null;
-    protected timeout: number;
-    protected onIteratedCallback: (data: T|null) => void = () => {};
+  protected items: T[];
+  private currentIdx: number | null;
+  protected timeout: number;
+  protected onIteratedCallback: (data?: T | null) => void = () => {
+  };
 
-    constructor(items: T[] = [], timeout: number = 1000) {
-        this.timeout = timeout
-        this.items = items;
-        this.currentIdx = -1;
-    }
+  constructor(items: T[] = [], timeout: number = 1000) {
+    this.timeout = timeout;
+    this.items = items;
+    this.currentIdx = this.items.length > 0 ? 0 : -1;
+  }
 
-    public current(): T|null {
-        return !isNull(this.currentIdx) && this.currentIdx >= 0 && this.currentIdx < this.items.length
-            ? this.items[this.currentIdx]
-            : null;
-    }
+  public current(): T | null {
+    return !isNull(this.currentIdx) && this.currentIdx >= 0 && this.currentIdx < this.items.length
+      ? this.items[this.currentIdx]
+      : null;
+  }
 
-    public next(): void {
-        setTimeout(() => {
-            if (isNull(this.currentIdx)) return;
+  public async next(): Promise<void> {
+    // TODO: try using delay instead
+    return new Promise((reject, resolve) => {
+      delay(() => {
+        if (isNull(this.currentIdx)) {
+          resolve()
+          return
+        }
 
-            if (this.currentIdx === (this.items.length - 1)) {
-                this.currentIdx = null;
-                // TODO: Pass the current data at this time into the callback
-                this.onIteratedCallback(this.current());
-                return;
-            }
+        console.log(this.currentIdx, this.items.length)
+        if (this.currentIdx === (this.items.length - 1)) {
+          this.onIteratedCallback(this.current());
+          this.currentIdx = null;
+          resolve()
+          return;
+        }
 
-            this.currentIdx++;
-            // TODO: Pass the current data at this time into the callback
-            this.onIteratedCallback(this.current());
-        }, this.timeout)
-    }
+        this.currentIdx++;
+        console.log(this.currentIdx)
+        this.onIteratedCallback(this.current());
+        resolve()
+      }, this.timeout)
+  })
+  }
 
-    public getItems(): T[] {
-        return this.items;
-    }
+  public getItems(): T[] {
+    return this.items;
+  }
 
-    public getTimeout(): number {
-        return this.timeout;
-    }
+  public getTimeout(): number {
+    return this.timeout;
+  }
 
-    public setOnIteratedCallback(onIteratedCallback: () => void): void {
-        this.onIteratedCallback = onIteratedCallback;
-    }
-
+  public setOnIteratedCallback(onIteratedCallback: (data?: T | null) => void): void {
+    this.onIteratedCallback = onIteratedCallback;
+  }
 }

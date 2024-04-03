@@ -10,6 +10,7 @@ function useReadText() {
         utterance.lang = "en-US"
 
         utterance.onend = onEnd;
+        console.log("speaking");
         synth.speak(utterance);
     }, []);
 
