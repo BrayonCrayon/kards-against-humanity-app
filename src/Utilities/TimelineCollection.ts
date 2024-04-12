@@ -20,8 +20,10 @@ export class TimelineCollection {
 
   public async start() {
     for (const [_, timeline] of this.items.entries()) {
+
       this.currentTimeline = timeline;
       await this.iterateOverTimelines();
+
     }
   }
 
