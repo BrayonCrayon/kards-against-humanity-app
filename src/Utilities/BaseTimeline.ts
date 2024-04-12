@@ -1,4 +1,8 @@
-import { delay, isNull } from "lodash";
+import { isNull } from "lodash";
+
+function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export class BaseTimeline<T> {
 
@@ -21,28 +25,49 @@ export class BaseTimeline<T> {
   }
 
   public async next(): Promise<void> {
-    // TODO: try using delay instead
-    return new Promise((reject, resolve) => {
-      delay(() => {
-        if (isNull(this.currentIdx)) {
-          resolve()
-          return
-        }
+    console.log(this.currentIdx);
 
-        console.log(this.currentIdx, this.items.length)
-        if (this.currentIdx === (this.items.length - 1)) {
-          this.onIteratedCallback(this.current());
-          this.currentIdx = null;
-          resolve()
-          return;
-        }
+    await sleep(1000);
 
-        this.currentIdx++;
-        console.log(this.currentIdx)
-        this.onIteratedCallback(this.current());
-        resolve()
-      }, this.timeout)
-  })
+      console.log("HERE I AM", this.currentIdx)
+    if (isNull(this.currentIdx)) {
+
+      return;
+    }
+
+    // console.log(this.currentIdx, this.items.length)
+    if (this.currentIdx === (this.items.length - 1)) {
+      this.onIteratedCallback(this.current());
+      this.currentIdx = null;
+
+      return;
+    }
+
+    console.log("this.onIteratedCallback", this.currentIdx)
+    this.currentIdx++;
+    this.onIteratedCallback(this.current());
+    //   // TODO: try using delay instead
+    //   return new Promise((reject, resolve) => {
+    //     delay(() => {
+    //
+    //       if (isNull(this.currentIdx)) {
+    //         resolve()
+    //         return
+    //       }
+    //
+    //       // console.log(this.currentIdx, this.items.length)
+    //       if (this.currentIdx === (this.items.length - 1)) {
+    //         this.onIteratedCallback(this.current());
+    //         this.currentIdx = null;
+    //         resolve()
+    //         return;
+    //       }
+    //
+    //       this.currentIdx++;
+    //       this.onIteratedCallback(this.current());
+    //       resolve()
+    //     }, this.timeout)
+    // })
   }
 
   public getItems(): T[] {

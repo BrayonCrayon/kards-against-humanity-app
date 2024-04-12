@@ -17,6 +17,7 @@
     "@types/react-transition-group": "^4.4.6",
     "axios": "^1.4.0",
     "eventemitter3": "^5.0.1",
+    "flush-promises": "^1.0.2",
     "fork-ts-checker-webpack-plugin": "^6.5.3",
     "html-react-parser": "^3.0.16",
     "lodash": "^4.17.21",
