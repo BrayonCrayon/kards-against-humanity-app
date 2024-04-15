@@ -1,10 +1,9 @@
 import { BaseTimeline } from "./BaseTimeline";
 import { TimelineCollection } from "./TimelineCollection";
-import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
 import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { BlackCard } from "Types/BlackCard";
+import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
+import { Card } from "Types/Card";
 
-// jest.useFakeTimers();
 jest.setTimeout(1000000);
 describe("TimelineCollection", () => {
 
@@ -15,20 +14,19 @@ describe("TimelineCollection", () => {
         const blackCards = Array(3)
             .fill(0)
             .map((_,idx) => blackCardFactory({ id: idx + 1 }));
-        // const whiteCardTimeline = new BaseTimeline(whiteCards);
+        const whiteCardTimeline = new BaseTimeline(whiteCards);
         const blackCardTimeline = new BaseTimeline(blackCards);
-
         const whiteCardTester = jest.fn();
-        // const whiteCardCallback = (data?: WhiteCard|null) => { whiteCardTester(data) };
-        // whiteCardTimeline.setOnIteratedCallback(whiteCardCallback);
+        const whiteCardCallback = (data?: Card|null) => { whiteCardTester(data) };
+        whiteCardTimeline.setOnIteratedCallback(whiteCardCallback);
 
         const blackCardTester = jest.fn();
-        const blackCardCallback = (data?: BlackCard|null) => { blackCardTester(data) };
+        const blackCardCallback = (data?: Card|null) => { blackCardTester(data) };
         blackCardTimeline.setOnIteratedCallback(blackCardCallback);
 
         const timelines = new TimelineCollection();
-        timelines.add(BlackCard.name, blackCardTimeline);
-        // timelines.add(WhiteCard.name, whiteCardTimeline);
+        timelines.add(blackCardTimeline);
+        timelines.add(whiteCardTimeline);
 
         await timelines.start();
 
@@ -36,12 +34,9 @@ describe("TimelineCollection", () => {
             expect(blackCardTester).toHaveBeenCalledWith(card);
         })
 
-        // whiteCards.forEach((card) => {
-        //     expect(timelines.current()).toEqual(card);
-        //     jest.advanceTimersByTime(timelines.getCurrentTimeout());
-        //     expect(whiteCardTester).toHaveBeenCalledWith(card);
-        // })
-
+        whiteCards.forEach((card) => {
+            expect(whiteCardTester).toHaveBeenCalledWith(card);
+        })
 
         expect(whiteCardTester).toHaveBeenCalledTimes(3);
         expect(blackCardTester).toHaveBeenCalledTimes(3);

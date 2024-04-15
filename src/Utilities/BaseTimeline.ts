@@ -25,17 +25,13 @@ export class BaseTimeline<T> {
   }
 
   public async next(): Promise<void> {
-    console.log(this.currentIdx);
 
     await sleep(1000);
 
-      console.log("HERE I AM", this.currentIdx)
     if (isNull(this.currentIdx)) {
-
       return;
     }
 
-    // console.log(this.currentIdx, this.items.length)
     if (this.currentIdx === (this.items.length - 1)) {
       this.onIteratedCallback(this.current());
       this.currentIdx = null;
@@ -43,31 +39,8 @@ export class BaseTimeline<T> {
       return;
     }
 
-    console.log("this.onIteratedCallback", this.currentIdx)
-    this.currentIdx++;
     this.onIteratedCallback(this.current());
-    //   // TODO: try using delay instead
-    //   return new Promise((reject, resolve) => {
-    //     delay(() => {
-    //
-    //       if (isNull(this.currentIdx)) {
-    //         resolve()
-    //         return
-    //       }
-    //
-    //       // console.log(this.currentIdx, this.items.length)
-    //       if (this.currentIdx === (this.items.length - 1)) {
-    //         this.onIteratedCallback(this.current());
-    //         this.currentIdx = null;
-    //         resolve()
-    //         return;
-    //       }
-    //
-    //       this.currentIdx++;
-    //       this.onIteratedCallback(this.current());
-    //       resolve()
-    //     }, this.timeout)
-    // })
+    this.currentIdx++;
   }
 
   public getItems(): T[] {
