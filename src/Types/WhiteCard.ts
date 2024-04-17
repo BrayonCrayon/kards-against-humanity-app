@@ -1,3 +1,5 @@
+import { Card } from "Types/Card";
+
 export interface IWhiteCard {
   id: number;
   text: string;
@@ -8,7 +10,7 @@ export interface IWhiteCard {
   deleted_at?: Date;
 }
 
-export class WhiteCard implements IWhiteCard {
+export class WhiteCard extends Card implements IWhiteCard {
   id: number;
   text: string;
   expansionId: number;
@@ -24,6 +26,7 @@ export class WhiteCard implements IWhiteCard {
     selected = false,
     order = 0
   ) {
+    super();
     this.id = id;
     this.text = text;
     this.expansionId = expansionId;
