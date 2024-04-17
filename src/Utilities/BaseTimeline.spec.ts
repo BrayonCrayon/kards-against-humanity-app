@@ -13,7 +13,7 @@ describe("BaseTimeline", () => {
     it("will be able to iterate over to the next item in the list", async () => {
         const items = Array(3)
             .fill(0)
-            .map((_,idx) => idx + 1);
+            .map((_,idx) => [idx + 1]);
         const timeout = 5;
         const target = new BaseTimeline(items, timeout);
 
@@ -30,7 +30,7 @@ describe("BaseTimeline", () => {
     });
 
     it("will be able to accept a callback and call it on each iteration", async () => {
-        const items = Array(3).fill(0).map((_,idx) => idx + 1);
+        const items = Array(3).fill(0).map((_,idx) => [idx + 1]);
         const callback = jest.fn();
         const target = new BaseTimeline(items, 5);
         target.setOnIteratedCallback(callback);

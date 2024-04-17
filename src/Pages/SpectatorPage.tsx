@@ -1,7 +1,5 @@
-import React, {useState} from "react";
-import {WhiteKard} from "../Components/WhiteKard";
-import {WhiteCard} from "../Types/WhiteCard";
-import useSwitchCard from "../Hooks/Spectate/useSwitchCard";
+import React from "react";
+import CardResponseDisplay from "Components/Spectation/CardResponseDisplay";
 
 export const SpectatorPage: React.FC = () => {
   // const { state: { players } } = usePlayers();
@@ -12,14 +10,6 @@ export const SpectatorPage: React.FC = () => {
   // const fetchSpectatorState = useFetchSpectatorState();
   // const listenOnEvents = useListenOnEvents();
   // const {submittedCards, getSubmittedCards} = useSubmittedCards();
-
-  const [tempWhiteCards] = useState([
-    new WhiteCard(0, "1", 0, false),
-    new WhiteCard(1, "2", 0, false),
-    new WhiteCard(2, "3", 0, false),
-  ]);
-
-  const {card: whiteCard} = useSwitchCard<WhiteCard>({ initialCards: tempWhiteCards });
 
 //// TODO: Make sure to not remove this piece of the code
   // const haveAllPlayersSubmitted = useMemo(() => {
@@ -48,23 +38,19 @@ export const SpectatorPage: React.FC = () => {
   // },[game, haveAllPlayersSubmitted]);
 //// TODO: End of the main setup of this page
 
+// TODO: Determine when to show the answers and feed that threw the CardResponseDisplay
+  // TODO: Move the blackKard to the left hand side of the page when showing answers
+
+// TODO: After all answers have been shown, display the answers in never ending scroll listing animation
+
+// TODO: Display Winner when winner is selected
 
   return <div className="flex w-full h-full flex-col bg-lukewarmGray-200">
     <iframe className="bg-lukewarmGray-200 w-full" src="https://lottie.host/embed/07bd7bac-9b50-4440-b5e1-38a7a9bcced9/oGrv9hk7Kj.json"></iframe>
     <div className="flex w-full justify-center">
-      {/*<CSSTransition in={show} timeout={300} unmountOnExit classNames={"spectator-card-slide"}>*/}
-      {/*  <WhiteKard card={whiteCard} onClick={() => {}} />*/}
-      {/*</CSSTransition>*/}
       <div>
-        {
-          whiteCard &&
-          <div className="border-b-4 h-auto border-black">
-            <WhiteKard card={whiteCard} onClick={() => {}} />
-          </div>
-        }
-        {/*<button onClick={() => setWhiteCard(tempWhiteCards[0])}>click me to read the card</button>*/}
+        <CardResponseDisplay showAnswers={false} />
       </div>
-      {/*<button onClick={() => setShow(!show)}>Show</button>*/}
       {/*<div className="flex flex-grow justify-around">*/}
       {/*  <BlackKard card={blackCard} />*/}
       {/*</div>*/}

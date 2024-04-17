@@ -1,65 +1,57 @@
-import {useCallback, useEffect, useState} from "react";
-import EventEmitter from "eventemitter3";
+import { useCallback, useEffect, useState } from "react";
+import { WhiteCard } from "Types/WhiteCard";
+import { BlackCard } from "Types/BlackCard";
+import { TimelineCollection } from "Utilities/TimelineCollection";
+import { BaseTimeline } from "Utilities/BaseTimeline";
+import { Card } from "Types/Card";
 
-interface Model {
-    id: number;
-}
-
-interface useSwitchCardProps<T> {
-    initialCards: T[];
+interface useSwitchCardProps {
+    whiteCards: WhiteCard[][],
+    blackCards: BlackCard[],
     timeout?: number;
 }
-type ReturnType<T> = { card: T | null }
 
-const useSwitchCard = <T extends Model,>({initialCards, timeout= 5000}: useSwitchCardProps<T>): ReturnType<T> => {
+interface useSwitchCardReturn {
+    cards?: Card[] | null,
+    timeLines?: TimelineCollection,
+    start: () => void
+}
 
-    const [cards] = useState(initialCards);
-    const [card, setCard] = useState<null|T>(initialCards?.length ? initialCards[0] : null);
-    const [switchCardTimeout, setSwitchCardTimeout] = useState<NodeJS.Timeout|null>(null);
-    const [events] = useState(new EventEmitter());
+const useSwitchCard = ({whiteCards = [], blackCards = [], timeout = 5000}: useSwitchCardProps): useSwitchCardReturn => {
+    const [timeLines, setTimelines] = useState<TimelineCollection>();
+    const [cards, setCards] = useState<Card[]|null|undefined>(null);
 
-    const switchCard = useCallback(() => {
-        if(card === null) {
-            setCard(cards[0]);
-            switchCardCallback();
-            return;
-        }
-
-        const playedCardIdx = cards.findIndex((item) => item.id === card.id);
-
-        if ((playedCardIdx + 1) > (cards.length - 1)) {
-            setCard(null);
-            setSwitchCardTimeout(null);
-            return;
-        }
-
-        switchCardCallback();
-        setCard(cards[playedCardIdx + 1]);
-    }, [card]);
-
-    useEffect(() => {
-        if (events.listenerCount("switchCard") > 0) {
-            events.removeAllListeners();
-        }
-
-        events.on("switchCard", switchCard, this);
-    }, [events, card]);
-
-    const switchCardCallback = useCallback(() => {
-        const timeoutId = setTimeout(() => {
-            events.emit("switchCard");
-            if (switchCardTimeout) clearTimeout(switchCardTimeout);
-        }, timeout)
-
-        setSwitchCardTimeout(timeoutId)
-    }, [switchCardTimeout]);
-
-    useEffect(() => {
-        if(!switchCardTimeout) {switchCardCallback();}
+    const cardCallback = useCallback((data?: Card[] | null) => {
+        setCards(data);
     }, []);
 
+    useEffect(() => {
+        if (timeLines) return;
+
+        const collection = new TimelineCollection();
+
+        const blackCardTimeline = new BaseTimeline<Card[]>([blackCards], 10000);
+        blackCardTimeline.setOnIteratedCallback(cardCallback);
+        collection.add(blackCardTimeline);
+
+        const whiteCardTimeline = new BaseTimeline<Card[]>(whiteCards, timeout);
+        whiteCardTimeline.setOnIteratedCallback(cardCallback);
+        collection.add(whiteCardTimeline);
+
+        setTimelines(collection);
+        setCards(collection.currentCard);
+    }, []);
+
+    const start = useCallback(() => {
+      if (!timeLines) return;
+
+      timeLines.start();
+    },[timeLines]);
+
     return {
-        card
+        cards,
+        timeLines,
+        start
     }
 }
 

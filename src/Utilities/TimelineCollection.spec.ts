@@ -12,12 +12,12 @@ describe("TimelineCollection", () => {
     it("will be able to iterate over multiple base timelines", async ()=>{
         const whiteCards = Array(3)
             .fill(0)
-            .map((_,idx) => whiteCardFactory({ id: idx + 1 }));
+            .map((_,idx) => [whiteCardFactory({ id: idx + 1 })]);
         const blackCards = Array(3)
             .fill(0)
-            .map((_,idx) => blackCardFactory({ id: idx + 1 }));
-        const whiteCardTimeline = new BaseTimeline<WhiteCard>(whiteCards, 5);
-        const blackCardTimeline = new BaseTimeline<BlackCard>(blackCards, 5);
+            .map((_,idx) => [blackCardFactory({ id: idx + 1 })]);
+        const whiteCardTimeline = new BaseTimeline<WhiteCard[]>(whiteCards, 5);
+        const blackCardTimeline = new BaseTimeline<BlackCard[]>(blackCards, 5);
         const whiteCardTester = jest.fn();
         const whiteCardCallback = (data?: Card|null) => { whiteCardTester(data) };
         whiteCardTimeline.setOnIteratedCallback(whiteCardCallback);
@@ -40,7 +40,35 @@ describe("TimelineCollection", () => {
             expect(whiteCardTester).toHaveBeenCalledWith(card);
         })
 
-        expect(whiteCardTester).toHaveBeenCalledTimes(3);
         expect(blackCardTester).toHaveBeenCalledTimes(3);
+        expect(whiteCardTester).toHaveBeenCalledTimes(4);
     })
+
+    it("will set the first timeline to only the first timeline that was added", () => {
+        const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
+        const blackCards = Array(1).fill({}).map(() => [blackCardFactory()]);
+        const target = new BaseTimeline<WhiteCard[]>(whiteCards, 5);
+        const other = new BaseTimeline<BlackCard[]>(blackCards, 5);
+        const timeLineCollection = new TimelineCollection();
+
+        timeLineCollection.add(target);
+        timeLineCollection.add(other);
+
+        expect(timeLineCollection.currentTimeline).not.toBeNull();
+        expect(timeLineCollection.currentTimeline).toEqual(target);
+    });
+
+    it("will set the current card to the first item of the first timeline that was added", () => {
+        const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
+        const blackCards = Array(1).fill({}).map(() => [blackCardFactory()]);
+        const target = new BaseTimeline<WhiteCard[]>(whiteCards, 5);
+        const other = new BaseTimeline<BlackCard[]>(blackCards, 5);
+        const timeLineCollection = new TimelineCollection();
+
+        timeLineCollection.add(target);
+        timeLineCollection.add(other);
+
+        expect(timeLineCollection.currentCard).not.toBeNull();
+        expect(timeLineCollection.currentCard).toEqual(whiteCards[0]);
+    });
 });
