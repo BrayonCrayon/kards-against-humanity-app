@@ -1,16 +1,16 @@
 import { isNull } from "lodash";
+import { Card } from "Types/Card";
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class BaseTimeline<T> {
+export class BaseTimeline<T extends K, K = Card> {
 
   protected items: T[];
   private currentIdx: number | null;
   protected timeout: number;
-  protected onIteratedCallback: (data?: T | null) => void = () => {
-  };
+  protected onIteratedCallback: (data?: K | null) => void = () => {};
 
   constructor(items: T[] = [], timeout: number = 1000) {
     this.timeout = timeout;
@@ -26,7 +26,7 @@ export class BaseTimeline<T> {
 
   public async next(): Promise<void> {
 
-    await sleep(1000);
+    await sleep(this.timeout);
 
     if (isNull(this.currentIdx)) {
       return;
@@ -51,7 +51,7 @@ export class BaseTimeline<T> {
     return this.timeout;
   }
 
-  public setOnIteratedCallback(onIteratedCallback: (data?: T | null) => void): void {
+  public setOnIteratedCallback(onIteratedCallback: (data?: K | null) => void): void {
     this.onIteratedCallback = onIteratedCallback;
   }
 }

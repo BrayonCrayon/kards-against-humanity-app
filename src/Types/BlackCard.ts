@@ -1,3 +1,5 @@
+import { Card } from "Types/Card";
+
 export interface IBlackCard {
   id: number;
   text: string;
@@ -7,7 +9,7 @@ export interface IBlackCard {
   deleted_at?: Date;
 }
 
-export class BlackCard implements IBlackCard {
+export class BlackCard extends Card implements IBlackCard {
     id: number;
     text: string;
     pick: number;
@@ -23,6 +25,7 @@ export class BlackCard implements IBlackCard {
       createdAt?: Date | undefined,
       deleted_at?: Date | undefined,
     ) {
+      super();
       this.id = id;
       this.text = text;
       this.pick = pick;

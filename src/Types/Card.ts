@@ -1,4 +1,3 @@
-import { WhiteCard } from "Types/WhiteCard";
-import { BlackCard } from "Types/BlackCard";
+export class Card {
 
-export type Card = WhiteCard | BlackCard;
+}

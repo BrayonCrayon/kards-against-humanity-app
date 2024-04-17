@@ -3,6 +3,8 @@ import { TimelineCollection } from "./TimelineCollection";
 import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
 import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
 import { Card } from "Types/Card";
+import { WhiteCard } from "Types/WhiteCard";
+import { BlackCard } from "Types/BlackCard";
 
 jest.setTimeout(1000000);
 describe("TimelineCollection", () => {
@@ -14,8 +16,8 @@ describe("TimelineCollection", () => {
         const blackCards = Array(3)
             .fill(0)
             .map((_,idx) => blackCardFactory({ id: idx + 1 }));
-        const whiteCardTimeline = new BaseTimeline(whiteCards);
-        const blackCardTimeline = new BaseTimeline(blackCards);
+        const whiteCardTimeline = new BaseTimeline<WhiteCard>(whiteCards, 5);
+        const blackCardTimeline = new BaseTimeline<BlackCard>(blackCards, 5);
         const whiteCardTester = jest.fn();
         const whiteCardCallback = (data?: Card|null) => { whiteCardTester(data) };
         whiteCardTimeline.setOnIteratedCallback(whiteCardCallback);
