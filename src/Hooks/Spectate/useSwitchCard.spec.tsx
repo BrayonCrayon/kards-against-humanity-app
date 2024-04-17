@@ -1,64 +1,34 @@
 import { renderHook } from "@testing-library/react";
 import useSwitchCard from "./useSwitchCard";
 import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
-import { act } from "react-dom/test-utils";
-import { WhiteCard } from "Types/WhiteCard";
+import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
+import { TimelineCollection } from "Utilities/TimelineCollection";
 
 jest.useFakeTimers()
 describe("useSwitchCard", () => {
 
-    it("will to set the first card when a list of cards is passed", () => {
-        const initialCards = Array(6).fill(whiteCardFactory())
-        const { result } = renderHook(useSwitchCard<WhiteCard>, {
-            initialProps: {initialCards}
+    it("will setup timelines when hook is called", () => {
+        const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
+        const blackCards = Array(1).fill({}).map(blackCardFactory);
+        const { result } = renderHook(useSwitchCard, {
+            initialProps: { whiteCards, blackCards }
         });
 
-        const { card } = result.current;
+        const { timeLines } = result.current;
 
-        expect(card).toEqual(initialCards[0]);
+        expect(timeLines).toBeInstanceOf(TimelineCollection);
+        expect(timeLines!.items).toHaveLength(2);
     });
 
-    it("will be able to switch to the next card after 5000ms by default", async () => {
-        const initialCards = Array(3).fill({}).map(whiteCardFactory);
-        const timeout = 3000;
-
-        const { result, rerender } = renderHook(useSwitchCard<WhiteCard>, {
-            initialProps: {initialCards, timeout}
+    it("will set the first card when a list of cards are passed", () => {
+        const whiteCards = Array(3).fill({}).map(() => [whiteCardFactory()]);
+        const blackCards = Array(1).fill({}).map(blackCardFactory);
+        const { result } = renderHook(useSwitchCard, {
+            initialProps: {whiteCards, blackCards}
         });
 
-        const { card } = result.current;
-        expect(card).toEqual(initialCards[0]);
+        const { cards } = result.current;
 
-        act(() => jest.advanceTimersByTime(5000));
-        rerender({initialCards, timeout});
-        const { card: secondCard } = result.current;
-        expect(secondCard).toEqual(initialCards[1])
-
-        act(() => jest.advanceTimersByTime(5000));
-        rerender({initialCards, timeout});
-        const { card: thirdCard } = result.current;
-        expect(thirdCard).toEqual(initialCards[2]);
-    });
-
-    it("will be able to switch to the next card based on the timeout prop", async () => {
-        const initialCards = Array(3).fill({}).map(whiteCardFactory);
-        const timeout = 3000;
-
-        const { result, rerender } = renderHook(useSwitchCard<WhiteCard>, {
-            initialProps: {initialCards, timeout}
-        });
-
-        const { card } = result.current;
-        expect(card).toEqual(initialCards[0]);
-
-        act(() => jest.advanceTimersByTime(timeout));
-        rerender({initialCards, timeout});
-        const { card: secondCard } = result.current;
-        expect(secondCard).toEqual(initialCards[1])
-
-        act(() => jest.advanceTimersByTime(timeout));
-        rerender({initialCards, timeout});
-        const { card: thirdCard } = result.current;
-        expect(thirdCard).toEqual(initialCards[2]);
+        expect(cards).toEqual([blackCards[0]]);
     });
 })

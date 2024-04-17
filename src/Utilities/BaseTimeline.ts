@@ -10,7 +10,7 @@ export class BaseTimeline<T extends K, K = Card> {
   protected items: T[];
   private currentIdx: number | null;
   protected timeout: number;
-  protected onIteratedCallback: (data?: K | null) => void = () => {};
+  protected onIteratedCallback: (data?: T | null) => void = () => {};
 
   constructor(items: T[] = [], timeout: number = 1000) {
     this.timeout = timeout;
@@ -29,6 +29,7 @@ export class BaseTimeline<T extends K, K = Card> {
     await sleep(this.timeout);
 
     if (isNull(this.currentIdx)) {
+      this.onIteratedCallback(null);
       return;
     }
 
@@ -51,7 +52,7 @@ export class BaseTimeline<T extends K, K = Card> {
     return this.timeout;
   }
 
-  public setOnIteratedCallback(onIteratedCallback: (data?: K | null) => void): void {
+  public setOnIteratedCallback(onIteratedCallback: (data?: T | null) => void): void {
     this.onIteratedCallback = onIteratedCallback;
   }
 }

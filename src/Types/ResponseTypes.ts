@@ -1,12 +1,5 @@
-import {IWhiteCard} from "./WhiteCard";
-import {BlackCard} from "./BlackCard";
-
-export interface SubmittedCard extends Partial<IWhiteCard> {
-  id: number;
-  text: string;
-  expansionId: number;
-  order: number;
-}
+import { BlackCard } from "./BlackCard";
+import { SubmittedCard } from "Types/SubmittedCard";
 
 export interface PlayerSubmittedCard {
   user_id: number;

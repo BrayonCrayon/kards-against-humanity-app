@@ -1,4 +1,4 @@
-import { SubmittedCardsResponse } from "../../Types/ResponseTypes";
+import { SubmittedCardsResponse } from "Types/ResponseTypes";
 
 export const submittedCardsResponse: SubmittedCardsResponse = {
   data: [
