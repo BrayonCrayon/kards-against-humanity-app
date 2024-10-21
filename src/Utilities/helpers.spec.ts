@@ -1,10 +1,10 @@
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { BlackCard } from "../Types/BlackCard";
-import { SubmittedCard } from "../Types/ResponseTypes";
 import { canSubmit, fillOutBlackCard, toMinutesSeconds } from "./helpers";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
+import {SubmittedCard} from "Types/SubmittedCard";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,

@@ -7,6 +7,7 @@ describe("State Actions", () => {
     Stage.DISPLAY_BLACK_CARD,
     Stage.DISPLAY_SUBMISSIONS,
     Stage.DISPLAY_VOTES,
+    Stage.DISPLAY_WAITING_ROOM
   ])("will change to %s stage when set stage action is called", ($stage) => {
     const initialState: ISpectateState = { ...InitialSpectateState, };
     const action = new ChangeStage($stage);

@@ -16,8 +16,8 @@ describe("TimelineCollection", () => {
         const blackCards = Array(3)
             .fill(0)
             .map((_,idx) => [blackCardFactory({ id: idx + 1 })]);
-        const whiteCardTimeline = new BaseTimeline<WhiteCard[]>(whiteCards, 5);
-        const blackCardTimeline = new BaseTimeline<BlackCard[]>(blackCards, 5);
+        const whiteCardTimeline = new BaseTimeline<Card[]>(whiteCards, 5);
+        const blackCardTimeline = new BaseTimeline<Card[]>(blackCards, 5);
         const whiteCardTester = jest.fn();
         const whiteCardCallback = (data?: Card|null) => { whiteCardTester(data) };
         whiteCardTimeline.setOnIteratedCallback(whiteCardCallback);
@@ -47,8 +47,8 @@ describe("TimelineCollection", () => {
     it("will set the first timeline to only the first timeline that was added", () => {
         const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
         const blackCards = Array(1).fill({}).map(() => [blackCardFactory()]);
-        const target = new BaseTimeline<WhiteCard[]>(whiteCards, 5);
-        const other = new BaseTimeline<BlackCard[]>(blackCards, 5);
+        const target = new BaseTimeline<Card[]>(whiteCards, 5);
+        const other = new BaseTimeline<Card[]>(blackCards, 5);
         const timeLineCollection = new TimelineCollection();
 
         timeLineCollection.add(target);
@@ -61,8 +61,8 @@ describe("TimelineCollection", () => {
     it("will set the current card to the first item of the first timeline that was added", () => {
         const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
         const blackCards = Array(1).fill({}).map(() => [blackCardFactory()]);
-        const target = new BaseTimeline<WhiteCard[]>(whiteCards, 5);
-        const other = new BaseTimeline<BlackCard[]>(blackCards, 5);
+        const target = new BaseTimeline<Card[]>(whiteCards, 5);
+        const other = new BaseTimeline<Card[]>(blackCards, 5);
         const timeLineCollection = new TimelineCollection();
 
         timeLineCollection.add(target);

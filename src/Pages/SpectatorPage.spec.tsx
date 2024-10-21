@@ -9,6 +9,8 @@ import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import {
   gameSpectatorAllPlayersSubmittedExampleResponse
 } from "Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
+import {spyOnUseSpectate} from "../Tests/testHelpers";
+import {Stage} from "../State/Spectate/SpectateState";
 
 const {data} = gameSpectatorExampleResponse;
 
@@ -74,7 +76,24 @@ describe("SpectatorPage", () => {
       return kardsRender(<SpectatorPage />);
     });
 
-    expect(wrapper.queryByRole("playerSubmittedCard")).not.toBeInTheDocument()
+    expect(wrapper.queryByRole("playerSubmittedCard")).not.toBeInTheDocument();
     expect(fetchSubmittedCards).not.toHaveBeenCalled();
+  });
+
+  it.each([
+      [Stage.DISPLAY_BLACK_CARD, "black-card-0", ["submissions-display", "waiting-room", "votes-display"]],
+      [Stage.DISPLAY_SUBMISSIONS, "submissions-display", ["black-card-0", "waiting-room", "votes-display"]],
+      [Stage.DISPLAY_WAITING_ROOM, "waiting-room", ["submissions-display", "black-card-0", "votes-display"]],
+      [Stage.DISPLAY_VOTES, "votes-display", ["submissions-display", "waiting-room", "black-card-0"]],
+  ])
+  ("will show only the black card when spector stage is on display black card stage for %s", async (stage, currentStage, otherStages) => {
+    spyOnUseSpectate(jest.fn(), {stage})
+    const wrapper = await waitFor(() => kardsRender(<SpectatorPage/>));
+
+    expect(wrapper.queryByTestId(currentStage)).toBeInTheDocument();
+
+    otherStages.forEach((item) => {
+      expect(wrapper.queryByTestId(item)).not.toBeInTheDocument();
+    })
   });
 })
