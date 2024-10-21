@@ -8,6 +8,7 @@ import {HandProvider} from "State/Hand/HandContext";
 import {AuthProvider} from "State/Auth/AuthContext";
 import {GameProvider} from "State/Game/GameContext";
 import {createRoot} from "react-dom/client";
+import {SpectateProvider} from "./State/Spectate/SpectateContext";
 
 const container = document.getElementById("root");
 
@@ -22,7 +23,9 @@ root.render(
         <PlayersProvider>
           <GameProvider>
             <VoteProvider>
-              <App />
+              <SpectateProvider>
+                <App />
+              </SpectateProvider>
             </VoteProvider>
           </GameProvider>
         </PlayersProvider>

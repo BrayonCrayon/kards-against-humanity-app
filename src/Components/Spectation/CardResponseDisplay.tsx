@@ -12,9 +12,10 @@ import { Card } from "Types/Card";
 interface CardResponseDisplayProps {
   showAnswers: boolean;
   cards?: WhiteCard[][];
+  dataTestId?: string;
 }
 
-const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards = [] }) => {
+const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards = [], dataTestId = "" }) => {
 
   const [tempBlackCards] = useState([
     blackCardFactory()
@@ -39,7 +40,7 @@ const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards 
     start();
   }, [showAnswers, timeLines]);
 
-  return <div className="border-b-4 h-auto border-black">
+  return <div className="border-b-4 h-auto border-black" data-testid={dataTestId}>
     {
       showAnswers && hasCardsToDisplay &&
       cardsToDisplay!.map((card) => (
