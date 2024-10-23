@@ -11,6 +11,7 @@ import {usePlayers} from "State/Players/usePlayers";
 import {ChangeStage} from "State/Spectate/SpectateActions";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
+import ReviewRoom from "./ReviewRoom";
 
 export const SpectatorPage: React.FC = () => {
     const {state: {players}} = usePlayers();
@@ -73,7 +74,7 @@ export const SpectatorPage: React.FC = () => {
         }
         {
             stage === Stage.DISPLAY_WAITING_ROOM &&
-            <div data-testid="waiting-room">Here</div>
+            <ReviewRoom blackCard={blackCard} submissions={[]} />
         }
         {
             stage === Stage.DISPLAY_VOTES &&
