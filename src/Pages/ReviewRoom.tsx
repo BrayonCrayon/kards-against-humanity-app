@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {BlackCard} from "../Types/BlackCard";
 import {BlackKard} from "../Components/BlackKard";
 import {PlayerSubmittedCard} from "../Types/ResponseTypes";
@@ -11,6 +11,19 @@ export interface IReviewRoomProps {
 
 const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
     const {blackCard, submissions} = props;
+    const [cardIdx, setCardIdx] = useState(0)
+
+    useEffect(() => {
+        const timeout = setInterval(() => {
+            setCardIdx((prev) => {
+                return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
+            })
+        }, 1000);
+
+        return () => {
+            clearInterval(timeout);
+        }
+    }, []);
 
     return (
             <div className="flex flex-row flex-grow">
@@ -21,9 +34,7 @@ const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
                 </div>
                 <div className="p-12 pt-5 ">
                     {
-                        submissions.map((submission) => (
-                            <PlayerSubmittedCCard key={submission.user_id} playerSubmission={submission} blackCard={blackCard} />
-                        ))
+                        <PlayerSubmittedCCard key={submissions[cardIdx].user_id} playerSubmission={submissions[cardIdx]} blackCard={blackCard} />
                     }
                 </div>
             </div>
