@@ -12,6 +12,8 @@ import {ChangeStage} from "State/Spectate/SpectateActions";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import ReviewRoom from "./ReviewRoom";
+import {submittedCardFactory} from "../Tests/Factories/SubmittedCardFactory";
+import {userFactory} from "../Tests/Factories/UserFactory";
 
 export const SpectatorPage: React.FC = () => {
     const {state: {players}} = usePlayers();
@@ -74,7 +76,13 @@ export const SpectatorPage: React.FC = () => {
         }
         {
             stage === Stage.DISPLAY_WAITING_ROOM &&
-            <ReviewRoom blackCard={blackCard} submissions={[]} />
+            <ReviewRoom blackCard={blackCard} submissions={Array.from({ length: 4 })
+                .map(() => {
+                    return {
+                        user_id: userFactory().id,
+                        submitted_cards: Array.from({ length: 2 }).map(() => submittedCardFactory())
+                    }
+                })} />
         }
         {
             stage === Stage.DISPLAY_VOTES &&
