@@ -16,14 +16,18 @@ describe("SpectatePlayerListItem", () => {
     player.hasSubmittedWhiteCards = true;
     const wrapper = renderComponent({player, isJudge: false});
 
-    expect(wrapper.queryByTestId(player.id)?.textContent).toContain("Submitted");
+    const svg: HTMLImageElement = wrapper.queryByTestId(`card-submitted-icon-${player.id}`) as HTMLImageElement;
+    expect(svg).not.toBeNull();
+    expect(svg?.classList).not.toContain("opacity-25");
   });
 
   it("will indicate when users have not submitted their cards", () => {
     const [player] = players;
     player.hasSubmittedWhiteCards = false;
-    const wrapper = renderComponent();
+    const wrapper = renderComponent({player, isJudge: false});
 
-    expect(wrapper.queryByTestId(player.id)?.textContent).not.toContain("Submitted");
+    const svg: HTMLImageElement = wrapper.queryByTestId(`card-submitted-icon-${player.id}`) as HTMLImageElement;
+    expect(svg).not.toBeNull();
+    expect(svg?.classList).toContain("opacity-25");
   });
 });

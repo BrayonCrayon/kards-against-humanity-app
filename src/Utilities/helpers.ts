@@ -53,3 +53,7 @@ export const toMinutesSeconds = (seconds: number) => {
   const formattedMinutes = date.getMinutes();
   return `${formattedMinutes}:${formattedSeconds}`;
 };
+
+export const displayScore = (score: number): string => {
+  return score < 10 ? `0${score}` : score.toString();
+}
