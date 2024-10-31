@@ -14,27 +14,27 @@ const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
     const [cardIdx, setCardIdx] = useState(0)
 
     useEffect(() => {
-        const timeout = setInterval(() => {
-            setCardIdx((prev) => {
-                return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
-            })
-        }, 1000);
+        // const timeout = setInterval(() => {
+        //     setCardIdx((prev) => {
+        //         return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
+        //     })
+        // }, 1000);
 
-        return () => {
-            clearInterval(timeout);
-        }
+        // return () => {
+        //     clearInterval(timeout);
+        // }
     }, []);
 
     return (
-            <div className="flex flex-row flex-grow">
+            <div className="flex flex-grow">
                 <div className="flex justify-around w-1/4 bg-white shadow-md">
                     <div className="m-12">
-                        <BlackKard card={blackCard} />
+                        <BlackKard card={blackCard} className="text-ellipsis overflow-hidden max-h-96" />
                     </div>
                 </div>
-                <div className="p-12 pt-5 ">
+                <div className="p-12 w-full pt-5 flex flex-row items-center justify-center h-72">
                     {
-                        <PlayerSubmittedCCard key={submissions[cardIdx].user_id} playerSubmission={submissions[cardIdx]} blackCard={blackCard} />
+                        <PlayerSubmittedCCard className="max-h-72 overflow-hidden" key={submissions[cardIdx].user_id} playerSubmission={submissions[cardIdx]} blackCard={blackCard} />
                     }
                 </div>
             </div>

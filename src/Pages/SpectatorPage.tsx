@@ -14,6 +14,7 @@ import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import ReviewRoom from "./ReviewRoom";
 import {submittedCardFactory} from "../Tests/Factories/SubmittedCardFactory";
 import {userFactory} from "../Tests/Factories/UserFactory";
+import {blackCardFactory} from "../Tests/Factories/BlackCardFactory";
 
 export const SpectatorPage: React.FC = () => {
     const {state: {players}} = usePlayers();
@@ -21,6 +22,12 @@ export const SpectatorPage: React.FC = () => {
     const {state: {game, blackCard}} = useGame();
     const {state: {stage}, dispatch} = useSpectate();
     const {id} = useParams<{ id: string }>();
+
+    // TODO: remove this when you want real data
+    const testCard = blackCardFactory({
+        text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
+    });
+
 
     useEffect(() => {
         dispatch(new ChangeStage(Stage.DISPLAY_WAITING_ROOM))
@@ -76,7 +83,7 @@ export const SpectatorPage: React.FC = () => {
         }
         {
             stage === Stage.DISPLAY_WAITING_ROOM &&
-            <ReviewRoom blackCard={blackCard} submissions={Array.from({ length: 4 })
+            <ReviewRoom blackCard={testCard} submissions={Array.from({ length: 4 })
                 .map(() => {
                     return {
                         user_id: userFactory().id,

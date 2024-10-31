@@ -1,6 +1,6 @@
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { BlackCard } from "../Types/BlackCard";
-import { canSubmit, fillOutBlackCard, toMinutesSeconds } from "./helpers";
+import {canSubmit, displayScore, fillOutBlackCard, toMinutesSeconds} from "./helpers";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
@@ -83,5 +83,12 @@ describe("Helpers", () => {
     ["0:00", 0],
   ])("will return %s from %d", (expected, seconds) => {
     expect(toMinutesSeconds(seconds)).toEqual(expected);
+  });
+
+  it.each([
+      [23, "23"],
+      [3, "03"]
+  ])("will cast score as string", (score, expected) => {
+    expect(displayScore(score)).toEqual(expected)
   });
 });
