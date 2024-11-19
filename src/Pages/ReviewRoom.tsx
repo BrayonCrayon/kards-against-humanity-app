@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
-import {BlackCard} from "../Types/BlackCard";
-import {BlackKard} from "../Components/BlackKard";
-import {PlayerSubmittedCard} from "../Types/ResponseTypes";
-import {PlayerSubmittedCCard} from "../Components/PlayerSubmittedCCard";
+import React, { useEffect, useState } from "react";
+import { BlackCard } from "../Types/BlackCard";
+import { BlackKard } from "../Components/BlackKard";
+import { PlayerSubmittedCard } from "../Types/ResponseTypes";
+import { PlayerSubmittedCCard } from "../Components/PlayerSubmittedCCard";
 
 export interface IReviewRoomProps {
     blackCard: BlackCard,
@@ -14,15 +14,15 @@ const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
     const [cardIdx, setCardIdx] = useState(0)
 
     useEffect(() => {
-        // const timeout = setInterval(() => {
-        //     setCardIdx((prev) => {
-        //         return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
-        //     })
-        // }, 1000);
+        const timeout = setInterval(() => {
+            setCardIdx((prev) => {
+                return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
+            })
+        }, 3000);
 
-        // return () => {
-        //     clearInterval(timeout);
-        // }
+        return () => {
+            clearInterval(timeout);
+        }
     }, []);
 
     return (
