@@ -1,36 +1,63 @@
-import React, {useCallback, useEffect, useMemo} from "react";
-import {BlackKard} from "Components/BlackKard";
-import {useGame} from "State/Game/useGame";
-import {useSpectate} from "State/Spectate/useSpectate";
-import {Stage} from "State/Spectate/SpectateState";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { BlackKard, CardSize } from "Components/BlackKard";
+import { useGame } from "State/Game/useGame";
+import { useSpectate } from "State/Spectate/useSpectate";
+import { Stage } from "State/Spectate/SpectateState";
 import CardResponseDisplay from "Components/Spectation/CardResponseDisplay";
 import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
-import {useParams} from "react-router-dom";
-import {useAuth} from "State/Auth/useAuth";
-import {usePlayers} from "State/Players/usePlayers";
-import {ChangeStage} from "State/Spectate/SpectateActions";
+import { useParams } from "react-router-dom";
+import { useAuth } from "State/Auth/useAuth";
+import { usePlayers } from "State/Players/usePlayers";
+import { ChangeStage } from "State/Spectate/SpectateActions";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
 import ReviewRoom from "./ReviewRoom";
-import {submittedCardFactory} from "../Tests/Factories/SubmittedCardFactory";
-import {userFactory} from "../Tests/Factories/UserFactory";
-import {blackCardFactory} from "../Tests/Factories/BlackCardFactory";
+import { submittedCardFactory } from "../Tests/Factories/SubmittedCardFactory";
+import { userFactory } from "../Tests/Factories/UserFactory";
+import { blackCardFactory } from "../Tests/Factories/BlackCardFactory";
+import { SetPlayersAction } from "../State/Players/PlayersActions";
+import { User } from "../Types/User";
+import { gameFactory } from "../Tests/Factories/GameFactory";
+import { Game } from "../Types/Game";
+import { SetBlackCardAction, SetGameAction } from "../State/Game/GameActions";
+import { BlackCard } from "../Types/BlackCard";
+import Timer from "../Components/Atoms/Timer";
+import moment from "moment";
 
 export const SpectatorPage: React.FC = () => {
-    const {state: {players}} = usePlayers();
+    const {state: {players}, dispatch: playerDispatch} = usePlayers();
     const {state: {auth}} = useAuth();
-    const {state: {game, blackCard}} = useGame();
+    const {state: {game, blackCard}, dispatch: gameDispatch} = useGame();
     const {state: {stage}, dispatch} = useSpectate();
     const {id} = useParams<{ id: string }>();
 
     // TODO: remove this when you want real data
-    const testCard = blackCardFactory({
-        text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
-    });
+    // const testCard = blackCardFactory({
+    //     text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
+    // });
 
 
     useEffect(() => {
+        // TODO: This is a temp setup
+        // dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
         dispatch(new ChangeStage(Stage.DISPLAY_WAITING_ROOM))
+
+        const players: User[] = Array.from({length: 10}).map((_, idx) => userFactory({
+          hasSubmittedWhiteCards: idx % 2 !== 0,
+        }))
+        playerDispatch(new SetPlayersAction(players))
+
+        const game: Game = gameFactory({
+            judgeId: players[0].id,
+            selectionTimer: 60,
+            selectionEndsAt: moment().add(60, "seconds").unix()
+        })
+        // const card: BlackCard = blackCardFactory({
+        //   text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
+        // })
+        const card: BlackCard = blackCardFactory()
+        gameDispatch(new SetBlackCardAction(card))
+        gameDispatch(new SetGameAction(game))
     }, []);
 
     const fetchSpectatorState = useFetchSpectatorState();
@@ -72,8 +99,16 @@ export const SpectatorPage: React.FC = () => {
     return <div className="flex w-full h-full bg-lukewarmGray-200">
         {
             stage === Stage.DISPLAY_BLACK_CARD &&
-            <div className="flex flex-grow justify-around">
-                <BlackKard card={blackCard}/>
+            <div className="flex w-3/4">
+                <div className="flex flex-col h-full w-full">
+                    <div className="flex flex-col flex-grow justify-center w-full items-center">
+                        <BlackKard card={blackCard} size={CardSize.LARGE}/>
+                    </div>
+                    {
+                        !!game.selectionEndsAt && !!game.selectionTimer &&
+                        <Timer end={game.selectionEndsAt} />
+                    }
+                </div>
             </div>
         }
         {
@@ -83,7 +118,7 @@ export const SpectatorPage: React.FC = () => {
         }
         {
             stage === Stage.DISPLAY_WAITING_ROOM &&
-            <ReviewRoom blackCard={testCard} submissions={Array.from({ length: 4 })
+            <ReviewRoom blackCard={blackCard} submissions={Array.from({ length: 4 })
                 .map(() => {
                     return {
                         user_id: userFactory().id,
@@ -99,6 +134,7 @@ export const SpectatorPage: React.FC = () => {
         {/*  ? <DisplaySubmittedCard cards={submittedCards} />*/}
         {/*  : null*/}
         {/*}*/}
+
         <SpectatePlayerList players={players} judgeId={game.judgeId}/>
     </div>
 }
