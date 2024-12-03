@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import gameService from "Services/GameService";
 import { SubmittedCard, transformSubmittedCardArray } from "Types/SubmittedCard";
 import { WhiteCard } from "Types/WhiteCard";
+import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
+import { randNumber } from "@ngneat/falso";
 
 function useSubmittedCards() {
   const [submittedCards, setSubmittedCards] = useState<Array<PlayerSubmittedCard>>([]);
@@ -10,7 +11,12 @@ function useSubmittedCards() {
 
   const getSubmittedCards =  useCallback(async (gameId: string) => {
     try {
-      const { data } = await gameService.fetchSubmittedCards(gameId);
+      // const { data } = await gameService.fetchSubmittedCards(gameId);
+      // TODO: Please remove this part!!
+      const data = Array.from({ length: 3 }).map(() => ({
+        user_id: randNumber(),
+        submitted_cards: [submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory()]
+      }));
 
       data.forEach(submission => {
         submission.submitted_cards = transformSubmittedCardArray(submission.submitted_cards)
