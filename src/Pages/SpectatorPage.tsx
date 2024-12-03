@@ -40,7 +40,7 @@ export const SpectatorPage: React.FC = () => {
     useEffect(() => {
         // TODO: This is a temp setup
         // dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
-        dispatch(new ChangeStage(Stage.DISPLAY_WAITING_ROOM))
+        dispatch(new ChangeStage(Stage.DISPLAY_SUBMISSIONS))
 
         const players: User[] = Array.from({length: 10}).map((_, idx) => userFactory({
           hasSubmittedWhiteCards: idx % 2 !== 0,
@@ -58,11 +58,12 @@ export const SpectatorPage: React.FC = () => {
         const card: BlackCard = blackCardFactory()
         gameDispatch(new SetBlackCardAction(card))
         gameDispatch(new SetGameAction(game))
+        getSubmittedCards("a");
     }, []);
 
     const fetchSpectatorState = useFetchSpectatorState();
     // const listenOnEvents = useListenOnEvents();
-    const {submittedCards, getSubmittedCards} = useSubmittedCards();
+    const {whiteCards, getSubmittedCards} = useSubmittedCards();
 
     const haveAllPlayersSubmitted = useMemo(() => {
       return players.filter(user => user.id !== game.judgeId)
@@ -113,7 +114,13 @@ export const SpectatorPage: React.FC = () => {
         }
         {
             stage === Stage.DISPLAY_SUBMISSIONS &&
-            <CardResponseDisplay showAnswers={false} dataTestId="submissions-display"/>
+            <div className="flex w-3/4">
+              <div className="flex flex-col h-full w-full">
+                <div className="flex flex-col flex-grow justify-center w-full items-center">
+                  <CardResponseDisplay showAnswers={true} dataTestId="submissions-display" cards={whiteCards} />
+                </div>
+              </div>
+            </div>
             // <iframe className="bg-lukewarmGray-200 w-full" src="https://lottie.host/embed/07bd7bac-9b50-4440-b5e1-38a7a9bcced9/oGrv9hk7Kj.json"></iframe>
         }
         {

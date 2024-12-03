@@ -1,12 +1,12 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo } from "react";
 import useSwitchCard from "Hooks/Spectate/useSwitchCard";
 import { isEmpty } from "lodash";
 import { WhiteCard } from "Types/WhiteCard";
 import { WhiteKard } from "Components/WhiteKard";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
+import { Card } from "Types/Card";
+import { useGame } from "State/Game/useGame";
 import { BlackKard } from "Components/BlackKard";
 import { BlackCard } from "Types/BlackCard";
-import { Card } from "Types/Card";
 
 
 interface CardResponseDisplayProps {
@@ -17,12 +17,10 @@ interface CardResponseDisplayProps {
 
 const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards = [], dataTestId = "" }) => {
 
-  const [tempBlackCards] = useState([
-    blackCardFactory()
-  ])
+  const { state: { blackCard } } = useGame()
 
   const { start, timeLines, cards: cardsToDisplay  } = useSwitchCard({
-    whiteCards: cards, blackCards: tempBlackCards
+    whiteCards: cards, blackCards: [], timeout: 3000
   });
 
   const hasCardsToDisplay = useMemo(() => {
@@ -40,12 +38,12 @@ const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards 
     start();
   }, [showAnswers, timeLines]);
 
-  return <div className="border-b-4 h-auto border-black" data-testid={dataTestId}>
+  return <div className="h-auto flex flex-wrap justify-center max-w-full gap-2" data-testid={dataTestId}>
     {
       showAnswers && hasCardsToDisplay &&
       cardsToDisplay!.map((card) => (
           isWhiteCard(card)
-            ? <WhiteKard key={(card as WhiteCard).id} card={card as WhiteCard} onClick={() => {}} />
+            ? <WhiteKard key={(card as WhiteCard).id} card={card as WhiteCard} className="w-64" onClick={() => {}} />
             : <BlackKard key={(card as BlackCard).id} card={card as BlackCard} />
       ))
     }

@@ -1,6 +1,6 @@
-import React, {useMemo} from "react";
-import {WhiteCard} from "Types/WhiteCard";
-import {useAuth} from "State/Auth/useAuth";
+import React, { useMemo } from "react";
+import { WhiteCard } from "Types/WhiteCard";
+import { useAuth } from "State/Auth/useAuth";
 import PlayButton from "./Molecules/PlayButton";
 
 interface WhiteKardProps {
@@ -18,7 +18,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
     state: { hasSubmittedCards },
   } = useAuth();
 
-  const baseStyles = `bg-white font-bold relative px-6 py-7 text-3xl flex flex-wrap cursor-pointer min-h-72 max-w-64 leading-normal hover:bg-gray-100 ${className} `;
+  const baseStyles = `bg-white font-bold relative px-6 py-7 text-3xl flex flex-wrap cursor-pointer min-h-72  max-w-64 leading-normal hover:bg-gray-100 ${className} `;
 
   const nonSubmittedCards = useMemo(() => {
     return !card.selected && hasSubmittedCards;
