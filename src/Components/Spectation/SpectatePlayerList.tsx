@@ -1,5 +1,5 @@
-import React, {FC} from "react";
-import {User} from "Types/User";
+import React, { FC } from "react";
+import { User } from "Types/User";
 import SpectatePlayerListItem from "Components/Spectation/SpectatePlayerListItem";
 
 interface SpectatePlayerListProps {
@@ -9,7 +9,7 @@ interface SpectatePlayerListProps {
 
 const SpectatePlayerList: FC<SpectatePlayerListProps> = ({ players, judgeId }) => {
 
-  return <div className="w-1/4 bg-white p-6 shadow-md">
+  return <div className="w-1/4 bg-white p-6 shadow-md z-10">
     <div className="grid grid-cols-6">
       <p className="text-md border-b-2 border-lukewarmGray-300 pb-2 mb-4 col-span-2">Score | Player</p>
       <p className="text-md border-b-2 border-lukewarmGray-300 pb-2 mb-4 col-span-4 text-right">Card Submitted</p>
