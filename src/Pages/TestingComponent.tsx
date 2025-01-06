@@ -16,7 +16,7 @@ export const TestingComponent: FC<TestingComponentProps> = (props) => {
   return <div className="h-auto flex flex-wrap justify-center max-w-full gap-2">
     {
       whiteCards && whiteCards.map(card =>
-        <WhiteKard key={card.id} card={card} className="w-64 spectator-card-animation-enter-and-leave" onClick={() => {}} />
+        <WhiteKard key={card.id} card={card} className="w-64 animate-slide-in-and-slide-out" onClick={() => {}} />
       )
     }
   </div>
