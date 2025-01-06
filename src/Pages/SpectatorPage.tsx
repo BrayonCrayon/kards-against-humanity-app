@@ -18,7 +18,11 @@ import { Game } from "../Types/Game";
 import { SetBlackCardAction, SetGameAction } from "../State/Game/GameActions";
 import { BlackCard } from "../Types/BlackCard";
 import moment from "moment";
-import TestingComponent from "Pages/TestingComponent";
+import { BlackKard, CardSize } from "Components/BlackKard";
+import Timer from "Components/Atoms/Timer";
+import CardResponseDisplay from "Components/Spectation/CardResponseDisplay";
+import ReviewRoom from "Pages/ReviewRoom";
+import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
 
 export const SpectatorPage: React.FC = () => {
     const {state: {players}, dispatch: playerDispatch} = usePlayers();
@@ -94,46 +98,45 @@ export const SpectatorPage: React.FC = () => {
 // TODO: Display Winner when winner is selected
 
     return <div className="flex w-full h-full bg-lukewarmGray-200">
-      <TestingComponent whiteCards={whiteCards[0]} />
-        {/*{*/}
-        {/*    stage === Stage.DISPLAY_BLACK_CARD &&*/}
-        {/*    <div className="flex w-3/4">*/}
-        {/*        <div className="flex flex-col h-full w-full">*/}
-        {/*            <div className="flex flex-col flex-grow justify-center w-full items-center">*/}
-        {/*                <BlackKard card={blackCard} size={CardSize.LARGE}/>*/}
-        {/*            </div>*/}
-        {/*            {*/}
-        {/*                !!game.selectionEndsAt && !!game.selectionTimer &&*/}
-        {/*                <Timer end={game.selectionEndsAt} />*/}
-        {/*            }*/}
-        {/*        </div>*/}
-        {/*    </div>*/}
-        {/*}*/}
-        {/*{*/}
-        {/*    stage === Stage.DISPLAY_SUBMISSIONS &&*/}
-        {/*    <div className="flex w-3/4">*/}
-        {/*      <div className="flex flex-col h-full w-full">*/}
-        {/*        <div className="flex flex-col flex-grow justify-center w-full items-center">*/}
-        {/*          <CardResponseDisplay showAnswers={true} dataTestId="submissions-display" cards={whiteCards} />*/}
-        {/*        </div>*/}
-        {/*      </div>*/}
-        {/*    </div>*/}
-        {/*    // <iframe className="bg-lukewarmGray-200 w-full" src="https://lottie.host/embed/07bd7bac-9b50-4440-b5e1-38a7a9bcced9/oGrv9hk7Kj.json"></iframe>*/}
-        {/*}*/}
-        {/*{*/}
-        {/*    stage === Stage.DISPLAY_WAITING_ROOM &&*/}
-        {/*    <ReviewRoom blackCard={blackCard} submissions={Array.from({ length: 4 })*/}
-        {/*        .map(() => {*/}
-        {/*            return {*/}
-        {/*                user_id: userFactory().id,*/}
-        {/*                submitted_cards: Array.from({ length: 2 }).map(() => submittedCardFactory())*/}
-        {/*            }*/}
-        {/*        })} />*/}
-        {/*}*/}
-        {/*{*/}
-        {/*    stage === Stage.DISPLAY_VOTES &&*/}
-        {/*    <div data-testid="votes-display"/>*/}
-        {/*}*/}
+        {
+            stage === Stage.DISPLAY_BLACK_CARD &&
+            <div className="flex w-3/4">
+                <div className="flex flex-col h-full w-full">
+                    <div className="flex flex-col flex-grow justify-center w-full items-center">
+                        <BlackKard card={blackCard} size={CardSize.LARGE}/>
+                    </div>
+                    {
+                        !!game.selectionEndsAt && !!game.selectionTimer &&
+                        <Timer end={game.selectionEndsAt} />
+                    }
+                </div>
+            </div>
+        }
+        {
+            stage === Stage.DISPLAY_SUBMISSIONS &&
+            <div className="flex w-3/4">
+              <div className="flex flex-col h-full w-full">
+                <div className="flex flex-col flex-grow justify-center w-full items-center">
+                  <CardResponseDisplay showAnswers={true} dataTestId="submissions-display" cards={whiteCards} />
+                </div>
+              </div>
+            </div>
+            // <iframe className="bg-lukewarmGray-200 w-full" src="https://lottie.host/embed/07bd7bac-9b50-4440-b5e1-38a7a9bcced9/oGrv9hk7Kj.json"></iframe>
+        }
+        {
+            stage === Stage.DISPLAY_WAITING_ROOM &&
+            <ReviewRoom blackCard={blackCard} submissions={Array.from({ length: 4 })
+                .map(() => {
+                    return {
+                        user_id: userFactory().id,
+                        submitted_cards: Array.from({ length: 2 }).map(() => submittedCardFactory())
+                    }
+                })} />
+        }
+        {
+            stage === Stage.DISPLAY_VOTES &&
+            <div data-testid="votes-display"/>
+        }
         {/*{ haveAllPlayersSubmitted*/}
         {/*  ? <DisplaySubmittedCard cards={submittedCards} />*/}
         {/*  : null*/}
