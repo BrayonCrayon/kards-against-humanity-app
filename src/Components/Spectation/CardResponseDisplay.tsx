@@ -20,7 +20,7 @@ const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards 
   const { state: { blackCard } } = useGame()
 
   const { start, timeLines, cards: cardsToDisplay  } = useSwitchCard({
-    whiteCards: cards, blackCards: [], timeout: 3000
+    whiteCards: cards, blackCards: [], timeout: 5000
   });
 
   const hasCardsToDisplay = useMemo(() => {
@@ -43,8 +43,8 @@ const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards 
       showAnswers && hasCardsToDisplay &&
       cardsToDisplay!.map((card) => (
           isWhiteCard(card)
-            ? <WhiteKard key={(card as WhiteCard).id} card={card as WhiteCard} className="w-64" onClick={() => {}} />
-            : <BlackKard key={(card as BlackCard).id} card={card as BlackCard} />
+            ? <WhiteKard key={(card as WhiteCard).id} card={card as WhiteCard} className="w-64 animate-slide-in-and-slide-out" onClick={() => {}} />
+            : <BlackKard key={(card as BlackCard).id} card={card as BlackCard} className="animate-slide-in-and-slide-out"/>
       ))
     }
   </div>;
