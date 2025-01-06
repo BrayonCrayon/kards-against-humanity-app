@@ -102,3 +102,43 @@
   animation-name: slide-from-left;
   animation-duration: 8s;
 }
+
+@keyframes just-slide-from-left {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.spectator-card-animation-slide-in {
+  overflow: hidden;
+  animation-timing-function: ease-in;
+  //animation-delay: 2s;
+  animation-fill-mode: forwards;
+  animation-name: just-slide-from-left;
+  animation-duration: 1s;
+}
+
+@keyframes just-slide-from-right {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.spectator-card-animation-slide-out {
+  overflow: hidden;
+  animation-timing-function: ease-in;
+  //animation-delay: 2s;
+  animation-fill-mode: forwards;
+  animation-name: just-slide-from-right;
+  animation-duration: 1s;
+}
