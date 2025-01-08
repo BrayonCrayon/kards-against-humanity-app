@@ -30,7 +30,7 @@ const useSwitchCard = ({whiteCards = [], blackCards = [], timeout = 5000}: useSw
 
         const collection = new TimelineCollection();
 
-        const blackCardTimeline = new BaseTimeline<Card[]>([blackCards], 1000);
+        const blackCardTimeline = new BaseTimeline<Card[]>([blackCards], timeout);
         blackCardTimeline.setOnIteratedCallback(cardCallback);
         collection.add(blackCardTimeline);
 
