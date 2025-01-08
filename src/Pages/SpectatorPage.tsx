@@ -133,10 +133,10 @@ export const SpectatorPage: React.FC = () => {
                     }
                 })} />
         }
-        {
-            stage === Stage.DISPLAY_VOTES &&
-            <div data-testid="votes-display"/>
-        }
+        {/*{*/}
+        {/*    stage === Stage.DISPLAY_VOTES &&*/}
+        {/*    <div data-testid="votes-display"/>*/}
+        {/*}*/}
         {/*{ haveAllPlayersSubmitted*/}
         {/*  ? <DisplaySubmittedCard cards={submittedCards} />*/}
         {/*  : null*/}

@@ -20,7 +20,7 @@ const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards 
   const { state: { blackCard } } = useGame()
 
   const { start, timeLines, cards: cardsToDisplay  } = useSwitchCard({
-    whiteCards: cards, blackCards: [], timeout: 5000
+    whiteCards: cards, blackCards: [blackCard], timeout: 5000
   });
 
   const hasCardsToDisplay = useMemo(() => {
