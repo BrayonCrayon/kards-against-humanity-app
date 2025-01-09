@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import useSwitchCard from "./useSwitchCard";
 import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
 import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
@@ -30,5 +30,24 @@ describe("useSwitchCard", () => {
         const { cards } = result.current;
 
         expect(cards).toEqual([blackCards[0]]);
+    });
+
+    it("will call ending callback when hook has iterated through all cards", async () => {
+        const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
+        const blackCards = Array(1).fill({}).map(blackCardFactory);
+        const onFinishedCallback = jest.fn();
+
+        const { result } = renderHook(useSwitchCard, {
+            initialProps: {whiteCards, blackCards, onFinished: onFinishedCallback, timeout: 100}
+        });
+
+        const { start } = result.current;
+
+        start()
+        jest.advanceTimersByTime(1000);
+
+        await waitFor(() => {
+            expect(onFinishedCallback).toHaveBeenCalled();
+        })
     });
 })
