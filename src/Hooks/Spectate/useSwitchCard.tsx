@@ -9,6 +9,7 @@ interface useSwitchCardProps {
     whiteCards: WhiteCard[][],
     blackCards: BlackCard[],
     timeout?: number;
+    onFinished?: () => void
 }
 
 interface useSwitchCardReturn {
@@ -17,12 +18,22 @@ interface useSwitchCardReturn {
     start: () => void
 }
 
-const useSwitchCard = ({whiteCards = [], blackCards = [], timeout = 5000}: useSwitchCardProps): useSwitchCardReturn => {
+const useSwitchCard = (props: useSwitchCardProps): useSwitchCardReturn => {
+    const {
+        whiteCards = [],
+        blackCards = [],
+        timeout = 5000,
+        onFinished
+    } = props;
     const [timeLines, setTimelines] = useState<TimelineCollection>();
     const [cards, setCards] = useState<Card[]|null|undefined>(null);
 
     const cardCallback = useCallback((data?: Card[] | null) => {
         setCards(data);
+
+        if (!data && onFinished) {
+            onFinished();
+        }
     }, []);
 
     useEffect(() => {
