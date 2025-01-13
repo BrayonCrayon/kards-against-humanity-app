@@ -7,6 +7,9 @@ import { Card } from "Types/Card";
 import { useGame } from "State/Game/useGame";
 import { BlackKard } from "Components/BlackKard";
 import { BlackCard } from "Types/BlackCard";
+import { useSpectate } from "State/Spectate/useSpectate";
+import { ChangeStage } from "State/Spectate/SpectateActions";
+import { Stage } from "State/Spectate/SpectateState";
 
 
 interface CardResponseDisplayProps {
@@ -18,9 +21,15 @@ interface CardResponseDisplayProps {
 const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards = [], dataTestId = "" }) => {
 
   const { state: { blackCard } } = useGame()
+  const { dispatch } = useSpectate()
+
+  const onFinished = useCallback(() => {
+    dispatch(new ChangeStage(Stage.DISPLAY_WAITING_ROOM))
+  }, [])
+
 
   const { start, timeLines, cards: cardsToDisplay  } = useSwitchCard({
-    whiteCards: cards, blackCards: [blackCard], timeout: 5000
+    whiteCards: cards, blackCards: [blackCard], timeout: 5000, onFinished
   });
 
   const hasCardsToDisplay = useMemo(() => {
