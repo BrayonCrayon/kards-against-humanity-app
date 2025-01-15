@@ -4,6 +4,9 @@ import { BlackKard } from "Components/BlackKard";
 import { PlayerSubmittedCard } from "Types/ResponseTypes";
 import { PlayerSubmittedCCard } from "Components/PlayerSubmittedCCard";
 import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import { useSpectate } from "State/Spectate/useSpectate";
+import { ChangeStage } from "State/Spectate/SpectateActions";
+import { Stage } from "State/Spectate/SpectateState";
 
 export interface IReviewRoomProps {
     gameId: string,
@@ -14,21 +17,26 @@ export interface IReviewRoomProps {
 const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
     const { blackCard, submissions, gameId} = props;
     const [cardIdx, setCardIdx] = useState(0)
+    const { dispatch} = useSpectate()
+
+    const changeStage = () => {
+      dispatch(new ChangeStage(Stage.DISPLAY_VOTES))
+    }
 
     useEffect(() => {
-      listenWhenWinnerIsSelected(gameId, () => {})
+      listenWhenWinnerIsSelected(gameId, changeStage)
     }, []);
 
     useEffect(() => {
-        // const timeout = setInterval(() => {
-        //     setCardIdx((prev) => {
-        //         return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
-        //     })
-        // }, 3000);
-        //
-        // return () => {
-        //     clearInterval(timeout);
-        // }
+        const timeout = setInterval(() => {
+            setCardIdx((prev) => {
+                return Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
+            })
+        }, 3000);
+
+        return () => {
+            clearInterval(timeout);
+        }
     }, []);
 
     return (
