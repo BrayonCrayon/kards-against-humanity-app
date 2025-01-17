@@ -1,19 +1,15 @@
-import { useSpectate } from "State/Spectate/useSpectate";
 import { ChangeStage } from "State/Spectate/SpectateActions";
 import { Stage } from "State/Spectate/SpectateState";
-import { usePlayers } from "State/Players/usePlayers";
 import { useEffect, useMemo } from "react";
-import { useGame } from "State/Game/useGame";
+import { User } from "Types/User";
+import { useSpectate } from "State/Spectate/useSpectate";
 
-export const useSwitchStages = () => {
-  const { state: { stage }, dispatch } = useSpectate()
-  const { state: { game } } = useGame()
-  const { state: { players } } = usePlayers()
+export const useSwitchStages = (players: User[], stage: Stage) => {
+  const { dispatch } = useSpectate()
 
   const haveAllPlayersSubmitted = useMemo(() => {
-    return players.filter(user => user.id !== game.judgeId)
-      .every(user => user.hasSubmittedWhiteCards);
-  }, [players, game.judgeId]);
+    return players.every(user => user.hasSubmittedWhiteCards);
+  }, [players]);
 
   useEffect(() => {
     if (!haveAllPlayersSubmitted || stage !== Stage.DISPLAY_BLACK_CARD) {
