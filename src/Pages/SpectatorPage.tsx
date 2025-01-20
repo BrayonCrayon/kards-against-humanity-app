@@ -125,7 +125,10 @@ export const SpectatorPage: React.FC = () => {
         }
         {
             stage === Stage.DISPLAY_WAITING_ROOM &&
-            <ReviewRoom blackCard={blackCard} submissions={Array.from({ length: 4 })
+            <ReviewRoom
+              gameId={game.id}
+              blackCard={blackCard}
+              submissions={Array.from({ length: 4 })
                 .map(() => {
                     return {
                         user_id: userFactory().id,

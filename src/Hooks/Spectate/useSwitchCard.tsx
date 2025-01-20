@@ -5,7 +5,7 @@ import { TimelineCollection } from "Utilities/TimelineCollection";
 import { BaseTimeline } from "Utilities/BaseTimeline";
 import { Card } from "Types/Card";
 
-interface useSwitchCardProps {
+export interface useSwitchCardProps {
     whiteCards: WhiteCard[][],
     blackCards: BlackCard[],
     timeout?: number;

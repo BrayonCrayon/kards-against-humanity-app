@@ -5,9 +5,13 @@ import { BaseTimeline } from "Utilities/BaseTimeline";
 import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
 import { WhiteCard } from "Types/WhiteCard";
 import { Card } from "Types/Card";
+import { useSwitchCardProps } from "Hooks/Spectate/useSwitchCard";
+import { expectDispatch, spyOnUseSpectate } from "Tests/testHelpers";
+import { Stage } from "State/Spectate/SpectateState";
+import { waitFor } from "@testing-library/react";
 
 const mockHook = jest.fn();
-jest.mock("Hooks/Spectate/useSwitchCard", () => () => mockHook());
+jest.mock("Hooks/Spectate/useSwitchCard", () => (props: useSwitchCardProps) => mockHook(props));
 
 const mockUseSwitchCard = (hasTimeLines: boolean = false, cardCount: number = 1) => {
   const mockStart = jest.fn();
@@ -88,6 +92,24 @@ describe("CardResponseDisplay", () => {
 
     cards!.forEach((card) => {
       expect(wrapper.queryByText(card!.text)).toBeInTheDocument();
+    })
+  });
+
+  it("will update spectator stage when switch card hook onFinished is called", async () => {
+    const mockedDispatch = spyOnUseSpectate()
+    mockHook.mockImplementation((props: useSwitchCardProps) => {
+      props?.onFinished!()
+      return {
+        start: () => {},
+        timeLines: [],
+        cards: []
+      }
+    });
+
+    kardsRender(<CardResponseDisplay showAnswers={true} />);
+
+    await waitFor(() => {
+      expectDispatch(mockedDispatch, Stage.DISPLAY_WAITING_ROOM)
     })
   });
 });
