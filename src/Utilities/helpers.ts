@@ -2,6 +2,7 @@ import { BlackCard } from "Types/BlackCard";
 import { WhiteCard } from "Types/WhiteCard";
 import { Expansion, ExpansionOption } from "Types/Expansion";
 import { SubmittedCard } from "Types/SubmittedCard";
+import { CardSize } from "Components/BlackKard";
 
 export const fillOutBlackCard = (blackCard: BlackCard, cards: Array<SubmittedCard>): string => {
   let blackCardText = blackCard.text;
@@ -56,4 +57,12 @@ export const toMinutesSeconds = (seconds: number) => {
 
 export const displayScore = (score: number): string => {
   return score < 10 ? `0${score}` : score.toString();
+}
+
+export const cardSize = (text: string): CardSize => {
+  if (text.length < 100) {
+    return CardSize.SMALL
+  }
+
+  return text.length < 200 ? CardSize.MEDIUM : CardSize.LARGE;
 }

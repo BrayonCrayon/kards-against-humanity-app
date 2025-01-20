@@ -1,4 +1,4 @@
-import { gameFactory } from "../../Tests/Factories/GameFactory";
+import { gameFactory } from "Tests/Factories/GameFactory";
 
 export const gameStateOnePlayerInGameExampleResponse = {
   data: {

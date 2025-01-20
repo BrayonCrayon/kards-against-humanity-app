@@ -1,5 +1,5 @@
 import { kardsRender } from "Tests/testRenders";
-import CardResponseDisplay from "Components/Spectation/CardResponseDisplay";
+import CardResponseRoom from "Components/Spectation/CardResponseRoom";
 import { TimelineCollection } from "Utilities/TimelineCollection";
 import { BaseTimeline } from "Utilities/BaseTimeline";
 import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
@@ -37,13 +37,13 @@ const mockUseSwitchCard = (hasTimeLines: boolean = false, cardCount: number = 1)
   };
 };
 
-describe("CardResponseDisplay", () => {
+describe("CardResponseRoom", () => {
 
   it("will not start iteration onload when timelines are provided", () => {
     const { mockStart } = mockUseSwitchCard();
     const displayAnswers = false;
 
-    kardsRender(<CardResponseDisplay showAnswers={displayAnswers} />);
+    kardsRender(<CardResponseRoom showAnswers={displayAnswers} />);
 
     expect(mockStart).not.toHaveBeenCalled();
   });
@@ -52,14 +52,14 @@ describe("CardResponseDisplay", () => {
     const { mockStart } = mockUseSwitchCard(true);
     const displayAnswers = true;
 
-    kardsRender(<CardResponseDisplay showAnswers={displayAnswers} />);
+    kardsRender(<CardResponseRoom showAnswers={displayAnswers} />);
 
     expect(mockStart).toHaveBeenCalled();
   });
 
   it("will not start iteration when there are no timelines", () => {
     const { mockStart } = mockUseSwitchCard();
-    kardsRender(<CardResponseDisplay showAnswers={true} />);
+    kardsRender(<CardResponseRoom showAnswers={true} />);
 
     expect(mockStart).not.toHaveBeenCalled();
   });
@@ -68,7 +68,7 @@ describe("CardResponseDisplay", () => {
     const { timeLines } = mockUseSwitchCard(true);
     const cards = timeLines?.currentCard as WhiteCard[];
 
-    const wrapper = kardsRender(<CardResponseDisplay showAnswers={false} />);
+    const wrapper = kardsRender(<CardResponseRoom showAnswers={false} />);
 
     cards?.forEach((card) => {
       expect(wrapper.queryByText(card!.text)).toBeNull();
@@ -78,7 +78,7 @@ describe("CardResponseDisplay", () => {
   it("will show responses when show answers is true", () => {
     const { cards } = mockUseSwitchCard(true);
 
-    const wrapper = kardsRender(<CardResponseDisplay showAnswers={true} />);
+    const wrapper = kardsRender(<CardResponseRoom showAnswers={true} />);
 
     cards!.forEach((card) => {
       expect(wrapper.queryByText(card!.text)).toBeInTheDocument();
@@ -88,7 +88,7 @@ describe("CardResponseDisplay", () => {
   it("will show multiple answers when present", () => {
     const { cards } = mockUseSwitchCard(true, 2);
 
-    const wrapper = kardsRender(<CardResponseDisplay showAnswers={true} />);
+    const wrapper = kardsRender(<CardResponseRoom showAnswers={true} />);
 
     cards!.forEach((card) => {
       expect(wrapper.queryByText(card!.text)).toBeInTheDocument();
@@ -106,7 +106,7 @@ describe("CardResponseDisplay", () => {
       }
     });
 
-    kardsRender(<CardResponseDisplay showAnswers={true} />);
+    kardsRender(<CardResponseRoom showAnswers={true} />);
 
     await waitFor(() => {
       expectDispatch(mockedDispatch, Stage.DISPLAY_WAITING_ROOM)

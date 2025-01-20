@@ -1,5 +1,5 @@
 import { kardsRender } from "Tests/testRenders";
-import ReviewRoom from "./ReviewRoom";
+import ReviewRoom from "Components/Spectation/ReviewRoom";
 import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
 import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
 import { userFactory } from "Tests/Factories/UserFactory";
@@ -53,7 +53,7 @@ describe("ReviewRoom", () => {
     kardsRender(<ReviewRoom gameId="394732k4jh2i3h4i23" blackCard={blackCard} submissions={usersSubmission} />);
 
     await waitFor(() => {
-      expectDispatch(mockedDispatch, Stage.DISPLAY_VOTES);
+      expectDispatch(mockedDispatch, Stage.DISPLAY_WINNER);
     });
   });
 });

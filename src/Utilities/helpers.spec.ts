@@ -1,10 +1,13 @@
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { BlackCard } from "../Types/BlackCard";
-import {canSubmit, displayScore, fillOutBlackCard, toMinutesSeconds} from "./helpers";
+import { canSubmit, cardSize, displayScore, fillOutBlackCard, toMinutesSeconds } from "./helpers";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
-import {SubmittedCard} from "Types/SubmittedCard";
+import { SubmittedCard } from "Types/SubmittedCard";
+import { CardSize } from "Components/BlackKard";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,
@@ -90,5 +93,16 @@ describe("Helpers", () => {
       [3, "03"]
   ])("will cast score as string", (score, expected) => {
     expect(displayScore(score)).toEqual(expected)
+  });
+
+  it.each([
+    [CardSize.SMALL, 99],
+    [CardSize.MEDIUM, 100],
+    [CardSize.MEDIUM, 199],
+    [CardSize.LARGE, 200],
+  ])("will return %s card size when text is %d characters", (expectedSize, characterCount) => {
+    const text = "0".repeat(characterCount)
+
+    expect(cardSize(text)).toEqual(expectedSize)
   });
 });

@@ -12,13 +12,13 @@ import { ChangeStage } from "State/Spectate/SpectateActions";
 import { Stage } from "State/Spectate/SpectateState";
 
 
-interface CardResponseDisplayProps {
+interface CardResponseRoomProps {
   showAnswers: boolean;
   cards?: WhiteCard[][];
   dataTestId?: string;
 }
 
-const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards = [], dataTestId = "" }) => {
+const CardResponseRoom: FC<CardResponseRoomProps> = ({ showAnswers, cards = [], dataTestId = "" }) => {
 
   const { state: { blackCard } } = useGame()
   const { dispatch } = useSpectate()
@@ -59,4 +59,4 @@ const CardResponseDisplay: FC<CardResponseDisplayProps> = ({ showAnswers, cards 
   </div>;
 };
 
-export default CardResponseDisplay;
+export default CardResponseRoom;

@@ -3,9 +3,9 @@ import { BlackCard } from "Types/BlackCard";
 import PlayButton from "./Molecules/PlayButton";
 
 export enum CardSize {
-  SMALL,
-  MEDIUM,
-  LARGE
+  SMALL = "small",
+  MEDIUM = "medium",
+  LARGE = "large"
 }
 
 interface BlackCardProps {
