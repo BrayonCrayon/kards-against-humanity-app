@@ -24,6 +24,7 @@ import CardResponseRoom from "Components/Spectation/CardResponseRoom";
 import ReviewRoom from "Components/Spectation/ReviewRoom";
 import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
 import { cardSize } from "Utilities/helpers";
+import WinnerRoom from "Components/Spectation/WinnerRoom";
 
 export const SpectatorPage: React.FC = () => {
   const { state: { players }, dispatch: playerDispatch } = usePlayers();
@@ -40,7 +41,7 @@ export const SpectatorPage: React.FC = () => {
 
   useEffect(() => {
     // TODO: This is a temp setup
-    dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
+    dispatch(new ChangeStage(Stage.DISPLAY_WINNER))
     // dispatch(new ChangeStage(Stage.DISPLAY_WAITING_ROOM));
 
     const players: User[] = Array.from({ length: 10 }).map((_, idx) => userFactory({
@@ -129,7 +130,7 @@ export const SpectatorPage: React.FC = () => {
         }
         {
           stage === Stage.DISPLAY_WINNER &&
-          <div data-testid="votes-display" />
+          <WinnerRoom player={players[0]} cards={whiteCards[0]} />
         }
       </div>
       <SpectatePlayerList players={players} judgeId={game.judgeId} />

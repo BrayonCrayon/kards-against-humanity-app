@@ -1,19 +1,60 @@
-import WinnerRoom from "Components/Spectation/WinnerRoom";
-import { render } from "@testing-library/react";
 import { userFactory } from "Tests/Factories/UserFactory";
+import { render } from "@testing-library/react";
+import WinnerRoom from "Components/Spectation/WinnerRoom";
 import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
-import { whiteCardTestId } from "Tests/selectors";
+import { userTestId, whiteCardTestId } from "Tests/selectors";
+import { act } from "react-dom/test-utils";
+import { expectDispatch, spyOnUseSpectate } from "Tests/testHelpers";
+import { Stage } from "State/Spectate/SpectateState";
 
+jest.useFakeTimers();
 
 describe("WinnerRoom", () => {
-  it("will render out component", () => {
+  it("will show drum icon before winner", () => {
     const winner = userFactory();
     const cards = Array.from({length: 3}).map(() => whiteCardFactory())
     const wrapper = render(<WinnerRoom player={winner} cards={cards} />);
 
-    expect(wrapper.queryByText(winner.name)).toBeInTheDocument();
+    expect(wrapper.queryByTestId("drum-icon")).toBeInTheDocument();
+    expect(wrapper.queryByText(winner.name)).not.toBeInTheDocument();
+    cards.forEach((card) => {
+      expect(wrapper.queryByTestId(whiteCardTestId(card.id))).not.toBeInTheDocument();
+    })
+  });
+
+  it("will show winner after the drum timeout has been completed", async () => {
+    const winner = userFactory();
+    const cards = Array.from({length: 3}).map(() => whiteCardFactory())
+    const wrapper = render(<WinnerRoom player={winner} cards={cards} />);
+
+    act(() => {
+      jest.advanceTimersByTime(6000);
+    });
+
+    expect(wrapper.queryByTestId("drum-icon")).not.toBeInTheDocument();
+
+    const winnerDisplay = wrapper.queryByTestId(userTestId(winner.id));
+    expect(winnerDisplay).toBeInTheDocument();
+    expect(winnerDisplay!.textContent).toContain(winner.name);
+
     cards.forEach((card) => {
       expect(wrapper.queryByTestId(whiteCardTestId(card.id))).toBeInTheDocument();
     })
+  });
+
+  it("will call spectator dispatch after showing winner and their cards for a certain amount of time", () => {
+    const winner = userFactory();
+    const cards = Array.from({length: 3}).map(() => whiteCardFactory())
+    const dispatch = spyOnUseSpectate();
+    render(<WinnerRoom player={winner} cards={cards} />);
+
+    act(() => {
+      jest.advanceTimersByTime(6000);
+    });
+    act(() => {
+      jest.advanceTimersByTime(11000);
+    });
+
+    expectDispatch(dispatch, Stage.DISPLAY_BLACK_CARD);
   });
 })
