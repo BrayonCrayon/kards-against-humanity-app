@@ -15,7 +15,15 @@ function useSubmittedCards() {
       // TODO: Please remove this part!!
       const data = Array.from({ length: 3 }).map(() => ({
         user_id: randNumber(),
-        submitted_cards: [submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory(), submittedCardFactory()]
+        submitted_cards: [
+          submittedCardFactory(),
+          submittedCardFactory(),
+          submittedCardFactory(),
+          submittedCardFactory(),
+          submittedCardFactory(),
+          submittedCardFactory(),
+          submittedCardFactory()
+        ]
       }));
 
       data.forEach(submission => {

@@ -79,7 +79,7 @@ describe("VotingSection", () => {
 
     it("submits selected winner to api", async () => {
       const { user_id } = submittedCardsResponse.data[0];
-      const { spy } = spyOnUseVote(jest.fn(), { selectedPlayerId: user_id });
+      const spy = spyOnUseVote(jest.fn(), { selectedPlayerId: user_id });
 
       const wrapper = await waitFor(() => renderer());
 

@@ -46,21 +46,28 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
   }, [showDrum]);
 
 
-  return <div>
+  // return   <DotLottieReact
+  //   src="public/lottie/confetti.lottie"
+  //   loop
+  //   autoplay
+  // />
+
+  return <div className="flex justify-center items-center w-full">
     {
       showDrum &&
-        <DrumIcon dataTestId="drum-icon" />
+        <DrumIcon className="w-1/2"  dataTestId="drum-icon" />
     }
     {
       !showDrum &&
-      <div className="bg-white p-8 shadow-md border-2 rounded flex flex-col justify-center">
-        <h1 data-testid={`user-${player.id}`} className="text-4xl text-center pb-4">The winner is: {player.name}</h1>
-        <div>hello</div>
-        {
-          cards.map(card =>
-            <WhiteKard key={card.id} card={card} onClick={() => {}} />
-          )
-        }
+      <div className="p-8 h-full flex flex-col items-center gap-10">
+        <h1 data-testid={`user-${player.id}`} className="text-4xl text-center p-4 bg-white w-fit rounded">The winner is: {player.name}</h1>
+        <div className="flex flex-wrap gap-2 justify-center">
+          {
+            cards.map(card =>
+              <WhiteKard key={card.id} className="w-64" card={card} onClick={() => {}} />
+            )
+          }
+        </div>
       </div>
     }
   </div>

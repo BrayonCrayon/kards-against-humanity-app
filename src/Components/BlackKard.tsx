@@ -26,7 +26,7 @@ export const BlackKard: React.FC<BlackCardProps> = (props) => {
       case CardSize.LARGE:
         return "w-1/2 h-3/4 text-base"
       default:
-        return "min-h-72 max-w-64"
+        return "min-h-72 max-w-64 min-w-64"
     }
   }, [size])
 

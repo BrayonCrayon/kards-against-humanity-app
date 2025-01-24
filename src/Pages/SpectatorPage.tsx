@@ -41,11 +41,12 @@ export const SpectatorPage: React.FC = () => {
 
   useEffect(() => {
     // TODO: This is a temp setup
-    dispatch(new ChangeStage(Stage.DISPLAY_WINNER))
-    // dispatch(new ChangeStage(Stage.DISPLAY_WAITING_ROOM));
+    // dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD));
+    dispatch(new ChangeStage(Stage.DISPLAY_WINNER));
 
     const players: User[] = Array.from({ length: 10 }).map((_, idx) => userFactory({
-      hasSubmittedWhiteCards: idx % 2 !== 0
+      // hasSubmittedWhiteCards: idx % 2 !== 0
+      hasSubmittedWhiteCards: true
     }));
     playerDispatch(new SetPlayersAction(players));
 
@@ -57,7 +58,8 @@ export const SpectatorPage: React.FC = () => {
     // const card: BlackCard = blackCardFactory({
     //   text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
     // })
-    const card: BlackCard = blackCardFactory();
+    const card: BlackCard = blackCardFactory({ text: "I am"});
+    // const card: BlackCard = blackCardFactory({ text: "I am a buttermilk cat, with lots of fur. My computer is a block of metal." });
     gameDispatch(new SetBlackCardAction(card));
     gameDispatch(new SetGameAction(game));
     getSubmittedCards("a");
@@ -94,7 +96,7 @@ export const SpectatorPage: React.FC = () => {
   }, [game, haveAllPlayersSubmitted]);
 
   return (
-    <div className="flex w-full h-full bg-lukewarmGray-200">
+    <div className="flex w-full h-full bg-lukewarmGray-300">
       <div className="flex w-3/4">
         {
           stage === Stage.DISPLAY_BLACK_CARD &&

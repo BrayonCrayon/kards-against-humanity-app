@@ -1,9 +1,9 @@
-import {initialPlayersState, IPlayersState} from "State/Players/PlayersState";
-import {IAuthState, initialAuthState} from "State/Auth/AuthState";
-import {IGameState, initialGameState} from "State/Game/GameState";
-import {IHandState, initialHandState} from "State/Hand/HandState";
-import {initialVoteState, IVoteState} from "State/Vote/VoteState";
-import {InitialSpectateState, ISpectateState} from "State/Spectate/SpectateState";
+import { initialPlayersState, IPlayersState } from "State/Players/PlayersState";
+import { IAuthState, initialAuthState } from "State/Auth/AuthState";
+import { IGameState, initialGameState } from "State/Game/GameState";
+import { IHandState, initialHandState } from "State/Hand/HandState";
+import { initialVoteState, IVoteState } from "State/Vote/VoteState";
+import { InitialSpectateState, ISpectateState } from "State/Spectate/SpectateState";
 import * as usePlayers from "State/Players/usePlayers";
 import * as useAuth from "State/Auth/useAuth";
 import * as useGame from "State/Game/useGame";
@@ -56,15 +56,16 @@ export const spyOnUseGame = (
   mockedDispatch = jest.fn(),
   state: IGameState = initialGameState,
 ) => {
-  return spyOnState(state, mockedDispatch, useGame, "useGame");
+  spyOnState(state, mockedDispatch, useGame, "useGame");
+  return mockedDispatch;
 }
 
 export const spyOnUseVote = (
   mockedDispatch = jest.fn(),
   state: IVoteState = initialVoteState,
 ) => {
-  const spy = spyOnState(state, mockedDispatch, useVote, "useVote");
-  return { spy, mockedDispatch };
+  spyOnState(state, mockedDispatch, useVote, "useVote");
+  return mockedDispatch;
 }
 
 export const spyOnUsePlayers = (
