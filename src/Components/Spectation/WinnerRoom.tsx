@@ -1,10 +1,12 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { User } from "Types/User";
 import { WhiteCard } from "Types/WhiteCard";
-import DrumIcon from "Components/Icons/DrumIcon";
 import { WhiteKard } from "Components/WhiteKard";
 import { useSpectate } from "State/Spectate/useSpectate";
 import ReactConfetti from "react-confetti";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { ChangeStage } from "State/Spectate/SpectateActions";
+import { Stage } from "State/Spectate/SpectateState";
 
 interface WinnerRoomProps {
   player: User
@@ -17,37 +19,37 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
     cards
   } = props;
   const { dispatch } = useSpectate();
-  const [showDrum, setShowDrum] = useState(false);
+  const [showDrum, setShowDrum] = useState(true);
 
 
-  // useEffect(() => {
-  //   const timeout = setInterval(() => {
-  //     setShowDrum(false)
-  //   }, 5000);
-  //
-  //   return () => {
-  //     clearInterval(timeout);
-  //   }
-  // }, []);
-  //
-  // useEffect(() => {
-  //   if (showDrum) {
-  //     return
-  //   }
-  //
-  //   const timeout = setInterval(() => {
-  //     dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
-  //   }, 10000);
-  //
-  //   return () => {
-  //     clearInterval(timeout);
-  //   }
-  // }, [showDrum]);
+  useEffect(() => {
+    const timeout = setInterval(() => {
+      setShowDrum(false)
+    }, 5000);
+
+    return () => {
+      clearInterval(timeout);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showDrum) {
+      return
+    }
+
+    const timeout = setInterval(() => {
+      dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
+    }, 10000);
+
+    return () => {
+      clearInterval(timeout);
+    }
+  }, [showDrum]);
 
   return <div className="flex justify-center items-center w-full">
     {
       showDrum &&
-      <DrumIcon className="w-1/2" dataTestId="drum-icon" />
+      <DotLottieReact src="/lottie/drum.lottie" className="w-full" loop autoplay />
     }
     {
       !showDrum &&
