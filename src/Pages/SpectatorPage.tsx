@@ -6,69 +6,28 @@ import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
 import { useParams } from "react-router-dom";
 import { useAuth } from "State/Auth/useAuth";
 import { usePlayers } from "State/Players/usePlayers";
-import { ChangeStage } from "State/Spectate/SpectateActions";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
-import { userFactory } from "Tests/Factories/UserFactory";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { User } from "Types/User";
-import { gameFactory } from "Tests/Factories/GameFactory";
-import { Game } from "Types/Game";
-import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
-import { BlackCard } from "Types/BlackCard";
-import moment from "moment";
 import { BlackKard } from "Components/BlackKard";
 import Timer from "Components/Atoms/Timer";
 import CardResponseRoom from "Components/Spectation/CardResponseRoom";
 import ReviewRoom from "Components/Spectation/ReviewRoom";
-import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
 import { cardSize } from "Utilities/helpers";
 import WinnerRoom from "Components/Spectation/WinnerRoom";
+import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
+import { useSwitchStages } from "Hooks/Spectate/useSwitchStages";
 
 export const SpectatorPage: React.FC = () => {
-  const { state: { players }, dispatch: playerDispatch } = usePlayers();
+  const { state: { players } } = usePlayers();
   const { state: { auth } } = useAuth();
-  const { state: { game, blackCard }, dispatch: gameDispatch } = useGame();
-  const { state: { stage }, dispatch } = useSpectate();
+  const { state: { game, blackCard } } = useGame();
+  const { state: { stage } } = useSpectate();
   const { id } = useParams<{ id: string }>();
 
-  // TODO: remove this when you want real data
-  // const testCard = blackCardFactory({
-  //     text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
-  // });
-
-
-  useEffect(() => {
-    // TODO: This is a temp setup
-    // dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD));
-    dispatch(new ChangeStage(Stage.DISPLAY_WINNER));
-
-    const players: User[] = Array.from({ length: 10 }).map((_, idx) => userFactory({
-      // hasSubmittedWhiteCards: idx % 2 !== 0
-      hasSubmittedWhiteCards: true
-    }));
-    playerDispatch(new SetPlayersAction(players));
-
-    const game: Game = gameFactory({
-      judgeId: players[0].id,
-      selectionTimer: 60,
-      selectionEndsAt: moment().add(60, "seconds").unix()
-    });
-    // const card: BlackCard = blackCardFactory({
-    //   text: "So this family circus act comes in to see a talent agent in Hoboken, and the agent askes what they do. The father of the act jumps up and starts to furiously beat off into a towel while his wife whips her hair back and forth to that famous song - originally sung by one of Will Smith's kids, \"I Whipe My Hair Bcak And Forth\" - which her twin daughters are singing while they braid each other's pubes, all while the twin BROTHERS are creating a real-estate bubble by purchasing houses and flipping them for needless profit, and all THIS is happening while the grandmother is peeing into a Smuckers jar and slapping her ass. The whole thing ends with the family spitting into each other's assholes. The talent agent can't believe it. He looks at the sweaty father who has just spit into his mother's asshole and says. \"WOW. This is great. Whaddya call yourselves?\" And the guy looks at him and says, \"We're _.\""
-    // })
-    const card: BlackCard = blackCardFactory({ text: "I am"});
-    // const card: BlackCard = blackCardFactory({ text: "I am a buttermilk cat, with lots of fur. My computer is a block of metal." });
-    gameDispatch(new SetBlackCardAction(card));
-    gameDispatch(new SetGameAction(game));
-    getSubmittedCards("a");
-  }, []);
-
-  // useSwitchStages(players, stage);
+  useSwitchStages(players, stage);
   const fetchSpectatorState = useFetchSpectatorState();
-  // const listenOnEvents = useListenOnEvents();
-  const { whiteCards, getSubmittedCards } = useSubmittedCards();
+  const listenOnEvents = useListenOnEvents();
+  const { whiteCards, submittedCards, getSubmittedCards } = useSubmittedCards();
 
   const haveAllPlayersSubmitted = useMemo(() => {
     return players.filter(user => user.id !== game.judgeId)
@@ -77,12 +36,12 @@ export const SpectatorPage: React.FC = () => {
 
   const setup = useCallback(async () => {
     await fetchSpectatorState(id ?? "");
-    // await listenOnEvents(id ?? "", auth.id); // TODO: Bring this back when ready to test locally
+    listenOnEvents(id ?? "", auth.id);
   }, [id]);
 
   useEffect(() => {
     if (game.id) {
-      // listenOnEvents(game.id, auth.id); // TODO: Bring this back when ready to test locally
+      listenOnEvents(game.id, auth.id);
       return;
     }
 
@@ -115,20 +74,14 @@ export const SpectatorPage: React.FC = () => {
           <div className="flex flex-col h-full w-full flex-grow justify-center items-center">
             <CardResponseRoom showAnswers={true} dataTestId="submissions-display" cards={whiteCards} />
           </div>
-          // <iframe className="bg-lukewarmGray-200 w-full" src="https://lottie.host/embed/07bd7bac-9b50-4440-b5e1-38a7a9bcced9/oGrv9hk7Kj.json"></iframe>
         }
         {
           stage === Stage.DISPLAY_WAITING_ROOM &&
           <ReviewRoom
             gameId={game.id}
             blackCard={blackCard}
-            submissions={Array.from({ length: 4 })
-              .map(() => {
-                return {
-                  user_id: userFactory().id,
-                  submitted_cards: Array.from({ length: 2 }).map(() => submittedCardFactory())
-                };
-              })} />
+            submissions={submittedCards}
+          />
         }
         {
           stage === Stage.DISPLAY_WINNER &&
