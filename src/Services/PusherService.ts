@@ -3,12 +3,13 @@ import Pusher from "pusher-js";
 
 export const pusher = new Pusher("80e06980f526e21fc058", { cluster: "us2"});
 // @ts-ignore
-window.Pusher = require("pusher-js");
+window.Pusher = Pusher;
 // @ts-ignore
 window.Echo = new Echo({
   broadcaster: "pusher",
   key: "80e06980f526e21fc058",
   cluster: "us2",
+  forceTLS: true,
 });
 
 // @ts-ignore

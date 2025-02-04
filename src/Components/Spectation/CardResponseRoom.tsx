@@ -52,8 +52,8 @@ const CardResponseRoom: FC<CardResponseRoomProps> = ({ showAnswers, cards = [], 
       showAnswers && hasCardsToDisplay &&
       cardsToDisplay!.map((card) => (
           isWhiteCard(card)
-            ? <WhiteKard key={(card as WhiteCard).id} card={card as WhiteCard} className="w-64 animate-slide-in-and-slide-out" onClick={() => {}} />
-            : <BlackKard key={(card as BlackCard).id} card={card as BlackCard} className="animate-slide-in-and-slide-out"/>
+            ? <WhiteKard key={(card as WhiteCard).id} card={card as WhiteCard} hidePlayButton className="w-64 animate-slide-in-and-slide-out" onClick={() => {}} />
+            : <BlackKard key={(card as BlackCard).id} card={card as BlackCard} hidePlayButton className="animate-slide-in-and-slide-out"/>
       ))
     }
   </div>;

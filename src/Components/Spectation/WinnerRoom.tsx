@@ -53,12 +53,12 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
     }
     {
       !showDrum &&
-      <div className="relative p-8 h-full flex flex-col items-center gap-10">
+      <div className="p-8 h-full flex flex-col items-center gap-10">
         <h1 data-testid={`user-${player.id}`} className="text-4xl text-center p-4 bg-white w-fit rounded">The winner is: {player.name}</h1>
         <div className="flex flex-wrap gap-2 justify-center">
           {
             cards.map(card =>
-              <WhiteKard key={card.id} className="w-64" card={card} onClick={() => {}} />
+              <WhiteKard key={card.id} hidePlayButton className="w-64" card={card} onClick={() => {}} />
             )
           }
         </div>

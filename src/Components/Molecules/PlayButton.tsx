@@ -15,7 +15,7 @@ const PlayButton: FC<PlayButtonProps> = ({ text, isDark = false }) => {
     }, [play, text]);
 
     return (
-        <div className={`absolute bottom-1 left-2 text-lg cursor-pointer ${colorStyles}`} onClick={playMe}>
+        <div data-testid="play-button" className={`absolute bottom-1 left-2 text-lg cursor-pointer ${colorStyles}`} onClick={playMe}>
             <i className="fa-solid fa-volume-high"></i>
         </div>
     )

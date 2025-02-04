@@ -1,6 +1,6 @@
 import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
 import { BlackCard } from "../Types/BlackCard";
-import { canSubmit, cardSize, displayScore, fillOutBlackCard, toMinutesSeconds } from "./helpers";
+import { canSubmit, cardSize, displayScore, fillOutBlackCard, nonJudgePlayers, toMinutesSeconds } from "./helpers";
 import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
@@ -8,6 +8,8 @@ import {
 import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
 import { SubmittedCard } from "Types/SubmittedCard";
 import { CardSize } from "Components/BlackKard";
+import { userFactory } from "Tests/Factories/UserFactory";
+import { User } from "Types/User";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,
@@ -104,5 +106,15 @@ describe("Helpers", () => {
     const text = "0".repeat(characterCount)
 
     expect(cardSize(text)).toEqual(expectedSize)
+  });
+
+  it("will return all players and exclude the player that is the judge", () => {
+    const players = Array.from({ length: 4 }).map(() => userFactory());
+    const judgeId = players[2].id
+
+    const result = nonJudgePlayers(judgeId, players)
+
+    expect(result).toHaveLength(players.length - 1)
+    result.forEach((player: User) => expect(player.id).not.toEqual(judgeId))
   });
 });

@@ -11,14 +11,16 @@ export enum CardSize {
 interface BlackCardProps {
   card: BlackCard;
   className?: string;
-  size?: CardSize
+  size?: CardSize;
+  hidePlayButton?: boolean;
 }
 
 export const BlackKard: React.FC<BlackCardProps> = (props) => {
   const {
     card,
     className = "",
-    size = CardSize.SMALL
+    size = CardSize.SMALL,
+    hidePlayButton = false,
   } = props
 
   const sizeClasses = useMemo(() => {
@@ -36,7 +38,7 @@ export const BlackKard: React.FC<BlackCardProps> = (props) => {
       data-testid={`black-card-${card.id}`}
     >
       <p className="text-ellipsis overflow-hidden">{card.text}</p>
-      <PlayButton text={card.text} />
+      { !hidePlayButton && <PlayButton text={card.text} /> }
       <div className="absolute bottom-1 right-1 text-2xl self-end pt-3 text-gray-600">K.</div>
     </div>
   );

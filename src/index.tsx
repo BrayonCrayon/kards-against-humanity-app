@@ -2,13 +2,13 @@ import React from "react";
 import "./index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import {VoteProvider} from "State/Vote/VoteContext";
-import {PlayersProvider} from "State/Players/PlayersContext";
-import {HandProvider} from "State/Hand/HandContext";
-import {AuthProvider} from "State/Auth/AuthContext";
-import {GameProvider} from "State/Game/GameContext";
-import {createRoot} from "react-dom/client";
-import {SpectateProvider} from "./State/Spectate/SpectateContext";
+import { VoteProvider } from "State/Vote/VoteContext";
+import { PlayersProvider } from "State/Players/PlayersContext";
+import { HandProvider } from "State/Hand/HandContext";
+import { AuthProvider } from "State/Auth/AuthContext";
+import { GameProvider } from "State/Game/GameContext";
+import { createRoot } from "react-dom/client";
+import { SpectateProvider } from "State/Spectate/SpectateContext";
 
 const container = document.getElementById("root");
 

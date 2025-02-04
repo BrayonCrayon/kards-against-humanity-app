@@ -32,4 +32,12 @@ describe("useSwitchStages", () => {
 
     expectNoDispatch(dispatchMock, Stage.DISPLAY_SUBMISSIONS);
   })
+
+  it("will remain on black card stage on initial load with no players", () => {
+    const dispatchMock = spyOnUseSpectate()
+
+    renderHook(() => useSwitchStages([], Stage.DISPLAY_BLACK_CARD ));
+
+    expectNoDispatch(dispatchMock, Stage.DISPLAY_SUBMISSIONS);
+  });
 });

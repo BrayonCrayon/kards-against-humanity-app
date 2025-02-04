@@ -1,20 +1,22 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useGame } from "State/Game/useGame";
 import { useSpectate } from "State/Spectate/useSpectate";
-import { Stage } from "State/Spectate/SpectateState";
 import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
 import { useParams } from "react-router-dom";
 import { useAuth } from "State/Auth/useAuth";
 import { usePlayers } from "State/Players/usePlayers";
 import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
 import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
-import { BlackKard } from "Components/BlackKard";
-import Timer from "Components/Atoms/Timer";
-import CardResponseRoom from "Components/Spectation/CardResponseRoom";
-import ReviewRoom from "Components/Spectation/ReviewRoom";
-import { cardSize } from "Utilities/helpers";
 import WinnerRoom from "Components/Spectation/WinnerRoom";
-import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
+import useListenOnSpectatorEvents from "Hooks/Helpers/useListenOnSpectatorEvents";
+import { userFactory } from "Tests/Factories/UserFactory";
+import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
+import { Stage } from "State/Spectate/SpectateState";
+import ReviewRoom from "Components/Spectation/ReviewRoom";
+import CardResponseRoom from "Components/Spectation/CardResponseRoom";
+import { BlackKard } from "Components/BlackKard";
+import { cardSize, nonJudgePlayers } from "Utilities/helpers";
+import Timer from "Components/Atoms/Timer";
 import { useSwitchStages } from "Hooks/Spectate/useSwitchStages";
 
 export const SpectatorPage: React.FC = () => {
@@ -24,9 +26,9 @@ export const SpectatorPage: React.FC = () => {
   const { state: { stage } } = useSpectate();
   const { id } = useParams<{ id: string }>();
 
-  useSwitchStages(players, stage);
+  useSwitchStages(nonJudgePlayers(game.judgeId, players), stage);
   const fetchSpectatorState = useFetchSpectatorState();
-  const listenOnEvents = useListenOnEvents();
+  const listenOnEvents = useListenOnSpectatorEvents();
   const { whiteCards, submittedCards, getSubmittedCards } = useSubmittedCards();
 
   const haveAllPlayersSubmitted = useMemo(() => {
@@ -56,12 +58,12 @@ export const SpectatorPage: React.FC = () => {
 
   return (
     <div className="flex w-full h-full bg-lukewarmGray-300">
-      <div className="flex w-3/4">
+      <div className="flex w-3/4 relative">
         {
           stage === Stage.DISPLAY_BLACK_CARD &&
           <div className="flex flex-col h-full w-full">
             <div className="flex flex-col flex-grow justify-center w-full items-center">
-              <BlackKard card={blackCard} size={cardSize(blackCard.text)} />
+              <BlackKard card={blackCard} size={cardSize(blackCard.text)} hidePlayButton />
             </div>
             {
               !!game.selectionEndsAt && !!game.selectionTimer &&
@@ -70,7 +72,7 @@ export const SpectatorPage: React.FC = () => {
           </div>
         }
         {
-          stage === Stage.DISPLAY_SUBMISSIONS &&
+          stage === Stage.DISPLAY_SUBMISSIONS && whiteCards.length &&
           <div className="flex flex-col h-full w-full flex-grow justify-center items-center">
             <CardResponseRoom showAnswers={true} dataTestId="submissions-display" cards={whiteCards} />
           </div>
@@ -84,8 +86,9 @@ export const SpectatorPage: React.FC = () => {
           />
         }
         {
+          // TODO: grab vote selectedUserId and retrieve the white cards and player info on that id
           stage === Stage.DISPLAY_WINNER &&
-          <WinnerRoom player={players[0]} cards={whiteCards[0]} />
+          <WinnerRoom player={userFactory()} cards={[whiteCardFactory(), whiteCardFactory()]} />
         }
       </div>
       <SpectatePlayerList players={players} judgeId={game.judgeId} />

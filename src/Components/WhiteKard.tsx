@@ -7,12 +7,14 @@ interface WhiteKardProps {
   card: WhiteCard;
   onClick: (card: WhiteCard) => void;
   className?: string;
+  hidePlayButton?: boolean;
 }
 
 export const WhiteKard: React.FC<WhiteKardProps> = ({
   card,
   onClick = () => {},
   className = "",
+  hidePlayButton = false,
 }) => {
   const {
     state: { hasSubmittedCards },
@@ -50,7 +52,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
         </div>
       )}
       <span>{card.text}</span>
-      <PlayButton text={card.text} isDark />
+      { !hidePlayButton && <PlayButton text={card.text} isDark /> }
       <div className="absolute text-2xl font-bold text-gray-200 bottom-1 right-1">K.</div>
     </div>
   );

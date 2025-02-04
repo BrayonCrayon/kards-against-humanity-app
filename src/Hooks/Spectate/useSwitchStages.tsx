@@ -8,7 +8,7 @@ export const useSwitchStages = (players: User[], stage: Stage) => {
   const { dispatch } = useSpectate()
 
   const haveAllPlayersSubmitted = useMemo(() => {
-    return players.every(user => user.hasSubmittedWhiteCards);
+    return players.length > 0 && players.every(user => user.hasSubmittedWhiteCards);
   }, [players]);
 
   useEffect(() => {

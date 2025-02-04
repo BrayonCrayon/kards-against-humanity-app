@@ -51,7 +51,7 @@ const useSwitchCard = (props: useSwitchCardProps): useSwitchCardReturn => {
 
         setTimelines(collection);
         setCards(collection.currentCard);
-    }, []);
+    }, [whiteCards, blackCards]);
 
     const start = useCallback(() => {
       if (!timeLines) return;

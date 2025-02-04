@@ -1,11 +1,10 @@
-import {FC, useCallback, useEffect, useState} from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import LeaveGame from "Components/Molecules/LeaveGame";
-import {TimerSetting} from "./TimerSetting";
-import {Button} from "Components/Atoms/Button";
+import { TimerSetting } from "./TimerSetting";
+import { Button } from "Components/Atoms/Button";
 import useUpdateGameSettings from "Hooks/Game/State/useUpdateGameSettings";
-import {happyToast} from "Utilities/toasts";
-import {useGame} from "State/Game/useGame";
-import {KAHToggler} from "Components/KAHToggler";
+import { happyToast } from "Utilities/toasts";
+import { useGame } from "State/Game/useGame";
 
 export interface Options {
     timer: number|null;
@@ -22,7 +21,7 @@ const GameSettingsTab: FC<GameSettingsTabProps> = ({ options = null, onUpdatedSe
     const { state: { game }} = useGame();
     const update = useUpdateGameSettings();
     const [defaultTimer, setDefaultTimer] = useState<number | null>(options?.timer ?? game.selectionTimer);
-    const [displayAnimations, setDisplayAnimations] = useState(options?.hasAnimations ?? false);
+    const [displayAnimations] = useState(options?.hasAnimations ?? false);
 
     const updateSettings = useCallback(async () => {
         await update(game.id, defaultTimer);
@@ -31,21 +30,13 @@ const GameSettingsTab: FC<GameSettingsTabProps> = ({ options = null, onUpdatedSe
 
     useEffect(() => {
         onUpdatedSettings({ timer: defaultTimer, hasAnimations: displayAnimations});
-    }, [defaultTimer, displayAnimations]);
+    }, [defaultTimer]);
 
     return (
         <div className="flex flex-col h-full">
             <div className="flex-1">
                 <TimerSetting onChange={(seconds) => { setDefaultTimer(seconds)}} timer={defaultTimer} />
                 <hr className={"pb-3"}/>
-                <KAHToggler
-                    className="pl-4"
-                    on={displayAnimations}
-                    dataTestId="animation-toggle"
-                    onText={"Use Animations"}
-                    offText={"Use Animations"}
-                    onClick={() => { setDisplayAnimations(!displayAnimations)}}
-                />
             </div>
             {
                 game.id &&

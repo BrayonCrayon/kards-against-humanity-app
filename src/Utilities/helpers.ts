@@ -3,6 +3,7 @@ import { WhiteCard } from "Types/WhiteCard";
 import { Expansion, ExpansionOption } from "Types/Expansion";
 import { SubmittedCard } from "Types/SubmittedCard";
 import { CardSize } from "Components/BlackKard";
+import { User } from "Types/User";
 
 export const fillOutBlackCard = (blackCard: BlackCard, cards: Array<SubmittedCard>): string => {
   let blackCardText = blackCard.text;
@@ -65,4 +66,8 @@ export const cardSize = (text: string): CardSize => {
   }
 
   return text.length < 200 ? CardSize.MEDIUM : CardSize.LARGE;
+}
+
+export const nonJudgePlayers = (judgeId: number, players: User[]): User[] => {
+  return players.filter((player: User) => player.id !== judgeId);
 }

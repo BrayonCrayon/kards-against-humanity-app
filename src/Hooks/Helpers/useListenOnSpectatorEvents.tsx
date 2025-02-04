@@ -1,3 +1,5 @@
+import useUserJoinsGameCallback from "Hooks/Helpers/useUserJoinsGameCallback";
+import useRefreshPlayersStateCallback from "Hooks/Game/State/useRefreshPlayersStateCallback";
 import { useCallback } from "react";
 import {
   listenWhenGameRotates,
@@ -5,12 +7,10 @@ import {
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards
 } from "Services/PusherService";
-import useGameStateCallback from "Hooks/Game/State/useGameStateCallback";
-import useRefreshPlayersStateCallback from "Hooks/Game/State/useRefreshPlayersStateCallback";
-import useUserJoinsGameCallback from "Hooks/Helpers/useUserJoinsGameCallback";
+import useSpectatorStateCallback from "Hooks/Game/State/useSpectatorStateCallback";
 
-function useListenOnEvents() {
-  const updateGameState = useGameStateCallback();
+function useListenOnSpectatorEvents() {
+  const updateGameState = useSpectatorStateCallback();
   const userJoinsGameCallback = useUserJoinsGameCallback();
   const refreshPlayersState = useRefreshPlayersStateCallback();
 
@@ -20,6 +20,7 @@ function useListenOnEvents() {
     listenWhenGameRotates(gameId, updateGameState);
     listenWhenGameStart(userId, updateGameState);
   }, []);
+
 }
 
-export default useListenOnEvents;
+export default useListenOnSpectatorEvents;

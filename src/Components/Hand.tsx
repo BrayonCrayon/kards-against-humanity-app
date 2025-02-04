@@ -1,11 +1,11 @@
-import {WhiteKard} from "./WhiteKard";
-import React, {FC, useCallback, useMemo} from "react";
-import {SetHandAction} from "State/Hand/HandActions";
-import {WhiteCard} from "Types/WhiteCard";
-import {canSubmit, decrementPreviouslySelectedCardPositions} from "Utilities/helpers";
-import {useHand} from "State/Hand/useHand";
-import {useGame} from "State/Game/useGame";
-import {useAuth} from "State/Auth/useAuth";
+import { WhiteKard } from "./WhiteKard";
+import React, { FC, useCallback, useMemo } from "react";
+import { SetHandAction } from "State/Hand/HandActions";
+import { WhiteCard } from "Types/WhiteCard";
+import { canSubmit, decrementPreviouslySelectedCardPositions } from "Utilities/helpers";
+import { useHand } from "State/Hand/useHand";
+import { useGame } from "State/Game/useGame";
+import { useAuth } from "State/Auth/useAuth";
 import Redraw from "./Redraw";
 import SubmitButton from "./SubmitButton";
 
@@ -78,7 +78,7 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
           onSubmit={() => onSubmit()}
           show={showSubmitButton}
           transitionClassName="submit-button"
-          buttonClass="submit-button"
+          buttonClass="submit-button hidden md:block"
           dataTestId="submit"
         />
         <Redraw
@@ -103,7 +103,7 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
               timeout={400}
               onSubmit={() => onSubmit()}
               transitionClassName="submit-button-slide"
-              buttonClass="white-card-submit-button"
+              buttonClass="white-card-submit-button md:hidden"
               dataTestId={`submit-${card.id}`}
             />
           </div>
