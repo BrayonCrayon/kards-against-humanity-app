@@ -6,11 +6,11 @@ import { userFactory } from "Tests/Factories/UserFactory";
 import { PlayerSubmittedCard } from "Types/ResponseTypes";
 import { playerSubmittedCardTestId } from "Tests/selectors";
 import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { act } from "react-dom/test-utils";
 import { expectDispatch, spyOnUseSpectate } from "Tests/testHelpers";
 import { Stage } from "State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
 import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import { act } from "react-dom/test-utils";
 
 jest.mock("Services/PusherService");
 jest.useFakeTimers();
@@ -37,7 +37,7 @@ describe("ReviewRoom", () => {
     usersSubmission.forEach(submission => {
       expect(wrapper.queryByTestId(playerSubmittedCardTestId(submission.user_id))).toBeInTheDocument();
       act(() => {
-        jest.advanceTimersByTime(3000);
+        jest.advanceTimersByTime(5000);
       });
     });
   });

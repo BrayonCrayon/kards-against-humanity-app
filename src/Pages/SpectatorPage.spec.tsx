@@ -9,8 +9,8 @@ import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
 import {
   gameSpectatorAllPlayersSubmittedExampleResponse
 } from "Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
-import { spyOnUseSpectate } from "../Tests/testHelpers";
-import { Stage } from "../State/Spectate/SpectateState";
+import { spyOnUseSpectate } from "Tests/testHelpers";
+import { Stage } from "State/Spectate/SpectateState";
 
 const {data} = gameSpectatorExampleResponse;
 
@@ -22,8 +22,12 @@ jest.mock("react-router-dom", () => ({
   }),
 }));
 
+jest.mock("@lottiefiles/dotlottie-react", () => ({
+  DotLottieReact: () => <div></div>
+}))
+
 const mockListenOnEvents = jest.fn();
-jest.mock("Hooks/Helpers/useListenOnEvents", () => {
+jest.mock("Hooks/Helpers/useListenOnSpectatorEvents", () => {
   return () => mockListenOnEvents;
 });
 

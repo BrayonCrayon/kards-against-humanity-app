@@ -23,7 +23,7 @@ export const kardsRender = (children: ReactNode): RenderResult => render(
   </MemoryRouter>,
 );
 
-export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TResult) => renderHook(callback, {
+export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TResult, props?: TProps) => renderHook(callback, {
     wrapper: ({ children }) => (
         <GameProvider>
           <AuthProvider>
@@ -37,4 +37,5 @@ export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TR
           </AuthProvider>
         </GameProvider>
     ),
+    initialProps: props
   });

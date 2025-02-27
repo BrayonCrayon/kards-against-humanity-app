@@ -1,4 +1,5 @@
 import { Card } from "Types/Card";
+import { SubmittedCard } from "Types/SubmittedCard";
 
 export interface IWhiteCard {
   id: number;
@@ -55,3 +56,15 @@ export const transformWhiteCardArray = (
     );
   });
 };
+
+export const transformSubmissionsToWhiteCard = (cards: SubmittedCard[]): WhiteCard[] => {
+  return cards.map((item) => {
+    return new WhiteCard(
+      item.id,
+      item.text,
+      item.expansionId,
+      item.selected,
+      item.order,
+    )
+  })
+}

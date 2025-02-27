@@ -15,13 +15,10 @@ export interface IReviewRoomProps {
     submissions: PlayerSubmittedCard[]
 }
 
-type IntervalReturn = ReturnType<typeof setInterval>;
-
 const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
     const { blackCard, submissions, gameId} = props;
     const [cardIdx, setCardIdx] = useState(0)
     const fetchRoundWinner = useFetchRoundWinner();
-    // const [timeout, setTimeout] = useState<IntervalReturn|null>(null)
     const { dispatch} = useSpectate()
 
     const changeStage = (data: IWinnerIsSelectedEventData) => {
@@ -31,19 +28,7 @@ const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
 
     useEffect(() => {
       listenWhenWinnerIsSelected(gameId, changeStage)
-
-      // if (timeout) clearInterval(timeout);
     }, []);
-
-    // const setSubmissionInterval = useCallback(() => {
-    //   setInterval(() => {
-    //     setCardIdx((prev) => {
-    //       const test = Math.min(prev + 1, submissions.length) === submissions.length ? 0 : prev + 1;
-    //       console.log(test);
-    //       return test
-    //     })
-    //   }, 5000);
-    // }, [])
 
     useEffect(() => {
         const timeout = setInterval(() => {

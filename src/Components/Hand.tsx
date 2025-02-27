@@ -78,7 +78,7 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
           onSubmit={() => onSubmit()}
           show={showSubmitButton}
           transitionClassName="submit-button"
-          buttonClass="submit-button hidden md:block"
+          buttonClass="submit-button hidden md:flex"
           dataTestId="submit"
         />
         <Redraw

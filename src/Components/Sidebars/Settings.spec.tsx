@@ -1,11 +1,11 @@
 import userEvent from "@testing-library/user-event";
-import {kardsRender} from "Tests/testRenders";
+import { kardsRender } from "Tests/testRenders";
 import Settings from "Components/Sidebars/Settings";
-import {User} from "Types/User";
-import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
-import {spyOnUseGame} from "Tests/testHelpers";
-import {gameFactory} from "Tests/Factories/GameFactory";
-import {blackCardFactory} from "Tests/Factories/BlackCardFactory";
+import { User } from "Types/User";
+import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { spyOnUseGame } from "Tests/testHelpers";
+import { gameFactory } from "Tests/Factories/GameFactory";
+import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
 
 const mockedLeaveGame = jest.fn();
 jest.mock("Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
@@ -30,8 +30,9 @@ describe("Settings", () => {
 
   it("will allow players to see other players", async function () {
     const {
-      data: { game, users },
+      data: { game, users, blackCard },
     } = gameStateExampleResponse;
+    spyOnUseGame(jest.fn(), { game, blackCard });
     const wrapper = renderComponent(game.id, users);
 
     await userEvent.click(wrapper.getByTestId("game-settings"));

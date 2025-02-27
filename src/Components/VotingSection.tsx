@@ -53,7 +53,7 @@ export const VotingSection: FC = () => {
           <SubmitButton
             show={auth.id === game.judgeId && selectedPlayerId > 0}
             transitionClassName="submit-button"
-            buttonClass="submit-button w-full hidden md:block"
+            buttonClass="submit-button w-full hidden md:flex"
             onSubmit={() => submitWinner(game.id, selectedPlayerId)}
             dataTestId="submit-selected-winner"
           />
