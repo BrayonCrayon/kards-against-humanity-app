@@ -1,10 +1,10 @@
 import DisplaySubmittedCard from "./DisplaySubmittedCard";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { kardsRender } from "Tests/testRenders";
-import { spyOnUseGame } from "Tests/testHelpers";
+import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
+import { kardsRender } from "@/Tests/testRenders";
+import { spyOnUseGame } from "@/Tests/testHelpers";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
-} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 
 const {data} = submittedCardsResponse;
 const {data: {game, blackCard}} = gameStateAllPlayerSubmittedCardsExampleResponse;

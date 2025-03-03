@@ -1,15 +1,15 @@
-import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
-import { BlackCard } from "../Types/BlackCard";
+import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
+import { BlackCard } from "@/Types/BlackCard";
 import { canSubmit, cardSize, displayScore, fillOutBlackCard, nonJudgePlayers, toMinutesSeconds } from "./helpers";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
-} from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
-import { SubmittedCard } from "Types/SubmittedCard";
-import { CardSize } from "Components/BlackKard";
-import { userFactory } from "Tests/Factories/UserFactory";
-import { User } from "Types/User";
+} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { transformWhiteCardArray, WhiteCard } from "@/Types/WhiteCard";
+import { SubmittedCard } from "@/Types/SubmittedCard";
+import { CardSize } from "@/Components/BlackKard";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { User } from "@/Types/User";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,

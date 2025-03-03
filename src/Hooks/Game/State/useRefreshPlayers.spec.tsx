@@ -1,12 +1,11 @@
-import { gameFixture } from "Api/fixtures/gameFixture";
-import useRotateGame from "Hooks/Game/Actions/useRotateGame";
-import useRefreshPlayers from "Hooks/Game/State/useRefreshPlayers";
-import { expectDispatch, spyOnUsePlayers } from "Tests/testHelpers";
-import { playersIndexExampleResponse } from "Api/fixtures/playersIndexExampleResponse";
-import { transformUsers } from "Types/User";
-import { initialPlayersState } from "State/Players/PlayersState";
+import { gameFixture } from "@/Api/fixtures/gameFixture";
+import useRefreshPlayers from "@/Hooks/Game/State/useRefreshPlayers";
+import { expectDispatch, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { playersIndexExampleResponse } from "@/Api/fixtures/playersIndexExampleResponse";
+import { transformUsers } from "@/Types/User";
+import { initialPlayersState } from "@/State/Players/PlayersState";
 import { service } from "setupTests";
-import { kardsHookRender } from "Tests/testRenders";
+import { kardsHookRender } from "@/Tests/testRenders";
 
 const mockedDispatch = jest.fn();
 

@@ -1,9 +1,9 @@
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { render } from "@testing-library/react";
-import { PlayerSubmittedCCard } from "Components/PlayerSubmittedCCard";
-import { playerSubmittedCardTestId } from "Tests/selectors";
+import { PlayerSubmittedCCard } from "@/Components/PlayerSubmittedCCard";
+import { playerSubmittedCardTestId } from "@/Tests/selectors";
 
 
 describe("PlayerSubmittedCCard", () => {

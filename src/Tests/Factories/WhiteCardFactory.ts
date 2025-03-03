@@ -1,5 +1,5 @@
 import { randNumber, randText } from "@ngneat/falso";
-import { IWhiteCard, WhiteCard } from "Types/WhiteCard";
+import { IWhiteCard, WhiteCard } from "@/Types/WhiteCard";
 
 
 export const whiteCardFactory = (overrides?: Partial<IWhiteCard>): WhiteCard => {

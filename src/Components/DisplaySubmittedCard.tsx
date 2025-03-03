@@ -1,7 +1,7 @@
 import React from "react";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { PlayerSubmittedCCard } from "Components/PlayerSubmittedCCard";
-import { useGame } from "State/Game/useGame";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { PlayerSubmittedCCard } from "@/Components/PlayerSubmittedCCard";
+import { useGame } from "@/State/Game/useGame";
 
 interface DisplaySubmittedCardProps {
   cards: Array<PlayerSubmittedCard>

@@ -1,5 +1,5 @@
-import { gameFixture } from "Api/fixtures/gameFixture";
-import useRotateGame from "Hooks/Game/Actions/useRotateGame";
+import { gameFixture } from "@/Api/fixtures/gameFixture";
+import useRotateGame from "@/Hooks/Game/Actions/useRotateGame";
 import { service } from "setupTests";
 import {renderHook} from "@testing-library/react";
 

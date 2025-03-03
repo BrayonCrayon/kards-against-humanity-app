@@ -1,4 +1,4 @@
-import { RoundWinner } from "../../Types/ResponseTypes";
+import { RoundWinner } from "@/Types/ResponseTypes";
 import { BaseAction } from "../GeneralContext";
 import { initialVoteState, IVoteState } from "./VoteState";
 

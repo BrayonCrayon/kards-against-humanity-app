@@ -1,10 +1,8 @@
 import { BaseTimeline } from "./BaseTimeline";
 import { TimelineCollection } from "./TimelineCollection";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
-import { Card } from "Types/Card";
-import { WhiteCard } from "Types/WhiteCard";
-import { BlackCard } from "Types/BlackCard";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { Card } from "@/Types/Card";
 
 jest.setTimeout(1000000);
 describe("TimelineCollection", () => {

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { BlackCard } from "Types/BlackCard";
+import { BlackCard } from "@/Types/BlackCard";
 import PlayButton from "./Molecules/PlayButton";
 
 export enum CardSize {

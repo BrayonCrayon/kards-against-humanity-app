@@ -1,14 +1,14 @@
-import {screen, waitFor} from "@testing-library/react";
-import {CreateGameForm} from "Components/Forms/CreateGameForm";
+import { screen, waitFor } from "@testing-library/react";
+import { CreateGameForm } from "@/Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import {getExpansionsExampleResponse} from "Api/fixtures/getExpansionsExampleResponse";
-import {kardsRender} from "Tests/testRenders";
-import gameService, {ICreateGameOptions} from "Services/GameService";
+import { getExpansionsExampleResponse } from "@/Api/fixtures/getExpansionsExampleResponse";
+import { kardsRender } from "@/Tests/testRenders";
+import gameService, { ICreateGameOptions } from "@/Services/GameService";
 
 const { data: expansions } = getExpansionsExampleResponse;
 
 const mockCreateGame = jest.fn();
-jest.mock("Hooks/Game/Create/useCreateGame", () => {
+jest.mock("@/Hooks/Game/Create/useCreateGame", () => {
   return () => mockCreateGame;
 });
 

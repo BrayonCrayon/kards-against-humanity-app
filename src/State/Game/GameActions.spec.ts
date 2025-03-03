@@ -1,8 +1,8 @@
-import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
-import { Game, initialGameObject } from "Types/Game";
-import { initialGameState } from "State/Game/GameState";
-import { BlackCard } from "Types/BlackCard";
-import { gameFactory } from "../../Tests/Factories/GameFactory";
+import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
+import { Game } from "@/Types/Game";
+import { initialGameState } from "@/State/Game/GameState";
+import { BlackCard } from "@/Types/BlackCard";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
 
 describe("GameActions", () => {
   it("will set game", () => {

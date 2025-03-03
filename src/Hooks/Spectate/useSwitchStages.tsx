@@ -1,8 +1,8 @@
-import { ChangeStage } from "State/Spectate/SpectateActions";
-import { Stage } from "State/Spectate/SpectateState";
+import { ChangeStage } from "@/State/Spectate/SpectateActions";
+import { Stage } from "@/State/Spectate/SpectateState";
 import { useEffect, useMemo } from "react";
-import { User } from "Types/User";
-import { useSpectate } from "State/Spectate/useSpectate";
+import { User } from "@/Types/User";
+import { useSpectate } from "@/State/Spectate/useSpectate";
 
 export const useSwitchStages = (players: User[], stage: Stage) => {
   const { dispatch } = useSpectate()

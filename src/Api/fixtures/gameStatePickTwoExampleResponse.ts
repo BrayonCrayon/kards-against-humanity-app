@@ -1,4 +1,4 @@
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 
 export const gameStatePickTwoExampleResponse = {
   data: {

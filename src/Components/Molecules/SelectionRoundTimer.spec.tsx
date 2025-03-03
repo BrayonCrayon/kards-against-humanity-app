@@ -1,18 +1,18 @@
-import {spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers} from "Tests/testHelpers";
-import {gameFactory} from "Tests/Factories/GameFactory";
+import { spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
 import moment from "moment";
-import {blackCardFactory} from "Tests/Factories/BlackCardFactory";
-import {kardsRender} from "Tests/testRenders";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { kardsRender } from "@/Tests/testRenders";
 import SelectionRoundTimer from "./SelectionRoundTimer";
-import {toMinutesSeconds} from "Utilities/helpers";
-import {userFactory} from "Tests/Factories/UserFactory";
-import {transformUser, transformUsers} from "Types/User";
-import {waitFor} from "@testing-library/react";
-import {service} from "setupTests";
-import {act} from "react-dom/test-utils";
-import {transformWhiteCardArray} from "Types/WhiteCard";
-import {whiteCardFactory} from "Tests/Factories/WhiteCardFactory";
-import {AxiosResponse} from "axios";
+import { toMinutesSeconds } from "@/Utilities/helpers";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { transformUser, transformUsers } from "@/Types/User";
+import { waitFor } from "@testing-library/react";
+import { service } from "setupTests";
+import { act } from "react-dom/test-utils";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { AxiosResponse } from "axios";
 
 jest.useFakeTimers();
 

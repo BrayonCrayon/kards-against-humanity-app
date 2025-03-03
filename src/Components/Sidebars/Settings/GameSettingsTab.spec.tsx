@@ -1,10 +1,10 @@
-import { spyOnUseGame } from "Tests/testHelpers";
-import { gameFactory } from "Tests/Factories/GameFactory";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { kardsRender } from "Tests/testRenders";
+import { spyOnUseGame } from "@/Tests/testHelpers";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { kardsRender } from "@/Tests/testRenders";
 import GameSettingsTab from "./GameSettingsTab";
 import React from "react";
-import { toMinutesSeconds } from "Utilities/helpers";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
 

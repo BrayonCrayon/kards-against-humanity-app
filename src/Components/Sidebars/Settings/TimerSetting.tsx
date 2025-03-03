@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from "react";
-import { KAHToggler } from "Components/KAHToggler";
-import { KAHRange } from "Components/Atoms/KAHRange";
-import { toMinutesSeconds } from "Utilities/helpers";
+import { KAHToggler } from "@/Components/KAHToggler";
+import { KAHRange } from "@/Components/Atoms/KAHRange";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
 interface TimerTabProps {
   onChange: (seconds: number | null) => void;

@@ -1,7 +1,7 @@
-import useLoading from "Hooks/Game/Shared/useLoading";
+import useLoading from "@/Hooks/Game/Shared/useLoading";
 import {renderHook, waitFor} from "@testing-library/react";
 import { act } from "react-dom/test-utils";
-import { errorToast } from "Utilities/toasts";
+import { errorToast } from "@/Utilities/toasts";
 
 describe("useLoading", () => {
 

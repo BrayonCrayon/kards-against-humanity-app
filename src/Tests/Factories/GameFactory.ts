@@ -1,4 +1,4 @@
-import { Game } from "Types/Game";
+import { Game } from "@/Types/Game";
 import { randFullName, randNumber, randUuid, randWord } from "@ngneat/falso";
 
 export const gameFactory = (overrides?: Partial<Game>): Game => {

@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import { WhiteCard } from "Types/WhiteCard";
-import { BlackCard } from "Types/BlackCard";
-import { TimelineCollection } from "Utilities/TimelineCollection";
-import { BaseTimeline } from "Utilities/BaseTimeline";
-import { Card } from "Types/Card";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { BlackCard } from "@/Types/BlackCard";
+import { TimelineCollection } from "@/Utilities/TimelineCollection";
+import { BaseTimeline } from "@/Utilities/BaseTimeline";
+import { Card } from "@/Types/Card";
 
 export interface useSwitchCardProps {
     whiteCards: WhiteCard[][],

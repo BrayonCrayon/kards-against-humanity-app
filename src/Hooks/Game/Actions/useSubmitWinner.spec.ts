@@ -1,7 +1,7 @@
-import { kardsHookRender } from "Tests/testRenders";
+import { kardsHookRender } from "@/Tests/testRenders";
 import { service } from "setupTests";
-import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
-import { happyToast } from "Utilities/toasts";
+import useSubmitWinner from "@/Hooks/Game/Actions/useSubmitWinner";
+import { happyToast } from "@/Utilities/toasts";
 
 const gameId = "1j1j";
 const playerId = 1;

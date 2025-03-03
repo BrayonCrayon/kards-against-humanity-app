@@ -1,7 +1,7 @@
-import {kardsRender} from "Tests/testRenders";
-import {gameSpectatorExampleResponse} from "Api/fixtures/gameSpectatorExampleResponse";
-import {transformUsers, User} from "Types/User";
-import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
+import { kardsRender } from "@/Tests/testRenders";
+import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
+import { transformUsers, User } from "@/Types/User";
+import SpectatePlayerList from "@/Components/Spectation/SpectatePlayerList";
 
 const {data: {users, game}} = gameSpectatorExampleResponse;
 const players = transformUsers(users);

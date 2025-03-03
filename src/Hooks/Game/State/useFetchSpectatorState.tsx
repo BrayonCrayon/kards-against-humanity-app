@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import gameService from "Services/GameService";
-import { SetAuthAction } from "State/Auth/AuthActions";
-import { transformUser, transformUsers } from "Types/User";
-import { useAuth } from "State/Auth/useAuth";
-import { usePlayers } from "State/Players/usePlayers";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { useGame } from "State/Game/useGame";
-import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
+import gameService from "@/Services/GameService";
+import { SetAuthAction } from "@/State/Auth/AuthActions";
+import { transformUser, transformUsers } from "@/Types/User";
+import { useAuth } from "@/State/Auth/useAuth";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { SetPlayersAction } from "@/State/Players/PlayersActions";
+import { useGame } from "@/State/Game/useGame";
+import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
 
 function useFetchSpectatorState() {
   const { dispatch: usersDispatch } = usePlayers();

@@ -1,16 +1,16 @@
-import React, {FC, useCallback, useState} from "react";
-import {BlackKard} from "Components/BlackKard";
-import {usePlayers} from "State/Players/usePlayers";
-import PlayerNotificationBar from "Components/PlayerNotificationBar";
-import JudgeMessage from "Components/JudgeMessage";
-import {useAuth} from "State/Auth/useAuth";
-import {useGame} from "State/Game/useGame";
-import Settings from "Components/Sidebars/Settings";
-import ShareButton from "Components/Atoms/ShareButton";
-import {ShareData} from "Types/WebShare";
-import CopyGameCode from "Components/Molecules/CopyGameCode";
-import useUpdateGameSettings from "Hooks/Game/State/useUpdateGameSettings";
-import {happyToast} from "Utilities/toasts";
+import React, { FC, useCallback, useState } from "react";
+import { BlackKard } from "@/Components/BlackKard";
+import { usePlayers } from "@/State/Players/usePlayers";
+import PlayerNotificationBar from "@/Components/PlayerNotificationBar";
+import JudgeMessage from "@/Components/JudgeMessage";
+import { useAuth } from "@/State/Auth/useAuth";
+import { useGame } from "@/State/Game/useGame";
+import Settings from "@/Components/Sidebars/Settings";
+import ShareButton from "@/Components/Atoms/ShareButton";
+import { ShareData } from "@/Types/WebShare";
+import CopyGameCode from "@/Components/Molecules/CopyGameCode";
+import useUpdateGameSettings from "@/Hooks/Game/State/useUpdateGameSettings";
+import { happyToast } from "@/Utilities/toasts";
 
 const GameInfo: FC = () => {
   const { state: { game, blackCard }, } = useGame();

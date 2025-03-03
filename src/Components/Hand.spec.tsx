@@ -1,13 +1,13 @@
-import { kardsRender } from "Tests/testRenders";
+import { kardsRender } from "@/Tests/testRenders";
 import Hand from "./Hand";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { transformWhiteCardArray, WhiteCard } from "Types/WhiteCard";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { transformWhiteCardArray, WhiteCard } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
-import { transformUser } from "Types/User";
-import { errorToast } from "Utilities/toasts";
-import { confirmedSweetAlert, dismissSweetAlert, spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "Tests/testHelpers";
-import { getCardSubmitButton, whiteCardTestId } from "Tests/selectors";
+import { transformUser } from "@/Types/User";
+import { errorToast } from "@/Utilities/toasts";
+import { confirmedSweetAlert, dismissSweetAlert, spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "@/Tests/testHelpers";
+import { getCardSubmitButton, whiteCardTestId } from "@/Tests/selectors";
 
 const {
   data: { game, hand: handResponse, blackCard, currentUser },
@@ -17,8 +17,8 @@ const hand = transformWhiteCardArray(handResponse, false, []);
 const auth = transformUser(currentUser);
 
 const mockRedraw = jest.fn();
-jest.mock("Hooks/Game/Actions/useRedrawPlayerHand", () => () => mockRedraw);
-jest.mock("Utilities/toasts");
+jest.mock("@/Hooks/Game/Actions/useRedrawPlayerHand", () => () => mockRedraw);
+jest.mock("@/Utilities/toasts");
 
 describe("Hand", () => {
   beforeEach(() => {

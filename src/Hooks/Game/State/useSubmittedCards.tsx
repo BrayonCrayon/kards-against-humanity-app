@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { SubmittedCard, transformSubmittedCardArray } from "Types/SubmittedCard";
-import { WhiteCard } from "Types/WhiteCard";
-import gameService from "Services/GameService";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { SubmittedCard, transformSubmittedCardArray } from "@/Types/SubmittedCard";
+import { WhiteCard } from "@/Types/WhiteCard";
+import gameService from "@/Services/GameService";
 
 function useSubmittedCards() {
   const [submittedCards, setSubmittedCards] = useState<Array<PlayerSubmittedCard>>([]);

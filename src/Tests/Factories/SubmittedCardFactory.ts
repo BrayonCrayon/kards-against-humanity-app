@@ -1,5 +1,5 @@
 import { randNumber, randText } from "@ngneat/falso";
-import { SubmittedCard } from "Types/SubmittedCard";
+import { SubmittedCard } from "@/Types/SubmittedCard";
 
 
 export const submittedCardFactory = (overrides?: Partial<SubmittedCard>): SubmittedCard => {

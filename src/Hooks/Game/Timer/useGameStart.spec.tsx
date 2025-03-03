@@ -1,10 +1,10 @@
 import {renderHook} from "@testing-library/react";
-import {gameFactory} from "Tests/Factories/GameFactory";
+import {gameFactory} from "@/Tests/Factories/GameFactory";
 import {service} from "setupTests";
 import useGameStart from "./useGameStart";
 
 const mockedFetchGameCallback = jest.fn();
-jest.mock("Hooks/Game/State/useFetchGameState", () => () => mockedFetchGameCallback);
+jest.mock("@/Hooks/Game/State/useFetchGameState", () => () => mockedFetchGameCallback);
 
 describe("useGameStart", () => {
 

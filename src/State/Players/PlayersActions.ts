@@ -1,6 +1,6 @@
-import { User } from "../../Types/User";
+import { User } from "@/Types/User";
 import { BaseAction } from "../GeneralContext";
-import { IPlayersState } from "State/Players/PlayersState";
+import { IPlayersState } from "@/State/Players/PlayersState";
 
 export class KickPlayerAction extends BaseAction<IPlayersState, number> {
   execute = (state: IPlayersState) => ({

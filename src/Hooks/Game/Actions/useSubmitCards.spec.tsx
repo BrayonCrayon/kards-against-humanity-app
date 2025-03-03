@@ -1,10 +1,10 @@
-import { kardsHookRender } from "Tests/testRenders";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
-import { expectDispatch, expectNoDispatch, spyOnUseAuth } from "Tests/testHelpers";
-import useSubmitCards from "Hooks/Game/Actions/useSubmitCards";
-import gameService from "Services/GameService";
-import { initialAuthState } from "State/Auth/AuthState";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { gameStateJudgeExampleResponse } from "@/Api/fixtures/gameStateJudgeExampleResponse";
+import { expectDispatch, expectNoDispatch, spyOnUseAuth } from "@/Tests/testHelpers";
+import useSubmitCards from "@/Hooks/Game/Actions/useSubmitCards";
+import gameService from "@/Services/GameService";
+import { initialAuthState } from "@/State/Auth/AuthState";
 
 const {
   data: {

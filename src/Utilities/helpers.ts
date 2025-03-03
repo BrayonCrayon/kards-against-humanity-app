@@ -1,9 +1,9 @@
-import { BlackCard } from "Types/BlackCard";
-import { WhiteCard } from "Types/WhiteCard";
-import { Expansion, ExpansionOption } from "Types/Expansion";
-import { SubmittedCard } from "Types/SubmittedCard";
-import { CardSize } from "Components/BlackKard";
-import { User } from "Types/User";
+import { BlackCard } from "@/Types/BlackCard";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { Expansion, ExpansionOption } from "@/Types/Expansion";
+import { SubmittedCard } from "@/Types/SubmittedCard";
+import { CardSize } from "@/Components/BlackKard";
+import { User } from "@/Types/User";
 
 export const fillOutBlackCard = (blackCard: BlackCard, cards: Array<SubmittedCard>): string => {
   let blackCardText = blackCard.text;

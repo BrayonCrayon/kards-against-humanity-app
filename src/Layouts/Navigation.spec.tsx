@@ -1,4 +1,4 @@
-import { kardsRender } from "Tests/testRenders";
+import { kardsRender } from "@/Tests/testRenders";
 import Navigation from "Layouts/Navigation";
 import { useLocation } from "react-router-dom";
 

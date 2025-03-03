@@ -1,4 +1,4 @@
-import { Expansion } from "Types/Expansion";
+import { Expansion } from "@/Types/Expansion";
 
 interface IGetExpansionsExampleResponse {
   data: Expansion[];

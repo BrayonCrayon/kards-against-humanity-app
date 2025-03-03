@@ -1,4 +1,4 @@
-import FloatingButton from "Components/Atoms/FloatingButton";
+import FloatingButton from "@/Components/Atoms/FloatingButton";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 

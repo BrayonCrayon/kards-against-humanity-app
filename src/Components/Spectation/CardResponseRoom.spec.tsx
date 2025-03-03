@@ -1,17 +1,17 @@
-import { kardsRender } from "Tests/testRenders";
-import CardResponseRoom from "Components/Spectation/CardResponseRoom";
-import { TimelineCollection } from "Utilities/TimelineCollection";
-import { BaseTimeline } from "Utilities/BaseTimeline";
-import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
-import { WhiteCard } from "Types/WhiteCard";
-import { Card } from "Types/Card";
-import { useSwitchCardProps } from "Hooks/Spectate/useSwitchCard";
-import { expectDispatch, spyOnUseSpectate } from "Tests/testHelpers";
-import { Stage } from "State/Spectate/SpectateState";
+import { kardsRender } from "@/Tests/testRenders";
+import CardResponseRoom from "@/Components/Spectation/CardResponseRoom";
+import { TimelineCollection } from "@/Utilities/TimelineCollection";
+import { BaseTimeline } from "@/Utilities/BaseTimeline";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { Card } from "@/Types/Card";
+import { useSwitchCardProps } from "@/Hooks/Spectate/useSwitchCard";
+import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
+import { Stage } from "@/State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
 
 const mockHook = jest.fn();
-jest.mock("Hooks/Spectate/useSwitchCard", () => (props: useSwitchCardProps) => mockHook(props));
+jest.mock("@/Hooks/Spectate/useSwitchCard", () => (props: useSwitchCardProps) => mockHook(props));
 
 const mockUseSwitchCard = (hasTimeLines: boolean = false, cardCount: number = 1) => {
   const mockStart = jest.fn();

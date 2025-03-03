@@ -1,5 +1,5 @@
 import { FC, useCallback, useState } from "react";
-import { ExpansionOption } from "Types/Expansion";
+import { ExpansionOption } from "@/Types/Expansion";
 import { KAHToggler } from "../../KAHToggler";
 import ExpansionCard from "../../ExpansionCard";
 

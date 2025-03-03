@@ -1,12 +1,12 @@
-import {FC, FormEvent, useCallback, useState} from "react";
-import {Button} from "Components/Atoms/Button";
-import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
-import KAHInput from "Components/KAHInput";
-import {KAHCheckbox} from "Components/KAHCheckbox";
-import useJoinGame from "Hooks/Game/Join/useJoinGame";
-import {KAHCard} from "Components/KAHCard";
-import useLoading from "Hooks/Game/Shared/useLoading";
-import {useParams} from "react-router-dom";
+import { FC, FormEvent, useCallback, useState } from "react";
+import { Button } from "@/Components/Atoms/Button";
+import useJoinAsSpectator from "@/Hooks/Game/Join/useJoinAsSpectator";
+import KAHInput from "@/Components/KAHInput";
+import { KAHCheckbox } from "@/Components/KAHCheckbox";
+import useJoinGame from "@/Hooks/Game/Join/useJoinGame";
+import { KAHCard } from "@/Components/KAHCard";
+import useLoading from "@/Hooks/Game/Shared/useLoading";
+import { useParams } from "react-router-dom";
 
 const JoinGameForm: FC = () => {
   const { code: sharedCode } = useParams<{ code: string | undefined }>();

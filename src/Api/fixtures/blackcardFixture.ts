@@ -1,4 +1,4 @@
-import { BlackCard } from "../../Types/BlackCard";
+import { BlackCard } from "@/Types/BlackCard";
 
 export const blackCardFixture: BlackCard = {
   id: 1234,

@@ -1,18 +1,18 @@
-import React, {useCallback, useEffect, useMemo} from "react";
-import {useParams} from "react-router-dom";
-import {useGame} from "State/Game/useGame";
-import useFetchGameState from "Hooks/Game/State/useFetchGameState";
-import GameInfo from "Components/GameInformation/GameInfo";
-import {VotingSection} from "Components/VotingSection";
-import {RoundWinnerModal} from "Components/RoundWinnerModal";
-import {usePlayers} from "State/Players/usePlayers";
-import {useHand} from "State/Hand/useHand";
-import {useAuth} from "State/Auth/useAuth";
-import Hand from "Components/Hand";
-import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
-import useSubmitCards from "Hooks/Game/Actions/useSubmitCards";
-import {PreGameModal} from "Components/PreGameModal";
-import SelectionRoundTimer from "../Components/Molecules/SelectionRoundTimer";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { useGame } from "@/State/Game/useGame";
+import useFetchGameState from "@/Hooks/Game/State/useFetchGameState";
+import GameInfo from "@/Components/GameInformation/GameInfo";
+import { VotingSection } from "@/Components/VotingSection";
+import { RoundWinnerModal } from "@/Components/RoundWinnerModal";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { useHand } from "@/State/Hand/useHand";
+import { useAuth } from "@/State/Auth/useAuth";
+import Hand from "@/Components/Hand";
+import useListenOnEvents from "@/Hooks/Helpers/useListenOnEvents";
+import useSubmitCards from "@/Hooks/Game/Actions/useSubmitCards";
+import { PreGameModal } from "@/Components/PreGameModal";
+import SelectionRoundTimer from "@/Components/Molecules/SelectionRoundTimer";
 
 const GamePage = () => {
   const {

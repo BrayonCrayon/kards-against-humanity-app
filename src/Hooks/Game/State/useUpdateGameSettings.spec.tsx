@@ -1,11 +1,11 @@
-import {kardsHookRender} from "Tests/testRenders";
+import {kardsHookRender} from "@/Tests/testRenders";
 import {service} from "setupTests";
 import useUpdateGameSettings from "./useUpdateGameSettings";
-import {gameFactory} from "Tests/Factories/GameFactory";
+import {gameFactory} from "@/Tests/Factories/GameFactory";
 import {AxiosResponse} from "axios";
 
 const mockedCallback = jest.fn();
-jest.mock("Hooks/Game/State/useFetchGameState", () => {
+jest.mock("@/Hooks/Game/State/useFetchGameState", () => {
     return () => mockedCallback;
 })
 

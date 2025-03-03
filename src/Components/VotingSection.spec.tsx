@@ -1,28 +1,28 @@
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
+import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
-} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { RenderResult, waitFor } from "@testing-library/react";
-import { transformUser, transformUsers } from "Types/User";
+import { transformUser, transformUsers } from "@/Types/User";
 import { VotingSection } from "./VotingSection";
-import { transformWhiteCardArray } from "Types/WhiteCard";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
-import { happyToast } from "Utilities/toasts";
-import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import { happyToast } from "@/Utilities/toasts";
+import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
 import { act } from "react-dom/test-utils";
-import { kardsRender } from "Tests/testRenders";
-import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "Tests/testHelpers";
+import { kardsRender } from "@/Tests/testRenders";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
 import { service } from "setupTests";
-import gameService, { fetchSubmittedCards } from "Services/GameService";
+import gameService, { fetchSubmittedCards } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
-import { initialVoteState } from "State/Vote/VoteState";
+import { initialVoteState } from "@/State/Vote/VoteState";
 
 const mockFetchRoundWinner = jest.fn();
 const mockDispatch = jest.fn();
 
-jest.mock("Utilities/toasts");
-jest.mock("Services/PusherService");
-jest.mock("Hooks/Game/State/useFetchRoundWinner", () => {
+jest.mock("@/Utilities/toasts");
+jest.mock("@/Services/PusherService");
+jest.mock("@/Hooks/Game/State/useFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 

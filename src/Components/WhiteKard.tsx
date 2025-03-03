@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { WhiteCard } from "Types/WhiteCard";
-import { useAuth } from "State/Auth/useAuth";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { useAuth } from "@/State/Auth/useAuth";
 import PlayButton from "./Molecules/PlayButton";
 
 interface WhiteKardProps {

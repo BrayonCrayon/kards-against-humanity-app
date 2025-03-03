@@ -4,10 +4,10 @@ import {
   listenWhenGameStart,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards
-} from "Services/PusherService";
-import useGameStateCallback from "Hooks/Game/State/useGameStateCallback";
-import useRefreshPlayersStateCallback from "Hooks/Game/State/useRefreshPlayersStateCallback";
-import useUserJoinsGameCallback from "Hooks/Helpers/useUserJoinsGameCallback";
+} from "@/Services/PusherService";
+import useGameStateCallback from "@/Hooks/Game/State/useGameStateCallback";
+import useRefreshPlayersStateCallback from "@/Hooks/Game/State/useRefreshPlayersStateCallback";
+import useUserJoinsGameCallback from "@/Hooks/Helpers/useUserJoinsGameCallback";
 
 function useListenOnEvents() {
   const updateGameState = useGameStateCallback();

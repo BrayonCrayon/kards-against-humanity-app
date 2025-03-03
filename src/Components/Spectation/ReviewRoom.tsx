@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { BlackCard } from "Types/BlackCard";
-import { BlackKard } from "Components/BlackKard";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { PlayerSubmittedCCard } from "Components/PlayerSubmittedCCard";
-import { IWinnerIsSelectedEventData, listenWhenWinnerIsSelected } from "Services/PusherService";
-import { useSpectate } from "State/Spectate/useSpectate";
-import { ChangeStage } from "State/Spectate/SpectateActions";
-import { Stage } from "State/Spectate/SpectateState";
-import useFetchRoundWinner from "Hooks/Game/State/useFetchRoundWinner";
+import { BlackCard } from "@/Types/BlackCard";
+import { BlackKard } from "@/Components/BlackKard";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { PlayerSubmittedCCard } from "@/Components/PlayerSubmittedCCard";
+import { IWinnerIsSelectedEventData, listenWhenWinnerIsSelected } from "@/Services/PusherService";
+import { useSpectate } from "@/State/Spectate/useSpectate";
+import { ChangeStage } from "@/State/Spectate/SpectateActions";
+import { Stage } from "@/State/Spectate/SpectateState";
+import useFetchRoundWinner from "@/Hooks/Game/State/useFetchRoundWinner";
 
 export interface IReviewRoomProps {
     gameId: string,

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
-import { User } from "Types/User";
-import SpectatePlayerListItem from "Components/Spectation/SpectatePlayerListItem";
+import { User } from "@/Types/User";
+import SpectatePlayerListItem from "@/Components/Spectation/SpectatePlayerListItem";
 
 interface SpectatePlayerListProps {
   players: User[];

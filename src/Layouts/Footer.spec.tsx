@@ -1,5 +1,5 @@
-import { kardsRender } from "../Tests/testRenders";
-import Footer from "Layouts/Footer";
+import { kardsRender } from "@/Tests/testRenders";
+import Footer from "@/Layouts/Footer";
 import { useLocation } from "react-router-dom";
 
 const renderComponent = () => {

@@ -1,5 +1,5 @@
-import {User} from "Types/User";
-import {FC, useMemo} from "react";
+import { User } from "@/Types/User";
+import { FC, useMemo } from "react";
 
 interface JudgeMessageProps {
   user: User;

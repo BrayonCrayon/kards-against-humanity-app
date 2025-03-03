@@ -1,4 +1,4 @@
-import {RoundWinner} from "Types/ResponseTypes";
+import { RoundWinner } from "@/Types/ResponseTypes";
 
 export interface IVoteState {
   selectedPlayerId: number;

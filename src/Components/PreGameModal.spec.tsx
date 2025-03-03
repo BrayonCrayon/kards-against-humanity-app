@@ -1,16 +1,16 @@
-import {render} from "@testing-library/react";
-import {PreGameModal} from "Components/PreGameModal";
-import {toMinutesSeconds} from "Utilities/helpers";
-import {userFactory} from "Tests/Factories/UserFactory";
-import {spyOnUseAuth, spyOnUseGame} from "Tests/testHelpers";
-import {gameFactory} from "Tests/Factories/GameFactory";
-import {blackCardFactory} from "Tests/Factories/BlackCardFactory";
-import {kardsRender} from "Tests/testRenders";
+import { render } from "@testing-library/react";
+import { PreGameModal } from "@/Components/PreGameModal";
+import { toMinutesSeconds } from "@/Utilities/helpers";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { kardsRender } from "@/Tests/testRenders";
 import userEvent from "@testing-library/user-event";
-import {Game} from "Types/Game";
+import { Game } from "@/Types/Game";
 
 const mockedStartGame = jest.fn();
-jest.mock("Hooks/Game/Timer/useGameStart", () => () => mockedStartGame);
+jest.mock("@/Hooks/Game/Timer/useGameStart", () => () => mockedStartGame);
 
 const setupState = (gameOptions: Partial<Game> = { selectionTimer: 215 }) => {
     const user = userFactory();

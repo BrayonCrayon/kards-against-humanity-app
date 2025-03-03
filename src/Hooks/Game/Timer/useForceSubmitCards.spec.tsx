@@ -1,10 +1,10 @@
-import {blackCardFactory} from "Tests/Factories/BlackCardFactory";
-import {whiteCardFactory} from "Tests/Factories/WhiteCardFactory";
-import {transformWhiteCardArray} from "Types/WhiteCard";
-import {kardsHookRender} from "Tests/testRenders";
-import {useForceSubmitCards} from "Hooks/Game/Timer/useForceSubmitCards";
-import {service} from "setupTests";
-import {expectDispatch, spyOnUseAuth} from "Tests/testHelpers";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { useForceSubmitCards } from "@/Hooks/Game/Timer/useForceSubmitCards";
+import { service } from "setupTests";
+import { expectDispatch, spyOnUseAuth } from "@/Tests/testHelpers";
 
 describe("useForceSubmitCards", () => {
     it.each([1, 2, 3])

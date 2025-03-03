@@ -1,14 +1,14 @@
 import userEvent from "@testing-library/user-event";
-import { kardsRender } from "Tests/testRenders";
-import Settings from "Components/Sidebars/Settings";
-import { User } from "Types/User";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { spyOnUseGame } from "Tests/testHelpers";
-import { gameFactory } from "Tests/Factories/GameFactory";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
+import { kardsRender } from "@/Tests/testRenders";
+import Settings from "@/Components/Sidebars/Settings";
+import { User } from "@/Types/User";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { spyOnUseGame } from "@/Tests/testHelpers";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
 const mockedLeaveGame = jest.fn();
-jest.mock("Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
+jest.mock("@/Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
 
 const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
   return kardsRender(<Settings players={players} />);

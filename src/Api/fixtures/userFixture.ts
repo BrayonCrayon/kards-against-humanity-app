@@ -1,4 +1,4 @@
-import {User} from "Types/User";
+import { User } from "@/Types/User";
 
 export const userFixture: User = {
   id: 1,

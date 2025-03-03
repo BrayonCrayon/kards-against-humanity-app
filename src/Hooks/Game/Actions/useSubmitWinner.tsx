@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import gameService from "Services/GameService";
-import { happyToast } from "Utilities/toasts";
+import gameService from "@/Services/GameService";
+import { happyToast } from "@/Utilities/toasts";
 
 
 function useSubmitWinner() {

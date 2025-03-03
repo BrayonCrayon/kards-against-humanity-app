@@ -1,10 +1,10 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import LeaveGame from "Components/Molecules/LeaveGame";
+import LeaveGame from "@/Components/Molecules/LeaveGame";
 import { TimerSetting } from "./TimerSetting";
-import { Button } from "Components/Atoms/Button";
-import useUpdateGameSettings from "Hooks/Game/State/useUpdateGameSettings";
-import { happyToast } from "Utilities/toasts";
-import { useGame } from "State/Game/useGame";
+import { Button } from "@/Components/Atoms/Button";
+import useUpdateGameSettings from "@/Hooks/Game/State/useUpdateGameSettings";
+import { happyToast } from "@/Utilities/toasts";
+import { useGame } from "@/State/Game/useGame";
 
 export interface Options {
     timer: number|null;

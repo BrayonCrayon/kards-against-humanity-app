@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
-import ShareButton from "Components/Atoms/ShareButton";
+import ShareButton from "@/Components/Atoms/ShareButton";
 import userEvent from "@testing-library/user-event";
-import { webShare } from "Types/WebShare";
-import { errorToast } from "Utilities/toasts";
+import { webShare } from "@/Types/WebShare";
+import { errorToast } from "@/Utilities/toasts";
 
-jest.mock("Utilities/toasts", () => ({
+jest.mock("@/Utilities/toasts", () => ({
   errorToast: jest.fn()
 }))
 

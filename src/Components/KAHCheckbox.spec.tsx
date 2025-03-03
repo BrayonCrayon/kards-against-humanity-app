@@ -1,5 +1,5 @@
 import { render, waitFor } from "@testing-library/react";
-import { KAHCheckbox } from "Components/KAHCheckbox";
+import { KAHCheckbox } from "@/Components/KAHCheckbox";
 import userEvent from "@testing-library/user-event";
 
 

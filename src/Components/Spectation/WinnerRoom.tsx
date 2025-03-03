@@ -1,12 +1,12 @@
 import React, { FC, useEffect, useState } from "react";
-import { User } from "Types/User";
-import { WhiteCard } from "Types/WhiteCard";
-import { WhiteKard } from "Components/WhiteKard";
-import { useSpectate } from "State/Spectate/useSpectate";
+import { User } from "@/Types/User";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { WhiteKard } from "@/Components/WhiteKard";
+import { useSpectate } from "@/State/Spectate/useSpectate";
 import ReactConfetti from "react-confetti";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { ChangeStage } from "State/Spectate/SpectateActions";
-import { Stage } from "State/Spectate/SpectateState";
+import { ChangeStage } from "@/State/Spectate/SpectateActions";
+import { Stage } from "@/State/Spectate/SpectateState";
 
 interface WinnerRoomProps {
   player: User

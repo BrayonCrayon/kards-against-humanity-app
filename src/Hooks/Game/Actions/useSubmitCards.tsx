@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { WhiteCard } from "Types/WhiteCard";
-import { submitCards } from "Services/GameService";
-import { SetHasSubmittedCards } from "State/Auth/AuthActions";
-import { useAuth } from "State/Auth/useAuth";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { submitCards } from "@/Services/GameService";
+import { SetHasSubmittedCards } from "@/State/Auth/AuthActions";
+import { useAuth } from "@/State/Auth/useAuth";
 
 function useSubmitCards() {
   const { dispatch } = useAuth();

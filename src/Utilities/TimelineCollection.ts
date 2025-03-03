@@ -1,5 +1,5 @@
 import { BaseTimeline } from "./BaseTimeline";
-import { Card } from "Types/Card";
+import { Card } from "@/Types/Card";
 import { isEmpty } from "lodash";
 
 export class TimelineCollection {

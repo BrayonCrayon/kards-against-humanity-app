@@ -1,13 +1,13 @@
 import React from "react";
-import {fireEvent, RenderResult, waitFor} from "@testing-library/react";
-import GameInfo from "Components/GameInformation/GameInfo";
-import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
-import {transformUser, transformUsers} from "Types/User";
-import {kardsRender} from "Tests/testRenders";
-import {spyOnUseAuth, spyOnUseGame, spyOnUsePlayers} from "Tests/testHelpers";
+import { fireEvent, RenderResult, waitFor } from "@testing-library/react";
+import GameInfo from "@/Components/GameInformation/GameInfo";
+import { gameStateJudgeExampleResponse } from "@/Api/fixtures/gameStateJudgeExampleResponse";
+import { transformUser, transformUsers } from "@/Types/User";
+import { kardsRender } from "@/Tests/testRenders";
+import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
-import {happyToast} from "Utilities/toasts";
-import {gameFactory} from "Tests/Factories/GameFactory";
+import { happyToast } from "@/Utilities/toasts";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
 
 const { data: {game, users, currentUser, blackCard} } = gameStateJudgeExampleResponse;
 const players = transformUsers(users);
@@ -19,20 +19,20 @@ const renderer = async (): Promise<RenderResult> => {
 };
 
 const mockKickPlayer = jest.fn();
-jest.mock("Hooks/Game/Actions/useKickPlayer", () => {
+jest.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
   return () => {
     return mockKickPlayer;
   };
 });
 
 const mockUpdateGameSettings = jest.fn();
-jest.mock("Hooks/Game/State/useUpdateGameSettings", () => {
+jest.mock("@/Hooks/Game/State/useUpdateGameSettings", () => {
   return () => {
     return mockUpdateGameSettings;
   }
 })
 
-jest.mock("Utilities/toasts");
+jest.mock("@/Utilities/toasts");
 
 describe("GameInfo", () => {
   beforeEach(() => {

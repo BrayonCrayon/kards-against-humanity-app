@@ -1,26 +1,26 @@
-import { kardsRender } from "Tests/testRenders";
+import { kardsRender } from "@/Tests/testRenders";
 import { RoundWinnerModal } from "./RoundWinnerModal";
-import * as Vote from "State/Vote/useVote";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
+import * as Vote from "@/State/Vote/useVote";
+import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import userEvent from "@testing-library/user-event";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
-} from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { transformUser, transformUsers } from "Types/User";
+} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { transformUser, transformUsers } from "@/Types/User";
 import { waitFor } from "@testing-library/react";
-import { roundWinnerExampleResponse } from "Api/fixtures/roundWinnerExampleResponse";
-import { fillOutBlackCard } from "Utilities/helpers";
-import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "Tests/testHelpers";
+import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleResponse";
+import { fillOutBlackCard } from "@/Utilities/helpers";
+import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "@/Tests/testHelpers";
 
 const mockRotateGame = jest.fn();
-jest.mock("Hooks/Game/Actions/useRotateGame", () => {
+jest.mock("@/Hooks/Game/Actions/useRotateGame", () => {
   return () => {
     return mockRotateGame;
   };
 });
 
 const mockFetchGameState = jest.fn();
-jest.mock("Hooks/Game/State/useFetchGameState", () => {
+jest.mock("@/Hooks/Game/State/useFetchGameState", () => {
   return () => {
     return mockFetchGameState;
   };

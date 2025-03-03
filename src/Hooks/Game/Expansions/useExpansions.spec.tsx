@@ -1,8 +1,8 @@
-import { kardsHookRender } from "Tests/testRenders";
+import { kardsHookRender } from "@/Tests/testRenders";
 import { service } from "setupTests";
 import { AxiosResponse } from "axios";
-import useExpansions from "Hooks/Game/Expansions/useExpansions";
-import gameService from "Services/GameService";
+import useExpansions from "@/Hooks/Game/Expansions/useExpansions";
+import gameService from "@/Services/GameService";
 import {act} from "react-dom/test-utils";
 
 

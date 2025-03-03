@@ -1,16 +1,16 @@
-import { kardsRender } from "Tests/testRenders";
-import { SpectatorPage } from "Pages/SpectatorPage";
-import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";
+import { kardsRender } from "@/Tests/testRenders";
+import { SpectatorPage } from "@/Pages/SpectatorPage";
+import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
 import { waitFor } from "@testing-library/react";
 import { service } from "setupTests";
 import { AxiosResponse } from "axios";
-import { fetchSubmittedCards } from "Services/GameService";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
+import { fetchSubmittedCards } from "@/Services/GameService";
+import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import {
   gameSpectatorAllPlayersSubmittedExampleResponse
-} from "Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
-import { spyOnUseSpectate } from "Tests/testHelpers";
-import { Stage } from "State/Spectate/SpectateState";
+} from "@/Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
+import { spyOnUseSpectate } from "@/Tests/testHelpers";
+import { Stage } from "@/State/Spectate/SpectateState";
 
 const {data} = gameSpectatorExampleResponse;
 
@@ -27,7 +27,7 @@ jest.mock("@lottiefiles/dotlottie-react", () => ({
 }))
 
 const mockListenOnEvents = jest.fn();
-jest.mock("Hooks/Helpers/useListenOnSpectatorEvents", () => {
+jest.mock("@/Hooks/Helpers/useListenOnSpectatorEvents", () => {
   return () => mockListenOnEvents;
 });
 

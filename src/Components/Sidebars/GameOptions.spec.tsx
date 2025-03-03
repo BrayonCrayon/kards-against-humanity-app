@@ -1,9 +1,9 @@
-import {getExpansionsExampleResponse} from "Api/fixtures/getExpansionsExampleResponse";
-import {kardsRender} from "Tests/testRenders";
-import {GameOptions} from "Components/Sidebars/GameOptions";
-import {ExpansionsToExpansionOptions} from "Utilities/helpers";
+import { getExpansionsExampleResponse } from "@/Api/fixtures/getExpansionsExampleResponse";
+import { kardsRender } from "@/Tests/testRenders";
+import { GameOptions } from "@/Components/Sidebars/GameOptions";
+import { ExpansionsToExpansionOptions } from "@/Utilities/helpers";
 import userEvent from "@testing-library/user-event";
-import {waitFor} from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 
 const { data: expansions } = getExpansionsExampleResponse;
 const expansionOptions = ExpansionsToExpansionOptions(expansions);

@@ -1,5 +1,5 @@
 import { BlackCard } from "./BlackCard";
-import { SubmittedCard } from "Types/SubmittedCard";
+import { SubmittedCard } from "@/Types/SubmittedCard";
 
 export interface PlayerSubmittedCard {
   user_id: number;

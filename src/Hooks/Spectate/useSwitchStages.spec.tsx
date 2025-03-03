@@ -1,7 +1,7 @@
-import { expectDispatch, expectNoDispatch, spyOnUseSpectate } from "Tests/testHelpers";
-import { userFactory } from "Tests/Factories/UserFactory";
-import { useSwitchStages } from "Hooks/Spectate/useSwitchStages";
-import { Stage } from "State/Spectate/SpectateState";
+import { expectDispatch, expectNoDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { useSwitchStages } from "@/Hooks/Spectate/useSwitchStages";
+import { Stage } from "@/State/Spectate/SpectateState";
 import { renderHook } from "@testing-library/react";
 
 describe("useSwitchStages", () => {

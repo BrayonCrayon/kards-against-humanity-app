@@ -1,27 +1,27 @@
-import {kardsHookRender} from "Tests/testRenders";
-import {gameFixture} from "Api/fixtures/gameFixture";
+import {kardsHookRender} from "@/Tests/testRenders";
+import {gameFixture} from "@/Api/fixtures/gameFixture";
 import {
   listenWhenGameRotates,
   listenWhenGameStart,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards
-} from "Services/PusherService";
-import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
+} from "@/Services/PusherService";
+import useListenOnEvents from "@/Hooks/Helpers/useListenOnEvents";
 
-jest.mock("Services/PusherService");
+jest.mock("@/Services/PusherService");
 
 const mockGameStateCallback = jest.fn();
-jest.mock("Hooks/Game/State/useGameStateCallback", () => {
+jest.mock("@/Hooks/Game/State/useGameStateCallback", () => {
   return () => mockGameStateCallback;
 });
 
 const mockJoinCallback = jest.fn();
-jest.mock("Hooks/Helpers/useUserJoinsGameCallback", () => {
+jest.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
   return () => mockJoinCallback;
 });
 
 const mockRefreshPlayersCallback = jest.fn();
-jest.mock("Hooks/Game/State/useRefreshPlayersStateCallback", () => {
+jest.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
   return () => mockRefreshPlayersCallback;
 });
 

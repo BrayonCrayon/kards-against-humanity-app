@@ -1,11 +1,11 @@
-import {expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers} from "Tests/testHelpers";
-import {service} from "setupTests";
-import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
-import {AxiosResponse} from "axios";
-import {kardsHookRender} from "Tests/testRenders";
-import useCreateGame from "Hooks/Game/Create/useCreateGame";
-import {transformUser, transformUsers} from "Types/User";
-import {ICreateGameOptions} from "Services/GameService";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { service } from "setupTests";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { AxiosResponse } from "axios";
+import { kardsHookRender } from "@/Tests/testRenders";
+import useCreateGame from "@/Hooks/Game/Create/useCreateGame";
+import { transformUser, transformUsers } from "@/Types/User";
+import { ICreateGameOptions } from "@/Services/GameService";
 
 const mockedNavigate = jest.fn();
 jest.mock("react-router-dom", () => ({

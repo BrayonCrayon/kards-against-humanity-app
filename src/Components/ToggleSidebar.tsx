@@ -1,5 +1,5 @@
-import {FC, useState, JSX, PropsWithChildren} from "react";
-import { Button } from "Components/Atoms/Button";
+import { FC, JSX, PropsWithChildren, useState } from "react";
+import { Button } from "@/Components/Atoms/Button";
 
 interface ToggleSidebarProps extends PropsWithChildren {
   toggleElement?: JSX.Element;

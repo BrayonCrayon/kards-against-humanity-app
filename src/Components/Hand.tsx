@@ -1,11 +1,11 @@
 import { WhiteKard } from "./WhiteKard";
 import React, { FC, useCallback, useMemo } from "react";
-import { SetHandAction } from "State/Hand/HandActions";
-import { WhiteCard } from "Types/WhiteCard";
-import { canSubmit, decrementPreviouslySelectedCardPositions } from "Utilities/helpers";
-import { useHand } from "State/Hand/useHand";
-import { useGame } from "State/Game/useGame";
-import { useAuth } from "State/Auth/useAuth";
+import { SetHandAction } from "@/State/Hand/HandActions";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { canSubmit, decrementPreviouslySelectedCardPositions } from "@/Utilities/helpers";
+import { useHand } from "@/State/Hand/useHand";
+import { useGame } from "@/State/Game/useGame";
+import { useAuth } from "@/State/Auth/useAuth";
 import Redraw from "./Redraw";
 import SubmitButton from "./SubmitButton";
 

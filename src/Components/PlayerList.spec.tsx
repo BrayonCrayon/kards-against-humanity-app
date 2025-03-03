@@ -1,14 +1,14 @@
-import { kardsRender } from "Tests/testRenders";
+import { kardsRender } from "@/Tests/testRenders";
 import PlayerList from "./PlayerList";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { waitFor } from "@testing-library/react";
-import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "Tests/testHelpers";
+import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
 
 const { users: players, currentUser: auth, game, blackCard } = gameStateExampleResponse.data;
 
 const mockKickPlayer = jest.fn();
-jest.mock("Hooks/Game/Actions/useKickPlayer", () => () => mockKickPlayer);
+jest.mock("@/Hooks/Game/Actions/useKickPlayer", () => () => mockKickPlayer);
 
 describe("PlayerList", () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 import { render, RenderResult } from "@testing-library/react";
 import { WhiteKard } from "./WhiteKard";
-import { whiteCardFixture } from "Api/fixtures/whiteCardFixture";
-import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
+import { whiteCardFixture } from "@/Api/fixtures/whiteCardFixture";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 
 const card = whiteCardFixture[0];
 

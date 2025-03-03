@@ -1,7 +1,7 @@
-import React, {FC, useMemo} from "react";
-import {User} from "Types/User";
-import CardSubmittedIcon from "Components/Icons/CardSubmittedIcon";
-import {displayScore} from "../../Utilities/helpers";
+import React, { FC } from "react";
+import { User } from "@/Types/User";
+import CardSubmittedIcon from "@/Components/Icons/CardSubmittedIcon";
+import { displayScore } from "../../Utilities/helpers";
 
 interface SpectatePlayerListItemProps {
   player: User,

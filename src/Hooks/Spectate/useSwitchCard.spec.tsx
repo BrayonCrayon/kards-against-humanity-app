@@ -1,8 +1,8 @@
 import { renderHook, waitFor } from "@testing-library/react";
 import useSwitchCard from "./useSwitchCard";
-import { whiteCardFactory } from "Tests/Factories/WhiteCardFactory";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { TimelineCollection } from "Utilities/TimelineCollection";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { TimelineCollection } from "@/Utilities/TimelineCollection";
 
 jest.useFakeTimers()
 describe("useSwitchCard", () => {

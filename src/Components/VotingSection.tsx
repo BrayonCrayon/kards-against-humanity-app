@@ -1,16 +1,16 @@
 import React, { FC, useCallback, useEffect } from "react";
-import { useGame } from "State/Game/useGame";
-import { useVote } from "State/Vote/useVote";
+import { useGame } from "@/State/Game/useGame";
+import { useVote } from "@/State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import { listenWhenWinnerIsSelected } from "Services/PusherService";
-import useFetchRoundWinner from "Hooks/Game/State/useFetchRoundWinner";
-import { Selectable } from "Components/Atoms/Selectable";
-import { SelectWinnerAction } from "State/Vote/VoteActions";
-import { useAuth } from "State/Auth/useAuth";
-import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
-import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
+import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
+import useFetchRoundWinner from "@/Hooks/Game/State/useFetchRoundWinner";
+import { Selectable } from "@/Components/Atoms/Selectable";
+import { SelectWinnerAction } from "@/State/Vote/VoteActions";
+import { useAuth } from "@/State/Auth/useAuth";
+import useSubmittedCards from "@/Hooks/Game/State/useSubmittedCards";
+import useSubmitWinner from "@/Hooks/Game/Actions/useSubmitWinner";
 import SubmitButton from "./SubmitButton";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
 
 export const VotingSection: FC = () => {
   const {

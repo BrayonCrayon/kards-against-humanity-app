@@ -1,10 +1,10 @@
 import { render, renderHook, RenderResult } from "@testing-library/react";
-import { GameProvider } from "State/Game/GameContext";
+import { GameProvider } from "@/State/Game/GameContext";
 import { MemoryRouter } from "react-router-dom";
-import { VoteProvider } from "State/Vote/VoteContext";
-import { PlayersProvider } from "State/Players/PlayersContext";
-import { HandProvider } from "State/Hand/HandContext";
-import { AuthProvider } from "State/Auth/AuthContext";
+import { VoteProvider } from "@/State/Vote/VoteContext";
+import { PlayersProvider } from "@/State/Players/PlayersContext";
+import { HandProvider } from "@/State/Hand/HandContext";
+import { AuthProvider } from "@/State/Auth/AuthContext";
 import React, { ReactNode } from "react";
 
 export const kardsRender = (children: ReactNode): RenderResult => render(

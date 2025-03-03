@@ -1,5 +1,5 @@
-import { Card } from "Types/Card";
-import { SubmittedCard } from "Types/SubmittedCard";
+import { Card } from "@/Types/Card";
+import { SubmittedCard } from "@/Types/SubmittedCard";
 
 export interface IWhiteCard {
   id: number;

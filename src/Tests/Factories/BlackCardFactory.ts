@@ -1,5 +1,5 @@
 import { randNumber, randText } from "@ngneat/falso";
-import { BlackCard } from "Types/BlackCard";
+import { BlackCard } from "@/Types/BlackCard";
 
 export const blackCardFactory = (overrides?: Partial<BlackCard>): BlackCard => {
     const props = {

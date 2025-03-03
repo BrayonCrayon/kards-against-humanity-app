@@ -1,4 +1,4 @@
-import { Card } from "Types/Card";
+import { Card } from "@/Types/Card";
 
 export interface IBlackCard {
   id: number;

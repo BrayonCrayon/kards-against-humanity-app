@@ -1,10 +1,10 @@
-import useKickPlayer from "Hooks/Game/Actions/useKickPlayer";
-import { gameFixture } from "Api/fixtures/gameFixture";
+import useKickPlayer from "@/Hooks/Game/Actions/useKickPlayer";
+import { gameFixture } from "@/Api/fixtures/gameFixture";
 import { act } from "react-dom/test-utils";
-import { kardsHookRender } from "Tests/testRenders";
+import { kardsHookRender } from "@/Tests/testRenders";
 import { service } from "setupTests";
-import { expectDispatch, spyOnUsePlayers } from "Tests/testHelpers";
-import { initialPlayersState } from "State/Players/PlayersState";
+import { expectDispatch, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { initialPlayersState } from "@/State/Players/PlayersState";
 
 const mockedDispatch = jest.fn();
 const gameId = gameFixture.id;

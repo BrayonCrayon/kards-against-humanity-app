@@ -1,4 +1,4 @@
-import { RoundWinnerResponse } from "../../Types/ResponseTypes";
+import { RoundWinnerResponse } from "@/Types/ResponseTypes";
 
 export const roundWinnerExampleResponse: RoundWinnerResponse = {
   data: {

@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { TimerSetting } from "./TimerSetting";
 import { random } from "lodash";
 import userEvent from "@testing-library/user-event";
-import { toMinutesSeconds } from "Utilities/helpers";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
 describe("TimerTab", () => {
   it("will disable time by default", () => {

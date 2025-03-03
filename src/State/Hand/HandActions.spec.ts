@@ -1,8 +1,8 @@
-import {SetHandAction} from "State/Hand/HandActions";
-import {whiteCardFixture} from "Api/fixtures/whiteCardFixture";
-import {initialHandState} from "State/Hand/HandState";
-import {whiteCardFactory} from "Tests/Factories/WhiteCardFactory";
-import {WhiteCard} from "Types/WhiteCard";
+import { SetHandAction } from "@/State/Hand/HandActions";
+import { whiteCardFixture } from "@/Api/fixtures/whiteCardFixture";
+import { initialHandState } from "@/State/Hand/HandState";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { WhiteCard } from "@/Types/WhiteCard";
 
 
 describe("HandActions", () => {

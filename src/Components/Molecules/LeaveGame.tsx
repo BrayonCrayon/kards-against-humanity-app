@@ -1,6 +1,6 @@
 import React, {FC, useCallback} from "react";
-import useLeaveGame from "Hooks/Game/Actions/useLeaveGame";
-import useLoading from "Hooks/Game/Shared/useLoading";
+import useLeaveGame from "@/Hooks/Game/Actions/useLeaveGame";
+import useLoading from "@/Hooks/Game/Shared/useLoading";
 import {Button, ButtonVariant} from "../Atoms/Button";
 
 interface LeaveGameProps {

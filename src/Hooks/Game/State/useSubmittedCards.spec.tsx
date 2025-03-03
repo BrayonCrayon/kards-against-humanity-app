@@ -1,12 +1,12 @@
-import { kardsHookRender } from "Tests/testRenders";
-import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
+import { kardsHookRender } from "@/Tests/testRenders";
+import useSubmittedCards from "@/Hooks/Game/State/useSubmittedCards";
 import { service } from "setupTests";
 import { AxiosResponse } from "axios";
 import { act } from "react-dom/test-utils";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { SubmittedCard } from "Types/SubmittedCard";
-import { WhiteCard } from "Types/WhiteCard";
+import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { SubmittedCard } from "@/Types/SubmittedCard";
+import { WhiteCard } from "@/Types/WhiteCard";
 
 
 describe("useSubmittedCards", () => {

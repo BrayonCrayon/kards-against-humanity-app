@@ -1,5 +1,5 @@
 import React, { FC, useCallback } from "react";
-import useReadText from "Hooks/Helpers/useReadText";
+import useReadText from "@/Hooks/Helpers/useReadText";
 
 interface PlayButtonProps {
     text: string,

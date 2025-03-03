@@ -1,7 +1,7 @@
-import {render, waitFor} from "@testing-library/react";
-import Timer from "Components/Atoms/Timer";
+import { render, waitFor } from "@testing-library/react";
+import Timer from "@/Components/Atoms/Timer";
 import moment from "moment";
-import {act} from "react-dom/test-utils";
+import { act } from "react-dom/test-utils";
 
 jest.useFakeTimers().setSystemTime();
 describe("Timer", () => {

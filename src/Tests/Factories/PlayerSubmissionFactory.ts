@@ -1,6 +1,6 @@
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
 import { randNumber } from "@ngneat/falso";
-import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
+import { submittedCardFactory } from "@/Tests/Factories/SubmittedCardFactory";
 
 
 export const playerSubmissionFactory = (overrides: Partial<PlayerSubmittedCard> = {}) => {

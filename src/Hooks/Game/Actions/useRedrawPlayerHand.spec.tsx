@@ -1,11 +1,11 @@
-import { kardsHookRender } from "Tests/testRenders";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { expectDispatch, expectNoDispatch, spyOnUseAuth, spyOnUseHand } from "Tests/testHelpers";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import useRedrawPlayerHand from "Hooks/Game/Actions/useRedrawPlayerHand";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { expectDispatch, expectNoDispatch, spyOnUseAuth, spyOnUseHand } from "@/Tests/testHelpers";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import useRedrawPlayerHand from "@/Hooks/Game/Actions/useRedrawPlayerHand";
 import { service } from "setupTests";
-import { initialAuthState } from "State/Auth/AuthState";
-import { initialHandState } from "State/Hand/HandState";
+import { initialAuthState } from "@/State/Auth/AuthState";
+import { initialHandState } from "@/State/Hand/HandState";
 
 const {data: {hand, game}} = gameStateExampleResponse;
 const mockDispatch = jest.fn();

@@ -1,5 +1,5 @@
 import {FC, useEffect, useState} from "react";
-import {toMinutesSeconds} from "Utilities/helpers";
+import {toMinutesSeconds} from "@/Utilities/helpers";
 import moment from "moment";
 
 interface TimerProps {

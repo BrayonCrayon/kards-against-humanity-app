@@ -1,6 +1,6 @@
 import { BaseContext, useGenericReducer } from "../GeneralContext";
 import { IHandState, initialHandState } from "./HandState";
-import { HandActionTypes } from "State/Hand/HandActions";
+import { HandActionTypes } from "@/State/Hand/HandActions";
 import React, {FC, PropsWithChildren} from "react";
 
 export const HandContext = React.createContext<

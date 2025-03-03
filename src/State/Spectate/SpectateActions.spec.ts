@@ -1,5 +1,5 @@
-import { InitialSpectateState, ISpectateState, Stage } from "State/Spectate/SpectateState";
-import { ChangeStage } from "State/Spectate/SpectateActions";
+import { InitialSpectateState, ISpectateState, Stage } from "@/State/Spectate/SpectateState";
+import { ChangeStage } from "@/State/Spectate/SpectateActions";
 
 describe("State Actions", () => {
 

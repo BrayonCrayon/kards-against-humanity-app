@@ -1,5 +1,5 @@
 import { isNull } from "lodash";
-import { Card } from "Types/Card";
+import { Card } from "@/Types/Card";
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));

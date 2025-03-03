@@ -1,9 +1,9 @@
-import React, {FC, useEffect, useState} from "react";
-import ToggleSidebar from "Components/ToggleSidebar";
-import {User} from "Types/User";
-import TabView, {Tab} from "./Settings/TabView";
+import React, { FC, useEffect, useState } from "react";
+import ToggleSidebar from "@/Components/ToggleSidebar";
+import { User } from "@/Types/User";
+import TabView, { Tab } from "./Settings/TabView";
 import GameSettingsTab from "./Settings/GameSettingsTab";
-import PlayerList from "Components/PlayerList";
+import PlayerList from "@/Components/PlayerList";
 
 interface SettingsProps {
   players: User[];

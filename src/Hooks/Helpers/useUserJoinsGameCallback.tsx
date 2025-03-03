@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { gameCallbackData } from "Services/PusherService";
-import useRefreshPlayers from "Hooks/Game/State/useRefreshPlayers";
+import { gameCallbackData } from "@/Services/PusherService";
+import useRefreshPlayers from "@/Hooks/Game/State/useRefreshPlayers";
 
 function useUserJoinsGameCallback() {
   const refreshPlayers = useRefreshPlayers();

@@ -1,5 +1,5 @@
 import React from "react";
-import JoinGameForm from "../Components/Forms/JoinGameForm";
+import JoinGameForm from "@/Components/Forms/JoinGameForm";
 
 const HomePage: React.FC = () => {
   return (

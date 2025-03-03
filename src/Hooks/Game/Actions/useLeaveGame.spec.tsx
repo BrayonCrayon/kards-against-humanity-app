@@ -1,6 +1,6 @@
-import { kardsHookRender } from "Tests/testRenders";
+import { kardsHookRender } from "@/Tests/testRenders";
 import { service } from "setupTests";
-import useLeaveGame from "Hooks/Game/Actions/useLeaveGame";
+import useLeaveGame from "@/Hooks/Game/Actions/useLeaveGame";
 import { AxiosResponse } from "axios";
 import {
   expectDispatch,
@@ -9,10 +9,10 @@ import {
   spyOnUseHand,
   spyOnUsePlayers,
   spyOnUseVote
-} from "Tests/testHelpers";
-import { initialGameState } from "State/Game/GameState";
-import { initialPlayersState } from "State/Players/PlayersState";
-import { initialHandState } from "State/Hand/HandState";
+} from "@/Tests/testHelpers";
+import { initialGameState } from "@/State/Game/GameState";
+import { initialPlayersState } from "@/State/Players/PlayersState";
+import { initialHandState } from "@/State/Hand/HandState";
 
 const dispatch = jest.fn();
 

@@ -1,5 +1,5 @@
-import { IWhiteCard } from "Types/WhiteCard";
-import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
+import { IWhiteCard } from "@/Types/WhiteCard";
+import { submittedCardFactory } from "@/Tests/Factories/SubmittedCardFactory";
 
 export interface ISubmittedCard extends Partial<IWhiteCard> {
   id: number;

@@ -1,6 +1,6 @@
 import { FC, useCallback } from "react";
-import { defaultShareData, ShareData, webShare } from "Types/WebShare";
-import { errorToast } from "Utilities/toasts";
+import { defaultShareData, ShareData, webShare } from "@/Types/WebShare";
+import { errorToast } from "@/Utilities/toasts";
 
 interface ShareButtonProps {
   role?: string;

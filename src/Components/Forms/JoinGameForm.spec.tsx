@@ -1,18 +1,18 @@
 import { waitFor } from "@testing-library/react";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "@/Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import { kardsRender } from "Tests/testRenders";
-import { setupAndSubmitForm } from "Tests/actions";
+import { kardsRender } from "@/Tests/testRenders";
+import { setupAndSubmitForm } from "@/Tests/actions";
 import { mockedAxios } from "setupTests";
 import userEvent from "@testing-library/user-event";
 
 const mockJoinAsSpectator = jest.fn();
 const mockJoinGame = jest.fn();
-jest.mock("Hooks/Game/Join/useJoinAsSpectator", () => {
+jest.mock("@/Hooks/Game/Join/useJoinAsSpectator", () => {
   return () => mockJoinAsSpectator
 })
-jest.mock("Hooks/Game/Join/useJoinGame", () => {
+jest.mock("@/Hooks/Game/Join/useJoinGame", () => {
   return () => mockJoinGame
 });
 

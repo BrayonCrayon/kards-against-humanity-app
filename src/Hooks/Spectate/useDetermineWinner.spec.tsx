@@ -1,13 +1,13 @@
-import { kardsHookRender } from "Tests/testRenders";
-import useDetermineWinner from "Hooks/Spectate/useDetermineWinner";
-import { userFactory } from "Tests/Factories/UserFactory";
+import { kardsHookRender } from "@/Tests/testRenders";
+import useDetermineWinner from "@/Hooks/Spectate/useDetermineWinner";
+import { userFactory } from "@/Tests/Factories/UserFactory";
 import { randNumber } from "@ngneat/falso";
-import { spyOnUseVote } from "Tests/testHelpers";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { RoundWinner } from "Types/ResponseTypes";
-import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
-import { SubmittedCard } from "Types/SubmittedCard";
-import { transformSubmissionsToWhiteCard } from "Types/WhiteCard";
+import { spyOnUseVote } from "@/Tests/testHelpers";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { RoundWinner } from "@/Types/ResponseTypes";
+import { submittedCardFactory } from "@/Tests/Factories/SubmittedCardFactory";
+import { SubmittedCard } from "@/Types/SubmittedCard";
+import { transformSubmissionsToWhiteCard } from "@/Types/WhiteCard";
 
 describe("useDetermineWinner", () => {
   it("will return defaults when there is no winner between games", () => {

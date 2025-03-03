@@ -1,18 +1,18 @@
-import { kardsRender } from "Tests/testRenders";
-import ReviewRoom from "Components/Spectation/ReviewRoom";
-import { blackCardFactory } from "Tests/Factories/BlackCardFactory";
-import { submittedCardFactory } from "Tests/Factories/SubmittedCardFactory";
-import { userFactory } from "Tests/Factories/UserFactory";
-import { PlayerSubmittedCard } from "Types/ResponseTypes";
-import { playerSubmittedCardTestId } from "Tests/selectors";
-import { submittedCardsResponse } from "Api/fixtures/submittedCardsResponse";
-import { expectDispatch, spyOnUseSpectate } from "Tests/testHelpers";
-import { Stage } from "State/Spectate/SpectateState";
+import { kardsRender } from "@/Tests/testRenders";
+import ReviewRoom from "@/Components/Spectation/ReviewRoom";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { submittedCardFactory } from "@/Tests/Factories/SubmittedCardFactory";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { playerSubmittedCardTestId } from "@/Tests/selectors";
+import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
+import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
+import { Stage } from "@/State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
-import { listenWhenWinnerIsSelected } from "Services/PusherService";
+import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
 import { act } from "react-dom/test-utils";
 
-jest.mock("Services/PusherService");
+jest.mock("@/Services/PusherService");
 jest.useFakeTimers();
 
 describe("ReviewRoom", () => {

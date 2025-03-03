@@ -1,15 +1,15 @@
 import React, { FC, useCallback, useEffect, useMemo } from "react";
-import useSwitchCard from "Hooks/Spectate/useSwitchCard";
+import useSwitchCard from "@/Hooks/Spectate/useSwitchCard";
 import { isEmpty } from "lodash";
-import { WhiteCard } from "Types/WhiteCard";
-import { WhiteKard } from "Components/WhiteKard";
-import { Card } from "Types/Card";
-import { useGame } from "State/Game/useGame";
-import { BlackKard } from "Components/BlackKard";
-import { BlackCard } from "Types/BlackCard";
-import { useSpectate } from "State/Spectate/useSpectate";
-import { ChangeStage } from "State/Spectate/SpectateActions";
-import { Stage } from "State/Spectate/SpectateState";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { WhiteKard } from "@/Components/WhiteKard";
+import { Card } from "@/Types/Card";
+import { useGame } from "@/State/Game/useGame";
+import { BlackKard } from "@/Components/BlackKard";
+import { BlackCard } from "@/Types/BlackCard";
+import { useSpectate } from "@/State/Spectate/useSpectate";
+import { ChangeStage } from "@/State/Spectate/SpectateActions";
+import { Stage } from "@/State/Spectate/SpectateState";
 
 
 interface CardResponseRoomProps {

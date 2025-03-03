@@ -1,9 +1,9 @@
 import React, { FC, useCallback, useMemo } from "react";
-import { User } from "Types/User";
-import useKickPlayer from "Hooks/Game/Actions/useKickPlayer";
+import { User } from "@/Types/User";
+import useKickPlayer from "@/Hooks/Game/Actions/useKickPlayer";
 import Swal from "sweetalert2";
-import { useAuth } from "State/Auth/useAuth";
-import { useGame } from "State/Game/useGame";
+import { useAuth } from "@/State/Auth/useAuth";
+import { useGame } from "@/State/Game/useGame";
 import KickPlayerIcon from "./Icons/KickPlayerIcon";
 
 interface PlayerListItemProps {

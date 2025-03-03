@@ -1,12 +1,12 @@
-import { useVote } from "State/Vote/useVote";
+import { useVote } from "@/State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { ClearStateAction } from "State/Vote/VoteActions";
-import { Button } from "Components/Atoms/Button";
-import { useGame } from "State/Game/useGame";
-import useRotateGame from "Hooks/Game/Actions/useRotateGame";
-import { usePlayers } from "State/Players/usePlayers";
-import { useAuth } from "State/Auth/useAuth";
+import { ClearStateAction } from "@/State/Vote/VoteActions";
+import { Button } from "@/Components/Atoms/Button";
+import { useGame } from "@/State/Game/useGame";
+import useRotateGame from "@/Hooks/Game/Actions/useRotateGame";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { useAuth } from "@/State/Auth/useAuth";
 
 export function RoundWinnerModal() {
   const {
