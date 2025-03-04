@@ -1,7 +1,9 @@
-import React, {FC, useCallback} from "react";
+import React, { FC, useCallback } from "react";
 import useLeaveGame from "@/Hooks/Game/Actions/useLeaveGame";
 import useLoading from "@/Hooks/Game/Shared/useLoading";
-import {Button, ButtonVariant} from "../Atoms/Button";
+import { Button, ButtonVariant } from "../Atoms/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDoorOpen } from "@fortawesome/free-solid-svg-icons";
 
 interface LeaveGameProps {
     gameId: string;
@@ -27,7 +29,7 @@ const LeaveGame: FC<LeaveGameProps> = ({gameId, className = ""}) => {
                 isLoading={loading}
                 onClick={leave}
             >
-                <i className="fa-solid fa-door-open pr-2"></i>
+              <FontAwesomeIcon icon={faDoorOpen} className="pr-2" />
             </Button>
         </>
     );

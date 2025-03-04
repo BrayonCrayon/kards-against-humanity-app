@@ -30,7 +30,7 @@ const JoinGameForm: FC = () => {
 
   return (
     <div className="flex flex-col w-full h-full" data-testid="join-game-section">
-      <KAHCard className="flex-grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto lg:w-1/3">
+      <KAHCard className="grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto lg:w-1/3">
         <form data-testid="join-game-form" onSubmit={submitToApi} className="flex flex-col">
           <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput
@@ -39,7 +39,7 @@ const JoinGameForm: FC = () => {
             label="Code"
             placeholder="ex: A3D5"
             name="code"
-            inputClass="flex-grow"
+            inputClass="grow"
             required
             onChange={(e) => setCode(e.target.value)}
           />
@@ -50,7 +50,7 @@ const JoinGameForm: FC = () => {
               value={userName}
               placeholder="Bob's your uncle"
               name="name"
-              inputClass="flex-grow"
+              inputClass="grow"
               minLength={3}
               maxLength={17}
               required

@@ -1,5 +1,7 @@
 import { User } from "@/Types/User";
 import { FC, useMemo } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 
 interface JudgeMessageProps {
   user: User;
@@ -25,7 +27,7 @@ const JudgeMessage: FC<JudgeMessageProps> = ({
           data-testid="judge-message"
           className={`flex flex-col w-full ${className}`}
         >
-          <i className="fas fa-user-secret text-8xl self-center" />
+          <FontAwesomeIcon icon={faUserSecret} size="8x" className="self-center" />
           <p className="text-center font-bold text-2xl">You are judging!</p>
         </div>
       )}

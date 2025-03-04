@@ -54,7 +54,7 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
     {
       !showDrum &&
       <div className="p-8 h-full flex flex-col items-center gap-10">
-        <h1 data-testid={`user-${player.id}`} className="text-4xl text-center p-4 bg-white w-fit rounded">The winner is: {player.name}</h1>
+        <h1 data-testid={`user-${player.id}`} className="text-4xl text-center p-4 bg-white w-fit rounded-sm">The winner is: {player.name}</h1>
         <div className="flex flex-wrap gap-2 justify-center">
           {
             cards.map(card =>

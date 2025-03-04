@@ -62,7 +62,7 @@ export const SpectatorPage: React.FC = () => {
         {
           stage === Stage.DISPLAY_BLACK_CARD &&
           <div className="flex flex-col h-full w-full">
-            <div className="flex flex-col flex-grow justify-center w-full items-center">
+            <div className="flex flex-col grow justify-center w-full items-center">
               <BlackKard card={blackCard} size={cardSize(blackCard.text)} hidePlayButton />
             </div>
             {
@@ -73,7 +73,7 @@ export const SpectatorPage: React.FC = () => {
         }
         {
           stage === Stage.DISPLAY_SUBMISSIONS && whiteCards.length &&
-          <div className="flex flex-col h-full w-full flex-grow justify-center items-center">
+          <div className="flex flex-col h-full w-full grow justify-center items-center">
             <CardResponseRoom showAnswers={true} dataTestId="submissions-display" cards={whiteCards} />
           </div>
         }

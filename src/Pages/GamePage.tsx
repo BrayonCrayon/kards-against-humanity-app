@@ -13,6 +13,8 @@ import useListenOnEvents from "@/Hooks/Helpers/useListenOnEvents";
 import useSubmitCards from "@/Hooks/Game/Actions/useSubmitCards";
 import { PreGameModal } from "@/Components/PreGameModal";
 import SelectionRoundTimer from "@/Components/Molecules/SelectionRoundTimer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMugHot } from "@fortawesome/free-solid-svg-icons";
 
 const GamePage = () => {
   const {
@@ -72,7 +74,7 @@ const GamePage = () => {
           <p className="text-lg font-bold text-center self-center">
             You have submitted your cards, sit tight for judging.
           </p>
-          <i className="fa-solid fa-mug-hot text-4xl pb-2 ml-2"></i>
+          <FontAwesomeIcon icon={faMugHot} size="3x" className="pb-2 ml-2" />
         </div>
       ) : null}
       {showVotingSection && <VotingSection />}

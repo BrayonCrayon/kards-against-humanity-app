@@ -33,7 +33,7 @@ export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300,
           onClick={onToggle}
         />
       </div>
-      <div className="overflow-y-auto px-2 rounded">
+      <div className="overflow-y-auto px-2 rounded-sm">
         <p className={`text-6xl text-center font-bold mb-4 ${!timerOn ? "opacity-25" : ""}`}>
           {toMinutesSeconds(seconds)}
         </p>

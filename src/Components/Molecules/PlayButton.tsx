@@ -1,5 +1,7 @@
 import React, { FC, useCallback } from "react";
 import useReadText from "@/Hooks/Helpers/useReadText";
+import { faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface PlayButtonProps {
     text: string,
@@ -16,7 +18,7 @@ const PlayButton: FC<PlayButtonProps> = ({ text, isDark = false }) => {
 
     return (
         <div data-testid="play-button" className={`absolute bottom-1 left-2 text-lg cursor-pointer ${colorStyles}`} onClick={playMe}>
-            <i className="fa-solid fa-volume-high"></i>
+            <FontAwesomeIcon icon={faVolumeHigh} />
         </div>
     )
 }

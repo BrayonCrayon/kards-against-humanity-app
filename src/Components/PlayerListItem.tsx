@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import { useAuth } from "@/State/Auth/useAuth";
 import { useGame } from "@/State/Game/useGame";
 import KickPlayerIcon from "./Icons/KickPlayerIcon";
+import { faGavel, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface PlayerListItemProps {
   player: User;
@@ -39,7 +41,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
   );
 
   const playerIcon = useMemo(() => {
-      return game.judgeId === player.id ? "fas fa-gavel" : "fa-solid fa-user";
+      return game.judgeId === player.id ? faGavel : faUser;
   }, [game, player]);
 
   const canKickPeople = useMemo(() => {
@@ -55,7 +57,7 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
       >
         <p className="w-10 border-r border-black text-right pr-2">{player.score}</p>
           <span className="w-8 mx-2 flex justify-center">
-            <i className={`${playerIcon} text-xl`}></i>
+            <FontAwesomeIcon icon={playerIcon} size="sm" />
           </span>
         <p className={`${player.hasSubmittedWhiteCards ? "text-emerald-500" : ""}`}>
           {player.name}

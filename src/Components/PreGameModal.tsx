@@ -8,6 +8,8 @@ import useGameStart from "@/Hooks/Game/Timer/useGameStart";
 import ShareButton from "@/Components/Atoms/ShareButton";
 import { ShareData } from "@/Types/WebShare";
 import CopyGameCode from "@/Components/Molecules/CopyGameCode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHourglassEnd } from "@fortawesome/free-solid-svg-icons";
 
 export const PreGameModal: React.FC= () => {
     const { state: { auth } } = useAuth();
@@ -56,7 +58,7 @@ export const PreGameModal: React.FC= () => {
                         </div>
                     </> :
                     <div className="w-full pb-4">
-                        <i className="fa-solid fa-hourglass-end text-4xl mb-2"></i>
+                        <FontAwesomeIcon icon={faHourglassEnd} size="2x" className="mb-2" />
                         <p>Waiting for the judge to start the game...</p>
                     </div>
                 }
