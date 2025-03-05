@@ -9,7 +9,7 @@ import { initialPlayersState } from "@/State/Players/PlayersState";
 import { initialGameState } from "@/State/Game/GameState";
 import {renderHook} from "@testing-library/react";
 
-let mockedDispatch = jest.fn();
+let mockedDispatch = vi.fn();
 const gameId = "tacoGameId";
 
 describe("useFetchSpectatorState", () => {
@@ -38,7 +38,7 @@ describe("useFetchSpectatorState", () => {
 
 
   it("will catch server error", async () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const serverError = { message: "500 server error" };
     service.fetchSpectatorState.mockRejectedValueOnce(serverError);
     const { result } = renderHook(useFetchSpectatorState);

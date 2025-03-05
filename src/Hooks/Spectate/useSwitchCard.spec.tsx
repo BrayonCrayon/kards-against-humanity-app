@@ -4,7 +4,7 @@ import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 import { TimelineCollection } from "@/Utilities/TimelineCollection";
 
-jest.useFakeTimers()
+vi.useFakeTimers()
 describe("useSwitchCard", () => {
 
     it("will setup timelines when hook is called", () => {
@@ -35,7 +35,7 @@ describe("useSwitchCard", () => {
     it("will call ending callback when hook has iterated through all cards", async () => {
         const whiteCards = Array(1).fill({}).map(() => [whiteCardFactory()]);
         const blackCards = Array(1).fill({}).map(blackCardFactory);
-        const onFinishedCallback = jest.fn();
+        const onFinishedCallback = vi.fn();
 
         const { result } = renderHook(useSwitchCard, {
             initialProps: {whiteCards, blackCards, onFinished: onFinishedCallback, timeout: 100}
@@ -44,7 +44,7 @@ describe("useSwitchCard", () => {
         const { start } = result.current;
 
         start()
-        jest.advanceTimersByTime(1000);
+        vi.advanceTimersByTime(1000);
 
         await waitFor(() => {
             expect(onFinishedCallback).toHaveBeenCalled();

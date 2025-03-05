@@ -11,9 +11,9 @@ const renderComponent = (options: { timer: number | null } = { timer: null }) =>
   return kardsRender(
     <GameOptions
       expansions={expansionOptions}
-      onToggle={jest.fn()}
-      toggleAll={jest.fn()}
-      onSettingsChange={jest.fn()}
+      onToggle={vi.fn()}
+      toggleAll={vi.fn()}
+      onSettingsChange={vi.fn()}
       hasAnimations={false}
       timer={options.timer}
     />

@@ -12,7 +12,7 @@ import { waitFor } from "@testing-library/react";
 describe("GameSettingsTab", () => {
 
     it("will show leave and update settings button when user is in game", () => {
-        const spyInstance = spyOnUseGame(jest.fn(), { game: gameFactory(), blackCard: blackCardFactory()});
+        const spyInstance = spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory()});
         const wrapper = kardsRender(<GameSettingsTab />);
 
         expect(wrapper.queryByTestId("update-settings")).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("GameSettingsTab", () => {
 
     it.skip("will set animation toggle and timer when values are provided", () => {
         const options = { timer: 150, hasAnimations: true };
-        spyOnUseGame(jest.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
+        spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
         const wrapper = kardsRender(<GameSettingsTab options={options} />);
 
         expect(wrapper.queryByText(toMinutesSeconds(options.timer))).toBeInTheDocument();
@@ -37,8 +37,8 @@ describe("GameSettingsTab", () => {
     });
 
     it("will call update callback when timer has been updated", async () => {
-        const callback = jest.fn();
-        spyOnUseGame(jest.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
+        const callback = vi.fn();
+        spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
         const wrapper = kardsRender(<GameSettingsTab onUpdatedSettings={callback}/>);
 
         await userEvent.click(wrapper.getByTestId("timer-toggle"));
@@ -49,8 +49,8 @@ describe("GameSettingsTab", () => {
     });
 
     it.skip("will call update callback when animations have been toggled", async () => {
-        const callback = jest.fn();
-        spyOnUseGame(jest.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
+        const callback = vi.fn();
+        spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
         const wrapper = kardsRender(<GameSettingsTab onUpdatedSettings={callback}/>);
 
         await userEvent.click(wrapper.getByTestId("animation-toggle"));

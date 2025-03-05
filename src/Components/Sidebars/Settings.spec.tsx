@@ -7,8 +7,8 @@ import { spyOnUseGame } from "@/Tests/testHelpers";
 import { gameFactory } from "@/Tests/Factories/GameFactory";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
-const mockedLeaveGame = jest.fn();
-jest.mock("@/Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
+const mockedLeaveGame = vi.fn();
+vi.mock("@/Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
 
 const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
   return kardsRender(<Settings players={players} />);
@@ -17,7 +17,7 @@ const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
 describe("Settings", () => {
   it("will allow players to leave game", async () => {
     const game = gameFactory();
-    const gameSpy = spyOnUseGame(jest.fn(), { game, blackCard: blackCardFactory() });
+    const gameSpy = spyOnUseGame(vi.fn(), { game, blackCard: blackCardFactory() });
     const wrapper = renderComponent();
 
     await userEvent.click(wrapper.getByTestId("game-settings"));
@@ -32,7 +32,7 @@ describe("Settings", () => {
     const {
       data: { game, users, blackCard },
     } = gameStateExampleResponse;
-    spyOnUseGame(jest.fn(), { game, blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard });
     const wrapper = renderComponent(game.id, users);
 
     await userEvent.click(wrapper.getByTestId("game-settings"));

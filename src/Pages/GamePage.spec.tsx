@@ -20,20 +20,20 @@ import { confirmedSweetAlert, spyOnUseVote } from "@/Tests/testHelpers";
 import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
 import { gameStatePickTwoExampleResponse } from "@/Api/fixtures/gameStatePickTwoExampleResponse";
 
-jest.mock("@/Services/PusherService");
-jest.mock("@/Utilities/toasts");
+vi.mock("@/Services/PusherService");
+vi.mock("@/Utilities/toasts");
 
 let mockGameId = gameStateExampleResponse.data.game.id;
 const cardsInHand = gameStateExampleResponse.data.hand;
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
+vi.mock("react-router-dom", () => ({
+  ...vi.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
     id: mockGameId,
   }),
 }));
 
-jest.mock("@/Hooks/Game/State/useGameStateCallback", () => {
-  return () => jest.fn();
+vi.mock("@/Hooks/Game/State/useGameStateCallback", () => {
+  return () => vi.fn();
 });
 
 describe("GamePage", () => {
@@ -43,7 +43,7 @@ describe("GamePage", () => {
   });
 
   afterAll(() => {
-    jest.resetAllMocks();
+    vi.resetAllMocks();
   });
 
   describe("Displaying game features", () => {
@@ -73,7 +73,7 @@ describe("GamePage", () => {
     it("performs an api call to get game state data to be loaded on refresh", async () => {
       // @ts-ignore
       service.fetchState.mockResolvedValueOnce(gameStateExampleResponse);
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
       await kardsRender(<GamePage />);
 
@@ -87,8 +87,8 @@ describe("GamePage", () => {
     it("catches error if api call to fetch game state fails", async () => {
       const errorResponse = { message: "No Api" };
       service.fetchState.mockRejectedValueOnce(errorResponse);
-      console.error = jest.fn();
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      console.error = vi.fn();
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
       await kardsRender(<GamePage />);
 
@@ -300,7 +300,7 @@ describe("GamePage", () => {
       service.submitCards.mockRejectedValueOnce(apiFailedResponse);
       const wrapper = await kardsRender(<GamePage />);
       const [cardToSelect] = gameStateExampleResponse.data.hand;
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(whiteCardTestId(cardToSelect.id)));
@@ -470,7 +470,7 @@ describe("Voting section", () => {
   it("can display round winner", async () => {
     service.fetchState.mockResolvedValueOnce(gameStateExampleResponse as AxiosResponse);
     const [submittedCard] = submittedCardsResponse.data[0].submitted_cards;
-    spyOnUseVote(jest.fn(), {
+    spyOnUseVote(vi.fn(), {
       selectedPlayerId: -1,
       selectedRoundWinner: {
         user_id: 1,

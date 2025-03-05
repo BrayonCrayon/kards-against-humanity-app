@@ -17,12 +17,12 @@ import gameService, { fetchSubmittedCards } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
 import { initialVoteState } from "@/State/Vote/VoteState";
 
-const mockFetchRoundWinner = jest.fn();
-const mockDispatch = jest.fn();
+const mockFetchRoundWinner = vi.fn();
+const mockDispatch = vi.fn();
 
-jest.mock("@/Utilities/toasts");
-jest.mock("@/Services/PusherService");
-jest.mock("@/Hooks/Game/State/useFetchRoundWinner", () => {
+vi.mock("@/Utilities/toasts");
+vi.mock("@/Services/PusherService");
+vi.mock("@/Hooks/Game/State/useFetchRoundWinner", () => {
   return () => mockFetchRoundWinner;
 });
 
@@ -46,8 +46,8 @@ const renderer = async (): Promise<RenderResult> => {
 
 describe("VotingSection", () => {
   beforeEach(() => {
-    spyOnUseGame(jest.fn(), { game, blackCard: mockProps.blackCard });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: mockHasSubmittedWhiteCards });
+    spyOnUseGame(vi.fn(), { game, blackCard: mockProps.blackCard });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: mockHasSubmittedWhiteCards });
   });
 
   describe("Api call", () => {
@@ -67,7 +67,7 @@ describe("VotingSection", () => {
     it("catches axios error if api call fails", async () => {
       const errorMessage = { message: "failed api call" };
       service.fetchSubmittedCards.mockRejectedValueOnce(errorMessage);
-      const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
       await renderer();
 
@@ -79,7 +79,7 @@ describe("VotingSection", () => {
 
     it("submits selected winner to api", async () => {
       const { user_id } = submittedCardsResponse.data[0];
-      const spy = spyOnUseVote(jest.fn(), { selectedPlayerId: user_id });
+      const spy = spyOnUseVote(vi.fn(), { selectedPlayerId: user_id });
 
       const wrapper = await waitFor(() => renderer());
 
@@ -126,7 +126,7 @@ describe("VotingSection", () => {
     });
 
     it("will not show submit winner button when user is not the judge", async () => {
-      spyOnUseGame(jest.fn(), {
+      spyOnUseGame(vi.fn(), {
         game: { ...mockProps.game, judgeId: mockProps.users[0].id },
         blackCard: mockProps.blackCard,
       });
@@ -152,7 +152,7 @@ describe("VotingSection", () => {
     });
 
     it("does not show submit winner button when a winner is in state", async () => {
-      spyOnUseVote(jest.fn(), {
+      spyOnUseVote(vi.fn(), {
         selectedRoundWinner: { ...submittedCardsResponse.data[0], black_card: mockProps.blackCard },
         selectedPlayerId: -1,
       });
@@ -171,7 +171,7 @@ describe("VotingSection", () => {
     });
 
     afterEach(() => {
-      jest.clearAllMocks();
+      vi.clearAllMocks();
     });
 
     it("will display players submitted card", async () => {

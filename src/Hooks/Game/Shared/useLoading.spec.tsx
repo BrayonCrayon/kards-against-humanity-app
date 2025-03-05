@@ -13,7 +13,7 @@ describe("useLoading", () => {
   });
 
   it("will call passed function into handleLoad", async () => {
-    const execute = jest.fn();
+    const execute = vi.fn();
     const { result: { current: { handleLoad } } } = renderHook(useLoading);
 
     await waitFor(async () => {
@@ -25,7 +25,7 @@ describe("useLoading", () => {
 
   it("will handle error if passed function throws an error", async () => {
     const errorMessage = { msg: "error" };
-    const execute = jest.fn().mockRejectedValueOnce(errorMessage);
+    const execute = vi.fn().mockRejectedValueOnce(errorMessage);
     const { result: { current: { handleLoad } } } = renderHook(useLoading);
 
     await act(async () => {

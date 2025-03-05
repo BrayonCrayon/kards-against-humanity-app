@@ -7,7 +7,7 @@ import { initialPlayersState } from "@/State/Players/PlayersState";
 import { service } from "setupTests";
 import { kardsHookRender } from "@/Tests/testRenders";
 
-const mockedDispatch = jest.fn();
+const mockedDispatch = vi.fn();
 
 describe("useRotateGame", () => {
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe("useRotateGame", () => {
     service.fetchPlayers.mockRejectedValueOnce(mockErrorMessage);
     const spyConsole = jest
       .spyOn(console, "error")
-      .mockImplementation(jest.fn());
+      .mockImplementation(vi.fn());
     const gameId = gameFixture.id;
     const { result } = kardsHookRender(useRefreshPlayers);
 

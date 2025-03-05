@@ -4,22 +4,23 @@ import { getExpansionsExampleResponse } from "@/Api/fixtures/getExpansionsExampl
 import JoinGameForm from "./JoinGameForm";
 import { kardsRender } from "@/Tests/testRenders";
 import { setupAndSubmitForm } from "@/Tests/actions";
-import { mockedAxios } from "setupTests";
+import { mockedAxios } from "@/setupTests";
 import userEvent from "@testing-library/user-event";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const mockJoinAsSpectator = jest.fn();
-const mockJoinGame = jest.fn();
-jest.mock("@/Hooks/Game/Join/useJoinAsSpectator", () => {
+const mockJoinAsSpectator = vi.fn();
+const mockJoinGame = vi.fn();
+vi.mock("@/Hooks/Game/Join/useJoinAsSpectator", () => {
   return () => mockJoinAsSpectator
 })
-jest.mock("@/Hooks/Game/Join/useJoinGame", () => {
+vi.mock("@/Hooks/Game/Join/useJoinGame", () => {
   return () => mockJoinGame
 });
 
 const mockGameCode = "3H8K";
-jest.mock("react-router-dom", () => {
+vi.mock("react-router-dom", () => {
   return {
-    ...jest.requireActual("react-router-dom"),
+    ...vi.importActual("react-router-dom"),
     useParams: () => ({
       code: mockGameCode
     })

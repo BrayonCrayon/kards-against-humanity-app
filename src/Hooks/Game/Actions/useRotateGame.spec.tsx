@@ -26,7 +26,7 @@ describe("useRotateGame", () => {
     service.rotate.mockRejectedValueOnce(mockErrorMessage);
     const spyConsole = jest
       .spyOn(console, "error")
-      .mockImplementation(jest.fn());
+      .mockImplementation(vi.fn());
     const gameId = gameFixture.id;
     const { result } = renderHook(() => useRotateGame());
 

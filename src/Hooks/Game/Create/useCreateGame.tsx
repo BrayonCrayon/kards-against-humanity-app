@@ -12,7 +12,7 @@ import { useHand } from "@/State/Hand/useHand";
 import { useAuth } from "@/State/Auth/useAuth";
 import { useGame } from "@/State/Game/useGame";
 
-function useCreateGame() {
+export function useCreateGame() {
   const navigate = useNavigate();
   const { dispatch: usersDispatch } = usePlayers();
   const { dispatch: handDispatch } = useHand();

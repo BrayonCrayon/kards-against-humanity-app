@@ -13,7 +13,7 @@ import { AxiosResponse } from "axios";
 import { fetchState } from "@/Services/GameService";
 import { renderHook } from "@testing-library/react";
 
-let mockedDispatch = jest.fn();
+let mockedDispatch = vi.fn();
 
 describe("useFetchGameState", () => {
   beforeEach(() => {

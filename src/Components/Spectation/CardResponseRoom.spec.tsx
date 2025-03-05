@@ -10,11 +10,11 @@ import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
 
-const mockHook = jest.fn();
-jest.mock("@/Hooks/Spectate/useSwitchCard", () => (props: useSwitchCardProps) => mockHook(props));
+const mockHook = vi.fn();
+vi.mock("@/Hooks/Spectate/useSwitchCard", () => (props: useSwitchCardProps) => mockHook(props));
 
 const mockUseSwitchCard = (hasTimeLines: boolean = false, cardCount: number = 1) => {
-  const mockStart = jest.fn();
+  const mockStart = vi.fn();
   let timeLines: TimelineCollection | undefined;
   let cards: WhiteCard[] | undefined;
 

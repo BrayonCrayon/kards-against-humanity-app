@@ -9,13 +9,13 @@ import { kardsRender } from "@/Tests/testRenders";
 import userEvent from "@testing-library/user-event";
 import { Game } from "@/Types/Game";
 
-const mockedStartGame = jest.fn();
-jest.mock("@/Hooks/Game/Timer/useGameStart", () => () => mockedStartGame);
+const mockedStartGame = vi.fn();
+vi.mock("@/Hooks/Game/Timer/useGameStart", () => () => mockedStartGame);
 
 const setupState = (gameOptions: Partial<Game> = { selectionTimer: 215 }) => {
     const user = userFactory();
-    spyOnUseAuth(jest.fn(), { auth: user, hasSubmittedCards: false });
-    spyOnUseGame(jest.fn(), {
+    spyOnUseAuth(vi.fn(), { auth: user, hasSubmittedCards: false });
+    spyOnUseGame(vi.fn(), {
         game: gameFactory({ judgeId: user.id, ...gameOptions }),
         blackCard: blackCardFactory()
     });

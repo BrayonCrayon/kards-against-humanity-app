@@ -23,7 +23,7 @@ const mockHand = transformWhiteCardArray(
     submittedWhiteCardIds
 );
 
-const mockDispatch = jest.fn();
+const mockDispatch = vi.fn();
 
 describe("useSubmitCards", () => {
   beforeEach(() => {

@@ -12,8 +12,8 @@ import { waitFor } from "@testing-library/react";
 import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
 import { act } from "react-dom/test-utils";
 
-jest.mock("@/Services/PusherService");
-jest.useFakeTimers();
+vi.mock("@/Services/PusherService");
+vi.useFakeTimers();
 
 describe("ReviewRoom", () => {
   it("Renders the black card", () => {
@@ -37,7 +37,7 @@ describe("ReviewRoom", () => {
     usersSubmission.forEach(submission => {
       expect(wrapper.queryByTestId(playerSubmittedCardTestId(submission.user_id))).toBeInTheDocument();
       act(() => {
-        jest.advanceTimersByTime(5000);
+        vi.advanceTimersByTime(5000);
       });
     });
   });
@@ -46,7 +46,7 @@ describe("ReviewRoom", () => {
     const usersSubmission: PlayerSubmittedCard[] = submittedCardsResponse.data;
     const blackCard = blackCardFactory();
     const mockedDispatch = spyOnUseSpectate();
-    (listenWhenWinnerIsSelected as jest.Mock).mockImplementation((gameId: string, callable: () => {}) => {
+    (listenWhenWinnerIsSelected as vi.Mock).mockImplementation((gameId: string, callable: () => {}) => {
       callable();
     });
 

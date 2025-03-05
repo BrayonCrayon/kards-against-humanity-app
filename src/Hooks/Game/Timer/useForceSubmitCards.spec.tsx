@@ -9,7 +9,7 @@ import { expectDispatch, spyOnUseAuth } from "@/Tests/testHelpers";
 describe("useForceSubmitCards", () => {
     it.each([1, 2, 3])
     ("will select randomly select cards from a players hand", async (pickAmount: number) => {
-        const mockedDispatch = jest.fn();
+        const mockedDispatch = vi.fn();
         const spy = spyOnUseAuth(mockedDispatch);
         const blackCard = blackCardFactory({ pick: pickAmount});
         const gameId = "429749324sdf";
@@ -32,8 +32,8 @@ describe("useForceSubmitCards", () => {
     });
 
     it("will catch error when endpoint fails", async () => {
-        const spy = spyOnUseAuth(jest.fn());
-        const consoleSpy = jest.spyOn(console, "error").mockImplementationOnce(jest.fn());
+        const spy = spyOnUseAuth(vi.fn());
+        const consoleSpy = vi.spyOn(console, "error").mockImplementationOnce(vi.fn());
         const blackCard = blackCardFactory();
         const gameId = "429749324sdf";
         const hand = transformWhiteCardArray(

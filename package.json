@@ -47,7 +47,7 @@
     "dev": "vite",
     "compile-ts": "tsc --project tsconfig.json",
     "ts-lint": "tsc --project tsconfig.json",
-    "eject": "react-scripts eject"
+    "test": "vitest"
   },
   "overrides": {
     "react-scripts": {
@@ -81,10 +81,12 @@
     "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.21.0",
+    "jsdom": "^26.0.0",
     "laravel-echo": "^2.0.2",
     "postcss": "^8.5.3",
     "prettier": "3.5.2",
     "ts-node": "^10.9.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^3.0.7"
   }
 }

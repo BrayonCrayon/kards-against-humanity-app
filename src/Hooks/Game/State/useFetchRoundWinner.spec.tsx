@@ -12,7 +12,7 @@ const renderUseFetchRoundWinner = () => {
   return kardsHookRender(useFetchRoundWinner);
 };
 
-const mockDispatch = jest.fn();
+const mockDispatch = vi.fn();
 
 const mockApiData: RoundWinner = {
   submitted_cards: [],
@@ -45,7 +45,7 @@ describe("useFetchRoundWinner", () => {
     const mockErrorMessage = { code: 500, message: "server failure", };
     const spyConsole = jest
       .spyOn(console, "error")
-      .mockImplementation(jest.fn());
+      .mockImplementation(vi.fn());
     service.roundWinner.mockRejectedValueOnce(mockErrorMessage);
     const gameId = gameFixture.id;
     const { result } = renderUseFetchRoundWinner();

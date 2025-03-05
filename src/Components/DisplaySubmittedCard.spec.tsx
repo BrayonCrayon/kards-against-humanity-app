@@ -15,7 +15,7 @@ const renderComponent = () => {
 
 describe("Submitted Card", function () {
   beforeEach(() => {
-    spyOnUseGame(jest.fn(), { game, blackCard })
+    spyOnUseGame(vi.fn(), { game, blackCard })
   })
 
   it("render submitted card", () => {

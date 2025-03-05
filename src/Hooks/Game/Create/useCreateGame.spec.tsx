@@ -7,11 +7,11 @@ import useCreateGame from "@/Hooks/Game/Create/useCreateGame";
 import { transformUser, transformUsers } from "@/Types/User";
 import { ICreateGameOptions } from "@/Services/GameService";
 
-const mockedNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
+const mockedNavigate = vi.fn();
+vi.mock("react-router-dom", () => ({
   useNavigate: () => mockedNavigate
 }))
-const dispatchSpy = jest.fn();
+const dispatchSpy = vi.fn();
 const { data } = gameStateExampleResponse;
 
 describe("useCreateGame", () => {
@@ -45,7 +45,7 @@ describe("useCreateGame", () => {
 
   it("will handle server error", async () => {
     const errorMsg = { status: 500 };
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     service.createGame.mockRejectedValueOnce(errorMsg);
     const { result } = kardsHookRender(useCreateGame);
 

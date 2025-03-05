@@ -10,7 +10,7 @@ describe("KAHCheckbox", () => {
   });
 
   it("will check the box and call our onclick", async () => {
-    const mockClick = jest.fn();
+    const mockClick = vi.fn();
     const wrapper = render(<KAHCheckbox dataTestid={'kah-checkbox'} onClick={mockClick} />);
 
     userEvent.click(wrapper.getByTestId("kah-checkbox"));

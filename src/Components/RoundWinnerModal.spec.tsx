@@ -12,15 +12,15 @@ import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleRes
 import { fillOutBlackCard } from "@/Utilities/helpers";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "@/Tests/testHelpers";
 
-const mockRotateGame = jest.fn();
-jest.mock("@/Hooks/Game/Actions/useRotateGame", () => {
+const mockRotateGame = vi.fn();
+vi.mock("@/Hooks/Game/Actions/useRotateGame", () => {
   return () => {
     return mockRotateGame;
   };
 });
 
-const mockFetchGameState = jest.fn();
-jest.mock("@/Hooks/Game/State/useFetchGameState", () => {
+const mockFetchGameState = vi.fn();
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => {
   return () => {
     return mockFetchGameState;
   };
@@ -37,10 +37,10 @@ const renderComponent = () => {
 
 describe("RoundWinnerModal", () => {
   beforeEach(() => {
-    spyOnUseGame(jest.fn(), { game, blackCard: blackCard });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
-    spyOnUsePlayers(jest.fn(), { players });
-    spyOnUseVote(jest.fn(), {
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCard });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
+    spyOnUsePlayers(vi.fn(), { players });
+    spyOnUseVote(vi.fn(), {
       selectedRoundWinner: {
         ...submittedCardsResponse.data[0],
         black_card: blackCard
@@ -64,8 +64,8 @@ describe("RoundWinnerModal", () => {
   });
 
   it("will close model when user clicks close button", async () => {
-    const dispatchSpy = jest.fn();
-    jest.spyOn(Vote, "useVote").mockImplementation(() => ({
+    const dispatchSpy = vi.fn();
+    vi.spyOn(Vote, "useVote").mockImplementation(() => ({
       dispatch: dispatchSpy,
       state: {
         selectedRoundWinner: roundWinnerExampleResponse.data,
@@ -92,7 +92,7 @@ describe("RoundWinnerModal", () => {
   it("will display round winners name", () => {
     const winner = submittedCardsResponse.data[0];
     const winnerName = players.find(user => user.id === winner.user_id)!.name;
-    spyOnUseVote(jest.fn(), {
+    spyOnUseVote(vi.fn(), {
       selectedPlayerId: 1,
       selectedRoundWinner: { ...winner, black_card: blackCard }
     });
@@ -113,7 +113,7 @@ describe("RoundWinnerModal", () => {
   });
 
   it("will only call round rotation hook when a winner is selected", () => {
-    spyOnUseVote(jest.fn(), { selectedRoundWinner: undefined, selectedPlayerId: 1 });
+    spyOnUseVote(vi.fn(), { selectedRoundWinner: undefined, selectedPlayerId: 1 });
 
     renderComponent();
 
@@ -122,7 +122,7 @@ describe("RoundWinnerModal", () => {
   });
 
   it("does not call game rotate when user is not a judge", async () => {
-    spyOnUseAuth(jest.fn(), { auth: players[0], hasSubmittedCards: false });
+    spyOnUseAuth(vi.fn(), { auth: players[0], hasSubmittedCards: false });
     renderComponent();
 
     await waitFor(() => {
@@ -131,7 +131,7 @@ describe("RoundWinnerModal", () => {
   });
 
   it("will continue to show previous black card after game rotate", async () => {
-    spyOnUseVote(jest.fn(), {
+    spyOnUseVote(vi.fn(), {
       selectedPlayerId: 1,
       selectedRoundWinner: roundWinnerExampleResponse.data
     });

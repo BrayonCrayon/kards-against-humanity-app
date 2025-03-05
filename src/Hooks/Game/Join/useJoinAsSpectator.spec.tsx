@@ -7,7 +7,7 @@ import { service } from "setupTests";
 import { AxiosResponse } from "axios";
 
 const {data: {users, user, game, blackCard} } = gameSpectatorExampleResponse;
-const mockedDispatch = jest.fn();
+const mockedDispatch = vi.fn();
 
 describe("useJoinAsSpectator", () => {
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe("useJoinAsSpectator", () => {
 
   it("will catch server error", async () => {
     const errorMessage = { message: "something happened"};
-    const consoleSpy = jest.spyOn(console, "error")
+    const consoleSpy = vi.spyOn(console, "error")
       .mockImplementation(() => {});
     service.joinAsSpectator.mockRejectedValueOnce(errorMessage);
 

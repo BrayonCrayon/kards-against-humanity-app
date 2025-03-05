@@ -6,12 +6,12 @@ const renderComponent = () => {
   return kardsRender(<Footer />);
 };
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useLocation: jest.fn(),
+vi.mock("react-router-dom", () => ({
+  ...vi.requireActual("react-router-dom"),
+  useLocation: vi.fn(),
 }));
 
-const mockedUseLocation = useLocation as jest.Mocked<typeof useLocation>;
+const mockedUseLocation = useLocation as vi.Mocked<typeof useLocation>;
 
 describe("Footer", () => {
   it("will show join game footer", () => {

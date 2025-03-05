@@ -14,7 +14,7 @@ import { initialGameState } from "@/State/Game/GameState";
 import { initialPlayersState } from "@/State/Players/PlayersState";
 import { initialHandState } from "@/State/Hand/HandState";
 
-const dispatch = jest.fn();
+const dispatch = vi.fn();
 
 describe("useLeaveGame", () => {
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe("useLeaveGame", () => {
     const errorMessage = { error: "500 server error" };
     service.leaveGame.mockRejectedValueOnce(errorMessage);
     const gameId = "2342klh34o3i2u432j";
-    const consoleSpy = jest.spyOn(console, "error").mockImplementationOnce(() => {});
+    const consoleSpy = vi.spyOn(console, "error").mockImplementationOnce(() => {});
     const { result } = kardsHookRender(useLeaveGame);
 
     await result.current(gameId);

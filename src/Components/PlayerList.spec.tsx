@@ -7,13 +7,13 @@ import userEvent from "@testing-library/user-event";
 
 const { users: players, currentUser: auth, game, blackCard } = gameStateExampleResponse.data;
 
-const mockKickPlayer = jest.fn();
-jest.mock("@/Hooks/Game/Actions/useKickPlayer", () => () => mockKickPlayer);
+const mockKickPlayer = vi.fn();
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => () => mockKickPlayer);
 
 describe("PlayerList", () => {
   beforeEach(() => {
-    spyOnUseGame(jest.fn(), { game, blackCard });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
+    spyOnUseGame(vi.fn(), { game, blackCard });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
   });
 
   it("will render", () => {
@@ -57,7 +57,7 @@ describe("PlayerList", () => {
   });
 
   it("shows a button to kick players on users list", async () => {
-    spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
+    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const playerToKickId = players.filter((item) => item.id !== auth.id)[0].id;
     const wrapper = kardsRender(<PlayerList users={players} />);
 
@@ -77,7 +77,7 @@ describe("PlayerList", () => {
   });
 
   it("will not show kick player on player that is the judge", async () => {
-    spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
+    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
@@ -87,7 +87,7 @@ describe("PlayerList", () => {
 
   it("will call api endpoint to kick player from game", async () => {
     confirmedSweetAlert(true);
-    spyOnUseGame(jest.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
+    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
     const playerToKick = players.filter((item) => item.id !== auth.id)[0];
     const wrapper = kardsRender(<PlayerList users={players} />);
 

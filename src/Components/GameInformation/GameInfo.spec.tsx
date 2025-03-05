@@ -18,27 +18,27 @@ const renderer = async (): Promise<RenderResult> => {
   return kardsRender(<GameInfo />);
 };
 
-const mockKickPlayer = jest.fn();
-jest.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
+const mockKickPlayer = vi.fn();
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
   return () => {
     return mockKickPlayer;
   };
 });
 
-const mockUpdateGameSettings = jest.fn();
-jest.mock("@/Hooks/Game/State/useUpdateGameSettings", () => {
+const mockUpdateGameSettings = vi.fn();
+vi.mock("@/Hooks/Game/State/useUpdateGameSettings", () => {
   return () => {
     return mockUpdateGameSettings;
   }
 })
 
-jest.mock("@/Utilities/toasts");
+vi.mock("@/Utilities/toasts");
 
 describe("GameInfo", () => {
   beforeEach(() => {
-    spyOnUsePlayers(jest.fn(), { players });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards });
-    spyOnUseGame(jest.fn(), { game, blackCard });
+    spyOnUsePlayers(vi.fn(), { players });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards });
+    spyOnUseGame(vi.fn(), { game, blackCard });
   });
 
   it("shows game code", async () => {
@@ -52,7 +52,7 @@ describe("GameInfo", () => {
   });
 
   it("copies game code to clipboard when clicked", async () => {
-    jest.spyOn(navigator.clipboard, "writeText");
+    vi.spyOn(navigator.clipboard, "writeText");
     const wrapper = await renderer();
 
     await waitFor(() => {
@@ -82,7 +82,7 @@ describe("GameInfo", () => {
   it("will update game settings when user clicks update in timer settings", async () => {
     const seconds = 300;
     const callbackSpy = spyOnUseGame(
-        jest.fn(),
+        vi.fn(),
         {game: gameFactory({selectionTimer: 200, selectionEndsAt: 5000}), blackCard}
     );
     const wrapper = await renderer();

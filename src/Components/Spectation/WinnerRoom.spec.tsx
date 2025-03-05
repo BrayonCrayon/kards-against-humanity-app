@@ -7,7 +7,7 @@ import { act } from "react-dom/test-utils";
 import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 
-jest.useFakeTimers();
+vi.useFakeTimers();
 
 describe("WinnerRoom", () => {
   it("will show drum icon before winner", () => {
@@ -28,7 +28,7 @@ describe("WinnerRoom", () => {
     const wrapper = render(<WinnerRoom player={winner} cards={cards} />);
 
     act(() => {
-      jest.advanceTimersByTime(6000);
+      vi.advanceTimersByTime(6000);
     });
 
     expect(wrapper.queryByTestId("drum-icon")).not.toBeInTheDocument();
@@ -49,10 +49,10 @@ describe("WinnerRoom", () => {
     render(<WinnerRoom player={winner} cards={cards} />);
 
     act(() => {
-      jest.advanceTimersByTime(6000);
+      vi.advanceTimersByTime(6000);
     });
     act(() => {
-      jest.advanceTimersByTime(11000);
+      vi.advanceTimersByTime(11000);
     });
 
     expectDispatch(dispatch, Stage.DISPLAY_BLACK_CARD);

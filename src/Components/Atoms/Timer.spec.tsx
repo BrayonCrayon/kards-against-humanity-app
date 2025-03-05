@@ -3,7 +3,7 @@ import Timer from "@/Components/Atoms/Timer";
 import moment from "moment";
 import { act } from "react-dom/test-utils";
 
-jest.useFakeTimers().setSystemTime();
+vi.useFakeTimers().setSystemTime();
 describe("Timer", () => {
 
   it("will display timer", async () => {
@@ -17,7 +17,7 @@ describe("Timer", () => {
     const endTimestamp = moment().add(60, "seconds").unix();
     const wrapper = render(<Timer end={endTimestamp} />);
 
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => vi.advanceTimersByTime(1000));
 
     await waitFor(() => {
       expect(wrapper.getByText("0:59")).toBeInTheDocument();
@@ -26,10 +26,10 @@ describe("Timer", () => {
 
   it("will notify when timer has ended", async () => {
     const endTimestamp = moment().add(1, "seconds").unix();
-    const callback = jest.fn();
+    const callback = vi.fn();
     const wrapper = render(<Timer end={endTimestamp} onEnd={callback} />);
 
-    act(() => jest.advanceTimersByTime(1000));
+    act(() => vi.advanceTimersByTime(1000));
 
     await waitFor(() => {
       expect(wrapper.getByText("0:00")).toBeInTheDocument();

@@ -15,19 +15,19 @@ import { Stage } from "@/State/Spectate/SpectateState";
 const {data} = gameSpectatorExampleResponse;
 
 const mockGameId = data.game.id;
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"), // use actual for all non-hook parts
+vi.mock("react-router-dom", () => ({
+  ...vi.requireActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
     id: mockGameId,
   }),
 }));
 
-jest.mock("@lottiefiles/dotlottie-react", () => ({
+vi.mock("@lottiefiles/dotlottie-react", () => ({
   DotLottieReact: () => <div></div>
 }))
 
-const mockListenOnEvents = jest.fn();
-jest.mock("@/Hooks/Helpers/useListenOnSpectatorEvents", () => {
+const mockListenOnEvents = vi.fn();
+vi.mock("@/Hooks/Helpers/useListenOnSpectatorEvents", () => {
   return () => mockListenOnEvents;
 });
 
@@ -91,7 +91,7 @@ describe("SpectatorPage", () => {
       [Stage.DISPLAY_WINNER, "votes-display", ["submissions-display", "waiting-room", "black-card-0"]],
   ])
   ("will show only the black card when spector stage is on display black card stage for %s", async (stage, currentStage, otherStages) => {
-    spyOnUseSpectate(jest.fn(), {stage})
+    spyOnUseSpectate(vi.fn(), {stage})
     const wrapper = await waitFor(() => kardsRender(<SpectatorPage/>));
 
     expect(wrapper.queryByTestId(currentStage)).toBeInTheDocument();

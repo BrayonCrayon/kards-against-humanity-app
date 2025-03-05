@@ -9,20 +9,20 @@ import {
   listenWhenUserSubmittedCards
 } from "@/Services/PusherService";
 
-jest.mock("@/Services/PusherService");
+vi.mock("@/Services/PusherService");
 
-const mockSpectatorStateCallback = jest.fn();
-jest.mock("@/Hooks/Game/State/useSpectatorStateCallback", () => {
+const mockSpectatorStateCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useSpectatorStateCallback", () => {
   return () => mockSpectatorStateCallback;
 });
 
-const mockJoinCallback = jest.fn();
-jest.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
+const mockJoinCallback = vi.fn();
+vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
   return () => mockJoinCallback;
 });
 
-const mockRefreshPlayersCallback = jest.fn();
-jest.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
+const mockRefreshPlayersCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
   return () => mockRefreshPlayersCallback;
 });
 

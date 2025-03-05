@@ -3,8 +3,8 @@ import {gameFactory} from "@/Tests/Factories/GameFactory";
 import {service} from "setupTests";
 import useGameStart from "./useGameStart";
 
-const mockedFetchGameCallback = jest.fn();
-jest.mock("@/Hooks/Game/State/useFetchGameState", () => () => mockedFetchGameCallback);
+const mockedFetchGameCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => () => mockedFetchGameCallback);
 
 describe("useGameStart", () => {
 
@@ -21,7 +21,7 @@ describe("useGameStart", () => {
     it("will catch server errors", async () => {
         const error = { message: "Something went wrong" };
         service.startGame.mockRejectedValueOnce(error);
-        const consoleSpy = jest.spyOn(console, "error").mockImplementationOnce(jest.fn());
+        const consoleSpy = vi.spyOn(console, "error").mockImplementationOnce(vi.fn());
         const game = gameFactory();
         const {result} = renderHook(useGameStart);
 

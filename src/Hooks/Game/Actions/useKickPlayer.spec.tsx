@@ -6,7 +6,7 @@ import { service } from "setupTests";
 import { expectDispatch, spyOnUsePlayers } from "@/Tests/testHelpers";
 import { initialPlayersState } from "@/State/Players/PlayersState";
 
-const mockedDispatch = jest.fn();
+const mockedDispatch = vi.fn();
 const gameId = gameFixture.id;
 const userId = 1;
 

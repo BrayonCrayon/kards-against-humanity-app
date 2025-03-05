@@ -35,7 +35,7 @@ describe("useDetermineWinner", () => {
     const expectedWinner = players[randNumber({ min: 0, max: players.length - 1})];
     const submissions: SubmittedCard[] = Array.from({ length: 2 }).map((_) => submittedCardFactory())
     const selectedRoundWinner: RoundWinner = { black_card: blackCardFactory(), user_id: expectedWinner.id, submitted_cards: submissions }
-    spyOnUseVote(jest.fn(), { selectedRoundWinner, selectedPlayerId: -1 });
+    spyOnUseVote(vi.fn(), { selectedRoundWinner, selectedPlayerId: -1 });
 
     const { result } = kardsHookRender(useDetermineWinner, players)
     const { winner, winnerCards } = result.current;

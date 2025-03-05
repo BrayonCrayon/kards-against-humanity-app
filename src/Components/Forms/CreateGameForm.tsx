@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Button } from "@/Components/Atoms/Button";
 import KAHInput from "@/Components/KAHInput";
-import useCreateGame from "@/Hooks/Game/Create/useCreateGame";
+import { useCreateGame } from "@/Hooks/Game/Create/useCreateGame";
 import { KAHCard } from "@/Components/KAHCard";
 import { GameOptions } from "@/Components/Sidebars/GameOptions";
 import useExpansions from "@/Hooks/Game/Expansions/useExpansions";

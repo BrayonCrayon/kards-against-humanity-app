@@ -10,7 +10,7 @@ import { errorToast } from "@/Utilities/toasts";
 const {data} = gameStateExampleResponse;
 const code = "1k2k";
 const userName = "Frodo";
-const dispatchSpy = jest.fn();
+const dispatchSpy = vi.fn();
 
 describe("useJoinGame", () => {
   beforeEach(() => {
@@ -36,8 +36,8 @@ describe("useJoinGame", () => {
   it("will catch server error", async () => {
     const errorMessage = { message: "No Api" };
     service.joinGame.mockRejectedValueOnce(errorMessage);
-    console.error = jest.fn();
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    console.error = vi.fn();
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
     const { result } = kardsHookRender(useJoinGame);
 

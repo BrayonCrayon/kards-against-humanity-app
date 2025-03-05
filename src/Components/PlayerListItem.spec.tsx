@@ -7,8 +7,8 @@ import { transformUser } from "@/Types/User";
 import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
 
 const { data: {game, users, blackCard} } = gameStateExampleResponse;
-const mockKickPlayer = jest.fn();
-jest.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
+const mockKickPlayer = vi.fn();
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
   return () => {
     return mockKickPlayer;
   };
@@ -23,9 +23,9 @@ const renderer = (user = player): RenderResult => {
 
 describe("PlayerListItem", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    spyOnUseGame(jest.fn(), { game, blackCard });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
+    vi.clearAllMocks();
+    spyOnUseGame(vi.fn(), { game, blackCard });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
   });
 
   it("will show prompt when a user is being kicked from the game", async () => {

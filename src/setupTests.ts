@@ -2,17 +2,18 @@ import "@testing-library/jest-dom";
 import { apiClient } from "@/Api/apiClient";
 import gameService from "@/Services/GameService";
 import { config } from "react-transition-group";
+import { Mocked, vi } from "vitest";
 
-window.scrollTo = jest.fn();
+window.scrollTo = vi.fn();
 config.disabled = true;
 
-jest.mock("@/Api/apiClient");
-export const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
+vi.mock("@/Api/apiClient");
+export const mockedAxios = apiClient as Mocked<typeof apiClient>;
 
-jest.mock("@/Services/GameService");
-export const service = gameService as jest.Mocked<typeof gameService>;
+vi.mock("@/Services/GameService");
+export const service = gameService as Mocked<typeof gameService>;
 
-jest.mock("@/Utilities/toasts");
+vi.mock("@/Utilities/toasts");
 
 Object.assign(navigator, {
   clipboard: {
@@ -20,11 +21,11 @@ Object.assign(navigator, {
   },
 });
 
-jest.mock("pusher-js");
-jest.mock("sweetalert2");
+vi.mock("pusher-js");
+vi.mock("sweetalert2");
 
-export const mockedUsedNavigate = jest.fn();
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom") as any,
+export const mockedUsedNavigate = vi.fn();
+vi.mock("react-router-dom", () => ({
+  ...vi.importActual("react-router-dom"),
   useNavigate: () => mockedUsedNavigate,
 }));

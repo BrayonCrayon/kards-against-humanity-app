@@ -8,20 +8,20 @@ import {
 } from "@/Services/PusherService";
 import useListenOnEvents from "@/Hooks/Helpers/useListenOnEvents";
 
-jest.mock("@/Services/PusherService");
+vi.mock("@/Services/PusherService");
 
-const mockGameStateCallback = jest.fn();
-jest.mock("@/Hooks/Game/State/useGameStateCallback", () => {
+const mockGameStateCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useGameStateCallback", () => {
   return () => mockGameStateCallback;
 });
 
-const mockJoinCallback = jest.fn();
-jest.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
+const mockJoinCallback = vi.fn();
+vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
   return () => mockJoinCallback;
 });
 
-const mockRefreshPlayersCallback = jest.fn();
-jest.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
+const mockRefreshPlayersCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
   return () => mockRefreshPlayersCallback;
 });
 
