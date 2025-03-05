@@ -1,5 +1,7 @@
 import { FC, JSX, PropsWithChildren, useState } from "react";
 import { Button } from "@/Components/Atoms/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 interface ToggleSidebarProps extends PropsWithChildren {
   toggleElement?: JSX.Element;
@@ -42,7 +44,7 @@ const ToggleSidebar: FC<ToggleSidebarProps> = ({
               data-testid="close-button"
               onClick={() => setShow(!show)}
             >
-              <i className="fa-solid fa-arrow-left text-3xl" />
+              <FontAwesomeIcon icon={faArrowLeft} className="text-3xl" />
             </button>
             {children}
           </div>
