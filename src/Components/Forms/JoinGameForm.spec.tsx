@@ -6,15 +6,18 @@ import { kardsRender } from "@/Tests/testRenders";
 import { setupAndSubmitForm } from "@/Tests/actions";
 import { mockedAxios } from "@/setupTests";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockJoinAsSpectator = vi.fn();
 const mockJoinGame = vi.fn();
 vi.mock("@/Hooks/Game/Join/useJoinAsSpectator", () => {
-  return () => mockJoinAsSpectator
+  return {
+    default: () => mockJoinAsSpectator
+  }
 })
 vi.mock("@/Hooks/Game/Join/useJoinGame", () => {
-  return () => mockJoinGame
+  return {
+    default: () => mockJoinGame
+  }
 });
 
 const mockGameCode = "3H8K";
@@ -40,6 +43,11 @@ describe("JoinGameForm", () => {
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
   });
 
+  afterEach(() => {
+    mockJoinAsSpectator.mockClear();
+    mockJoinGame.mockClear();
+  })
+
   it("renders", async () => {
     const wrapper = renderer();
 
@@ -62,7 +70,7 @@ describe("JoinGameForm", () => {
     await setupAndSubmitForm(userName, data.game.code, true);
 
     await waitFor(async () => {
-      expect(mockJoinAsSpectator).toHaveBeenCalledWith( data.game.code );
+      expect(mockJoinAsSpectator).toHaveBeenCalledWith(data.game.code);
       expect(mockJoinGame).not.toHaveBeenCalled();
     });
   })
