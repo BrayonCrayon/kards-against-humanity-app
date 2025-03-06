@@ -1,3 +1,4 @@
+import React from "react";
 import { render, waitFor } from "@testing-library/react";
 import { KAHCheckbox } from "@/Components/KAHCheckbox";
 import userEvent from "@testing-library/user-event";
@@ -16,8 +17,9 @@ describe("KAHCheckbox", () => {
     userEvent.click(wrapper.getByTestId("kah-checkbox"));
 
     await waitFor(() => {
-      expect(wrapper.container.querySelector("i")!.className)
-        .toContain("fa-check");
+      const svg = wrapper.container.querySelector("svg");
+      expect(svg).not.toBeNull();
+      expect(svg!.getAttribute("data-icon")).toBe("check");
     });
     expect(mockClick).toHaveBeenCalledWith(true);
   });

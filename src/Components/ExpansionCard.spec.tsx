@@ -1,3 +1,4 @@
+import React from "react";
 import { render } from "@testing-library/react";
 import ExpansionCard from "./ExpansionCard";
 
@@ -9,7 +10,8 @@ describe("Expansion Cards", function () {
   );
 
   it("matches the checked property of the Expansion Card", () => {
-    const checkbox = wrapper.container.querySelector("i");
-    expect(checkbox!.className).toContain("fa-check");
+    const checkbox = wrapper.container.querySelector("svg");
+    expect(checkbox).not.toBeNull();
+    expect(checkbox!.getAttribute("data-icon")).toBe("check");
   });
 });
