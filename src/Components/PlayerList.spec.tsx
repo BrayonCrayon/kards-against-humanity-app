@@ -1,17 +1,20 @@
-import { kardsRender } from "@/Tests/testRenders";
-import PlayerList from "./PlayerList";
-import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { waitFor } from "@testing-library/react";
-import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
+import { kardsRender } from "@/Tests/testRenders";
+import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import PlayerList from "./PlayerList";
 
 const { users: players, currentUser: auth, game, blackCard } = gameStateExampleResponse.data;
 
 const mockKickPlayer = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => () => mockKickPlayer);
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => ({
+  default: () => mockKickPlayer
+}));
 
 describe("PlayerList", () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     spyOnUseGame(vi.fn(), { game, blackCard });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
   });
@@ -33,7 +36,7 @@ describe("PlayerList", () => {
     const { container } = kardsRender(<PlayerList users={players} />);
 
     await waitFor(async () => {
-      expect(container.querySelector("i.fa-gavel")).not.toBeNull();
+      expect(container.querySelector("svg.fa-gavel")).not.toBeNull();
     });
   });
 

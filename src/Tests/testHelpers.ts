@@ -37,7 +37,7 @@ export const expectNoDispatch = <TFunction, TPayload>(
 };
 
 export const spyOnUseHand = (
-  mockedDispatch = jest.fn(),
+  mockedDispatch = vi.fn(),
   state: IHandState = initialHandState
 ) => {
   spyOnState(state, mockedDispatch, useHand, "useHand");
@@ -45,7 +45,7 @@ export const spyOnUseHand = (
 }
 
 export const spyOnUseAuth = (
-  mockedDispatch = jest.fn(),
+  mockedDispatch = vi.fn(),
   state: IAuthState = initialAuthState
 ) => {
   spyOnState(state, mockedDispatch, useAuth, "useAuth");
@@ -53,7 +53,7 @@ export const spyOnUseAuth = (
 }
 
 export const spyOnUseGame = (
-  mockedDispatch = jest.fn(),
+  mockedDispatch = vi.fn(),
   state: IGameState = initialGameState,
 ) => {
   spyOnState(state, mockedDispatch, useGame, "useGame");
@@ -61,7 +61,7 @@ export const spyOnUseGame = (
 }
 
 export const spyOnUseVote = (
-  mockedDispatch = jest.fn(),
+  mockedDispatch = vi.fn(),
   state: IVoteState = initialVoteState,
 ) => {
   spyOnState(state, mockedDispatch, useVote, "useVote");
@@ -69,7 +69,7 @@ export const spyOnUseVote = (
 }
 
 export const spyOnUsePlayers = (
-  mockedDispatch = jest.fn(),
+  mockedDispatch = vi.fn(),
   state: IPlayersState = initialPlayersState,
 ) => {
   spyOnState(state, mockedDispatch, usePlayers, "usePlayers");
@@ -77,7 +77,7 @@ export const spyOnUsePlayers = (
 };
 
 export const spyOnUseSpectate = (
-    mockedDispatch = jest.fn(),
+    mockedDispatch = vi.fn(),
     state: ISpectateState = InitialSpectateState,
 ) => {
     spyOnState(state, mockedDispatch, useSpectate, "useSpectate");
@@ -86,12 +86,11 @@ export const spyOnUseSpectate = (
 
 export const spyOnState = <T extends object>(
   state: any = {},
-  mockedDispatch = jest.fn(),
+  mockedDispatch = vi.fn(),
   hook: T,
-  name: jest.FunctionPropertyNames<Required<T>>
+  name: keyof T
 ) => {
-  // todo: add a real type if someone can figure it out...
-  return jest.spyOn(hook, name).mockImplementation((): any => ({
+  return vi.spyOn(hook, name).mockImplementation((): any => ({
     state:{
       ...state,
     },
@@ -100,7 +99,7 @@ export const spyOnState = <T extends object>(
 }
 
 export const confirmedSweetAlert = (confirmed: boolean) => {
-  return jest.spyOn(Swal, "fire")
+  return vi.spyOn(Swal, "fire")
     .mockResolvedValueOnce({
         isConfirmed: confirmed,
         isDenied: false,
@@ -109,7 +108,7 @@ export const confirmedSweetAlert = (confirmed: boolean) => {
 }
 
 export const dismissSweetAlert = () => {
-  return jest.spyOn(Swal, "fire")
+  return vi.spyOn(Swal, "fire")
     .mockResolvedValueOnce({
       isConfirmed: false,
       isDenied: false,

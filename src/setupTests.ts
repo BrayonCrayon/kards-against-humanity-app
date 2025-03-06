@@ -1,4 +1,4 @@
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom/vitest";
 import { apiClient } from "@/Api/apiClient";
 import gameService from "@/Services/GameService";
 import { config } from "react-transition-group";

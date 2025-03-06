@@ -47,7 +47,8 @@
     "dev": "vite",
     "compile-ts": "tsc --project tsconfig.json",
     "ts-lint": "tsc --project tsconfig.json",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest run"
   },
   "overrides": {
     "react-scripts": {
