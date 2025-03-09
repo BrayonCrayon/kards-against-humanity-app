@@ -4,7 +4,7 @@ import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { Card } from "@/Types/Card";
 
-jest.setTimeout(1000000);
+vi.useFakeTimers({ shouldAdvanceTime: true });
 describe("TimelineCollection", () => {
 
     it("will be able to iterate over multiple base timelines", async ()=>{
@@ -16,11 +16,11 @@ describe("TimelineCollection", () => {
             .map((_,idx) => [blackCardFactory({ id: idx + 1 })]);
         const whiteCardTimeline = new BaseTimeline<Card[]>(whiteCards, 5);
         const blackCardTimeline = new BaseTimeline<Card[]>(blackCards, 5);
-        const whiteCardTester = jest.fn();
+        const whiteCardTester = vi.fn();
         const whiteCardCallback = (data?: Card|null) => { whiteCardTester(data) };
         whiteCardTimeline.setOnIteratedCallback(whiteCardCallback);
 
-        const blackCardTester = jest.fn();
+        const blackCardTester = vi.fn();
         const blackCardCallback = (data?: Card|null) => { blackCardTester(data) };
         blackCardTimeline.setOnIteratedCallback(blackCardCallback);
 

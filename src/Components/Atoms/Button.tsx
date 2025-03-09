@@ -23,6 +23,7 @@ interface ButtonProps extends PropsWithChildren {
   role?: string;
   iconClass?: string;
   beforeLoadingClass?: string;
+  ref?: any;
 }
 
 export const Button: FC<ButtonProps> = ({
@@ -38,6 +39,7 @@ export const Button: FC<ButtonProps> = ({
   iconClass = "",
   beforeLoadingClass = "",
   children,
+  ref
 }) => {
   const style = useMemo(() => {
     return `${variant} ${className}`;
@@ -45,6 +47,7 @@ export const Button: FC<ButtonProps> = ({
 
   return (
     <button
+      ref={ref}
       role={role}
       type={type}
       onClick={(e) => onClick(e)}

@@ -8,11 +8,9 @@ import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHel
 
 const { data: {game, users, blackCard} } = gameStateExampleResponse;
 const mockKickPlayer = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
-  return () => {
-    return mockKickPlayer;
-  };
-});
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => ({
+    default: () => mockKickPlayer
+}));
 
 const player = transformUser(users[0]);
 const [auth] = users.filter(user => user.id === game.judgeId);

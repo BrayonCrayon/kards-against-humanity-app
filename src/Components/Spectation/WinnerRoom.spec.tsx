@@ -1,9 +1,10 @@
+import "@testing-library/jest-dom/vitest";
 import { userFactory } from "@/Tests/Factories/UserFactory";
 import { render } from "@testing-library/react";
 import WinnerRoom from "@/Components/Spectation/WinnerRoom";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { userTestId, whiteCardTestId } from "@/Tests/selectors";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 

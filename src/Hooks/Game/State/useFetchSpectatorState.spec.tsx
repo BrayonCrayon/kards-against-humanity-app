@@ -3,7 +3,7 @@ import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampl
 import { fetchSpectatorState } from "@/Services/GameService";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers";
 import { initialAuthState } from "@/State/Auth/AuthState";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import { initialPlayersState } from "@/State/Players/PlayersState";
 import { initialGameState } from "@/State/Game/GameState";

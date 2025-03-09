@@ -1,5 +1,5 @@
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { AxiosResponse } from "axios";
 import { kardsHookRender } from "@/Tests/testRenders";

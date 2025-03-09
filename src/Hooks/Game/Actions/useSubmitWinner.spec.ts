@@ -1,5 +1,5 @@
 import { kardsHookRender } from "@/Tests/testRenders";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import useSubmitWinner from "@/Hooks/Game/Actions/useSubmitWinner";
 import { happyToast } from "@/Utilities/toasts";
 
@@ -19,7 +19,7 @@ describe("useSubmitWinner",() => {
 
   it("will catch server error", async () => {
     service.submitWinner.mockRejectedValueOnce({});
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(jest.fn());
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(vi.fn());
     const { result } = kardsHookRender(useSubmitWinner);
 
     await result.current(gameId, playerId);

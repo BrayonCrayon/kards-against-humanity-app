@@ -1,9 +1,9 @@
 import { kardsHookRender } from "@/Tests/testRenders";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import useExpansions from "@/Hooks/Game/Expansions/useExpansions";
 import gameService from "@/Services/GameService";
-import {act} from "react-dom/test-utils";
+import { act } from "react-dom/test-utils";
 
 
 describe("useFetchExpansions", () => {
@@ -31,7 +31,7 @@ describe("useFetchExpansions", () => {
     // @ts-ignore
     gameService.fetchExpansions.mockRejectedValueOnce(errorMessage);
 
-    const consoleSpy = jest
+    const consoleSpy = vi
       .spyOn(console, "error")
       .mockImplementationOnce(() => {});
     const { result } = kardsHookRender(useExpansions);

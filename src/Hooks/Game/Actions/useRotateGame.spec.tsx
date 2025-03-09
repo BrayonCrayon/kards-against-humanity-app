@@ -1,7 +1,7 @@
 import { gameFixture } from "@/Api/fixtures/gameFixture";
 import useRotateGame from "@/Hooks/Game/Actions/useRotateGame";
-import { service } from "setupTests";
-import {renderHook} from "@testing-library/react";
+import { service } from "@/setupTests";
+import { renderHook } from "@testing-library/react";
 
 describe("useRotateGame", () => {
   beforeEach(() => {
@@ -24,7 +24,7 @@ describe("useRotateGame", () => {
       message: "server error",
     };
     service.rotate.mockRejectedValueOnce(mockErrorMessage);
-    const spyConsole = jest
+    const spyConsole = vi
       .spyOn(console, "error")
       .mockImplementation(vi.fn());
     const gameId = gameFixture.id;

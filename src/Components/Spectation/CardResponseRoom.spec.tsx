@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { kardsRender } from "@/Tests/testRenders";
 import CardResponseRoom from "@/Components/Spectation/CardResponseRoom";
 import { TimelineCollection } from "@/Utilities/TimelineCollection";
@@ -11,7 +12,9 @@ import { Stage } from "@/State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
 
 const mockHook = vi.fn();
-vi.mock("@/Hooks/Spectate/useSwitchCard", () => (props: useSwitchCardProps) => mockHook(props));
+vi.mock("@/Hooks/Spectate/useSwitchCard", () => ({
+  default: (props: useSwitchCardProps) => mockHook(props)
+}));
 
 const mockUseSwitchCard = (hasTimeLines: boolean = false, cardCount: number = 1) => {
   const mockStart = vi.fn();

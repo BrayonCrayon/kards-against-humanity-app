@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import React from "react";
 import { fireEvent, RenderResult, waitFor } from "@testing-library/react";
 import GameInfo from "@/Components/GameInformation/GameInfo";
@@ -18,19 +19,17 @@ const renderer = async (): Promise<RenderResult> => {
   return kardsRender(<GameInfo />);
 };
 
-const mockKickPlayer = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => {
-  return () => {
-    return mockKickPlayer;
-  };
-});
+const mocks = vi.hoisted(() => ({
+  updateGameSettings: vi.fn()
+}))
 
-const mockUpdateGameSettings = vi.fn();
-vi.mock("@/Hooks/Game/State/useUpdateGameSettings", () => {
-  return () => {
-    return mockUpdateGameSettings;
-  }
-})
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => ({
+    default: () => vi.fn()
+}));
+
+vi.mock("@/Hooks/Game/State/useUpdateGameSettings", () => ({
+    default: () => mocks.updateGameSettings,
+}))
 
 vi.mock("@/Utilities/toasts");
 
@@ -101,7 +100,7 @@ describe("GameInfo", () => {
     await userEvent.click(wrapper.getByTestId("update-settings"));
 
     await waitFor(() => {
-      expect(mockUpdateGameSettings).toHaveBeenCalled();
+      expect(mocks.updateGameSettings).toHaveBeenCalled();
       callbackSpy.mockRestore();
     });
   });

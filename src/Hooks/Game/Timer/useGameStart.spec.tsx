@@ -1,10 +1,13 @@
-import {renderHook} from "@testing-library/react";
-import {gameFactory} from "@/Tests/Factories/GameFactory";
-import {service} from "setupTests";
+import { renderHook } from "@testing-library/react";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { service } from "@/setupTests";
 import useGameStart from "./useGameStart";
 
-const mockedFetchGameCallback = vi.fn();
-vi.mock("@/Hooks/Game/State/useFetchGameState", () => () => mockedFetchGameCallback);
+const mocks = vi.hoisted(() => ({ fetchGameCallback: vi.fn() }))
+
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({
+    default: () => mocks.fetchGameCallback
+}));
 
 describe("useGameStart", () => {
 
@@ -15,7 +18,7 @@ describe("useGameStart", () => {
         await result.current(game.id);
 
         expect(service.startGame).toHaveBeenCalledWith(game.id);
-        expect(mockedFetchGameCallback).toHaveBeenCalledWith(game.id);
+        expect(mocks.fetchGameCallback).toHaveBeenCalledWith(game.id);
     });
 
     it("will catch server errors", async () => {

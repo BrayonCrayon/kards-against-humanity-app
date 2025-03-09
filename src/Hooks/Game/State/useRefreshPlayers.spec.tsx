@@ -4,7 +4,7 @@ import { expectDispatch, spyOnUsePlayers } from "@/Tests/testHelpers";
 import { playersIndexExampleResponse } from "@/Api/fixtures/playersIndexExampleResponse";
 import { transformUsers } from "@/Types/User";
 import { initialPlayersState } from "@/State/Players/PlayersState";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { kardsHookRender } from "@/Tests/testRenders";
 
 const mockedDispatch = vi.fn();
@@ -32,7 +32,7 @@ describe("useRotateGame", () => {
       message: "server error",
     };
     service.fetchPlayers.mockRejectedValueOnce(mockErrorMessage);
-    const spyConsole = jest
+    const spyConsole = vi
       .spyOn(console, "error")
       .mockImplementation(vi.fn());
     const gameId = gameFixture.id;

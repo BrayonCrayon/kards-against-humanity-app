@@ -8,13 +8,13 @@ import { toMinutesSeconds } from "@/Utilities/helpers";
 import { userFactory } from "@/Tests/Factories/UserFactory";
 import { transformUser, transformUsers } from "@/Types/User";
 import { waitFor } from "@testing-library/react";
-import { service } from "setupTests";
-import { act } from "react-dom/test-utils";
+import { service } from "@/setupTests";
+import { act } from "react";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { AxiosResponse } from "axios";
 
-vi.useFakeTimers();
+vi.useFakeTimers({ shouldAdvanceTime: true });
 
 describe("SelectionRoundTimer", () => {
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will show timer", async () => {
-        vi.setSystemTime();
+        vi.setSystemTime(new Date());
         const game = gameFactory({
             selectionTimer: 60,
             selectionEndsAt: moment().add(60, "seconds").unix()
@@ -40,7 +40,7 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will call end timer callback for players", async () => {
-        vi.setSystemTime();
+        vi.setSystemTime(new Date());
         const user = transformUser(userFactory());
         const game = gameFactory({
             selectionTimer: 60,
@@ -57,7 +57,7 @@ describe("SelectionRoundTimer", () => {
 
         kardsRender(<SelectionRoundTimer/>);
 
-        await act(() => {
+        act(() => {
             vi.advanceTimersByTime(1000);
         });
 
@@ -96,7 +96,7 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will not call end timer callback for judge", async () => {
-        vi.setSystemTime();
+        vi.setSystemTime(new Date());
         const user = transformUser(userFactory());
         const game = gameFactory({
             judgeId: user.id,
@@ -112,7 +112,7 @@ describe("SelectionRoundTimer", () => {
 
         kardsRender(<SelectionRoundTimer/>);
 
-        await act(() => {
+        act(() => {
             vi.advanceTimersByTime(1000);
         });
 
@@ -122,7 +122,7 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will not call end timer callback when authed user already submitted their cards", async () => {
-        vi.setSystemTime();
+        vi.setSystemTime(new Date());
         const user = transformUser(userFactory({id: 1, hasSubmittedWhiteCards: true}));
         const game = gameFactory({
             judgeId: 999,
@@ -139,7 +139,7 @@ describe("SelectionRoundTimer", () => {
 
         kardsRender(<SelectionRoundTimer/>);
 
-        await act(() => {
+        act(() => {
             vi.advanceTimersByTime(1000);
         });
 

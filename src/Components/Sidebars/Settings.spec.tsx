@@ -8,7 +8,9 @@ import { gameFactory } from "@/Tests/Factories/GameFactory";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
 const mockedLeaveGame = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useLeaveGame", () => () => mockedLeaveGame);
+vi.mock("@/Hooks/Game/Actions/useLeaveGame", () => ({
+  default: () => mockedLeaveGame
+}));
 
 const renderComponent = (gameId = "alsdf83948f3f", players: User[] = []) => {
   return kardsRender(<Settings players={players} />);

@@ -8,7 +8,7 @@ import { initialHandState } from "@/State/Hand/HandState";
 import { initialPlayersState } from "@/State/Players/PlayersState";
 import { initialAuthState } from "@/State/Auth/AuthState";
 import { initialGameState } from "@/State/Game/GameState";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import { fetchState } from "@/Services/GameService";
 import { renderHook } from "@testing-library/react";

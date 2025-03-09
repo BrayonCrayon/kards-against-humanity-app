@@ -1,8 +1,8 @@
 import { kardsHookRender } from "@/Tests/testRenders";
 import useSubmittedCards from "@/Hooks/Game/State/useSubmittedCards";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
 import { SubmittedCard } from "@/Types/SubmittedCard";

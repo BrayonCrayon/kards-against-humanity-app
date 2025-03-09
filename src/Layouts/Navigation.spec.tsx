@@ -1,17 +1,19 @@
+import "@testing-library/jest-dom/vitest";
 import { kardsRender } from "@/Tests/testRenders";
-import Navigation from "Layouts/Navigation";
+import Navigation from "@/Layouts/Navigation";
 import { useLocation } from "react-router-dom";
+import { Mocked } from "vitest";
 
 const renderComponent = () => {
   return kardsRender(<Navigation />);
 }
 
 vi.mock('react-router-dom', () => ({
-  ...vi.requireActual('react-router-dom'),
+  ...vi.importActual('react-router-dom'),
   useLocation: vi.fn()
 }));
 
-const mockedUseLocation = useLocation as vi.Mocked<typeof useLocation>;
+const mockedUseLocation = useLocation as Mocked<typeof useLocation>;
 
 describe("Navigation", () => {
   it("will show navigation", () => {

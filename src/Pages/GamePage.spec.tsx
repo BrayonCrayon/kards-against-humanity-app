@@ -3,7 +3,9 @@ import GamePage from "./GamePage";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "@/Services/PusherService";
 import userEvent from "@testing-library/user-event";
-import { gameStateSubmittedWhiteCardsExampleResponse } from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import {
+  gameStateSubmittedWhiteCardsExampleResponse
+} from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "@/Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "@/Tests/actions";
 import { gameStateJudgeExampleResponse } from "@/Api/fixtures/gameStateJudgeExampleResponse";
@@ -13,7 +15,7 @@ import {
 } from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "@/Api/fixtures/gameStateOnePlayerInGameExampleResponse";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { fetchState } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
 import { confirmedSweetAlert, spyOnUseVote } from "@/Tests/testHelpers";
@@ -26,15 +28,15 @@ vi.mock("@/Utilities/toasts");
 let mockGameId = gameStateExampleResponse.data.game.id;
 const cardsInHand = gameStateExampleResponse.data.hand;
 vi.mock("react-router-dom", () => ({
-  ...vi.requireActual("react-router-dom"), // use actual for all non-hook parts
+  ...vi.importActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
     id: mockGameId,
   }),
 }));
 
-vi.mock("@/Hooks/Game/State/useGameStateCallback", () => {
-  return () => vi.fn();
-});
+vi.mock("@/Hooks/Game/State/useGameStateCallback", () => ({
+  default: () => vi.fn()
+}));
 
 describe("GamePage", () => {
   beforeEach(() => {

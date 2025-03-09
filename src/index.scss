@@ -4,6 +4,7 @@
 @use "./Styles/SpectatorCard.scss";
 @use "./Styles/RangeInput.scss";
 @use "tailwindcss";
+@config "../tailwind.config";
 
 body {
   margin: 0;

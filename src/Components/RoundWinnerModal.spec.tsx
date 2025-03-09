@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { kardsRender } from "@/Tests/testRenders";
 import { RoundWinnerModal } from "./RoundWinnerModal";
 import * as Vote from "@/State/Vote/useVote";
@@ -13,18 +14,14 @@ import { fillOutBlackCard } from "@/Utilities/helpers";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "@/Tests/testHelpers";
 
 const mockRotateGame = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useRotateGame", () => {
-  return () => {
-    return mockRotateGame;
-  };
-});
+vi.mock("@/Hooks/Game/Actions/useRotateGame", () => ({
+    default: () => mockRotateGame
+}));
 
 const mockFetchGameState = vi.fn();
-vi.mock("@/Hooks/Game/State/useFetchGameState", () => {
-  return () => {
-    return mockFetchGameState;
-  };
-});
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({
+    default: () => mockFetchGameState
+}));
 
 const { data: { game, users, currentUser, blackCard } } = gameStateAllPlayerSubmittedCardsExampleResponse;
 
@@ -137,8 +134,8 @@ describe("RoundWinnerModal", () => {
     });
     const { data: { black_card, submitted_cards, user_id } } = roundWinnerExampleResponse;
     const expectedCardText = fillOutBlackCard(black_card, submitted_cards)
-      .replaceAll("<strong>", "")
-      .replaceAll("</strong>", "");
+      .replace("<strong>", "")
+      .replace("</strong>", "");
 
     const wrapper = renderComponent();
 

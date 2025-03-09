@@ -1,6 +1,6 @@
-import React, { FC, useCallback, useState } from "react";
-import { Button, ButtonVariant } from "./Atoms/Button";
+import React, { FC, useCallback, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
+import { Button, ButtonVariant } from "@/Components/Atoms/Button";
 
 interface SubmitButtonProps {
   show: boolean;
@@ -20,6 +20,7 @@ const SubmitButton: FC<SubmitButtonProps> = ({
   dataTestId = "",
 }) => {
   const [loading, setLoading] = useState(false);
+  const nodeRef = useRef(null);
 
   const onClick = useCallback(async () => {
     setLoading(true);
@@ -28,20 +29,23 @@ const SubmitButton: FC<SubmitButtonProps> = ({
   }, [loading, onSubmit]);
 
   return (
-    <CSSTransition in={show} timeout={timeout} unmountOnExit classNames={transitionClassName}>
-      <Button
-        variant={ButtonVariant["submit-test"]}
-        text="Submit"
-        className={buttonClass}
-        iconClass="text-emerald-500 justify-self-end"
-        beforeLoadingClass="flex w-3/4 gap-2 items-center"
-        isLoading={loading}
-        onClick={() => onClick()}
-        dataTestid={dataTestId}
-      >
-        <img alt="submit icon" src="/images/green-check.png" />
-      </Button>
-    </CSSTransition>
+    // <TransitionGroup>
+      <CSSTransition nodeRef={nodeRef} in={show} timeout={timeout} unmountOnExit classNames={transitionClassName}>
+        <Button
+          ref={nodeRef}
+          variant={ButtonVariant["submit-test"]}
+          text="Submit"
+          className={buttonClass}
+          iconClass="text-emerald-500 justify-self-end"
+          beforeLoadingClass="flex w-3/4 gap-2 items-center"
+          isLoading={loading}
+          onClick={() => onClick()}
+          dataTestid={dataTestId}
+        >
+          <img alt="submit icon" src="/images/green-check.png" />
+        </Button>
+      </CSSTransition>
+    // </TransitionGroup>
   );
 };
 

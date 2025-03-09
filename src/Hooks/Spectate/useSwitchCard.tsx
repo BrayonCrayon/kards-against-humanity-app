@@ -57,7 +57,7 @@ const useSwitchCard = (props: useSwitchCardProps): useSwitchCardReturn => {
       if (!timeLines) return;
 
       timeLines.start();
-    },[timeLines]);
+    }, [timeLines]);
 
     return {
         cards,

@@ -1,7 +1,7 @@
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
 import { kardsHookRender } from "@/Tests/testRenders";
 import useJoinGame from "@/Hooks/Game/Join/useJoinGame";
-import { mockedUsedNavigate, service } from "setupTests";
+import { mockedUsedNavigate, service } from "@/setupTests";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { AxiosResponse } from "axios";
 import { transformUser, transformUsers } from "@/Types/User";

@@ -9,22 +9,24 @@ import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { happyToast } from "@/Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 import { kardsRender } from "@/Tests/testRenders";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import gameService, { fetchSubmittedCards } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
 import { initialVoteState } from "@/State/Vote/VoteState";
 
-const mockFetchRoundWinner = vi.fn();
-const mockDispatch = vi.fn();
+const mocks = vi.hoisted(() => ({
+  FetchRoundWinner: vi.fn(),
+  Dispatch: vi.fn()
+}))
 
 vi.mock("@/Utilities/toasts");
 vi.mock("@/Services/PusherService");
-vi.mock("@/Hooks/Game/State/useFetchRoundWinner", () => {
-  return () => mockFetchRoundWinner;
-});
+vi.mock("@/Hooks/Game/State/useFetchRoundWinner", () => ({
+  default: () => mocks.FetchRoundWinner
+}));
 
 const {
   data: { game, hand, blackCard, users, currentUser, hasSubmittedWhiteCards },
@@ -102,7 +104,7 @@ describe("VotingSection", () => {
         await renderer();
       });
 
-      expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(game.id, mockFetchRoundWinner);
+      expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(game.id, mocks.FetchRoundWinner);
     });
   });
 
@@ -138,7 +140,7 @@ describe("VotingSection", () => {
     });
 
     it("calls dispatch with correct action and payload when a user is selected", async () => {
-      spyOnUseVote(mockDispatch, initialVoteState);
+      spyOnUseVote(mocks.Dispatch, initialVoteState);
       const wrapper = await renderer();
       const { user_id } = submittedCardsResponse.data[0];
 
@@ -147,7 +149,7 @@ describe("VotingSection", () => {
       });
 
       await waitFor(() => {
-        expectDispatch(mockDispatch, user_id);
+        expectDispatch(mocks.Dispatch, user_id);
       });
     });
 
@@ -167,7 +169,7 @@ describe("VotingSection", () => {
   describe("displaying players submitted card", () => {
     beforeEach(() => {
       service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
-      spyOnUseVote(mockDispatch, { selectedPlayerId: -1, selectedRoundWinner: undefined });
+      spyOnUseVote(mocks.Dispatch, { selectedPlayerId: -1, selectedRoundWinner: undefined });
     });
 
     afterEach(() => {
@@ -209,7 +211,7 @@ describe("VotingSection", () => {
     });
 
     it("will not allow non judge users to select submitted cards", async () => {
-      spyOnUseAuth(mockDispatch, { auth: mockProps.users[0], hasSubmittedCards: false });
+      spyOnUseAuth(mocks.Dispatch, { auth: mockProps.users[0], hasSubmittedCards: false });
       const [submittedCard] = submittedCardsResponse.data;
       const wrapper = await renderer();
 
@@ -217,7 +219,7 @@ describe("VotingSection", () => {
         userEvent.click(wrapper.getByTestId(`player-submitted-response-${submittedCard.user_id}`));
       });
       await waitFor(() => {
-        expect(mockDispatch).not.toHaveBeenCalled();
+        expect(mocks.Dispatch).not.toHaveBeenCalled();
       });
     });
   });

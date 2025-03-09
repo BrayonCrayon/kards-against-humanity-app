@@ -4,7 +4,7 @@ import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 import { TimelineCollection } from "@/Utilities/TimelineCollection";
 
-vi.useFakeTimers()
+vi.useFakeTimers({ shouldAdvanceTime: true })
 describe("useSwitchCard", () => {
 
     it("will setup timelines when hook is called", () => {

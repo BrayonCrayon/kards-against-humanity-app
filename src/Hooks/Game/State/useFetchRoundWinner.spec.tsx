@@ -5,7 +5,7 @@ import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
 import { kardsHookRender } from "@/Tests/testRenders";
 import { expectDispatch, spyOnUseVote } from "@/Tests/testHelpers";
 import { initialVoteState } from "@/State/Vote/VoteState";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleResponse";
 
 const renderUseFetchRoundWinner = () => {
@@ -43,7 +43,7 @@ describe("useFetchRoundWinner", () => {
 
   it("will catch error if api call fails", async () => {
     const mockErrorMessage = { code: 500, message: "server failure", };
-    const spyConsole = jest
+    const spyConsole = vi
       .spyOn(console, "error")
       .mockImplementation(vi.fn());
     service.roundWinner.mockRejectedValueOnce(mockErrorMessage);

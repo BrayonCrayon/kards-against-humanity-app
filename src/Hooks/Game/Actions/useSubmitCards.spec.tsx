@@ -47,7 +47,7 @@ describe("useSubmitCards", () => {
     const errorMessage = { error: "500 Server error" };
     // @ts-ignore
     gameService.submitCards.mockRejectedValueOnce(errorMessage);
-    const consoleSpy = jest
+    const consoleSpy = vi
       .spyOn(console, "error")
       .mockImplementationOnce(() => {});
     const { result } = kardsHookRender(useSubmitCards);

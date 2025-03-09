@@ -12,19 +12,19 @@ import {
 vi.mock("@/Services/PusherService");
 
 const mockSpectatorStateCallback = vi.fn();
-vi.mock("@/Hooks/Game/State/useSpectatorStateCallback", () => {
-  return () => mockSpectatorStateCallback;
-});
+vi.mock("@/Hooks/Game/State/useSpectatorStateCallback", () => ({
+  default: () => mockSpectatorStateCallback
+}));
 
 const mockJoinCallback = vi.fn();
-vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
-  return () => mockJoinCallback;
-});
+vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => ({
+  default: () => mockJoinCallback
+}));
 
 const mockRefreshPlayersCallback = vi.fn();
-vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
-  return () => mockRefreshPlayersCallback;
-});
+vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => ({
+  default: () => mockRefreshPlayersCallback
+}));
 
 describe("useListenOnSpectatorEvents", () => {
   it("will listen on pusher events", () => {

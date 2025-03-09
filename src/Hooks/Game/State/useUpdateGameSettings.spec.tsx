@@ -1,13 +1,13 @@
-import {kardsHookRender} from "@/Tests/testRenders";
-import {service} from "setupTests";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { service } from "@/setupTests";
 import useUpdateGameSettings from "./useUpdateGameSettings";
-import {gameFactory} from "@/Tests/Factories/GameFactory";
-import {AxiosResponse} from "axios";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { AxiosResponse } from "axios";
 
 const mockedCallback = vi.fn();
-vi.mock("@/Hooks/Game/State/useFetchGameState", () => {
-    return () => mockedCallback;
-})
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({
+    default: () => mockedCallback
+}))
 
 describe("useUpdateGameSettings", () => {
 

@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { kardsRender } from "@/Tests/testRenders";
 import Hand from "./Hand";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
@@ -17,7 +18,9 @@ const hand = transformWhiteCardArray(handResponse, false, []);
 const auth = transformUser(currentUser);
 
 const mockRedraw = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useRedrawPlayerHand", () => () => mockRedraw);
+vi.mock("@/Hooks/Game/Actions/useRedrawPlayerHand", () => ({
+  default: () => mockRedraw
+}));
 vi.mock("@/Utilities/toasts");
 
 describe("Hand", () => {

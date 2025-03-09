@@ -1,5 +1,5 @@
 import { kardsHookRender } from "@/Tests/testRenders";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import useLeaveGame from "@/Hooks/Game/Actions/useLeaveGame";
 import { AxiosResponse } from "axios";
 import {

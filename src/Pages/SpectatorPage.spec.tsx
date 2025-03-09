@@ -2,7 +2,7 @@ import { kardsRender } from "@/Tests/testRenders";
 import { SpectatorPage } from "@/Pages/SpectatorPage";
 import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
 import { waitFor } from "@testing-library/react";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import { fetchSubmittedCards } from "@/Services/GameService";
 import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
@@ -16,7 +16,7 @@ const {data} = gameSpectatorExampleResponse;
 
 const mockGameId = data.game.id;
 vi.mock("react-router-dom", () => ({
-  ...vi.requireActual("react-router-dom"), // use actual for all non-hook parts
+  ...vi.importActual("react-router-dom"), // use actual for all non-hook parts
   useParams: () => ({
     id: mockGameId,
   }),
@@ -26,10 +26,10 @@ vi.mock("@lottiefiles/dotlottie-react", () => ({
   DotLottieReact: () => <div></div>
 }))
 
-const mockListenOnEvents = vi.fn();
-vi.mock("@/Hooks/Helpers/useListenOnSpectatorEvents", () => {
-  return () => mockListenOnEvents;
-});
+const mocks = vi.hoisted(() => ({ listenOnEvents: vi.fn() }))
+vi.mock("@/Hooks/Helpers/useListenOnSpectatorEvents", () => ({
+  default: () => mocks.listenOnEvents
+}));
 
 describe("SpectatorPage", () => {
   beforeEach(() => {
@@ -42,7 +42,7 @@ describe("SpectatorPage", () => {
 
     await waitFor(() => {
       expect(service.fetchSpectatorState).toHaveBeenCalledWith(mockGameId);
-      expect(mockListenOnEvents).toHaveBeenCalledWith(mockGameId);
+      expect(mocks.listenOnEvents).toHaveBeenCalledWith(mockGameId);
     });
   });
 
@@ -51,7 +51,7 @@ describe("SpectatorPage", () => {
       kardsRender(<SpectatorPage />);
     });
 
-    expect(mockListenOnEvents).toHaveBeenCalledWith(data.game.id);
+    expect(mocks.listenOnEvents).toHaveBeenCalledWith(data.game.id);
   });
 
   it.skip("will display black card", async () => {

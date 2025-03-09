@@ -10,7 +10,8 @@ import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
 import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
+import { Mock } from "vitest";
 
 vi.mock("@/Services/PusherService");
 vi.useFakeTimers();
@@ -46,7 +47,7 @@ describe("ReviewRoom", () => {
     const usersSubmission: PlayerSubmittedCard[] = submittedCardsResponse.data;
     const blackCard = blackCardFactory();
     const mockedDispatch = spyOnUseSpectate();
-    (listenWhenWinnerIsSelected as vi.Mock).mockImplementation((gameId: string, callable: () => {}) => {
+    (listenWhenWinnerIsSelected as Mock).mockImplementation((gameId: string, callable: () => {}) => {
       callable();
     });
 

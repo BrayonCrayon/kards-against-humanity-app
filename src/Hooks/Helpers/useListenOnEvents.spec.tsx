@@ -1,5 +1,5 @@
-import {kardsHookRender} from "@/Tests/testRenders";
-import {gameFixture} from "@/Api/fixtures/gameFixture";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { gameFixture } from "@/Api/fixtures/gameFixture";
 import {
   listenWhenGameRotates,
   listenWhenGameStart,
@@ -11,19 +11,19 @@ import useListenOnEvents from "@/Hooks/Helpers/useListenOnEvents";
 vi.mock("@/Services/PusherService");
 
 const mockGameStateCallback = vi.fn();
-vi.mock("@/Hooks/Game/State/useGameStateCallback", () => {
-  return () => mockGameStateCallback;
-});
+vi.mock("@/Hooks/Game/State/useGameStateCallback", () => ({
+  default: () => mockGameStateCallback
+}));
 
 const mockJoinCallback = vi.fn();
-vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => {
-  return () => mockJoinCallback;
-});
+vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => ({
+  default: () => mockJoinCallback
+}));
 
 const mockRefreshPlayersCallback = vi.fn();
-vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => {
-  return () => mockRefreshPlayersCallback;
-});
+vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => ({
+  default: () => mockRefreshPlayersCallback
+}));
 
 describe("useListenOnEvents", () => {
   it("will listen on pusher events", async () => {

@@ -1,10 +1,10 @@
 import useKickPlayer from "@/Hooks/Game/Actions/useKickPlayer";
 import { gameFixture } from "@/Api/fixtures/gameFixture";
-import { act } from "react-dom/test-utils";
 import { kardsHookRender } from "@/Tests/testRenders";
-import { service } from "setupTests";
+import { service } from "@/setupTests";
 import { expectDispatch, spyOnUsePlayers } from "@/Tests/testHelpers";
 import { initialPlayersState } from "@/State/Players/PlayersState";
+import { act } from "react";
 
 const mockedDispatch = vi.fn();
 const gameId = gameFixture.id;
@@ -30,7 +30,7 @@ describe("useKickPlayer", () => {
   it("will catch error if call to api fails", async () => {
     let errorMessage = { code: 500, message: "server error" };
     service.kick.mockRejectedValueOnce(errorMessage);
-    const consoleSpy = jest
+    const consoleSpy = vi
       .spyOn(console, "error")
       .mockImplementation(() => {});
     const { result } = renderUseKickPlayer();

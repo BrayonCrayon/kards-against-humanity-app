@@ -7,7 +7,7 @@ const renderComponent = () => {
 };
 
 vi.mock("react-router-dom", () => ({
-  ...vi.requireActual("react-router-dom"),
+  ...vi.importActual("react-router-dom"),
   useLocation: vi.fn(),
 }));
 

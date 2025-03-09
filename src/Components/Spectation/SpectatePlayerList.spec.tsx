@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { kardsRender } from "@/Tests/testRenders";
 import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
 import { transformUsers, User } from "@/Types/User";

@@ -1,6 +1,6 @@
 import { BaseTimeline } from "./BaseTimeline";
 
-jest.setTimeout(1000000);
+vi.setConfig({ testTimeout: 1000000 })
 describe("BaseTimeline", () => {
 
     it("will set defaults if none are provided", () => {
@@ -31,7 +31,7 @@ describe("BaseTimeline", () => {
 
     it("will be able to accept a callback and call it on each iteration", async () => {
         const items = Array(3).fill(0).map((_,idx) => [idx + 1]);
-        const callback = jest.fn();
+        const callback = vi.fn();
         const target = new BaseTimeline(items, 5);
         target.setOnIteratedCallback(callback);
 

@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { render } from "@testing-library/react";
 import { PreGameModal } from "@/Components/PreGameModal";
 import { toMinutesSeconds } from "@/Utilities/helpers";
@@ -10,7 +11,9 @@ import userEvent from "@testing-library/user-event";
 import { Game } from "@/Types/Game";
 
 const mockedStartGame = vi.fn();
-vi.mock("@/Hooks/Game/Timer/useGameStart", () => () => mockedStartGame);
+vi.mock("@/Hooks/Game/Timer/useGameStart", () => ({
+    default: () => mockedStartGame
+}));
 
 const setupState = (gameOptions: Partial<Game> = { selectionTimer: 215 }) => {
     const user = userFactory();

@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { spyOnUseGame } from "@/Tests/testHelpers";
 import { gameFactory } from "@/Tests/Factories/GameFactory";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
