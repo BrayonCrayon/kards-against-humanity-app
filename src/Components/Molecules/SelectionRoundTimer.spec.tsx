@@ -14,7 +14,10 @@ import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { AxiosResponse } from "axios";
 
-vi.useFakeTimers({ shouldAdvanceTime: true });
+vi.hoisted(() => {
+    vi.setSystemTime(new Date());
+})
+// vi.useFakeTimers({ shouldAdvanceTime: true });
 
 describe("SelectionRoundTimer", () => {
     beforeEach(() => {
@@ -30,7 +33,7 @@ describe("SelectionRoundTimer", () => {
         vi.setSystemTime(new Date());
         const game = gameFactory({
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Math.floor(Date.now() / 1000) + 60, // TODO: THis is where we are now
         });
         spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
 

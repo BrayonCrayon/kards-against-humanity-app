@@ -46,6 +46,10 @@ describe("RoundWinnerModal", () => {
     });
   });
 
+  afterEach(() => {
+    vi.resetAllMocks();
+  })
+
   it("will render the modal", async () => {
     const wrapper = renderComponent();
     expect(
@@ -133,9 +137,7 @@ describe("RoundWinnerModal", () => {
       selectedRoundWinner: roundWinnerExampleResponse.data
     });
     const { data: { black_card, submitted_cards, user_id } } = roundWinnerExampleResponse;
-    const expectedCardText = fillOutBlackCard(black_card, submitted_cards)
-      .replace("<strong>", "")
-      .replace("</strong>", "");
+    const expectedCardText = fillOutBlackCard(black_card, submitted_cards).replace(/<(\/)?strong>/g, "");
 
     const wrapper = renderComponent();
 
