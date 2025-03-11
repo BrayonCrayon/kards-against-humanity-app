@@ -4,7 +4,6 @@ import moment from "moment";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 import { kardsRender } from "@/Tests/testRenders";
 import SelectionRoundTimer from "./SelectionRoundTimer";
-import { toMinutesSeconds } from "@/Utilities/helpers";
 import { userFactory } from "@/Tests/Factories/UserFactory";
 import { transformUser, transformUsers } from "@/Types/User";
 import { waitFor } from "@testing-library/react";
@@ -13,16 +12,15 @@ import { act } from "react";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { AxiosResponse } from "axios";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
-vi.hoisted(() => {
-    vi.setSystemTime(new Date());
-})
-// vi.useFakeTimers({ shouldAdvanceTime: true });
 
 describe("SelectionRoundTimer", () => {
     beforeEach(() => {
         spyOnUseAuth(vi.fn(), { auth: userFactory(), hasSubmittedCards: false });
         spyOnUseHand();
+        vi.useFakeTimers({shouldAdvanceTime: true});
+        vi.setSystemTime(new Date(2025, 1, 1, 6, 0, 0, 0));
     });
 
     afterEach(() => {
@@ -30,11 +28,11 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will show timer", async () => {
-        vi.setSystemTime(new Date());
         const game = gameFactory({
             selectionTimer: 60,
-            selectionEndsAt: Math.floor(Date.now() / 1000) + 60, // TODO: THis is where we are now
+            selectionEndsAt: Date.now() / 1000 + 60, // TODO: THis is where we are now
         });
+
         spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
 
         const wrapper = kardsRender(<SelectionRoundTimer/>);
@@ -43,11 +41,10 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will call end timer callback for players", async () => {
-        vi.setSystemTime(new Date());
         const user = transformUser(userFactory());
         const game = gameFactory({
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
         const hand = transformWhiteCardArray(
             Array.from({ length: 7 }).map((_, idx) => whiteCardFactory({ order: idx + 1 }))
@@ -99,12 +96,11 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will not call end timer callback for judge", async () => {
-        vi.setSystemTime(new Date());
         const user = transformUser(userFactory());
         const game = gameFactory({
             judgeId: user.id,
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
         const players = transformUsers(Array.from({ length: 2 }).map(() => userFactory()));
         vi.advanceTimersByTime(game.selectionTimer! * 1000);
@@ -125,12 +121,11 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will not call end timer callback when authed user already submitted their cards", async () => {
-        vi.setSystemTime(new Date());
         const user = transformUser(userFactory({id: 1, hasSubmittedWhiteCards: true}));
         const game = gameFactory({
             judgeId: 999,
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
         const players = transformUsers(Array.from({length: 2})
             .map((_, idx) => userFactory({id: idx + 1, hasSubmittedWhiteCards: idx > 0})));
