@@ -125,7 +125,7 @@ describe("SelectionRoundTimer", () => {
         const game = gameFactory({
             judgeId: 999,
             selectionTimer: 60,
-            selectionEndsAt: Date.now() / 1000 + 60,
+            selectionEndsAt: Date.now() / 1000 + 60, 
         });
         const players = transformUsers(Array.from({length: 2})
             .map((_, idx) => userFactory({id: idx + 1, hasSubmittedWhiteCards: idx > 0})));
