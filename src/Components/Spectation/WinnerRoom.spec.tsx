@@ -9,6 +9,9 @@ import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 
 vi.useFakeTimers();
+vi.mock("react-confetti");
+// TODO: Errors being thrown from "@lottiefiles/dotlottie-react"
+// Can't mock the whole thing because then we can't find the drum icon
 
 describe("WinnerRoom", () => {
   it("will show drum icon before winner", () => {

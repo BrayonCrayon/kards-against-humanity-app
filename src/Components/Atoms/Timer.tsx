@@ -12,9 +12,7 @@ const Timer: FC<TimerProps> = ({ end , onEnd = () => {}}) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // TODO: WIP
-      // const difference = moment.unix(end).diff(moment(), "seconds");
-      const difference = Math.floor((end - (Date.now() / 1000)));
+      const difference = (end - (Date.now() / 1000));
       if (difference <= 0) {
         onEnd();
       }
@@ -25,9 +23,6 @@ const Timer: FC<TimerProps> = ({ end , onEnd = () => {}}) => {
   }, [seconds])
 
   useEffect(() => {
-    // TODO: WIP
-    // setSeconds(moment.unix(end).diff(moment(), "seconds"));
-    console.log("Implementation: ", ((end - (Date.now() / 1000))));
     setSeconds((end - Date.now() / 1000));
   }, []);
 

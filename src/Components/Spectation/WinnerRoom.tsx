@@ -49,7 +49,7 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
   return <div className="flex justify-center items-center w-full">
     {
       showDrum &&
-      <DotLottieReact src="/lottie/drum.lottie" className="w-full" loop autoplay />
+      <DotLottieReact src="/lottie/drum.lottie" className="w-full" loop autoplay data-testid="drum-icon" />
     }
     {
       !showDrum &&

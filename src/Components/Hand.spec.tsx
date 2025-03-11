@@ -30,6 +30,10 @@ describe("Hand", () => {
     spyOnUseHand(vi.fn(), { hand });
   });
 
+  afterEach(() => {
+    vi.clearAllMocks();
+  })
+
   it("will not redraw hand when user cancels confirm", async () => {
     mockRedraw.mockClear();
     const sweetSpy = dismissSweetAlert();

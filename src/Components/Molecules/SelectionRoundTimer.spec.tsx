@@ -25,12 +25,13 @@ describe("SelectionRoundTimer", () => {
 
     afterEach(() => {
         vi.clearAllTimers();
+        vi.clearAllMocks();
     });
 
     it("will show timer", async () => {
         const game = gameFactory({
             selectionTimer: 60,
-            selectionEndsAt: Date.now() / 1000 + 60, // TODO: THis is where we are now
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
 
         spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});

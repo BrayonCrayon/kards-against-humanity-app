@@ -85,7 +85,10 @@ describe("VotingSection", () => {
 
       const wrapper = await waitFor(() => renderer());
 
-      await userEvent.click(wrapper.getByTestId("submit-selected-winner"));
+      const submitButtons = wrapper.getAllByTestId("submit-selected-winner");
+      expect(submitButtons).toHaveLength(2);
+      
+      await userEvent.click(submitButtons[0]);
 
       await waitFor(() => {
         expect(gameService.submitWinner).toHaveBeenCalledWith(mockProps.game.id, user_id);
