@@ -8,6 +8,7 @@ import React from "react";
 import { toMinutesSeconds } from "@/Utilities/helpers";
 import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
+import { initialGameState } from "@/State/Game/GameState";
 
 
 describe("GameSettingsTab", () => {
@@ -22,6 +23,7 @@ describe("GameSettingsTab", () => {
     });
 
     it("will not show leave and update settings buttons when user is not in game", () => {
+        spyOnUseGame(vi.fn(), initialGameState);
         const wrapper = kardsRender(<GameSettingsTab />);
 
         expect(wrapper.queryByTestId("update-settings")).not.toBeInTheDocument();

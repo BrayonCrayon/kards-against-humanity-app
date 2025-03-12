@@ -4,14 +4,11 @@ import { render } from "@testing-library/react";
 import WinnerRoom from "@/Components/Spectation/WinnerRoom";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { userTestId, whiteCardTestId } from "@/Tests/selectors";
-import { act } from "react";
+import React, { act } from "react";
 import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 
 vi.useFakeTimers();
-vi.mock("react-confetti");
-// TODO: Errors being thrown from "@lottiefiles/dotlottie-react"
-// Can't mock the whole thing because then we can't find the drum icon
 
 describe("WinnerRoom", () => {
   it("will show drum icon before winner", () => {

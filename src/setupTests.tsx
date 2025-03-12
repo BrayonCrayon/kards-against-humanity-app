@@ -3,6 +3,7 @@ import { apiClient } from "@/Api/apiClient";
 import gameService from "@/Services/GameService";
 import { config } from "react-transition-group";
 import { Mocked, vi } from "vitest";
+import React from "react";
 
 window.scrollTo = vi.fn();
 config.disabled = true;
@@ -29,3 +30,12 @@ vi.mock("react-router-dom", () => ({
   ...vi.importActual("react-router-dom"),
   useNavigate: () => mockedUsedNavigate,
 }));
+
+vi.mock("react-confetti");
+vi.mock("@lottiefiles/dotlottie-react", () => ({
+  DotLottieReact: () => <div data-testid="drum-icon" />
+}));
+
+afterEach(() => {
+  vi.clearAllMocks()
+})

@@ -19,14 +19,14 @@ describe("SpectatePlayerList", () => {
     });
 
     nonJudgePlayers.forEach((player) => {
-      expect(wrapper.queryByTestId(player.id)).toContainHTML("fas fa-user text-xl")
+      expect(wrapper.queryByTestId(player.id)).toContainHTML("fa-user")
     })
   });
 
   it("will display the gavel icon for judges", () => {
     const wrapper = renderComponent();
 
-    expect(wrapper.queryByTestId(game.judgeId)).toContainHTML("fas fa-gavel text-xl")
+    expect(wrapper.queryByTestId(game.judgeId)).toContainHTML("fa-gavel")
   });
 
   it("will display a list of users", () => {

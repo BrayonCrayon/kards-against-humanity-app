@@ -62,7 +62,7 @@ describe("PlayerListItem", () => {
 
     await waitFor(() => {
       const isUserLoggedIn =
-        wrapper.getByTestId(`user-${auth.id}`).getElementsByTagName("i")
+        wrapper.getByTestId(`user-${auth.id}`).getElementsByTagName("svg")
           .length > 0;
       expect(isUserLoggedIn).toBeTruthy();
     });

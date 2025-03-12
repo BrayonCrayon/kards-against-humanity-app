@@ -7,6 +7,10 @@ import { service } from "@/setupTests";
 import { expectDispatch, spyOnUseAuth } from "@/Tests/testHelpers";
 
 describe("useForceSubmitCards", () => {
+    afterEach(() => {
+        vi.clearAllMocks()
+    })
+
     it.each([1, 2, 3])
     ("will select randomly select cards from a players hand", async (pickAmount: number) => {
         const mockedDispatch = vi.fn();

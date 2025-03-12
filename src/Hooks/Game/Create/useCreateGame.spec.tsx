@@ -22,6 +22,10 @@ describe("useCreateGame", () => {
     spyOnUseHand(dispatchSpy);
   });
 
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
   it("will create game and set state", async () => {
     service.createGame.mockResolvedValue(gameStateExampleResponse as AxiosResponse);
     const name = "Frodo";

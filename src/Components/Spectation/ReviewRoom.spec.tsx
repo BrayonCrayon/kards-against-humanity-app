@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import { kardsRender } from "@/Tests/testRenders";
 import ReviewRoom from "@/Components/Spectation/ReviewRoom";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
@@ -9,12 +10,21 @@ import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
 import { waitFor } from "@testing-library/react";
-import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
 import { act } from "react";
-import { Mock } from "vitest";
+import { service } from "@/setupTests";
+import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleResponse";
+import { IWinnerIsSelectedEventData } from "@/Services/PusherService";
+import { randNumber } from "@ngneat/falso";
 
-vi.mock("@/Services/PusherService");
-vi.useFakeTimers();
+const mocks = vi.hoisted(() => ({
+  listenWhenWinnerIsSelected: vi.fn()
+}))
+
+vi.mock("@/Services/PusherService", () =>({
+  listenWhenWinnerIsSelected: mocks.listenWhenWinnerIsSelected
+}));
+
+vi.useFakeTimers({ shouldAdvanceTime: true });
 
 describe("ReviewRoom", () => {
   it("Renders the black card", () => {
@@ -47,8 +57,10 @@ describe("ReviewRoom", () => {
     const usersSubmission: PlayerSubmittedCard[] = submittedCardsResponse.data;
     const blackCard = blackCardFactory();
     const mockedDispatch = spyOnUseSpectate();
-    (listenWhenWinnerIsSelected as Mock).mockImplementation((gameId: string, callable: () => {}) => {
-      callable();
+    // @ts-ignore
+    service.roundWinner.mockResolvedValue(roundWinnerExampleResponse);
+    mocks.listenWhenWinnerIsSelected.mockImplementation((gameId: string, callable: (data: IWinnerIsSelectedEventData) => {}) => {
+      callable({ gameId: gameId, blackCardId:blackCard.id, userId: randNumber() });
     });
 
     kardsRender(<ReviewRoom gameId="394732k4jh2i3h4i23" blackCard={blackCard} submissions={usersSubmission} />);
