@@ -14,13 +14,13 @@ import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { AxiosResponse } from "axios";
 import { toMinutesSeconds } from "@/Utilities/helpers";
 
+vi.useFakeTimers({shouldAdvanceTime: true});
+vi.setSystemTime(new Date());
 
 describe("SelectionRoundTimer", () => {
     beforeEach(() => {
         spyOnUseAuth(vi.fn(), { auth: userFactory(), hasSubmittedCards: false });
         spyOnUseHand();
-        vi.useFakeTimers({shouldAdvanceTime: true});
-        vi.setSystemTime(new Date(2025, 1, 1, 6, 0, 0, 0));
     });
 
     afterEach(() => {

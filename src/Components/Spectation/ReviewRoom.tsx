@@ -44,7 +44,7 @@ const ReviewRoom: React.FC<IReviewRoomProps> = (props) => {
 
     return (
           <>
-              <div className="flex justify-around w-1/4 bg-white shadow-md pt-12">
+              <div className="flex justify-around w-1/4 bg-white shadow-md pt-12" data-testid="waiting-room">
                   <BlackKard hidePlayButton card={blackCard} className="text-ellipsis overflow-hidden max-h-96" />
               </div>
               <div className="p-12 w-full h-full pt-5 flex items-center justify-center">

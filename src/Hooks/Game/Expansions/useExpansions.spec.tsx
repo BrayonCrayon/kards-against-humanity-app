@@ -3,7 +3,7 @@ import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import useExpansions from "@/Hooks/Game/Expansions/useExpansions";
 import gameService from "@/Services/GameService";
-import { act } from "react-dom/test-utils";
+import { act } from "react";
 
 
 describe("useFetchExpansions", () => {

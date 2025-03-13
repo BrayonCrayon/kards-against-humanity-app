@@ -16,7 +16,7 @@ jobs:
           node-version: '18.16.0'
 
       - name: Install node modules
-        run: npm ci
+        run: npm i
 
       - name: Compile Typescript
         run: npm run compile-ts

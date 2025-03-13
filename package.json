@@ -47,7 +47,7 @@
     "dev": "vite",
     "compile-ts": "tsc --project tsconfig.json",
     "ts-lint": "tsc --project tsconfig.json",
-    "test": "vitest",
+    "test": "vitest run --watch=false",
     "test:ci": "vitest run"
   },
   "overrides": {
@@ -89,5 +89,8 @@
     "ts-node": "^10.9.2",
     "vite": "^6.2.0",
     "vitest": "^3.0.7"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.35.0"
   }
 }

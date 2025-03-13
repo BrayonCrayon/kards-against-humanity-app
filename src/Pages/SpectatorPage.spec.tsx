@@ -9,40 +9,48 @@ import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import {
   gameSpectatorAllPlayersSubmittedExampleResponse
 } from "@/Api/fixtures/gameSpectatorAllPlayersSubmittedExampleResponse";
-import { spyOnUseSpectate } from "@/Tests/testHelpers";
+import { spyOnUseSpectate, spyOnUseVote } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
+import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleResponse";
 
 const {data} = gameSpectatorExampleResponse;
 
-const mockGameId = data.game.id;
+const mocks = vi.hoisted(() => ({
+  listenOnEvents: vi.fn(),
+  useParams: vi.fn()
+}))
+
 vi.mock("react-router-dom", () => ({
   ...vi.importActual("react-router-dom"), // use actual for all non-hook parts
-  useParams: () => ({
-    id: mockGameId,
-  }),
+  useParams: mocks.useParams,
 }));
 
 vi.mock("@lottiefiles/dotlottie-react", () => ({
   DotLottieReact: () => <div></div>
 }))
 
-const mocks = vi.hoisted(() => ({ listenOnEvents: vi.fn() }))
 vi.mock("@/Hooks/Helpers/useListenOnSpectatorEvents", () => ({
   default: () => mocks.listenOnEvents
 }));
 
+vi.mock("@/Services/PusherService")
+
 describe("SpectatorPage", () => {
   beforeEach(() => {
-    service.fetchSpectatorState.mockResolvedValue(gameSpectatorExampleResponse  as AxiosResponse);
+    mocks.useParams.mockImplementation(() => ({
+      id: data.game.id,
+    }))
+    service.fetchSpectatorState.mockResolvedValue(gameSpectatorAllPlayersSubmittedExampleResponse  as AxiosResponse);
     service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
+    spyOnUseVote(vi.fn(), { selectedPlayerId: 0, selectedRoundWinner: roundWinnerExampleResponse.data })
   });
 
   it.skip("will call fetch spectator state when player refreshes and listens on game events", async () => {
     kardsRender(<SpectatorPage />);
 
     await waitFor(() => {
-      expect(service.fetchSpectatorState).toHaveBeenCalledWith(mockGameId);
-      expect(mocks.listenOnEvents).toHaveBeenCalledWith(mockGameId);
+      expect(service.fetchSpectatorState).toHaveBeenCalledWith(data.game.id);
+      expect(mocks.listenOnEvents).toHaveBeenCalledWith(data.game.id);
     });
   });
 
@@ -85,19 +93,21 @@ describe("SpectatorPage", () => {
   });
 
   it.each([
-      [Stage.DISPLAY_BLACK_CARD, "black-card-0", ["submissions-display", "waiting-room", "votes-display"]],
-      [Stage.DISPLAY_SUBMISSIONS, "submissions-display", ["black-card-0", "waiting-room", "votes-display"]],
-      [Stage.DISPLAY_WAITING_ROOM, "waiting-room", ["submissions-display", "black-card-0", "votes-display"]],
-      [Stage.DISPLAY_WINNER, "votes-display", ["submissions-display", "waiting-room", "black-card-0"]],
+      [Stage.DISPLAY_BLACK_CARD, "black-card-0", ["submissions-display", "waiting-room", "display-winner"]],
+      [Stage.DISPLAY_SUBMISSIONS, "submissions-display", ["black-card-0", "waiting-room", "display-winner"]],
+      [Stage.DISPLAY_WAITING_ROOM, "waiting-room", ["submissions-display", "black-card-0", "display-winner"]],
+      [Stage.DISPLAY_WINNER, "display-winner", ["submissions-display", "waiting-room", "black-card-0"]],
   ])
   ("will show only the black card when spector stage is on display black card stage for %s", async (stage, currentStage, otherStages) => {
     spyOnUseSpectate(vi.fn(), {stage})
-    const wrapper = await waitFor(() => kardsRender(<SpectatorPage/>));
+    const wrapper = kardsRender(<SpectatorPage/>);
 
-    expect(wrapper.queryByTestId(currentStage)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(wrapper.queryByTestId(currentStage)).toBeInTheDocument();
 
-    otherStages.forEach((item) => {
-      expect(wrapper.queryByTestId(item)).not.toBeInTheDocument();
+      otherStages.forEach((item) => {
+        expect(wrapper.queryByTestId(item)).not.toBeInTheDocument();
+      })
     })
   });
 })

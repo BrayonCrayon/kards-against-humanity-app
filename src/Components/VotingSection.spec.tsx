@@ -2,14 +2,13 @@ import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import {
   gameStateAllPlayerSubmittedCardsExampleResponse
 } from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { RenderResult, waitFor } from "@testing-library/react";
+import { waitFor } from "@testing-library/react";
 import { transformUser, transformUsers } from "@/Types/User";
 import { VotingSection } from "./VotingSection";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { happyToast } from "@/Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
-import { act } from "react";
 import { kardsRender } from "@/Tests/testRenders";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
 import { service } from "@/setupTests";
@@ -42,7 +41,7 @@ const mockProps = {
 let auth = transformUser(currentUser);
 const mockHasSubmittedWhiteCards = hasSubmittedWhiteCards;
 
-const renderer = async (): Promise<RenderResult> => {
+const renderer = () => {
   return kardsRender(<VotingSection />);
 };
 
@@ -58,7 +57,7 @@ describe("VotingSection", () => {
     });
 
     it("calls backend api for submitted cards", async () => {
-      await renderer();
+      renderer();
 
       await waitFor(() => {
         expect(fetchSubmittedCards).toHaveBeenCalledTimes(1);
@@ -71,7 +70,7 @@ describe("VotingSection", () => {
       service.fetchSubmittedCards.mockRejectedValueOnce(errorMessage);
       const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-      await renderer();
+      renderer();
 
       await waitFor(() => {
         expect(consoleSpy).toBeCalledWith(errorMessage);
@@ -83,11 +82,14 @@ describe("VotingSection", () => {
       const { user_id } = submittedCardsResponse.data[0];
       const spy = spyOnUseVote(vi.fn(), { selectedPlayerId: user_id });
 
-      const wrapper = await waitFor(() => renderer());
+      const wrapper = renderer();
 
-      const submitButtons = wrapper.getAllByTestId("submit-selected-winner");
-      expect(submitButtons).toHaveLength(2);
-      
+      const submitButtons = await waitFor(() => {
+        const buttons = wrapper.getAllByTestId("submit-selected-winner");
+        expect(buttons).toHaveLength(2);
+        return buttons;
+      })
+
       await userEvent.click(submitButtons[0]);
 
       await waitFor(() => {
@@ -102,12 +104,13 @@ describe("VotingSection", () => {
     beforeEach(() => {
       service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
     });
+    
     it("listens on winner selected pusher event when loading game page", async () => {
-      await act(async () => {
-        await renderer();
-      });
+      renderer();
 
-      expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(game.id, mocks.FetchRoundWinner);
+      await waitFor(() => {
+        expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(game.id, mocks.FetchRoundWinner);
+      })
     });
   });
 
@@ -117,7 +120,7 @@ describe("VotingSection", () => {
     });
 
     it("allows user to select a player submitted card", async () => {
-      const wrapper = await renderer();
+      const wrapper = renderer();
       const { user_id } = submittedCardsResponse.data[0];
 
       const submittedCardElement = await waitFor(() => {
@@ -135,7 +138,7 @@ describe("VotingSection", () => {
         game: { ...mockProps.game, judgeId: mockProps.users[0].id },
         blackCard: mockProps.blackCard,
       });
-      const wrapper = await renderer();
+      const wrapper = renderer();
 
       await waitFor(() => {
         expect(wrapper.queryByRole("submit-selected-winner")).not.toBeInTheDocument();
@@ -144,7 +147,7 @@ describe("VotingSection", () => {
 
     it("calls dispatch with correct action and payload when a user is selected", async () => {
       spyOnUseVote(mocks.Dispatch, initialVoteState);
-      const wrapper = await renderer();
+      const wrapper = renderer();
       const { user_id } = submittedCardsResponse.data[0];
 
       await waitFor(() => {
@@ -161,7 +164,7 @@ describe("VotingSection", () => {
         selectedRoundWinner: { ...submittedCardsResponse.data[0], black_card: mockProps.blackCard },
         selectedPlayerId: -1,
       });
-      const wrapper = await renderer();
+      const wrapper = renderer();
 
       await waitFor(() => {
         expect(wrapper.queryByRole("submit-selected-winner")).not.toBeInTheDocument();
@@ -180,7 +183,7 @@ describe("VotingSection", () => {
     });
 
     it("will display players submitted card", async () => {
-      const wrapper = await renderer();
+      const wrapper = renderer();
 
       await waitFor(() => {
         submittedCardsResponse.data.forEach((submittedData) => {
@@ -205,7 +208,7 @@ describe("VotingSection", () => {
         .replace("_", sortedCards[0].text.replace(/\.$/, ""))
         .replace("_", sortedCards[1].text.replace(/\.$/, ""));
 
-      const wrapper = await renderer();
+      const wrapper = renderer();
 
       await waitFor(() => {
         const submittedCard = wrapper.getByTestId(`player-submitted-response-${submittedResponse.user_id}`);
@@ -216,7 +219,7 @@ describe("VotingSection", () => {
     it("will not allow non judge users to select submitted cards", async () => {
       spyOnUseAuth(mocks.Dispatch, { auth: mockProps.users[0], hasSubmittedCards: false });
       const [submittedCard] = submittedCardsResponse.data;
-      const wrapper = await renderer();
+      const wrapper = renderer();
 
       await waitFor(() => {
         userEvent.click(wrapper.getByTestId(`player-submitted-response-${submittedCard.user_id}`));
