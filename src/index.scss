@@ -1,9 +1,10 @@
-@import "~@fortawesome/fontawesome-free/css/all.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-@import "./Styles/SubmitButton.scss";
-@import "./Styles/RangeInput.scss";
+//@use "node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+@use "@fortawesome/fontawesome-svg-core/styles.css";
+@use "./Styles/SubmitButton.scss";
+@use "./Styles/SpectatorCard.scss";
+@use "./Styles/RangeInput.scss";
+@use "tailwindcss";
+@config "../tailwind.config";
 
 body {
   margin: 0;

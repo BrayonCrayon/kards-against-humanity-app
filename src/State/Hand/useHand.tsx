@@ -1,5 +1,5 @@
-import { useGenericContext } from "State/GeneralContext";
-import { HandContext } from "State/Hand/HandContext";
+import { useGenericContext } from "@/State/GeneralContext";
+import { HandContext } from "@/State/Hand/HandContext";
 
 
 function useHand() {

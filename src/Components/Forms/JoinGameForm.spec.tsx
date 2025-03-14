@@ -1,25 +1,29 @@
 import { waitFor } from "@testing-library/react";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { getExpansionsExampleResponse } from "Api/fixtures/getExpansionsExampleResponse";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { getExpansionsExampleResponse } from "@/Api/fixtures/getExpansionsExampleResponse";
 import JoinGameForm from "./JoinGameForm";
-import { kardsRender } from "Tests/testRenders";
-import { setupAndSubmitForm } from "Tests/actions";
-import { mockedAxios } from "setupTests";
+import { kardsRender } from "@/Tests/testRenders";
+import { setupAndSubmitForm } from "@/Tests/actions";
+import { mockedAxios } from "@/setupTests";
 import userEvent from "@testing-library/user-event";
 
-const mockJoinAsSpectator = jest.fn();
-const mockJoinGame = jest.fn();
-jest.mock("Hooks/Game/Join/useJoinAsSpectator", () => {
-  return () => mockJoinAsSpectator
+const mockJoinAsSpectator = vi.fn();
+const mockJoinGame = vi.fn();
+vi.mock("@/Hooks/Game/Join/useJoinAsSpectator", () => {
+  return {
+    default: () => mockJoinAsSpectator
+  }
 })
-jest.mock("Hooks/Game/Join/useJoinGame", () => {
-  return () => mockJoinGame
+vi.mock("@/Hooks/Game/Join/useJoinGame", () => {
+  return {
+    default: () => mockJoinGame
+  }
 });
 
 const mockGameCode = "3H8K";
-jest.mock("react-router-dom", () => {
+vi.mock("react-router-dom", () => {
   return {
-    ...jest.requireActual("react-router-dom"),
+    ...vi.importActual("react-router-dom"),
     useParams: () => ({
       code: mockGameCode
     })
@@ -38,6 +42,11 @@ describe("JoinGameForm", () => {
   beforeEach(() => {
     mockedAxios.get.mockResolvedValue(getExpansionsExampleResponse);
   });
+
+  afterEach(() => {
+    mockJoinAsSpectator.mockClear();
+    mockJoinGame.mockClear();
+  })
 
   it("renders", async () => {
     const wrapper = renderer();
@@ -61,7 +70,7 @@ describe("JoinGameForm", () => {
     await setupAndSubmitForm(userName, data.game.code, true);
 
     await waitFor(async () => {
-      expect(mockJoinAsSpectator).toHaveBeenCalledWith( data.game.code );
+      expect(mockJoinAsSpectator).toHaveBeenCalledWith(data.game.code);
       expect(mockJoinGame).not.toHaveBeenCalled();
     });
   })

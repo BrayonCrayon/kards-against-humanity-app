@@ -1,20 +1,19 @@
-import React from "react";
-import useFetchGameState from "Hooks/Game/State/useFetchGameState";
-import { gameStateSubmittedWhiteCardsExampleResponse } from "Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { transformUser, transformUsers } from "Types/User";
-import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "Tests/testHelpers";
-import { usePlayers } from "State/Players/usePlayers";
-import { initialHandState } from "State/Hand/HandState";
-import { initialPlayersState } from "State/Players/PlayersState";
-import { initialAuthState } from "State/Auth/AuthState";
-import { initialGameState } from "State/Game/GameState";
-import { service } from "setupTests";
+import useFetchGameState from "@/Hooks/Game/State/useFetchGameState";
+import { gameStateSubmittedWhiteCardsExampleResponse } from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { transformUser, transformUsers } from "@/Types/User";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { initialHandState } from "@/State/Hand/HandState";
+import { initialPlayersState } from "@/State/Players/PlayersState";
+import { initialAuthState } from "@/State/Auth/AuthState";
+import { initialGameState } from "@/State/Game/GameState";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
-import { fetchState } from "Services/GameService";
+import { fetchState } from "@/Services/GameService";
 import { renderHook } from "@testing-library/react";
 
-let mockedDispatch = jest.fn();
+let mockedDispatch = vi.fn();
 
 describe("useFetchGameState", () => {
   beforeEach(() => {

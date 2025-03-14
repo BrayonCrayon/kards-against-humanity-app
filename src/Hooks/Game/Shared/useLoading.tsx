@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { errorToast } from "Utilities/toasts";
+import { errorToast } from "@/Utilities/toasts";
 
 
 function useLoading() {

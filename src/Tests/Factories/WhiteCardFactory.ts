@@ -1,9 +1,9 @@
-import {randNumber, randText} from "@ngneat/falso";
-import {IWhiteCard} from "Types/WhiteCard";
+import { randNumber, randText } from "@ngneat/falso";
+import { IWhiteCard, WhiteCard } from "@/Types/WhiteCard";
 
 
-export const whiteCardFactory = (overrides?: Partial<IWhiteCard>): IWhiteCard => {
-    return {
+export const whiteCardFactory = (overrides?: Partial<IWhiteCard>): WhiteCard => {
+    const props = {
         id: randNumber({ min: 1 }),
         text: randText(),
         expansionId: 0,
@@ -11,4 +11,11 @@ export const whiteCardFactory = (overrides?: Partial<IWhiteCard>): IWhiteCard =>
         selected: false,
         ...overrides
     };
+    return new WhiteCard(
+      props.id,
+      props.text,
+      props.expansionId,
+      props.selected,
+      props.order
+    );
 };

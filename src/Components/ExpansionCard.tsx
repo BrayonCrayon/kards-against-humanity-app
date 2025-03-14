@@ -1,6 +1,6 @@
 import React from "react";
-import { Expansion } from "Types/Expansion";
-import { KAHCheckbox } from "Components/KAHCheckbox";
+import { Expansion } from "@/Types/Expansion";
+import { KAHCheckbox } from "@/Components/KAHCheckbox";
 
 interface ExpansionCardProps extends Pick<Expansion, "id" | "name" | "cardCount"> {
   checked: boolean;

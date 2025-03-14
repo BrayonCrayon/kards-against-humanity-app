@@ -1,5 +1,6 @@
 import type { Config } from "@jest/types";
 
+// TODO: should be able to delete this config
 const path = require("path");
 
 // Sync object

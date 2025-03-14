@@ -1,5 +1,5 @@
-import React, {FC} from "react";
-import {User} from "Types/User";
+import React, { FC } from "react";
+import { User } from "@/Types/User";
 import PlayerListItem from "./PlayerListItem";
 
 interface PlayerListProps {

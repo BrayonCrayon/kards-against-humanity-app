@@ -1,13 +1,14 @@
+import "@testing-library/jest-dom/vitest";
 import React from "react";
-import {fireEvent, RenderResult, waitFor} from "@testing-library/react";
-import GameInfo from "Components/GameInformation/GameInfo";
-import {gameStateJudgeExampleResponse} from "Api/fixtures/gameStateJudgeExampleResponse";
-import {transformUser, transformUsers} from "Types/User";
-import {kardsRender} from "Tests/testRenders";
-import {spyOnUseAuth, spyOnUseGame, spyOnUsePlayers} from "Tests/testHelpers";
+import { fireEvent, RenderResult, waitFor } from "@testing-library/react";
+import GameInfo from "@/Components/GameInformation/GameInfo";
+import { gameStateJudgeExampleResponse } from "@/Api/fixtures/gameStateJudgeExampleResponse";
+import { transformUser, transformUsers } from "@/Types/User";
+import { kardsRender } from "@/Tests/testRenders";
+import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
-import {happyToast} from "Utilities/toasts";
-import {gameFactory} from "Tests/Factories/GameFactory";
+import { happyToast } from "@/Utilities/toasts";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
 
 const { data: {game, users, currentUser, blackCard} } = gameStateJudgeExampleResponse;
 const players = transformUsers(users);
@@ -18,27 +19,25 @@ const renderer = async (): Promise<RenderResult> => {
   return kardsRender(<GameInfo />);
 };
 
-const mockKickPlayer = jest.fn();
-jest.mock("Hooks/Game/Actions/useKickPlayer", () => {
-  return () => {
-    return mockKickPlayer;
-  };
-});
+const mocks = vi.hoisted(() => ({
+  updateGameSettings: vi.fn()
+}))
 
-const mockUpdateGameSettings = jest.fn();
-jest.mock("Hooks/Game/State/useUpdateGameSettings", () => {
-  return () => {
-    return mockUpdateGameSettings;
-  }
-})
+vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => ({
+    default: () => vi.fn()
+}));
 
-jest.mock("Utilities/toasts");
+vi.mock("@/Hooks/Game/State/useUpdateGameSettings", () => ({
+    default: () => mocks.updateGameSettings,
+}))
+
+vi.mock("@/Utilities/toasts");
 
 describe("GameInfo", () => {
   beforeEach(() => {
-    spyOnUsePlayers(jest.fn(), { players });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards });
-    spyOnUseGame(jest.fn(), { game, blackCard });
+    spyOnUsePlayers(vi.fn(), { players });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards });
+    spyOnUseGame(vi.fn(), { game, blackCard });
   });
 
   it("shows game code", async () => {
@@ -52,7 +51,7 @@ describe("GameInfo", () => {
   });
 
   it("copies game code to clipboard when clicked", async () => {
-    jest.spyOn(navigator.clipboard, "writeText");
+    vi.spyOn(navigator.clipboard, "writeText");
     const wrapper = await renderer();
 
     await waitFor(() => {
@@ -82,7 +81,7 @@ describe("GameInfo", () => {
   it("will update game settings when user clicks update in timer settings", async () => {
     const seconds = 300;
     const callbackSpy = spyOnUseGame(
-        jest.fn(),
+        vi.fn(),
         {game: gameFactory({selectionTimer: 200, selectionEndsAt: 5000}), blackCard}
     );
     const wrapper = await renderer();
@@ -101,7 +100,7 @@ describe("GameInfo", () => {
     await userEvent.click(wrapper.getByTestId("update-settings"));
 
     await waitFor(() => {
-      expect(mockUpdateGameSettings).toHaveBeenCalled();
+      expect(mocks.updateGameSettings).toHaveBeenCalled();
       callbackSpy.mockRestore();
     });
   });

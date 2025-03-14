@@ -1,4 +1,4 @@
-import {User} from "Types/User";
+import { User } from "@/Types/User";
 
 export interface IPlayersState {
   players: Array<User>;

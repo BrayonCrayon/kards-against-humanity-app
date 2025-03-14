@@ -1,13 +1,13 @@
-import { kardsHookRender } from "Tests/testRenders";
-import useJoinAsSpectator from "Hooks/Game/Join/useJoinAsSpectator";
-import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "Tests/testHelpers";
-import { transformUser, transformUsers } from "Types/User";
-import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";
-import { service } from "setupTests";
+import { kardsHookRender } from "@/Tests/testRenders";
+import useJoinAsSpectator from "@/Hooks/Game/Join/useJoinAsSpectator";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { transformUser, transformUsers } from "@/Types/User";
+import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 
 const {data: {users, user, game, blackCard} } = gameSpectatorExampleResponse;
-const mockedDispatch = jest.fn();
+const mockedDispatch = vi.fn();
 
 describe("useJoinAsSpectator", () => {
   beforeEach(() => {
@@ -31,7 +31,7 @@ describe("useJoinAsSpectator", () => {
 
   it("will catch server error", async () => {
     const errorMessage = { message: "something happened"};
-    const consoleSpy = jest.spyOn(console, "error")
+    const consoleSpy = vi.spyOn(console, "error")
       .mockImplementation(() => {});
     service.joinAsSpectator.mockRejectedValueOnce(errorMessage);
 

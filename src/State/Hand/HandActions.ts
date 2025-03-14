@@ -1,6 +1,6 @@
-import {BaseAction} from "State/GeneralContext";
-import {IHandState} from "./HandState";
-import {WhiteCard} from "Types/WhiteCard";
+import { BaseAction } from "@/State/GeneralContext";
+import { IHandState } from "./HandState";
+import { WhiteCard } from "@/Types/WhiteCard";
 
 export const HandActions = {};
 

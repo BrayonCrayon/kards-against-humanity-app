@@ -1,10 +1,15 @@
-import { blackCardFixture } from "../Api/fixtures/blackcardFixture";
-import { BlackCard } from "../Types/BlackCard";
-import { SubmittedCard } from "../Types/ResponseTypes";
-import { canSubmit, fillOutBlackCard, toMinutesSeconds } from "./helpers";
-import { gameStateExampleResponse } from "../Api/fixtures/gameStateExampleResponse";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "../Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { transformWhiteCardArray, WhiteCard } from "../Types/WhiteCard";
+import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
+import { BlackCard } from "@/Types/BlackCard";
+import { canSubmit, cardSize, displayScore, fillOutBlackCard, nonJudgePlayers, toMinutesSeconds } from "./helpers";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { transformWhiteCardArray, WhiteCard } from "@/Types/WhiteCard";
+import { SubmittedCard } from "@/Types/SubmittedCard";
+import { CardSize } from "@/Components/BlackKard";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { User } from "@/Types/User";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,
@@ -83,5 +88,33 @@ describe("Helpers", () => {
     ["0:00", 0],
   ])("will return %s from %d", (expected, seconds) => {
     expect(toMinutesSeconds(seconds)).toEqual(expected);
+  });
+
+  it.each([
+      [23, "23"],
+      [3, "03"]
+  ])("will cast score as string", (score, expected) => {
+    expect(displayScore(score)).toEqual(expected)
+  });
+
+  it.each([
+    [CardSize.SMALL, 99],
+    [CardSize.MEDIUM, 100],
+    [CardSize.MEDIUM, 199],
+    [CardSize.LARGE, 200],
+  ])("will return %s card size when text is %d characters", (expectedSize, characterCount) => {
+    const text = "0".repeat(characterCount)
+
+    expect(cardSize(text)).toEqual(expectedSize)
+  });
+
+  it("will return all players and exclude the player that is the judge", () => {
+    const players = Array.from({ length: 4 }).map(() => userFactory());
+    const judgeId = players[2].id
+
+    const result = nonJudgePlayers(judgeId, players)
+
+    expect(result).toHaveLength(players.length - 1)
+    result.forEach((player: User) => expect(player.id).not.toEqual(judgeId))
   });
 });

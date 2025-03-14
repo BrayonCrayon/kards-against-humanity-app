@@ -1,10 +1,10 @@
-import {useCallback} from "react";
-import {WhiteCard} from "Types/WhiteCard";
-import {BlackCard} from "Types/BlackCard";
-import {shuffle, take} from "lodash";
-import {submitCards} from "Services/GameService";
-import {useAuth} from "State/Auth/useAuth";
-import {SetHasSubmittedCards} from "State/Auth/AuthActions";
+import { useCallback } from "react";
+import { WhiteCard } from "@/Types/WhiteCard";
+import { BlackCard } from "@/Types/BlackCard";
+import { shuffle, take } from "lodash";
+import { submitCards } from "@/Services/GameService";
+import { useAuth } from "@/State/Auth/useAuth";
+import { SetHasSubmittedCards } from "@/State/Auth/AuthActions";
 
 export function useForceSubmitCards() {
   const { dispatch } = useAuth();

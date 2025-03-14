@@ -1,11 +1,11 @@
 import { render } from "@testing-library/react";
-import ShareButton from "Components/Atoms/ShareButton";
+import ShareButton from "@/Components/Atoms/ShareButton";
 import userEvent from "@testing-library/user-event";
-import { webShare } from "Types/WebShare";
-import { errorToast } from "Utilities/toasts";
+import { webShare } from "@/Types/WebShare";
+import { errorToast } from "@/Utilities/toasts";
 
-jest.mock("Utilities/toasts", () => ({
-  errorToast: jest.fn()
+vi.mock("@/Utilities/toasts", () => ({
+  errorToast: vi.fn()
 }))
 
 const renderComponent = () => {
@@ -14,7 +14,7 @@ const renderComponent = () => {
 
 describe("ShareButton", () => {
   it("will check if user can share", async () => {
-    const webSpy = jest.spyOn(webShare, "canShare").mockImplementationOnce(jest.fn());
+    const webSpy = vi.spyOn(webShare, "canShare").mockImplementationOnce(vi.fn());
     const wrapper = renderComponent();
 
     await userEvent.click(wrapper.getByRole("share-button"));
@@ -24,8 +24,8 @@ describe("ShareButton", () => {
   });
 
   it("will share data", async () => {
-    const webSpy = jest.spyOn(webShare, "canShare").mockImplementationOnce(jest.fn());
-    const share = jest.spyOn(webShare, "share");
+    const webSpy = vi.spyOn(webShare, "canShare").mockImplementationOnce(vi.fn());
+    const share = vi.spyOn(webShare, "share");
     const wrapper = renderComponent();
 
     await userEvent.click(wrapper.getByRole("share-button"));
@@ -36,7 +36,7 @@ describe("ShareButton", () => {
   });
 
   it("will catch error when user cannot share", async () => {
-    const webSpy = jest.spyOn(webShare, "share").mockRejectedValueOnce("Error");
+    const webSpy = vi.spyOn(webShare, "share").mockRejectedValueOnce("Error");
     const wrapper = renderComponent();
 
     await userEvent.click(wrapper.getByRole("share-button"));

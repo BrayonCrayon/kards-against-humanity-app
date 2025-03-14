@@ -1,7 +1,7 @@
 import {useCallback} from "react";
-import {updateSettings} from "Services/GameService";
+import {updateSettings} from "@/Services/GameService";
 import useFetchGameState from "./useFetchGameState";
-import {errorToast} from "Utilities/toasts";
+import {errorToast} from "@/Utilities/toasts";
 
 
 function useUpdateGameSettings() {

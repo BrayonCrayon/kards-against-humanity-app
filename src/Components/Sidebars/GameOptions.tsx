@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
-import ToggleSidebar from "Components/ToggleSidebar";
-import {ExpansionOption} from "Types/Expansion";
-import {Button, ButtonVariant} from "Components/Atoms/Button";
-import {ExpansionsTab} from "./Settings/ExpansionsTab";
-import TabView, {Tab} from "./Settings/TabView";
-import GameSettingsTab, {Options} from "Components/Sidebars/Settings/GameSettingsTab";
+import React, { useEffect, useState } from "react";
+import ToggleSidebar from "@/Components/ToggleSidebar";
+import { ExpansionOption } from "@/Types/Expansion";
+import { Button, ButtonVariant } from "@/Components/Atoms/Button";
+import { ExpansionsTab } from "./Settings/ExpansionsTab";
+import TabView, { Tab } from "./Settings/TabView";
+import GameSettingsTab, { Options } from "@/Components/Sidebars/Settings/GameSettingsTab";
 
 interface IGameOptions {
   expansions: ExpansionOption[];

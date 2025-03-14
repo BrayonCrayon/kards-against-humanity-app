@@ -1,7 +1,8 @@
-import {kardsRender} from "Tests/testRenders";
-import {gameSpectatorExampleResponse} from "Api/fixtures/gameSpectatorExampleResponse";
-import {transformUsers, User} from "Types/User";
-import SpectatePlayerList from "Components/Spectation/SpectatePlayerList";
+import "@testing-library/jest-dom/vitest";
+import { kardsRender } from "@/Tests/testRenders";
+import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
+import { transformUsers, User } from "@/Types/User";
+import SpectatePlayerList from "@/Components/Spectation/SpectatePlayerList";
 
 const {data: {users, game}} = gameSpectatorExampleResponse;
 const players = transformUsers(users);
@@ -18,14 +19,14 @@ describe("SpectatePlayerList", () => {
     });
 
     nonJudgePlayers.forEach((player) => {
-      expect(wrapper.queryByTestId(player.id)).toContainHTML("fas fa-user text-xl")
+      expect(wrapper.queryByTestId(player.id)).toContainHTML("fa-user")
     })
   });
 
   it("will display the gavel icon for judges", () => {
     const wrapper = renderComponent();
 
-    expect(wrapper.queryByTestId(game.judgeId)).toContainHTML("fas fa-gavel text-xl")
+    expect(wrapper.queryByTestId(game.judgeId)).toContainHTML("fa-gavel")
   });
 
   it("will display a list of users", () => {

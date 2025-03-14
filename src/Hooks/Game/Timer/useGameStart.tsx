@@ -1,7 +1,6 @@
-import {useCallback} from "react";
-import gameService from "Services/GameService";
-import useFetchGameState from "../State/useFetchGameState";
-
+import { useCallback } from "react";
+import gameService from "@/Services/GameService";
+import useFetchGameState from "@/Hooks/Game/State/useFetchGameState";
 
 function useGameStart() {
 

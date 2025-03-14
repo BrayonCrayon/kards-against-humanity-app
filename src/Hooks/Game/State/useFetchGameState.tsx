@@ -1,15 +1,15 @@
 import { useCallback } from "react";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { transformUser, transformUsers } from "Types/User";
-import { usePlayers } from "State/Players/usePlayers";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { useHand } from "State/Hand/useHand";
-import { SetHandAction } from "State/Hand/HandActions";
-import { useAuth } from "State/Auth/useAuth";
-import { SetAuthAction, SetHasSubmittedCards } from "State/Auth/AuthActions";
-import { useGame } from "State/Game/useGame";
-import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
-import { fetchState } from "Services/GameService";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { transformUser, transformUsers } from "@/Types/User";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { SetPlayersAction } from "@/State/Players/PlayersActions";
+import { useHand } from "@/State/Hand/useHand";
+import { SetHandAction } from "@/State/Hand/HandActions";
+import { useAuth } from "@/State/Auth/useAuth";
+import { SetAuthAction, SetHasSubmittedCards } from "@/State/Auth/AuthActions";
+import { useGame } from "@/State/Game/useGame";
+import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
+import { fetchState } from "@/Services/GameService";
 
 function useFetchGameState() {
     const {dispatch: usersDispatch} = usePlayers();

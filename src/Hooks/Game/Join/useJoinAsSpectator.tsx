@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import { transformUser, transformUsers } from "Types/User";
-import { useGame } from "State/Game/useGame";
-import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
-import { joinAsSpectator } from "Services/GameService";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { usePlayers } from "State/Players/usePlayers";
-import { useAuth } from "State/Auth/useAuth";
-import { SetAuthAction } from "State/Auth/AuthActions";
+import { transformUser, transformUsers } from "@/Types/User";
+import { useGame } from "@/State/Game/useGame";
+import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
+import { joinAsSpectator } from "@/Services/GameService";
+import { SetPlayersAction } from "@/State/Players/PlayersActions";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { useAuth } from "@/State/Auth/useAuth";
+import { SetAuthAction } from "@/State/Auth/AuthActions";
 import { useNavigate } from "react-router-dom";
 
 function useJoinAsSpectator() {

@@ -1,4 +1,4 @@
-import { Game } from "../../Types/Game";
+import { Game } from "@/Types/Game";
 
 export const gameFixture: Game = {
   id: "121313klhj3-eqweewq-2323-dasd",

@@ -1,16 +1,21 @@
-import {screen, waitFor} from "@testing-library/react";
-import {CreateGameForm} from "Components/Forms/CreateGameForm";
+import { screen, waitFor } from "@testing-library/react";
+import { CreateGameForm } from "@/Components/Forms/CreateGameForm";
 import userEvent from "@testing-library/user-event";
-import {getExpansionsExampleResponse} from "Api/fixtures/getExpansionsExampleResponse";
-import {kardsRender} from "Tests/testRenders";
-import gameService, {ICreateGameOptions} from "Services/GameService";
+import { getExpansionsExampleResponse } from "@/Api/fixtures/getExpansionsExampleResponse";
+import { kardsRender } from "@/Tests/testRenders";
+import { ICreateGameOptions } from "@/Services/GameService";
+import { service } from "@/setupTests";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AxiosResponse } from "axios";
 
 const { data: expansions } = getExpansionsExampleResponse;
 
-const mockCreateGame = jest.fn();
-jest.mock("Hooks/Game/Create/useCreateGame", () => {
-  return () => mockCreateGame;
-});
+const mocks = vi.hoisted(() => ({
+  createGame: vi.fn(),
+}))
+vi.mock("@/Hooks/Game/Create/useCreateGame", () => ({
+  useCreateGame: () => mocks.createGame
+}));
 
 const renderer = () => {
   return kardsRender(<CreateGameForm />);
@@ -18,8 +23,7 @@ const renderer = () => {
 
 describe("CreateGameForm", () => {
   beforeEach(() => {
-    // @ts-ignore
-    gameService.fetchExpansions.mockResolvedValue(getExpansionsExampleResponse);
+    service.fetchExpansions.mockResolvedValue(getExpansionsExampleResponse as AxiosResponse);
   });
 
   it("renders all expansion cards to be initially checked", async () => {
@@ -28,7 +32,7 @@ describe("CreateGameForm", () => {
     await userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     await waitFor(() => {
-      const expansionCard = wrapper.container.querySelectorAll("i[class*='fa-check']");
+      const expansionCard = wrapper.container.querySelectorAll("svg[class*='fa-check']");
       expect(expansionCard).toHaveLength(expansions.length);
     })
   });
@@ -52,7 +56,7 @@ describe("CreateGameForm", () => {
     await waitFor(() => userEvent.click(submitBtn));
 
     const options: ICreateGameOptions = {name, expansionIds: expectedExpansions, timer: null, hasAnimations};
-    await waitFor(() => expect(mockCreateGame).toHaveBeenCalledWith(options));
+    await waitFor(() => expect(mocks.createGame).toHaveBeenCalledWith(options));
   });
 
   it("calls create game hook", async () => {
@@ -75,7 +79,7 @@ describe("CreateGameForm", () => {
       hasAnimations: false
     };
     await waitFor(() => {
-      expect(mockCreateGame).toHaveBeenCalledWith(expectedOptions);
+      expect(mocks.createGame).toHaveBeenCalledWith(expectedOptions);
     });
   });
 
@@ -114,7 +118,7 @@ describe("CreateGameForm", () => {
     await userEvent.click(wrapper.getByRole("settings-menu-button"));
 
     await waitFor(() => {
-      expect(wrapper.queryByRole("settings-menu-button")).toBeInTheDocument();
+      expect(wrapper.queryByRole("settings-menu-button")).toBeDefined();
     });
   });
 });

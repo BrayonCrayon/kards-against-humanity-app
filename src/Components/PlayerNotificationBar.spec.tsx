@@ -1,7 +1,9 @@
-import { kardsRender } from "Tests/testRenders";
+import { kardsRender } from "@/Tests/testRenders";
 import PlayerNotificationBar from "./PlayerNotificationBar";
-import { gameStateAllPlayerSubmittedCardsExampleResponse } from "Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
-import { transformUsers, User } from "Types/User";
+import {
+  gameStateAllPlayerSubmittedCardsExampleResponse
+} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { transformUsers, User } from "@/Types/User";
 
 const {
   data: { users, game },

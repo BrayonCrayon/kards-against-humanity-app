@@ -1,6 +1,5 @@
-import {FC, useEffect, useState} from "react";
-import {toMinutesSeconds} from "Utilities/helpers";
-import moment from "moment";
+import { FC, useEffect, useState } from "react";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
 interface TimerProps {
   /** Timestamp in Seconds */
@@ -13,7 +12,7 @@ const Timer: FC<TimerProps> = ({ end , onEnd = () => {}}) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      const difference = moment.unix(end).diff(moment(), "seconds");
+      const difference = (end - (Date.now() / 1000));
       if (difference <= 0) {
         onEnd();
       }
@@ -24,7 +23,7 @@ const Timer: FC<TimerProps> = ({ end , onEnd = () => {}}) => {
   }, [seconds])
 
   useEffect(() => {
-    setSeconds(moment.unix(end).diff(moment(), "seconds"));
+    setSeconds((end - Date.now() / 1000));
   }, []);
 
   return (

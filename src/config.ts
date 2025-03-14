@@ -1,1 +1,2 @@
-export const API_URL = process.env.REACT_APP_API_URL;
+// @ts-ignore
+export const API_URL = import.meta.env.VITE_APP_API_URL;

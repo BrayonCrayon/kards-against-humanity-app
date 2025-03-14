@@ -1,5 +1,5 @@
-import { KickPlayerAction, SetPlayersAction } from "State/Players/PlayersActions";
-import { initialPlayersState } from "State/Players/PlayersState";
+import { KickPlayerAction, SetPlayersAction } from "@/State/Players/PlayersActions";
+import { initialPlayersState } from "@/State/Players/PlayersState";
 
 const createUser = (overrides = {}) => {
   return {

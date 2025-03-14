@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import { usePlayers } from "State/Players/usePlayers";
-import { KickPlayerAction } from "State/Players/PlayersActions";
-import gameService from "Services/GameService";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { KickPlayerAction } from "@/State/Players/PlayersActions";
+import gameService from "@/Services/GameService";
 
 function useKickPlayer() {
   const { dispatch } = usePlayers();

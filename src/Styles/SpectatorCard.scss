@@ -1,0 +1,58 @@
+//.spectator-card-enter {
+//  opacity: 0;
+//  transform: scale(0.9);
+//}
+//
+//.spectator-card-enter-active {
+//  opacity: 1;
+//  transform: translateX(0);
+//  transition: opacity 300ms, transform 300ms;
+//}
+//
+//.spectator-card-exit {
+//  opacity: 1;
+//}
+//
+//.spectator-card-exit-active {
+//  opacity: 0;
+//  transform: scale(0.9);
+//  transition: opacity 300ms, transform 300ms;
+//}
+
+.spectator-card-slide {
+  position: relative;
+}
+
+.spectator-card-slide-enter {
+  position: relative;
+  left: -1000px;
+}
+
+.spectator-card-slide-enter-active {
+  position: relative;
+  transition: 800ms;
+  left: 0;
+}
+
+.spectator-card-slide-exit {
+  position: relative;
+  left: 0;
+}
+
+.spectator-card-slide-exit-active {
+  display: none;
+}
+
+//.spectator-card {
+//  @apply hidden;
+//  @screen md {
+//    @apply bg-white text-black text-base self-center shadow-xl my-3 h-12 col-start-3 col-span-2 flex;
+//  }
+//}
+//
+//.white-card-spectator-card {
+//  @apply bg-white text-black text-base shadow-xl my-3 h-12 self-end;
+//  @screen md {
+//    @apply hidden;
+//  }
+//}

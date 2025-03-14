@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { whiteCardTestId } from "./selectors";
-import { WhiteCard } from "Types/WhiteCard";
+import { WhiteCard } from "@/Types/WhiteCard";
 import { screen, waitFor } from "@testing-library/react";
 
 export const selectWhiteCards = async (cards: WhiteCard[]) => {

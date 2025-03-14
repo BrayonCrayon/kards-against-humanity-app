@@ -1,5 +1,5 @@
-import {apiClient} from "Api/apiClient";
-import {PlayerCard, PlayerSubmittedCard, Resource, RoundWinner} from "Types/ResponseTypes";
+import { apiClient } from "@/Api/apiClient";
+import { PlayerCard, PlayerSubmittedCard, Resource, RoundWinner } from "@/Types/ResponseTypes";
 
 export const fetchSubmittedCards = (gameId: string) => {
   return apiClient.get<Array<PlayerSubmittedCard>>(`/api/game/${gameId}/submitted-cards`);

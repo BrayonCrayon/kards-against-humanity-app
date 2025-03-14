@@ -1,4 +1,4 @@
-import FloatingButton from "Components/Atoms/FloatingButton";
+import FloatingButton from "@/Components/Atoms/FloatingButton";
 import { render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
@@ -23,7 +23,7 @@ describe("FloatingButton", function() {
   });
 
   it("will call passed in click handler when button is pressed", async () => {
-    const onClick = jest.fn();
+    const onClick = vi.fn();
     const wrapper = renderComponent({ showButton: true, onClick });
 
     await userEvent.click(wrapper.getByRole("button"));
