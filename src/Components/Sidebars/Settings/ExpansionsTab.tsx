@@ -19,7 +19,7 @@ export const ExpansionsTab: FC<ExpansionsTabProps> = ({ expansions, onToggle, to
 
   return (
     <>
-      <div className="flex h-5% px-5 py-2 shadow-md items-center justify-end">
+      <div className="flex h-[5%] px-5 py-2 shadow-md items-center justify-end">
         <KAHToggler
           role="toggle-all-expansions"
           on={selectAll}

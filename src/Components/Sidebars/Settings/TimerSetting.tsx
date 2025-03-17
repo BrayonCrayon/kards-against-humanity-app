@@ -23,7 +23,7 @@ export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300,
 
   return (
     <>
-      <div className="flex h-5% px-5 py-2 items-center justify-end">
+      <div className="flex h-[5%] px-5 py-2 items-center justify-end">
         <KAHToggler
           dataTestId="timer-toggle"
           role="toggle-timer"
