@@ -4,7 +4,23 @@
 @use "./Styles/SpectatorCard.scss";
 @use "./Styles/RangeInput.scss";
 @use "tailwindcss";
-@config "../tailwind.config";
+
+@theme {
+  --color-lukewarmGray-50: #f8f8f8;
+  --color-lukewarmGray-100: #f0f0f0;
+  --color-lukewarmGray-200: #e4e4e4;
+  --color-lukewarmGray-300: #d3d3d3;
+  --color-lukewarmGray-400: #b4b4b4;
+  --color-lukewarmGray-500: #9a9a9a;
+  --color-lukewarmGray-600: #818181;
+  --color-lukewarmGray-700: #6a6a6a;
+  --color-lukewarmGray-800: #5a5a5a;
+  --color-lukewarmGray-900: #4e4e4e;
+
+  --color-lightBlack: #1a1a1a;
+
+  --color-emerald-500: #95D860;
+}
 
 body {
   margin: 0;
