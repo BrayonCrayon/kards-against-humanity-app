@@ -4,18 +4,66 @@
 @use "./Styles/SpectatorCard.scss";
 @use "./Styles/RangeInput.scss";
 @use "tailwindcss";
-@config "../tailwind.config";
+
+@theme {
+  --color-lukewarmGray-50: #f8f8f8;
+  --color-lukewarmGray-100: #f0f0f0;
+  --color-lukewarmGray-200: #e4e4e4;
+  --color-lukewarmGray-300: #d3d3d3;
+  --color-lukewarmGray-400: #b4b4b4;
+  --color-lukewarmGray-500: #9a9a9a;
+  --color-lukewarmGray-600: #818181;
+  --color-lukewarmGray-700: #6a6a6a;
+  --color-lukewarmGray-800: #5a5a5a;
+  --color-lukewarmGray-900: #4e4e4e;
+
+  --color-lightBlack: #1a1a1a;
+
+  --color-emerald-500: #95D860;
+
+  --animate-slide-in-and-slide-out: slide-in-and-slide-out 5s forwards;
+
+  @keyframes slide-in-and-slide-out {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    25%, 75% {
+      transform: translateX(0%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-in {
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    25%, 75% {
+      transform: translateX(-50%);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 1;
+    }
+  }
+}
 
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  monospace;
 }
