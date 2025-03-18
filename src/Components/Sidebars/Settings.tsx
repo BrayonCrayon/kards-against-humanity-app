@@ -1,9 +1,11 @@
-import React, {FC, useEffect, useState} from "react";
-import ToggleSidebar from "Components/ToggleSidebar";
-import {User} from "Types/User";
-import TabView, {Tab} from "./Settings/TabView";
+import React, { FC, useEffect, useState } from "react";
+import ToggleSidebar from "@/Components/ToggleSidebar";
+import { User } from "@/Types/User";
+import TabView, { Tab } from "./Settings/TabView";
 import GameSettingsTab from "./Settings/GameSettingsTab";
-import PlayerList from "Components/PlayerList";
+import PlayerList from "@/Components/PlayerList";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 interface SettingsProps {
   players: User[];
@@ -30,10 +32,7 @@ const Settings: FC<SettingsProps> = ({
         dataTestId="game-settings"
         toggleElement={
           <div className="flex flex-col hover:text-gray-700">
-            <i
-              aria-roledescription="Game settings"
-              className="fa-solid fa-gear text-4xl cursor-pointer self-center"
-            />
+            <FontAwesomeIcon aria-roledescription="Game settings" icon={faGear} size="2xl" className="cursor-pointer self-center" />
           </div>
         }
       >

@@ -2,7 +2,7 @@ import { fireEvent, render, waitFor } from "@testing-library/react";
 import { TimerSetting } from "./TimerSetting";
 import { random } from "lodash";
 import userEvent from "@testing-library/user-event";
-import { toMinutesSeconds } from "Utilities/helpers";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
 describe("TimerTab", () => {
   it("will disable time by default", () => {
@@ -17,7 +17,7 @@ describe("TimerTab", () => {
     [60, 180],
     [75, 199],
   ])("will change time to between %s and %s when enabled", async (min, max) => {
-    const onChange = jest.fn();
+    const onChange = vi.fn();
     const wrapper = render(<TimerSetting onChange={onChange} min={min} max={max} />);
 
     await userEvent.click(wrapper.getByRole("toggle-timer"));
@@ -51,7 +51,7 @@ describe("TimerTab", () => {
   });
 
   it("will reset timer when user toggles off timer", async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const wrapper = render(<TimerSetting onChange={callback} />);
 
     await userEvent.click(wrapper.getByRole("toggle-timer"));
@@ -64,7 +64,7 @@ describe("TimerTab", () => {
   });
 
   it("will reset timer back to original state when user toggles back on timer", async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const max = 60;
     const min = 0;
     const wrapper = render(<TimerSetting onChange={callback} min={min} max={max} />);

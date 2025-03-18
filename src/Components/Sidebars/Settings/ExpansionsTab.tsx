@@ -1,5 +1,5 @@
 import { FC, useCallback, useState } from "react";
-import { ExpansionOption } from "Types/Expansion";
+import { ExpansionOption } from "@/Types/Expansion";
 import { KAHToggler } from "../../KAHToggler";
 import ExpansionCard from "../../ExpansionCard";
 
@@ -19,7 +19,7 @@ export const ExpansionsTab: FC<ExpansionsTabProps> = ({ expansions, onToggle, to
 
   return (
     <>
-      <div className="flex h-5% px-5 py-2 shadow-md items-center justify-end">
+      <div className="flex h-[5%] px-5 py-2 shadow-md items-center justify-end">
         <KAHToggler
           role="toggle-all-expansions"
           on={selectAll}
@@ -28,7 +28,7 @@ export const ExpansionsTab: FC<ExpansionsTabProps> = ({ expansions, onToggle, to
           onClick={onChange}
         />
       </div>
-      <div className="h-5/6 overflow-y-scroll px-2 rounded">
+      <div className="h-5/6 overflow-y-scroll px-2 rounded-sm">
         {expansions.map(({ expansion, isSelected }) => {
           return (
             <ExpansionCard

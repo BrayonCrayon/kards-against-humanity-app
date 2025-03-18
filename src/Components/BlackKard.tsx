@@ -1,19 +1,44 @@
-import React from "react";
-import {BlackCard} from "Types/BlackCard";
+import React, { useMemo } from "react";
+import { BlackCard } from "@/Types/BlackCard";
 import PlayButton from "./Molecules/PlayButton";
+
+export enum CardSize {
+  SMALL = "small",
+  MEDIUM = "medium",
+  LARGE = "large"
+}
 
 interface BlackCardProps {
   card: BlackCard;
+  className?: string;
+  size?: CardSize;
+  hidePlayButton?: boolean;
 }
 
-export const BlackKard: React.FC<BlackCardProps> = ({ card }) => {
+export const BlackKard: React.FC<BlackCardProps> = (props) => {
+  const {
+    card,
+    className = "",
+    size = CardSize.SMALL,
+    hidePlayButton = false,
+  } = props
+
+  const sizeClasses = useMemo(() => {
+    switch (size) {
+      case CardSize.LARGE:
+        return "w-1/2 h-3/4 text-base"
+      default:
+        return "min-h-72 max-w-64 min-w-64"
+    }
+  }, [size])
+
   return (
     <div
-      className="relative border border-black bg-black text-white shadow-md font-bold flex flex-col px-6 py-7 text-3xl leading-normal min-h-72 max-w-64"
+      className={`relative border border-black bg-black text-white shadow-md font-bold flex flex-col px-6 py-7 text-3xl leading-normal ${sizeClasses} ${className}`}
       data-testid={`black-card-${card.id}`}
     >
-      <span>{card.text}</span>
-      <PlayButton text={card.text} />
+      <p className="text-ellipsis overflow-hidden">{card.text}</p>
+      { !hidePlayButton && <PlayButton text={card.text} /> }
       <div className="absolute bottom-1 right-1 text-2xl self-end pt-3 text-gray-600">K.</div>
     </div>
   );

@@ -1,5 +1,9 @@
-import React, {FC, useMemo} from "react";
-import {User} from "Types/User";
+import React, { FC } from "react";
+import { User } from "@/Types/User";
+import CardSubmittedIcon from "@/Components/Icons/CardSubmittedIcon";
+import { displayScore } from "@/Utilities/helpers";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGavel, faUser } from "@fortawesome/free-solid-svg-icons";
 
 interface SpectatePlayerListItemProps {
   player: User,
@@ -8,20 +12,19 @@ interface SpectatePlayerListItemProps {
 
 const SpectatePlayerListItem: FC<SpectatePlayerListItemProps> = ({ player , isJudge}) => {
 
-  const submittedStatus = useMemo(() => {
-    return player.hasSubmittedWhiteCards ? "Submitted Card" : "";
-  }, [player]);
-
-  return <div className="w-full">
+  return <div className="w-full flex justify-between items-center border-b border-lukewarmGray-500 mb-2 pb-2">
     <div data-testid={player.id} className="flex text-lg items-center">
-      <p className="border-r-2 border-black pr-2 mr-2">{player.score}</p>
-      <i className={`fas ${isJudge ? "fa-gavel" : "fa-user"} text-xl mr-2`} />
-      <span className="mr-1">{player.name}</span>
-      { player.hasSubmittedWhiteCards
-          ? <p className="">- { submittedStatus }</p>
-          : null
-      }
+      <p className="border-r border-black pr-2 mr-2">{displayScore(player.score)}</p>
+      <FontAwesomeIcon icon={isJudge ? faGavel : faUser} className="text-xl mr-2" />
+      <span className="mr-1 text-lightBlack">{player.name}</span>
     </div>
+    {
+      !isJudge &&
+      <CardSubmittedIcon
+          dataTestId={`card-submitted-icon-${player.id}`}
+          className={!player.hasSubmittedWhiteCards ? "opacity-25" : ""}
+      />
+    }
   </div>
 }
 

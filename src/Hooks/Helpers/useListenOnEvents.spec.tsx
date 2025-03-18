@@ -1,29 +1,29 @@
-import {kardsHookRender} from "Tests/testRenders";
-import {gameFixture} from "Api/fixtures/gameFixture";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { gameFixture } from "@/Api/fixtures/gameFixture";
 import {
   listenWhenGameRotates,
   listenWhenGameStart,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards
-} from "Services/PusherService";
-import useListenOnEvents from "Hooks/Helpers/useListenOnEvents";
+} from "@/Services/PusherService";
+import useListenOnEvents from "@/Hooks/Helpers/useListenOnEvents";
 
-jest.mock("Services/PusherService");
+vi.mock("@/Services/PusherService");
 
-const mockGameStateCallback = jest.fn();
-jest.mock("Hooks/Game/State/useGameStateCallback", () => {
-  return () => mockGameStateCallback;
-});
+const mockGameStateCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useGameStateCallback", () => ({
+  default: () => mockGameStateCallback
+}));
 
-const mockJoinCallback = jest.fn();
-jest.mock("Hooks/Helpers/useUserJoinsGameCallback", () => {
-  return () => mockJoinCallback;
-});
+const mockJoinCallback = vi.fn();
+vi.mock("@/Hooks/Helpers/useUserJoinsGameCallback", () => ({
+  default: () => mockJoinCallback
+}));
 
-const mockRefreshPlayersCallback = jest.fn();
-jest.mock("Hooks/Game/State/useRefreshPlayersStateCallback", () => {
-  return () => mockRefreshPlayersCallback;
-});
+const mockRefreshPlayersCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useRefreshPlayersStateCallback", () => ({
+  default: () => mockRefreshPlayersCallback
+}));
 
 describe("useListenOnEvents", () => {
   it("will listen on pusher events", async () => {

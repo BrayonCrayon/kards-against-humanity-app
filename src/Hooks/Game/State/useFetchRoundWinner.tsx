@@ -1,8 +1,8 @@
 import { useCallback } from "react";
-import { useVote } from "State/Vote/useVote";
-import { WinnerSelectedAction } from "State/Vote/VoteActions";
-import { IWinnerIsSelectedEventData } from "Services/PusherService";
-import gameService from "Services/GameService";
+import { useVote } from "@/State/Vote/useVote";
+import { WinnerSelectedAction } from "@/State/Vote/VoteActions";
+import { IWinnerIsSelectedEventData } from "@/Services/PusherService";
+import gameService from "@/Services/GameService";
 
 function useFetchRoundWinner() {
   const { dispatch } = useVote();

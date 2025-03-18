@@ -1,15 +1,15 @@
-import useFetchSpectatorState from "Hooks/Game/State/useFetchSpectatorState";
-import { gameSpectatorExampleResponse } from "Api/fixtures/gameSpectatorExampleResponse";
-import { fetchSpectatorState } from "Services/GameService";
-import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "Tests/testHelpers";
-import { initialAuthState } from "State/Auth/AuthState";
-import { service } from "setupTests";
+import useFetchSpectatorState from "@/Hooks/Game/State/useFetchSpectatorState";
+import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
+import { fetchSpectatorState } from "@/Services/GameService";
+import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { initialAuthState } from "@/State/Auth/AuthState";
+import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
-import { initialPlayersState } from "State/Players/PlayersState";
-import { initialGameState } from "State/Game/GameState";
+import { initialPlayersState } from "@/State/Players/PlayersState";
+import { initialGameState } from "@/State/Game/GameState";
 import {renderHook} from "@testing-library/react";
 
-let mockedDispatch = jest.fn();
+let mockedDispatch = vi.fn();
 const gameId = "tacoGameId";
 
 describe("useFetchSpectatorState", () => {
@@ -38,7 +38,7 @@ describe("useFetchSpectatorState", () => {
 
 
   it("will catch server error", async () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const serverError = { message: "500 server error" };
     service.fetchSpectatorState.mockRejectedValueOnce(serverError);
     const { result } = renderHook(useFetchSpectatorState);

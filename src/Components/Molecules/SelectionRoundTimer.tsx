@@ -1,10 +1,10 @@
-import {FC, useCallback, useMemo} from "react";
-import Timer from "Components/Atoms/Timer";
-import {useGame} from "State/Game/useGame";
-import {usePlayers} from "State/Players/usePlayers";
-import {useForceSubmitCards} from "Hooks/Game/Timer/useForceSubmitCards";
-import {useHand} from "State/Hand/useHand";
-import {useAuth} from "State/Auth/useAuth";
+import { FC, useCallback, useMemo } from "react";
+import Timer from "@/Components/Atoms/Timer";
+import { useGame } from "@/State/Game/useGame";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { useForceSubmitCards } from "@/Hooks/Game/Timer/useForceSubmitCards";
+import { useHand } from "@/State/Hand/useHand";
+import { useAuth } from "@/State/Auth/useAuth";
 
 interface SelectionRoundTimerProps {
     className?: string;

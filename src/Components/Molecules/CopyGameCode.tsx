@@ -1,6 +1,6 @@
-import React, {FC} from "react";
-import CopyIcon from "Components/Icons/CopyIcon";
-import ClipBoard from "Components/Atoms/ClipBoard";
+import React, { FC } from "react";
+import CopyIcon from "@/Components/Icons/CopyIcon";
+import ClipBoard from "@/Components/Atoms/ClipBoard";
 
 interface CopyGameCodeProps {
     code: string;

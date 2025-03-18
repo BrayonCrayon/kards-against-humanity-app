@@ -1,0 +1,9 @@
+---
+description: Since Global Helpers Imports are set to true for Vitest. Don't do explicit imports for those helpers.
+globs: *.spec.*, *.test.*
+---
+
+- Since Global Helpers Imports are set to true for Vitest. Don't do explicit imports for those helpers.
+- Therefore, your test file should never include import {X} from "vitest" (where X can be vi, describe, test, etc...)
+
+

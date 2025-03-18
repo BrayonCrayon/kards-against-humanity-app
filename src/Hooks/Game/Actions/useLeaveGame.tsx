@@ -1,19 +1,19 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { leaveGame } from "Services/GameService";
-import { useHand } from "State/Hand/useHand";
-import { useVote } from "State/Vote/useVote";
-import { usePlayers } from "State/Players/usePlayers";
-import { useGame } from "State/Game/useGame";
-import { useAuth } from "State/Auth/useAuth";
-import { SetHasSubmittedCards } from "State/Auth/AuthActions";
-import { SetBlackCardAction, SetGameAction } from "State/Game/GameActions";
-import { initialGameState } from "State/Game/GameState";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { initialPlayersState } from "State/Players/PlayersState";
-import { initialHandState } from "State/Hand/HandState";
-import { SetHandAction } from "State/Hand/HandActions";
-import { ClearStateAction } from "State/Vote/VoteActions";
+import { leaveGame } from "@/Services/GameService";
+import { useHand } from "@/State/Hand/useHand";
+import { useVote } from "@/State/Vote/useVote";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { useGame } from "@/State/Game/useGame";
+import { useAuth } from "@/State/Auth/useAuth";
+import { SetHasSubmittedCards } from "@/State/Auth/AuthActions";
+import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
+import { initialGameState } from "@/State/Game/GameState";
+import { SetPlayersAction } from "@/State/Players/PlayersActions";
+import { initialPlayersState } from "@/State/Players/PlayersState";
+import { initialHandState } from "@/State/Hand/HandState";
+import { SetHandAction } from "@/State/Hand/HandActions";
+import { ClearStateAction } from "@/State/Vote/VoteActions";
 
 function useLeaveGame() {
   const navigate = useNavigate();

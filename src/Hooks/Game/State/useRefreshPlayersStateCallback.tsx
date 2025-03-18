@@ -1,5 +1,5 @@
 import {useCallback} from "react";
-import {gameCallbackData} from "Services/PusherService";
+import {gameCallbackData} from "@/Services/PusherService";
 import useRefreshPlayers from "./useRefreshPlayers";
 
 function useRefreshPlayersStateCallback() {

@@ -1,14 +1,14 @@
 import { render, renderHook, RenderResult } from "@testing-library/react";
-import { GameProvider } from "State/Game/GameContext";
-import { MemoryRouter } from "react-router-dom";
-import { VoteProvider } from "State/Vote/VoteContext";
-import { PlayersProvider } from "State/Players/PlayersContext";
-import { HandProvider } from "State/Hand/HandContext";
-import { AuthProvider } from "State/Auth/AuthContext";
+import { GameProvider } from "@/State/Game/GameContext";
+// import { MemoryRouter } from "react-router-dom";
+import { VoteProvider } from "@/State/Vote/VoteContext";
+import { PlayersProvider } from "@/State/Players/PlayersContext";
+import { HandProvider } from "@/State/Hand/HandContext";
+import { AuthProvider } from "@/State/Auth/AuthContext";
 import React, { ReactNode } from "react";
 
 export const kardsRender = (children: ReactNode): RenderResult => render(
-  <MemoryRouter>
+  // <MemoryRouter>
     <GameProvider>
       <AuthProvider>
         <HandProvider>
@@ -19,11 +19,11 @@ export const kardsRender = (children: ReactNode): RenderResult => render(
           </VoteProvider>
         </HandProvider>
       </AuthProvider>
-    </GameProvider>
-  </MemoryRouter>,
+    </GameProvider>,
+  // </MemoryRouter>,
 );
 
-export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TResult) => renderHook(callback, {
+export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TResult, props?: TProps) => renderHook(callback, {
     wrapper: ({ children }) => (
         <GameProvider>
           <AuthProvider>
@@ -37,4 +37,5 @@ export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TR
           </AuthProvider>
         </GameProvider>
     ),
+    initialProps: props
   });

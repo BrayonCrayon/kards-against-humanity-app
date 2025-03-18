@@ -1,7 +1,7 @@
-import { ExpansionOption } from "Types/Expansion";
-import { fetchExpansions } from "Services/GameService";
+import { ExpansionOption } from "@/Types/Expansion";
+import { fetchExpansions } from "@/Services/GameService";
 import { useState } from "react";
-import { ExpansionsToExpansionOptions } from "Utilities/helpers";
+import { ExpansionsToExpansionOptions } from "@/Utilities/helpers";
 
 function useExpansions() {
   const [expansions, setExpansions] = useState<ExpansionOption[]>([]);

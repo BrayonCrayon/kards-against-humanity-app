@@ -1,7 +1,7 @@
 import { FC, useCallback, useState } from "react";
-import { KAHToggler } from "Components/KAHToggler";
-import { KAHRange } from "Components/Atoms/KAHRange";
-import { toMinutesSeconds } from "Utilities/helpers";
+import { KAHToggler } from "@/Components/KAHToggler";
+import { KAHRange } from "@/Components/Atoms/KAHRange";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
 interface TimerTabProps {
   onChange: (seconds: number | null) => void;
@@ -23,7 +23,7 @@ export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300,
 
   return (
     <>
-      <div className="flex h-5% px-5 py-2 items-center justify-end">
+      <div className="flex h-[5%] px-5 py-2 items-center justify-end">
         <KAHToggler
           dataTestId="timer-toggle"
           role="toggle-timer"
@@ -33,7 +33,7 @@ export const TimerSetting: FC<TimerTabProps> = ({ onChange, min = 60, max = 300,
           onClick={onToggle}
         />
       </div>
-      <div className="overflow-y-auto px-2 rounded">
+      <div className="overflow-y-auto px-2 rounded-sm">
         <p className={`text-6xl text-center font-bold mb-4 ${!timerOn ? "opacity-25" : ""}`}>
           {toMinutesSeconds(seconds)}
         </p>

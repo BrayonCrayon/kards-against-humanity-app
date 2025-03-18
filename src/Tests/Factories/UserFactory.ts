@@ -1,5 +1,5 @@
-import {User} from "Types/User";
-import {randFullName, randNumber} from "@ngneat/falso";
+import { User } from "@/Types/User";
+import { randFullName, randNumber } from "@ngneat/falso";
 
 export const userFactory = (overrides?: Partial<User>): User => {
     return {

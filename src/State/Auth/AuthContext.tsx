@@ -1,11 +1,7 @@
-import {
-  BaseContext,
-  useGenericContext,
-  useGenericReducer,
-} from "../GeneralContext";
-import { initialAuthState, IAuthState } from "State/Auth/AuthState";
-import { AuthActions } from "State/Auth/AuthActions";
-import React, {FC, PropsWithChildren} from "react";
+import { BaseContext, useGenericReducer } from "../GeneralContext";
+import { IAuthState, initialAuthState } from "@/State/Auth/AuthState";
+import { AuthActions } from "@/State/Auth/AuthActions";
+import React, { FC, PropsWithChildren } from "react";
 
 export const AuthContext = React.createContext<BaseContext<IAuthState, AuthActions>>({
   state: initialAuthState,

@@ -1,4 +1,6 @@
 import React from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faToggleOff, faToggleOn } from "@fortawesome/free-solid-svg-icons";
 
 type KAHTogglerProps = {
   on: boolean;
@@ -25,13 +27,13 @@ export const KAHToggler: React.FC<KAHTogglerProps> = ({
     {on && (
      <>
        {onText}
-       <i className="fa-solid fa-toggle-on text-2xl item-end" />
+       <FontAwesomeIcon icon={faToggleOn} size="xl" />
      </>
     )}
     {!on && (
      <>
        {offText}
-       <i className="fa-solid fa-toggle-off text-2xl item-end"/>
+       <FontAwesomeIcon icon={faToggleOff} size="xl" />
      </>
     )}
   </div>);

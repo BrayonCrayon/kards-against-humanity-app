@@ -1,6 +1,6 @@
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { IncrementRedrawCount, SetHasSubmittedCards, SetAuthAction } from "State/Auth/AuthActions";
-import { initialAuthState } from "State/Auth/AuthState";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { IncrementRedrawCount, SetHasSubmittedCards, SetAuthAction } from "@/State/Auth/AuthActions";
+import { initialAuthState } from "@/State/Auth/AuthState";
 
 const {data} = gameStateExampleResponse;
 

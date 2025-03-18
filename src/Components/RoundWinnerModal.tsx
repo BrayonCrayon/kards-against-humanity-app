@@ -1,12 +1,12 @@
-import { useVote } from "State/Vote/useVote";
+import { useVote } from "@/State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
 import React, { useCallback, useEffect, useMemo } from "react";
-import { ClearStateAction } from "State/Vote/VoteActions";
-import { Button } from "Components/Atoms/Button";
-import { useGame } from "State/Game/useGame";
-import useRotateGame from "Hooks/Game/Actions/useRotateGame";
-import { usePlayers } from "State/Players/usePlayers";
-import { useAuth } from "State/Auth/useAuth";
+import { ClearStateAction } from "@/State/Vote/VoteActions";
+import { Button } from "@/Components/Atoms/Button";
+import { useGame } from "@/State/Game/useGame";
+import useRotateGame from "@/Hooks/Game/Actions/useRotateGame";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { useAuth } from "@/State/Auth/useAuth";
 
 export function RoundWinnerModal() {
   const {
@@ -52,7 +52,7 @@ export function RoundWinnerModal() {
       data-testid="round-winner-modal"
       className="w-screen h-screen fixed top-0 left-0 flex flex-col items-center justify-center bg-white/75"
     >
-      <div className="bg-white p-8 shadow-md border-2 rounded flex flex-col justify-center">
+      <div className="bg-white p-8 shadow-md border-2 rounded-sm flex flex-col justify-center">
         <h1 className="text-4xl text-center pb-4">The winner is: {name}</h1>
         <PlayerSubmittedCCard
           className="self-center overflow-y-auto max-h-[462px]"

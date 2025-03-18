@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from "react";
-import {Link, useLocation} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { faBurger } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface GameLink {
   path: "/" | "/create";
@@ -29,8 +31,8 @@ const Navigation: React.FC = () => {
             <Link to={link.path} className="px-2 font-bold self-end">{ link.text }</Link>
             <Link to="/about-us" className="px-2 ml-4 font-bold self-end">About KAH</Link>
           </div>
-          <div onClick={() => setShow(!show)} className="text-4xl flex flex-grow items-center justify-end md:hidden">
-            <i className="fa-solid fa-burger mx-2"/>
+          <div onClick={() => setShow(!show)} className="text-4xl flex grow items-center justify-end md:hidden">
+            <FontAwesomeIcon icon={faBurger} className="mx-2" />
           </div>
         </div>
         {

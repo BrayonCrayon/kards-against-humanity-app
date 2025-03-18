@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Button, ButtonVariant } from "Components/Atoms/Button";
+import { Button, ButtonVariant } from "@/Components/Atoms/Button";
 import { useNavigate } from "react-router-dom";
 
 const CreateGameBanner: FC = () => {

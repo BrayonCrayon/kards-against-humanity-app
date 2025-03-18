@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
-import { usePlayers } from "State/Players/usePlayers";
-import { transformUsers } from "Types/User";
-import { SetPlayersAction } from "State/Players/PlayersActions";
-import { fetchPlayers } from "Services/GameService";
+import { useCallback } from "react";
+import { usePlayers } from "@/State/Players/usePlayers";
+import { transformUsers } from "@/Types/User";
+import { SetPlayersAction } from "@/State/Players/PlayersActions";
+import { fetchPlayers } from "@/Services/GameService";
 
 function useRefreshPlayers() {
   const { dispatch } = usePlayers();

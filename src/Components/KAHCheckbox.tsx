@@ -1,15 +1,18 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { type SizeProp } from "@fortawesome/fontawesome-svg-core";
 
 interface KAHCheckboxProps {
   onClick?: (value: boolean) => void;
-  size?: string;
+  size?: SizeProp;
   className?: string;
   dataTestid?: string;
   value?: boolean;
 }
 
 export const KAHCheckbox: FC<KAHCheckboxProps> = ({
-  size = "text-lg",
+  size = "lg",
   onClick= () => {},
   className= "",
   dataTestid = "",
@@ -27,11 +30,10 @@ export const KAHCheckbox: FC<KAHCheckboxProps> = ({
     onClick(!checked);
   }, [checked]);
 
-  const iconClass = useMemo(() => {
-    return `fa-solid ${size} ${checked ? "fa-check" : "" }`;
-  }, [checked]);
-
   return (<div className={`flex items-center justify-center ${className} cursor-pointer`} data-testid={dataTestid} onClick={toggle}>
-    <i className={iconClass}/>
+    {
+      checked &&
+      <FontAwesomeIcon icon={faCheck} size={size} />
+    }
   </div>);
 };

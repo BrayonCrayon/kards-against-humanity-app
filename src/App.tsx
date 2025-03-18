@@ -1,13 +1,13 @@
-import React, {useEffect} from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
-import GamePage from "./Pages/GamePage";
-import HomePage from "./Pages/HomePage";
-import {apiClient} from "Api/apiClient";
-import {SpectatorPage} from "Pages/SpectatorPage";
-import {CreateGameForm} from "Components/Forms/CreateGameForm";
-import Navigation from "Layouts/Navigation";
-import Footer from "Layouts/Footer";
-import AboutUs from "./Pages/AboutUs";
+import React, { useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import GamePage from "@/Pages/GamePage";
+import HomePage from "@/Pages/HomePage";
+import { apiClient } from "@/Api/apiClient";
+import { SpectatorPage } from "@/Pages/SpectatorPage";
+import { CreateGameForm } from "@/Components/Forms/CreateGameForm";
+import Navigation from "@/Layouts/Navigation";
+import Footer from "@/Layouts/Footer";
+import AboutUs from "@/Pages/AboutUs";
 
 export default function App() {
   useEffect(() => {

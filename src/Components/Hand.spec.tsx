@@ -1,13 +1,14 @@
-import { kardsRender } from "Tests/testRenders";
+import "@testing-library/jest-dom/vitest";
+import { kardsRender } from "@/Tests/testRenders";
 import Hand from "./Hand";
-import { gameStateExampleResponse } from "Api/fixtures/gameStateExampleResponse";
-import { transformWhiteCardArray, WhiteCard } from "Types/WhiteCard";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { transformWhiteCardArray, WhiteCard } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
-import { transformUser } from "Types/User";
-import { errorToast } from "Utilities/toasts";
-import { confirmedSweetAlert, dismissSweetAlert, spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "Tests/testHelpers";
-import { getCardSubmitButton, whiteCardTestId } from "Tests/selectors";
+import { transformUser } from "@/Types/User";
+import { errorToast } from "@/Utilities/toasts";
+import { confirmedSweetAlert, dismissSweetAlert, spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "@/Tests/testHelpers";
+import { getCardSubmitButton, whiteCardTestId } from "@/Tests/selectors";
 
 const {
   data: { game, hand: handResponse, blackCard, currentUser },
@@ -16,16 +17,22 @@ const {
 const hand = transformWhiteCardArray(handResponse, false, []);
 const auth = transformUser(currentUser);
 
-const mockRedraw = jest.fn();
-jest.mock("Hooks/Game/Actions/useRedrawPlayerHand", () => () => mockRedraw);
-jest.mock("Utilities/toasts");
+const mockRedraw = vi.fn();
+vi.mock("@/Hooks/Game/Actions/useRedrawPlayerHand", () => ({
+  default: () => mockRedraw
+}));
+vi.mock("@/Utilities/toasts");
 
 describe("Hand", () => {
   beforeEach(() => {
-    spyOnUseGame(jest.fn(), { game, blackCard });
-    spyOnUseAuth(jest.fn(), { auth, hasSubmittedCards: false });
-    spyOnUseHand(jest.fn(), { hand });
+    spyOnUseGame(vi.fn(), { game, blackCard });
+    spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
+    spyOnUseHand(vi.fn(), { hand });
   });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  })
 
   it("will not redraw hand when user cancels confirm", async () => {
     mockRedraw.mockClear();
@@ -81,7 +88,7 @@ describe("Hand", () => {
     const [card] = handWithSelection;
     card.order = 1;
     card.selected = true;
-    spyOnUseHand(jest.fn(), { hand: handWithSelection });
+    spyOnUseHand(vi.fn(), { hand: handWithSelection });
     const wrapper = kardsRender(<Hand />);
 
     userEvent.click(wrapper.getByRole(whiteCardTestId(card.id)));
@@ -95,7 +102,7 @@ describe("Hand", () => {
   });
 
   it("will not show submit button when card limit has not been reached", async () => {
-    spyOnUseHand(jest.fn(), { hand });
+    spyOnUseHand(vi.fn(), { hand });
     kardsRender(<Hand />);
 
     hand.forEach((card) => expect(getCardSubmitButton(card.id)).not.toBeInTheDocument());
@@ -106,8 +113,8 @@ describe("Hand", () => {
     const [card] = handWithSelection;
     card.order = 2;
     card.selected = true;
-    spyOnUseHand(jest.fn(), { hand: handWithSelection });
-    spyOnUseGame(jest.fn(), { game, blackCard: { ...blackCard, pick: 2 } });
+    spyOnUseHand(vi.fn(), { hand: handWithSelection });
+    spyOnUseGame(vi.fn(), { game, blackCard: { ...blackCard, pick: 2 } });
     kardsRender(<Hand />);
 
     expect(getCardSubmitButton(card.id)).not.toBeInTheDocument();

@@ -1,14 +1,24 @@
-import {useCallback} from "react";
+import { useCallback, useState } from "react";
 
 function useReadText() {
-    return useCallback(async (text: string) => {
+
+    const [onEnd, setOnEnd] = useState<(this: SpeechSynthesisUtterance, ev: SpeechSynthesisEvent) => any>(() => {});
+    const play = useCallback(async (text: string) => {
         const synth = window.speechSynthesis;
         const utterance = new SpeechSynthesisUtterance(text);
 
         utterance.lang = "en-US"
 
+        utterance.onend = onEnd;
+        console.log("speaking");
         synth.speak(utterance);
     }, []);
+
+    return {
+        onEnd,
+        setOnEnd,
+        play,
+    }
 }
 
 export default useReadText;

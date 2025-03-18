@@ -1,7 +1,7 @@
-import {kardsRender} from "Tests/testRenders";
+import { kardsRender } from "@/Tests/testRenders";
 import JudgeMessage from "./JudgeMessage";
-import {gameStateExampleResponse} from "Api/fixtures/gameStateExampleResponse";
-import {transformUser, transformUsers, User} from "Types/User";
+import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
+import { transformUser, transformUsers, User } from "@/Types/User";
 
 const { data: { currentUser, users, game } } = gameStateExampleResponse;
 

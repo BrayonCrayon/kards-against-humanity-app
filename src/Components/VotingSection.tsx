@@ -1,16 +1,16 @@
-import React, {FC, useCallback, useEffect} from "react";
-import {useGame} from "State/Game/useGame";
-import {useVote} from "State/Vote/useVote";
-import {PlayerSubmittedCCard} from "./PlayerSubmittedCCard";
-import {listenWhenWinnerIsSelected} from "Services/PusherService";
-import useFetchRoundWinner from "Hooks/Game/State/useFetchRoundWinner";
-import {Selectable} from "Components/Atoms/Selectable";
-import {SelectWinnerAction} from "State/Vote/VoteActions";
-import {useAuth} from "State/Auth/useAuth";
-import useSubmittedCards from "Hooks/Game/State/useSubmittedCards";
-import useSubmitWinner from "Hooks/Game/Actions/useSubmitWinner";
+import React, { FC, useCallback, useEffect } from "react";
+import { useGame } from "@/State/Game/useGame";
+import { useVote } from "@/State/Vote/useVote";
+import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
+import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
+import useFetchRoundWinner from "@/Hooks/Game/State/useFetchRoundWinner";
+import { Selectable } from "@/Components/Atoms/Selectable";
+import { SelectWinnerAction } from "@/State/Vote/VoteActions";
+import { useAuth } from "@/State/Auth/useAuth";
+import useSubmittedCards from "@/Hooks/Game/State/useSubmittedCards";
+import useSubmitWinner from "@/Hooks/Game/Actions/useSubmitWinner";
 import SubmitButton from "./SubmitButton";
-import {PlayerSubmittedCard} from "Types/ResponseTypes";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
 
 export const VotingSection: FC = () => {
   const {
@@ -53,7 +53,7 @@ export const VotingSection: FC = () => {
           <SubmitButton
             show={auth.id === game.judgeId && selectedPlayerId > 0}
             transitionClassName="submit-button"
-            buttonClass="submit-button w-full"
+            buttonClass="submit-button w-full hidden md:flex"
             onSubmit={() => submitWinner(game.id, selectedPlayerId)}
             dataTestId="submit-selected-winner"
           />
@@ -76,7 +76,7 @@ export const VotingSection: FC = () => {
               show={showSubmitButton(submission)}
               timeout={400}
               transitionClassName="submit-button-slide"
-              buttonClass="white-card-submit-button"
+              buttonClass="white-card-submit-button md:hidden"
               onSubmit={() => submitWinner(game.id, selectedPlayerId)}
               dataTestId="submit-selected-winner"
             />

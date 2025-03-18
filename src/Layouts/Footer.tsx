@@ -1,7 +1,7 @@
-import {JoinGameBanner} from "../Components/JoinGameBanner";
-import CreateGameBanner from "../Components/CreateGameBanner";
-import React, {useMemo} from "react";
-import {useLocation} from "react-router-dom";
+import { JoinGameBanner } from "@/Components/JoinGameBanner";
+import CreateGameBanner from "@/Components/CreateGameBanner";
+import React, { useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 const Footer: React.FC = () => {
   const location = useLocation();
@@ -17,7 +17,7 @@ const Footer: React.FC = () => {
     return(
       <>
         <div className="w-full h-80">
-          <div className="w-full bg-footer-adjacent-pattern bg-cover bg-center h-80 "></div>
+          <div className="w-full bg-[url('/images/about-us-image.svg')] bg-cover bg-center h-80 "></div>
         </div>
       </>)
   }

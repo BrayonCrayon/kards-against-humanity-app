@@ -1,13 +1,13 @@
-import {kardsHookRender} from "Tests/testRenders";
-import {service} from "setupTests";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { service } from "@/setupTests";
 import useUpdateGameSettings from "./useUpdateGameSettings";
-import {gameFactory} from "Tests/Factories/GameFactory";
-import {AxiosResponse} from "axios";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { AxiosResponse } from "axios";
 
-const mockedCallback = jest.fn();
-jest.mock("Hooks/Game/State/useFetchGameState", () => {
-    return () => mockedCallback;
-})
+const mockedCallback = vi.fn();
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({
+    default: () => mockedCallback
+}))
 
 describe("useUpdateGameSettings", () => {
 
@@ -25,7 +25,7 @@ describe("useUpdateGameSettings", () => {
 
     it("will catch server error if it occurs", async () => {
         service.updateSettings.mockRejectedValueOnce({});
-        const consoleSpy = jest.spyOn(console, "error").mockImplementationOnce(jest.fn());
+        const consoleSpy = vi.spyOn(console, "error").mockImplementationOnce(vi.fn());
         const selectionTimer = 219;
         const game = gameFactory();
         const {result} = kardsHookRender(useUpdateGameSettings);

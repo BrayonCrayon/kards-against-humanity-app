@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import gameService from "Services/GameService";
-import { useHand } from "State/Hand/useHand";
-import { SetHandAction } from "State/Hand/HandActions";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { useAuth } from "State/Auth/useAuth";
-import { IncrementRedrawCount } from "State/Auth/AuthActions";
+import gameService from "@/Services/GameService";
+import { useHand } from "@/State/Hand/useHand";
+import { SetHandAction } from "@/State/Hand/HandActions";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { useAuth } from "@/State/Auth/useAuth";
+import { IncrementRedrawCount } from "@/State/Auth/AuthActions";
 
 function useRedrawPlayerHand() {
 

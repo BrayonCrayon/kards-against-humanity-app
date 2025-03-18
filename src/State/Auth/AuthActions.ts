@@ -1,6 +1,6 @@
-import {BaseAction} from "../GeneralContext";
-import {IAuthState} from "State/Auth/AuthState";
-import {User} from "Types/User";
+import { BaseAction } from "../GeneralContext";
+import { IAuthState } from "@/State/Auth/AuthState";
+import { User } from "@/Types/User";
 
 export class SetAuthAction extends BaseAction<IAuthState, User> {
   execute = (state: IAuthState): IAuthState => ({

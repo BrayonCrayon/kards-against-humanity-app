@@ -1,5 +1,5 @@
-import { useGenericContext } from "State/GeneralContext";
-import { PlayersContext } from "State/Players/PlayersContext";
+import { useGenericContext } from "@/State/GeneralContext";
+import { PlayersContext } from "@/State/Players/PlayersContext";
 
 function usePlayers() {
   return useGenericContext(PlayersContext);

@@ -1,7 +1,7 @@
-import {gameSpectatorExampleResponse} from "Api/fixtures/gameSpectatorExampleResponse";
-import {transformUsers, User} from "Types/User";
-import {kardsRender} from "Tests/testRenders";
-import SpectatePlayerListItem from "Components/Spectation/SpectatePlayerListItem";
+import { gameSpectatorExampleResponse } from "@/Api/fixtures/gameSpectatorExampleResponse";
+import { transformUsers, User } from "@/Types/User";
+import { kardsRender } from "@/Tests/testRenders";
+import SpectatePlayerListItem from "@/Components/Spectation/SpectatePlayerListItem";
 
 const {data: {users, game}} = gameSpectatorExampleResponse;
 const players = transformUsers(users);
@@ -16,14 +16,18 @@ describe("SpectatePlayerListItem", () => {
     player.hasSubmittedWhiteCards = true;
     const wrapper = renderComponent({player, isJudge: false});
 
-    expect(wrapper.queryByTestId(player.id)?.textContent).toContain("Submitted");
+    const svg: HTMLImageElement = wrapper.queryByTestId(`card-submitted-icon-${player.id}`) as HTMLImageElement;
+    expect(svg).not.toBeNull();
+    expect(svg?.classList).not.toContain("opacity-25");
   });
 
   it("will indicate when users have not submitted their cards", () => {
     const [player] = players;
     player.hasSubmittedWhiteCards = false;
-    const wrapper = renderComponent();
+    const wrapper = renderComponent({player, isJudge: false});
 
-    expect(wrapper.queryByTestId(player.id)?.textContent).not.toContain("Submitted");
+    const svg: HTMLImageElement = wrapper.queryByTestId(`card-submitted-icon-${player.id}`) as HTMLImageElement;
+    expect(svg).not.toBeNull();
+    expect(svg?.classList).toContain("opacity-25");
   });
 });

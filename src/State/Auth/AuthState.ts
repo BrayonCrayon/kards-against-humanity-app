@@ -1,4 +1,4 @@
-import {initialUserObject, User} from "../../Types/User";
+import { initialUserObject, User } from "@/Types/User";
 
 export interface IAuthState {
   auth: User;

@@ -1,5 +1,5 @@
-import {FC, PropsWithChildren, useCallback, useState} from "react";
-import {Button, ButtonVariant} from "Components/Atoms/Button";
+import { FC, PropsWithChildren, useCallback, useState } from "react";
+import { Button, ButtonVariant } from "@/Components/Atoms/Button";
 
 interface FloatingButtonProps extends PropsWithChildren {
   className?: string;

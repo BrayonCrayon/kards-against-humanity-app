@@ -1,10 +1,10 @@
-import { kardsHookRender } from "Tests/testRenders";
-import { transformWhiteCardArray } from "Types/WhiteCard";
-import { gameStateJudgeExampleResponse } from "Api/fixtures/gameStateJudgeExampleResponse";
-import { expectDispatch, expectNoDispatch, spyOnUseAuth } from "Tests/testHelpers";
-import useSubmitCards from "Hooks/Game/Actions/useSubmitCards";
-import gameService from "Services/GameService";
-import { initialAuthState } from "State/Auth/AuthState";
+import { kardsHookRender } from "@/Tests/testRenders";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { gameStateJudgeExampleResponse } from "@/Api/fixtures/gameStateJudgeExampleResponse";
+import { expectDispatch, expectNoDispatch, spyOnUseAuth } from "@/Tests/testHelpers";
+import useSubmitCards from "@/Hooks/Game/Actions/useSubmitCards";
+import gameService from "@/Services/GameService";
+import { initialAuthState } from "@/State/Auth/AuthState";
 
 const {
   data: {
@@ -23,7 +23,7 @@ const mockHand = transformWhiteCardArray(
     submittedWhiteCardIds
 );
 
-const mockDispatch = jest.fn();
+const mockDispatch = vi.fn();
 
 describe("useSubmitCards", () => {
   beforeEach(() => {
@@ -47,7 +47,7 @@ describe("useSubmitCards", () => {
     const errorMessage = { error: "500 Server error" };
     // @ts-ignore
     gameService.submitCards.mockRejectedValueOnce(errorMessage);
-    const consoleSpy = jest
+    const consoleSpy = vi
       .spyOn(console, "error")
       .mockImplementationOnce(() => {});
     const { result } = kardsHookRender(useSubmitCards);

@@ -1,6 +1,8 @@
 import { FC, useCallback } from "react";
-import { defaultShareData, ShareData, webShare } from "Types/WebShare";
-import { errorToast } from "Utilities/toasts";
+import { defaultShareData, ShareData, webShare } from "@/Types/WebShare";
+import { errorToast } from "@/Utilities/toasts";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShareNodes } from "@fortawesome/free-solid-svg-icons";
 
 interface ShareButtonProps {
   role?: string;
@@ -20,7 +22,7 @@ const ShareButton: FC<ShareButtonProps> = ({ role = "share-button", data= defaul
 
   return (
     <button role={role} onClick={() => share()}>
-      <i className="fa-solid fa-share-nodes"></i>
+      <FontAwesomeIcon icon={faShareNodes} />
     </button>
   );
 }

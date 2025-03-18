@@ -1,5 +1,5 @@
 import React, {FC, PropsWithChildren, useCallback} from "react";
-import { happyToast } from "Utilities/toasts";
+import { happyToast } from "@/Utilities/toasts";
 import { SweetAlertPosition } from "sweetalert2";
 
 interface ClipboardProps extends PropsWithChildren{

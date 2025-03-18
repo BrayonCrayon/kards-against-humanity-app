@@ -1,7 +1,7 @@
-import React, {FC, PropsWithChildren} from "react";
-import { PlayersActionTypes } from "State/Players/PlayersActions";
+import React, { FC, PropsWithChildren } from "react";
+import { PlayersActionTypes } from "@/State/Players/PlayersActions";
 import { BaseContext, useGenericReducer } from "../GeneralContext";
-import { initialPlayersState, IPlayersState } from "State/Players/PlayersState";
+import { initialPlayersState, IPlayersState } from "@/State/Players/PlayersState";
 
 export const PlayersContext = React.createContext<
   BaseContext<IPlayersState, PlayersActionTypes>

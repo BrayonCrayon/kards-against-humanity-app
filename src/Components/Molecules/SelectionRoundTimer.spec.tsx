@@ -1,38 +1,40 @@
-import {spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers} from "Tests/testHelpers";
-import {gameFactory} from "Tests/Factories/GameFactory";
+import { spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
 import moment from "moment";
-import {blackCardFactory} from "Tests/Factories/BlackCardFactory";
-import {kardsRender} from "Tests/testRenders";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { kardsRender } from "@/Tests/testRenders";
 import SelectionRoundTimer from "./SelectionRoundTimer";
-import {toMinutesSeconds} from "Utilities/helpers";
-import {userFactory} from "Tests/Factories/UserFactory";
-import {transformUser, transformUsers} from "Types/User";
-import {waitFor} from "@testing-library/react";
-import {service} from "setupTests";
-import {act} from "react-dom/test-utils";
-import {transformWhiteCardArray} from "Types/WhiteCard";
-import {whiteCardFactory} from "Tests/Factories/WhiteCardFactory";
-import {AxiosResponse} from "axios";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { transformUser, transformUsers } from "@/Types/User";
+import { waitFor } from "@testing-library/react";
+import { service } from "@/setupTests";
+import { act } from "react";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import { AxiosResponse } from "axios";
+import { toMinutesSeconds } from "@/Utilities/helpers";
 
-jest.useFakeTimers();
+vi.useFakeTimers({shouldAdvanceTime: true});
+vi.setSystemTime(new Date());
 
 describe("SelectionRoundTimer", () => {
     beforeEach(() => {
-        spyOnUseAuth(jest.fn(), { auth: userFactory(), hasSubmittedCards: false });
+        spyOnUseAuth(vi.fn(), { auth: userFactory(), hasSubmittedCards: false });
         spyOnUseHand();
     });
 
     afterEach(() => {
-        jest.clearAllTimers();
+        vi.clearAllTimers();
+        vi.clearAllMocks();
     });
 
     it("will show timer", async () => {
-        jest.setSystemTime();
         const game = gameFactory({
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
-        spyOnUseGame(jest.fn(), {game, blackCard: blackCardFactory()});
+
+        spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
 
         const wrapper = kardsRender(<SelectionRoundTimer/>);
 
@@ -40,25 +42,24 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will call end timer callback for players", async () => {
-        jest.setSystemTime();
         const user = transformUser(userFactory());
         const game = gameFactory({
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
         const hand = transformWhiteCardArray(
             Array.from({ length: 7 }).map((_, idx) => whiteCardFactory({ order: idx + 1 }))
         );
-        jest.advanceTimersByTime(game.selectionTimer! * 1000);
-        spyOnUseGame(jest.fn(), {game, blackCard: blackCardFactory()});
-        spyOnUseAuth(jest.fn(), {auth: user, hasSubmittedCards: false});
-        spyOnUseHand(jest.fn(), { hand });
+        vi.advanceTimersByTime(game.selectionTimer! * 1000);
+        spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
+        spyOnUseAuth(vi.fn(), {auth: user, hasSubmittedCards: false});
+        spyOnUseHand(vi.fn(), { hand });
         service.submitCards.mockResolvedValueOnce({} as AxiosResponse);
 
         kardsRender(<SelectionRoundTimer/>);
 
-        await act(() => {
-            jest.advanceTimersByTime(1000);
+        act(() => {
+            vi.advanceTimersByTime(1000);
         });
 
         await waitFor(() => {
@@ -68,7 +69,7 @@ describe("SelectionRoundTimer", () => {
 
     it("will not show timer when end of the round is not present", async () => {
         const game = gameFactory({selectionTimer: 60});
-        spyOnUseGame(jest.fn(), {game, blackCard: blackCardFactory()});
+        spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
 
         const wrapper = kardsRender(<SelectionRoundTimer/>);
 
@@ -77,7 +78,7 @@ describe("SelectionRoundTimer", () => {
 
     it("will not show timer when selection timer is not present", () => {
         const game = gameFactory({ selectionEndsAt: moment().unix() });
-        spyOnUseGame(jest.fn(), {game, blackCard: blackCardFactory()});
+        spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
 
         const wrapper = kardsRender(<SelectionRoundTimer/>);
 
@@ -87,8 +88,8 @@ describe("SelectionRoundTimer", () => {
     it("will not show timer when game is in voting state", () => {
         const game = gameFactory({ selectionTimer: 60, selectionEndsAt: moment().unix() });
         const players = transformUsers(Array.from({ length: 2 }).map(() => userFactory({ hasSubmittedWhiteCards: true })));
-        spyOnUseGame(jest.fn(), { game, blackCard: blackCardFactory() });
-        spyOnUsePlayers(jest.fn(), { players });
+        spyOnUseGame(vi.fn(), { game, blackCard: blackCardFactory() });
+        spyOnUsePlayers(vi.fn(), { players });
 
         const wrapper = kardsRender(<SelectionRoundTimer/>);
 
@@ -96,24 +97,23 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will not call end timer callback for judge", async () => {
-        jest.setSystemTime();
         const user = transformUser(userFactory());
         const game = gameFactory({
             judgeId: user.id,
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60,
         });
         const players = transformUsers(Array.from({ length: 2 }).map(() => userFactory()));
-        jest.advanceTimersByTime(game.selectionTimer! * 1000);
-        spyOnUseGame(jest.fn(), {game, blackCard: blackCardFactory()});
-        spyOnUseAuth(jest.fn(), {auth: user, hasSubmittedCards: false});
-        spyOnUsePlayers(jest.fn(), { players });
+        vi.advanceTimersByTime(game.selectionTimer! * 1000);
+        spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
+        spyOnUseAuth(vi.fn(), {auth: user, hasSubmittedCards: false});
+        spyOnUsePlayers(vi.fn(), { players });
         service.submitCards.mockResolvedValueOnce({} as AxiosResponse);
 
         kardsRender(<SelectionRoundTimer/>);
 
-        await act(() => {
-            jest.advanceTimersByTime(1000);
+        act(() => {
+            vi.advanceTimersByTime(1000);
         });
 
         await waitFor(() => {
@@ -122,25 +122,24 @@ describe("SelectionRoundTimer", () => {
     });
 
     it("will not call end timer callback when authed user already submitted their cards", async () => {
-        jest.setSystemTime();
         const user = transformUser(userFactory({id: 1, hasSubmittedWhiteCards: true}));
         const game = gameFactory({
             judgeId: 999,
             selectionTimer: 60,
-            selectionEndsAt: moment().add(60, "seconds").unix()
+            selectionEndsAt: Date.now() / 1000 + 60, 
         });
         const players = transformUsers(Array.from({length: 2})
             .map((_, idx) => userFactory({id: idx + 1, hasSubmittedWhiteCards: idx > 0})));
-        jest.advanceTimersByTime(game.selectionTimer! * 1000);
-        spyOnUseGame(jest.fn(), {game, blackCard: blackCardFactory()});
-        spyOnUseAuth(jest.fn(), {auth: user, hasSubmittedCards: false});
-        spyOnUsePlayers(jest.fn(), {players});
+        vi.advanceTimersByTime(game.selectionTimer! * 1000);
+        spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory()});
+        spyOnUseAuth(vi.fn(), {auth: user, hasSubmittedCards: false});
+        spyOnUsePlayers(vi.fn(), {players});
         service.submitCards.mockResolvedValueOnce({} as AxiosResponse);
 
         kardsRender(<SelectionRoundTimer/>);
 
-        await act(() => {
-            jest.advanceTimersByTime(1000);
+        act(() => {
+            vi.advanceTimersByTime(1000);
         });
 
         await waitFor(() => {

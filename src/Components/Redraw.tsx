@@ -1,8 +1,8 @@
-import React, {FC, useCallback, useMemo} from "react";
-import {errorToast} from "../Utilities/toasts";
+import React, { FC, useCallback, useMemo } from "react";
+import { errorToast } from "@/Utilities/toasts";
 import Swal from "sweetalert2";
-import useRedrawPlayerHand from "../Hooks/Game/Actions/useRedrawPlayerHand";
-import {Game} from "../Types/Game";
+import useRedrawPlayerHand from "@/Hooks/Game/Actions/useRedrawPlayerHand";
+import { Game } from "../Types/Game";
 
 interface RedrawProps {
     game: Game;

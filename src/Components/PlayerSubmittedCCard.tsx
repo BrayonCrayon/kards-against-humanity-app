@@ -1,7 +1,7 @@
-import React, {FC, useMemo} from "react";
-import {PlayerSubmittedCard} from "../Types/ResponseTypes";
-import {BlackCard} from "../Types/BlackCard";
-import {fillOutBlackCard} from "../Utilities/helpers";
+import React, { FC, useMemo } from "react";
+import { PlayerSubmittedCard } from "@/Types/ResponseTypes";
+import { BlackCard } from "@/Types/BlackCard";
+import { fillOutBlackCard } from "@/Utilities/helpers";
 import parser from "html-react-parser";
 import PlayButton from "./Molecules/PlayButton";
 

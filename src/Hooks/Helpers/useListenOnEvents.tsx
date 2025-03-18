@@ -1,13 +1,13 @@
-import {useCallback} from "react";
+import { useCallback } from "react";
 import {
   listenWhenGameRotates,
   listenWhenGameStart,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards
-} from "Services/PusherService";
-import useGameStateCallback from "Hooks/Game/State/useGameStateCallback";
-import useUserJoinsGameCallback from "./useUserJoinsGameCallback";
-import useRefreshPlayersStateCallback from "Hooks/Game/State/useRefreshPlayersStateCallback";
+} from "@/Services/PusherService";
+import useGameStateCallback from "@/Hooks/Game/State/useGameStateCallback";
+import useRefreshPlayersStateCallback from "@/Hooks/Game/State/useRefreshPlayersStateCallback";
+import useUserJoinsGameCallback from "@/Hooks/Helpers/useUserJoinsGameCallback";
 
 function useListenOnEvents() {
   const updateGameState = useGameStateCallback();
