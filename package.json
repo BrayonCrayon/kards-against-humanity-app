@@ -44,6 +44,7 @@
     "web-vitals": "^4.2.4"
   },
   "scripts": {
+    "build": "vite build",
     "dev": "vite",
     "compile-ts": "tsc --project tsconfig.json",
     "ts-lint": "tsc --project tsconfig.json",
@@ -91,6 +92,9 @@
     "vitest": "^3.0.7"
   },
   "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.35.0"
+    "@rollup/rollup-linux-x64-gnu": "4.35.0",
+    "@tailwindcss/oxide-linux-x64-gnu": "4.0.14",
+    "@tailwindcss/oxide-linux-arm64-gnu": "^4.0.1",
+    "lightningcss-linux-x64-gnu": "^1.29.3"
   }
 }
