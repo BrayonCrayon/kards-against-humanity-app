@@ -51,7 +51,7 @@ const Redraw: FC<RedrawProps> = ({ game, redrawsUsed, className = "", buttonClas
                 >{ redrawsLeft }</p>
             </div>
             <button
-                className={`text-sm text-black border border-lightBlack ${buttonClass}`}
+                className={`text-sm text-black border border-lightBlack cursor-pointer ${buttonClass}`}
                 data-testid="redraw-button"
                 onClick={redraw}
             >
