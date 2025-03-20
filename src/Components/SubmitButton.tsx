@@ -29,23 +29,21 @@ const SubmitButton: FC<SubmitButtonProps> = ({
   }, [loading, onSubmit]);
 
   return (
-    // <TransitionGroup>
-      <CSSTransition nodeRef={nodeRef} in={show} timeout={timeout} unmountOnExit classNames={transitionClassName}>
-        <Button
-          ref={nodeRef}
-          variant={ButtonVariant["submit-test"]}
-          text="Submit"
-          className={buttonClass}
-          iconClass="text-emerald-500 justify-self-end"
-          beforeLoadingClass="flex w-3/4 gap-2 items-center"
-          isLoading={loading}
-          onClick={() => onClick()}
-          dataTestid={dataTestId}
-        >
-          <img alt="submit icon" src="/images/green-check.png" />
-        </Button>
-      </CSSTransition>
-    // </TransitionGroup>
+    <CSSTransition nodeRef={nodeRef} in={show} timeout={timeout} unmountOnExit classNames={transitionClassName}>
+      <Button
+        ref={nodeRef}
+        variant={ButtonVariant["submit-test"]}
+        text="Submit"
+        className={buttonClass}
+        iconClass="text-emerald-500 justify-self-end"
+        beforeLoadingClass="flex w-3/4 gap-2 items-center"
+        isLoading={loading}
+        onClick={() => onClick()}
+        dataTestid={dataTestId}
+      >
+        <img alt="submit icon" src="/images/green-check.png" />
+      </Button>
+    </CSSTransition>
   );
 };
 
