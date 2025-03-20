@@ -32,7 +32,7 @@ export const WhiteKard: React.FC<WhiteKardProps> = ({
       const hideOtherCards = nonSubmittedCards ? "opacity-25" : "";
 
     return `${baseStyles} ${selectedStyles} ${alreadySubmittedStyles} ${hideOtherCards}`;
-  }, [card.selected, nonSubmittedCards, hasSubmittedCards]);
+  }, [card.selected, nonSubmittedCards, hasSubmittedCards, baseStyles]);
 
   return (
     <div

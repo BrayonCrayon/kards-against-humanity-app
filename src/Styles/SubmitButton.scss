@@ -43,14 +43,6 @@
   display: none;
 }
 
-// TODO: Come back to clean up
-//.submit-button {
-//  @apply hidden;
-//  @screen md {
-//    @apply bg-white text-black text-base self-center shadow-xl my-3 h-12 col-start-3 col-span-2 flex;
-//  }
-//}
-
 .white-card-submit-button {
   @apply bg-white text-black text-base shadow-xl my-3 h-12 self-end;
   @screen md {

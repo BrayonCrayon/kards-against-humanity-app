@@ -74,12 +74,11 @@ const Hand: FC<HandProps> = ({ onSubmit = () => {} }) => {
   return (
     <>
       <div className="grid place-items-center md:grid-cols-6">
-        {/* TODO: Change styling to be different */}
         <SubmitButton
           onSubmit={() => onSubmit()}
           show={showSubmitButton}
           transitionClassName="submit-button"
-          buttonClass="flex"
+          buttonClass="hidden self-center shadow-xl my-3 h-12 col-start-3 col-span-2 md:flex"
           dataTestId="submit"
         />
         <Redraw
