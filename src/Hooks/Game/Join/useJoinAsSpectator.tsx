@@ -17,7 +17,7 @@ function useJoinAsSpectator() {
 
   return useCallback(async (gameCode: string) => {
       try {
-        const { data } = await joinAsSpectator(gameCode);
+        const { data } = await joinAsSpectator(gameCode.toUpperCase());
 
         userDispatch(new SetAuthAction(transformUser(data.user)));
         usersDispatch(new SetPlayersAction(transformUsers(data.users)));

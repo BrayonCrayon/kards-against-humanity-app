@@ -41,4 +41,13 @@ describe("useJoinAsSpectator", () => {
 
     expect(consoleSpy).toHaveBeenCalledWith(errorMessage)
   });
+
+  it("will capitalize game code", async () => {
+    const code = "1e4r"
+    const { result } = kardsHookRender(useJoinAsSpectator);
+
+    await result.current(code);
+
+    expect(service.joinAsSpectator).toHaveBeenCalledWith(code.toUpperCase());
+  });
 })

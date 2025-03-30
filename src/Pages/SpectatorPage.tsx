@@ -17,18 +17,21 @@ import { cardSize, nonJudgePlayers } from "@/Utilities/helpers";
 import Timer from "@/Components/Atoms/Timer";
 import { useSwitchStages } from "@/Hooks/Spectate/useSwitchStages";
 import useDetermineWinner from "@/Hooks/Spectate/useDetermineWinner";
+import { useVote } from "@/State/Vote/useVote";
+import { ClearStateAction } from "@/State/Vote/VoteActions";
 
 export const SpectatorPage: React.FC = () => {
   const { state: { players } } = usePlayers();
   const { state: { auth } } = useAuth();
   const { state: { game, blackCard } } = useGame();
   const { state: { stage } } = useSpectate();
+  const { dispatch: voteDispatch } = useVote();
   const { id } = useParams<{ id: string }>();
 
   useSwitchStages(nonJudgePlayers(game.judgeId, players), stage);
   const fetchSpectatorState = useFetchSpectatorState();
   const listenOnEvents = useListenOnSpectatorEvents();
-  const { whiteCards, submittedCards, getSubmittedCards } = useSubmittedCards();
+  const { whiteCards, submittedCards, getSubmittedCards, reset } = useSubmittedCards();
   const { winner, winnerCards } = useDetermineWinner(players)
 
   const haveAllPlayersSubmitted = useMemo(() => {
@@ -40,6 +43,11 @@ export const SpectatorPage: React.FC = () => {
     await fetchSpectatorState(id ?? "");
     listenOnEvents(id ?? "", auth.id);
   }, [id]);
+
+  const resetForNextRound = useCallback(() => {
+    reset();
+    voteDispatch(new ClearStateAction());
+  }, [])
 
   useEffect(() => {
     if (game.id) {
@@ -88,7 +96,7 @@ export const SpectatorPage: React.FC = () => {
         {
           stage === Stage.DISPLAY_WINNER &&
           winner &&
-          <WinnerRoom player={winner} cards={winnerCards} />
+          <WinnerRoom player={winner} cards={winnerCards} onEnd={resetForNextRound} />
         }
       </div>
       <SpectatePlayerList players={players} judgeId={game.judgeId} />

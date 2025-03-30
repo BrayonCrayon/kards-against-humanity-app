@@ -46,4 +46,18 @@ describe("useSubmittedCards", () => {
 
     expect(result.current.whiteCards).toEqual(expectedResult);
   });
+
+  it("will clear submitted and white cards when reset function is called", async () => {
+    service.fetchSubmittedCards.mockResolvedValue({ data: submittedCardsResponse.data } as AxiosResponse);
+    const gameId = "1j1j";
+    const { result } = kardsHookRender(useSubmittedCards);
+
+    await act(async () => {
+      await result.current.getSubmittedCards(gameId);
+      result.current.reset()
+    });
+
+    expect(result.current.submittedCards).toEqual([]);
+    expect(result.current.whiteCards).toEqual([]);
+  });
 });

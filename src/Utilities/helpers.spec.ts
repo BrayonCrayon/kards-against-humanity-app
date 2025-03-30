@@ -10,6 +10,7 @@ import { SubmittedCard } from "@/Types/SubmittedCard";
 import { CardSize } from "@/Components/BlackKard";
 import { userFactory } from "@/Tests/Factories/UserFactory";
 import { User } from "@/Types/User";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
 const blackCard: BlackCard = {
   ...blackCardFixture,
@@ -42,6 +43,26 @@ describe("Helpers", () => {
     selectedCards.forEach((card) => {
       expect(expectedCardText).toContain(`<strong>${card.text.replace(/\.$/, "")}</strong>`);
     });
+  });
+
+  it("will will replace underlines properly when there are more underlines in each section to be replaced", () => {
+    const blackCard = blackCardFactory({
+      text: "What do ___ say to other ___, and go boom in the ___.",
+    })
+    const { data: { hand } } = gameStateExampleResponse;
+    const selectedCards = hand.slice(0, 3);
+    let expectedText = blackCard.text;
+    selectedCards.forEach((card) => {
+      expectedText = expectedText.replace("___", `<strong>${card.text.replace(/\.$/, "")}</strong>`);
+    })
+
+    const result = fillOutBlackCard(blackCard, selectedCards);
+
+    selectedCards.forEach((card) => {
+      expect(result).toContain(`<strong>${card.text.replace(/\.$/, "")}</strong>`);
+    });
+    expect(result).not.toContain('_')
+    expect(result).toEqual(expectedText);
   });
 
   it("will return false when player has no submitted cards", () => {
