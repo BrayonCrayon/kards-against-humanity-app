@@ -43,11 +43,12 @@ describe("WinnerRoom", () => {
     })
   });
 
-  it("will call spectator dispatch after showing winner and their cards for a certain amount of time", () => {
+  it("will call spectator dispatch and passed callback after showing winner and their cards for a certain amount of time", () => {
     const winner = userFactory();
     const cards = Array.from({length: 3}).map(() => whiteCardFactory())
+    const onEndCallable = vi.fn()
     const dispatch = spyOnUseSpectate();
-    render(<WinnerRoom player={winner} cards={cards} />);
+    render(<WinnerRoom player={winner} cards={cards} onEnd={onEndCallable} />);
 
     act(() => {
       vi.advanceTimersByTime(6000);
@@ -57,5 +58,6 @@ describe("WinnerRoom", () => {
     });
 
     expectDispatch(dispatch, Stage.DISPLAY_BLACK_CARD);
+    expect(onEndCallable).toBeCalled();
   });
 })

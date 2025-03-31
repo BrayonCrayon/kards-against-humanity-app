@@ -27,7 +27,12 @@ function useSubmittedCards() {
     }
   }, [setSubmittedCards]);
 
-  return {submittedCards, getSubmittedCards, whiteCards};
+  const reset = useCallback(() => {
+    setSubmittedCards([]);
+    setWhiteCards([]);
+  }, [whiteCards, submittedCards]);
+
+  return {submittedCards, getSubmittedCards, whiteCards, reset};
 }
 
 export default useSubmittedCards;
