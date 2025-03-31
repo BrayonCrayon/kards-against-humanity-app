@@ -11,12 +11,14 @@ import { Stage } from "@/State/Spectate/SpectateState";
 interface WinnerRoomProps {
   player: User
   cards: WhiteCard[]
+  onEnd?: () => void
 }
 
 const WinnerRoom: FC<WinnerRoomProps> = (props) => {
   const {
     player,
-    cards
+    cards,
+    onEnd = () => {},
   } = props;
   const { dispatch } = useSpectate();
   const [showDrum, setShowDrum] = useState(true);
@@ -38,6 +40,7 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
     }
 
     const timeout = setInterval(() => {
+      onEnd()
       dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
     }, 10000);
 

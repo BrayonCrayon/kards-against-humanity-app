@@ -41,7 +41,7 @@ const useSwitchCard = (props: useSwitchCardProps): useSwitchCardReturn => {
 
         const collection = new TimelineCollection();
 
-        const blackCardTimeline = new BaseTimeline<Card[]>([blackCards], timeout);
+        const blackCardTimeline = new BaseTimeline<Card[]>([blackCards]);
         blackCardTimeline.setOnIteratedCallback(cardCallback);
         collection.add(blackCardTimeline);
 

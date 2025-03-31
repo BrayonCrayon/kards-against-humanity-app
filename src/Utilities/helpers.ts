@@ -17,7 +17,7 @@ export const fillOutBlackCard = (blackCard: BlackCard, cards: Array<SubmittedCar
     .forEach((card) => {
       if (blackCardText.indexOf("_", 0) < 0) return;
 
-      blackCardText = blackCardText.replace("_", `<strong>${card.text.replace(/\.$/, "")}</strong>`);
+      blackCardText = blackCardText.replace(/(_+)/, `<strong>${card.text.replace(/\.$/, "")}</strong>`);
     });
   return blackCardText;
 };
