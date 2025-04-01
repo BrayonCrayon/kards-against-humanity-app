@@ -1,5 +1,7 @@
 import useFetchGameState from "@/Hooks/Game/State/useFetchGameState";
-import { gameStateSubmittedWhiteCardsExampleResponse } from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import {
+  gameStateSubmittedWhiteCardsExampleResponse
+} from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import { transformUser, transformUsers } from "@/Types/User";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseHand, spyOnUsePlayers } from "@/Tests/testHelpers";
@@ -49,5 +51,6 @@ describe("useFetchGameState", () => {
     expectDispatch(mockedDispatch, transformUser(data.currentUser));
     expectDispatch(mockedDispatch, data.hasSubmittedWhiteCards);
     expectDispatch(mockedDispatch, data.blackCard);
+    expectDispatch(mockedDispatch, data.hasSpectator);
   });
 });

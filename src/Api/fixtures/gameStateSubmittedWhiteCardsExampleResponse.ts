@@ -5,6 +5,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
     game: gameFactory({ judgeId: 4 }),
     hasSubmittedWhiteCards: true,
     submittedWhiteCardIds: [76],
+    hasSpectator: false,
     users: [
       {
         id: 1,
