@@ -1,6 +1,6 @@
 import { useVote } from "@/State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { ClearStateAction } from "@/State/Vote/VoteActions";
 import { Button } from "@/Components/Atoms/Button";
 import { useGame } from "@/State/Game/useGame";
@@ -14,7 +14,7 @@ export function RoundWinnerModal() {
     state: { selectedRoundWinner },
   } = useVote();
   const {
-    state: { game },
+    state: { game, hasSpectator },
   } = useGame();
   const {
     state: { auth },
@@ -24,6 +24,7 @@ export function RoundWinnerModal() {
   } = usePlayers();
 
   const rotateGame = useRotateGame();
+  const [isSpectatorFinished, setIsSpectatorFinished] = useState(false);
 
   const name = useMemo(() => {
     const user = players.find((user) => {
@@ -45,7 +46,7 @@ export function RoundWinnerModal() {
     if (selectedRoundWinner && auth.id === game.judgeId) rotate();
   }, [selectedRoundWinner]);
 
-  if (!selectedRoundWinner) return null;
+  if (!selectedRoundWinner || (hasSpectator && !isSpectatorFinished)) return null;
 
   return (
     <div

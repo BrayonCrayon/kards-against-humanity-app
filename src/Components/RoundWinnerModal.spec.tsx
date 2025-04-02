@@ -13,15 +13,14 @@ import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleRes
 import { fillOutBlackCard } from "@/Utilities/helpers";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "@/Tests/testHelpers";
 
-const mockRotateGame = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useRotateGame", () => ({
-    default: () => mockRotateGame
-}));
+const mocks = vi.hoisted(() => ({
+  rotateGame: vi.fn(),
+  fetchGameState: vi.fn(),
+}))
 
-const mockFetchGameState = vi.fn();
-vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({
-    default: () => mockFetchGameState
-}));
+vi.mock("@/Hooks/Game/Actions/useRotateGame", () => ({ default: () => mocks.rotateGame }));
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({ default: () => mocks.fetchGameState }));
+vi.mock("@/Services/PusherService")
 
 const { data: { game, users, currentUser, blackCard } } = gameStateAllPlayerSubmittedCardsExampleResponse;
 
@@ -34,7 +33,7 @@ const renderComponent = () => {
 
 describe("RoundWinnerModal", () => {
   beforeEach(() => {
-    spyOnUseGame(vi.fn(), { game, blackCard: blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: false });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
     spyOnUsePlayers(vi.fn(), { players });
     spyOnUseVote(vi.fn(), {
@@ -108,8 +107,8 @@ describe("RoundWinnerModal", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(mockRotateGame).toHaveBeenCalledTimes(1);
-      expect(mockRotateGame).toHaveBeenCalledWith(game.id);
+      expect(mocks.rotateGame).toHaveBeenCalledTimes(1);
+      expect(mocks.rotateGame).toHaveBeenCalledWith(game.id);
     });
   });
 
@@ -118,8 +117,8 @@ describe("RoundWinnerModal", () => {
 
     renderComponent();
 
-    expect(mockRotateGame).toHaveBeenCalledTimes(0);
-    expect(mockRotateGame).not.toHaveBeenCalledWith(game.id);
+    expect(mocks.rotateGame).toHaveBeenCalledTimes(0);
+    expect(mocks.rotateGame).not.toHaveBeenCalledWith(game.id);
   });
 
   it("does not call game rotate when user is not a judge", async () => {
@@ -127,7 +126,7 @@ describe("RoundWinnerModal", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(mockRotateGame).toHaveBeenCalledTimes(0);
+      expect(mocks.rotateGame).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -147,5 +146,26 @@ describe("RoundWinnerModal", () => {
       );
       expect(winnerCardElement.textContent).toContain(expectedCardText);
     });
+  });
+
+  it("will hook into pusher event when spectator is in a game", () => {
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: true });
+    renderComponent();
+
+    expect(listenWhenSpectatorDisplaysWinner).toHaveBeenCalledTimes(1);
+  });
+
+  it("will not show winner when a spectator is watching and a winner is chosen", async () => {
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: true });
+    spyOnUseVote(vi.fn(), {
+      selectedPlayerId: 1,
+      selectedRoundWinner: roundWinnerExampleResponse.data
+    });
+    const { data: { user_id } } = roundWinnerExampleResponse;
+    const wrapper = renderComponent();
+
+    await waitFor(() => {
+      expect(wrapper.queryByTestId(`player-submitted-response-${user_id}`)).not.toBeInTheDocument();
+    })
   });
 });

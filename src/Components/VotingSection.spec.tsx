@@ -47,7 +47,7 @@ const renderer = () => {
 
 describe("VotingSection", () => {
   beforeEach(() => {
-    spyOnUseGame(vi.fn(), { game, blackCard: mockProps.blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard: mockProps.blackCard, hasSpectator: false });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: mockHasSubmittedWhiteCards });
   });
 
@@ -137,6 +137,7 @@ describe("VotingSection", () => {
       spyOnUseGame(vi.fn(), {
         game: { ...mockProps.game, judgeId: mockProps.users[0].id },
         blackCard: mockProps.blackCard,
+        hasSpectator: false
       });
       const wrapper = renderer();
 

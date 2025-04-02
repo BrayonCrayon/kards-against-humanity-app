@@ -65,3 +65,8 @@ export const listenWhenGameRotates = (
   echo.channel(`game-${gameId}`).stopListening(".game.rotate");
   echo.channel(`game-${gameId}`).listen(".game.rotate", callback);
 };
+
+// TODO: You are here to implement the pusher hook
+export const listenWhenSpectatorDisplaysWinner = () => {
+  echo.channel(`game-${gameId}`).stopListening(".spectator.winner");
+}
