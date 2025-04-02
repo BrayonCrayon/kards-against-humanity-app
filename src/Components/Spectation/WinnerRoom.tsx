@@ -7,6 +7,8 @@ import ReactConfetti from "react-confetti";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { ChangeStage } from "@/State/Spectate/SpectateActions";
 import { Stage } from "@/State/Spectate/SpectateState";
+import { pusher } from "@/Services/PusherService";
+import { useGame } from "@/State/Game/useGame";
 
 interface WinnerRoomProps {
   player: User
@@ -21,12 +23,14 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
     onEnd = () => {},
   } = props;
   const { dispatch } = useSpectate();
+  const { state: { game } } = useGame();
   const [showDrum, setShowDrum] = useState(true);
 
 
   useEffect(() => {
     const timeout = setInterval(() => {
       setShowDrum(false)
+      pusher.channel(`game-${game.id}`).trigger('.spectator.winner', {})
     }, 5000);
 
     return () => {

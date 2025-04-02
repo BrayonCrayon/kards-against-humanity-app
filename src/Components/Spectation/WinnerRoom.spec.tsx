@@ -5,10 +5,20 @@ import WinnerRoom from "@/Components/Spectation/WinnerRoom";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { userTestId, whiteCardTestId } from "@/Tests/selectors";
 import React, { act } from "react";
-import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
+import { expectDispatch, spyOnUseGame, spyOnUseSpectate } from "@/Tests/testHelpers";
 import { Stage } from "@/State/Spectate/SpectateState";
+import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
 vi.useFakeTimers();
+const mockedTrigger = vi.fn()
+const mocks = vi.hoisted(() => ({
+  echo: {
+    channel: vi.fn().mockImplementation(() => ({
+      whisper: mockedTrigger
+    })),
+  },
+}))
 
 describe("WinnerRoom", () => {
   it("will show drum icon before winner", () => {
@@ -59,5 +69,25 @@ describe("WinnerRoom", () => {
 
     expectDispatch(dispatch, Stage.DISPLAY_BLACK_CARD);
     expect(onEndCallable).toBeCalled();
+  });
+
+  it("will send pusher event to display round winner", () => {
+    const winner = userFactory();
+    const cards = Array.from({length: 3}).map(() => whiteCardFactory())
+    const game = gameFactory();
+    spyOnUseGame(vi.fn(), {game, blackCard: blackCardFactory(), hasSpectator: true});
+    vi.mock("@/Services/PusherService", () => ({ echo: mocks.echo }));
+    render(<WinnerRoom player={winner} cards={cards} />);
+
+
+    act(() => {
+      vi.advanceTimersByTime(6000);
+    });
+    act(() => {
+      vi.advanceTimersByTime(11000);
+    });
+
+    expect(mocks.echo.channel).toHaveBeenCalledWith(`game-${game.id}`)
+    expect(mockedTrigger).toHaveBeenCalledWith('.spectator.winner')
   });
 })
