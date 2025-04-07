@@ -2,18 +2,14 @@ import React, { FC, useEffect, useState } from "react";
 import { User } from "@/Types/User";
 import { WhiteCard } from "@/Types/WhiteCard";
 import { WhiteKard } from "@/Components/WhiteKard";
-import { useSpectate } from "@/State/Spectate/useSpectate";
 import ReactConfetti from "react-confetti";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { ChangeStage } from "@/State/Spectate/SpectateActions";
-import { Stage } from "@/State/Spectate/SpectateState";
-import { pusher } from "@/Services/PusherService";
-import { useGame } from "@/State/Game/useGame";
 
 interface WinnerRoomProps {
   player: User
   cards: WhiteCard[]
   onEnd?: () => void
+  onShowWinner?: () => void
 }
 
 const WinnerRoom: FC<WinnerRoomProps> = (props) => {
@@ -21,16 +17,15 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
     player,
     cards,
     onEnd = () => {},
+    onShowWinner = () => {}
   } = props;
-  const { dispatch } = useSpectate();
-  const { state: { game } } = useGame();
   const [showDrum, setShowDrum] = useState(true);
 
 
   useEffect(() => {
     const timeout = setInterval(() => {
       setShowDrum(false)
-      pusher.channel(`game-${game.id}`).trigger('.spectator.winner', {})
+      onShowWinner()
     }, 5000);
 
     return () => {
@@ -45,7 +40,6 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
 
     const timeout = setInterval(() => {
       onEnd()
-      dispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
     }, 10000);
 
     return () => {
@@ -69,7 +63,6 @@ const WinnerRoom: FC<WinnerRoomProps> = (props) => {
             )
           }
         </div>
-        {/* will appear at the center of the parent div*/}
         <div className="absolute top-0 left-0 w-full">
           <ReactConfetti width={window.innerWidth} height={window.innerHeight} numberOfPieces={2000} recycle={false}  />
         </div>

@@ -18,9 +18,11 @@ import { gameStateOnePlayerInGameExampleResponse } from "@/Api/fixtures/gameStat
 import { service } from "@/setupTests";
 import { fetchState } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
-import { confirmedSweetAlert, spyOnUseVote } from "@/Tests/testHelpers";
+import { confirmedSweetAlert, spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
 import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
 import { gameStatePickTwoExampleResponse } from "@/Api/fixtures/gameStatePickTwoExampleResponse";
+import roundWinnerFactory from "@/Tests/Factories/RoundWinnerFactory";
+import { initialGameState } from "@/State/Game/GameState";
 
 vi.mock("@/Services/PusherService");
 vi.mock("@/Utilities/toasts");
@@ -484,5 +486,24 @@ describe("Voting section", () => {
     const wrapper = kardsRender(<GamePage />);
 
     expect(await wrapper.findByTestId("round-winner-modal")).toBeInTheDocument();
+  });
+
+  it("will not display round winner modal when a spectator is in the game", async () => {
+    spyOnUseGame(vi.fn(), { ...initialGameState, hasSpectator: true })
+    service.fetchState.mockResolvedValueOnce(gameStateExampleResponse as AxiosResponse);
+    const [submittedCard] = submittedCardsResponse.data[0].submitted_cards;
+    const selectedRoundWinner = roundWinnerFactory({
+      user_id: 1,
+      submitted_cards: [submittedCard],
+      black_card: gameStateExampleResponse.data.blackCard,
+    })
+    spyOnUseVote(vi.fn(), { selectedPlayerId: -1, selectedRoundWinner });
+
+    const wrapper = kardsRender(<GamePage />);
+
+    await waitFor(() => {
+      expect(wrapper.queryByTestId("round-winner-modal")).not.toBeInTheDocument();
+      expect(wrapper.queryByTestId("player-drum-roll-modal")).toBeInTheDocument();
+    })
   });
 });

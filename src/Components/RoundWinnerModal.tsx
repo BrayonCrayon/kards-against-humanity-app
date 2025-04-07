@@ -1,13 +1,12 @@
 import { useVote } from "@/State/Vote/useVote";
 import { PlayerSubmittedCCard } from "./PlayerSubmittedCCard";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { ClearStateAction } from "@/State/Vote/VoteActions";
 import { Button } from "@/Components/Atoms/Button";
 import { useGame } from "@/State/Game/useGame";
 import useRotateGame from "@/Hooks/Game/Actions/useRotateGame";
 import { usePlayers } from "@/State/Players/usePlayers";
 import { useAuth } from "@/State/Auth/useAuth";
-import { listenWhenSpectatorDisplaysWinner } from "@/Services/PusherService";
 
 export function RoundWinnerModal() {
   const {
@@ -15,7 +14,7 @@ export function RoundWinnerModal() {
     state: { selectedRoundWinner },
   } = useVote();
   const {
-    state: { game, hasSpectator },
+    state: { game },
   } = useGame();
   const {
     state: { auth },
@@ -25,7 +24,6 @@ export function RoundWinnerModal() {
   } = usePlayers();
 
   const rotateGame = useRotateGame();
-  const [isSpectatorFinished, setIsSpectatorFinished] = useState(false);
 
   const name = useMemo(() => {
     const user = players.find((user) => {
@@ -44,18 +42,10 @@ export function RoundWinnerModal() {
   }, [game]);
 
   useEffect(() => {
-    if(hasSpectator) {
-      listenWhenSpectatorDisplaysWinner(game.id, () => {
-        setIsSpectatorFinished(true);
-      })
-    }
-  }, []);
-
-  useEffect(() => {
     if (selectedRoundWinner && auth.id === game.judgeId) rotate();
   }, [selectedRoundWinner]);
 
-  if (!selectedRoundWinner || (hasSpectator && !isSpectatorFinished)) return null;
+  if (!selectedRoundWinner) return null;
 
   return (
     <div
