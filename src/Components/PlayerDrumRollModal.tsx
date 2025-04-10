@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo } from "react";
 import { useVote } from "@/State/Vote/useVote";
 import WinnerRoom from "@/Components/Spectation/WinnerRoom";
 import { usePlayers } from "@/State/Players/usePlayers";
@@ -15,6 +15,10 @@ export const PlayerDrumRollModal: FC = () => {
   const { state: { auth } } = useAuth()
   const rotate = useRotateGame()
 
+  useEffect(() => {
+    if (selectedRoundWinner && auth.id === game.judgeId) rotate(game.id);
+  }, [selectedRoundWinner]);
+
   const player = useMemo(() => {
     return players.find(user => user.id === selectedRoundWinner?.user_id)
   }, [selectedRoundWinner, players])
@@ -27,11 +31,7 @@ export const PlayerDrumRollModal: FC = () => {
     return transformSubmissionsToWhiteCard(selectedRoundWinner.submitted_cards)
   }, [selectedRoundWinner])
 
-  const afterShowingWinner = useCallback(async () => {
-    if (auth.id === game.judgeId) {
-      await rotate(game.id)
-    }
-
+  const onEndOfShowingWinner = useCallback(async () => {
     voteDispatch(new ClearStateAction());
   }, [])
 
@@ -42,7 +42,7 @@ export const PlayerDrumRollModal: FC = () => {
       data-testid="player-drum-roll-modal"
       className="w-screen h-screen fixed top-0 left-0 flex flex-col items-center justify-center bg-lukewarmGray-300"
     >
-      <WinnerRoom player={player} cards={cards} onEnd={afterShowingWinner} />
+      <WinnerRoom player={player} cards={cards} onEnd={onEndOfShowingWinner} />
     </div>
   )
 }

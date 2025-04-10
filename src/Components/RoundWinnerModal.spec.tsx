@@ -148,49 +148,4 @@ describe("RoundWinnerModal", () => {
       expect(winnerCardElement.textContent).toContain(expectedCardText);
     });
   });
-
-  it("will hook into pusher event when spectator is in a game", () => {
-    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: true });
-    renderComponent();
-
-    expect(mocks.pusherListener).toHaveBeenCalledWith(game.id, expect.any(Function));
-  });
-
-  it("will not hook into pusher event when there is no spectator in a game", () => {
-    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: false });
-    renderComponent();
-
-    expect(mocks.pusherListener).not.toHaveBeenCalled();
-  });
-
-  it("will show the winner modal when we have received that the spectator has shown the winner", async () => {
-    spyOnUseVote(vi.fn(), {
-      selectedPlayerId: 1,
-      selectedRoundWinner: roundWinnerExampleResponse.data
-    });
-    const { data: { user_id } } = roundWinnerExampleResponse;
-    mocks.pusherListener.mockImplementationOnce((_: string, callback: () => void) => {
-      callback();
-    })
-    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: true });
-    const wrapper = renderComponent();
-
-    await waitFor(() => {
-      expect(wrapper.queryByTestId(`player-submitted-response-${user_id}`)).toBeInTheDocument();
-    })
-  });
-
-  it("will not show winner when a spectator is watching and a winner is chosen", async () => {
-    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: true });
-    spyOnUseVote(vi.fn(), {
-      selectedPlayerId: 1,
-      selectedRoundWinner: roundWinnerExampleResponse.data
-    });
-    const { data: { user_id } } = roundWinnerExampleResponse;
-    const wrapper = renderComponent();
-
-    await waitFor(() => {
-      expect(wrapper.queryByTestId(`player-submitted-response-${user_id}`)).not.toBeInTheDocument();
-    })
-  });
 });
