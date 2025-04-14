@@ -5,8 +5,6 @@ import WinnerRoom from "@/Components/Spectation/WinnerRoom";
 import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
 import { userTestId, whiteCardTestId } from "@/Tests/selectors";
 import React, { act } from "react";
-import { expectDispatch, spyOnUseSpectate } from "@/Tests/testHelpers";
-import { Stage } from "@/State/Spectate/SpectateState";
 
 vi.useFakeTimers();
 
@@ -43,11 +41,11 @@ describe("WinnerRoom", () => {
     })
   });
 
-  it("will call spectator dispatch and passed callback after showing winner and their cards for a certain amount of time", () => {
+
+  it("will call passed callback after showing winner and their cards for a certain amount of time", () => {
     const winner = userFactory();
     const cards = Array.from({length: 3}).map(() => whiteCardFactory())
     const onEndCallable = vi.fn()
-    const dispatch = spyOnUseSpectate();
     render(<WinnerRoom player={winner} cards={cards} onEnd={onEndCallable} />);
 
     act(() => {
@@ -57,7 +55,22 @@ describe("WinnerRoom", () => {
       vi.advanceTimersByTime(11000);
     });
 
-    expectDispatch(dispatch, Stage.DISPLAY_BLACK_CARD);
     expect(onEndCallable).toBeCalled();
+  });
+
+  it("will call passed onShowWinner callback when showing the winner after drums", () => {
+    const winner = userFactory();
+    const cards = Array.from({length: 3}).map(() => whiteCardFactory())
+    const onCallback = vi.fn()
+    render(<WinnerRoom player={winner} cards={cards} onShowWinner={onCallback} />);
+
+    act(() => {
+      vi.advanceTimersByTime(6000);
+    });
+    act(() => {
+      vi.advanceTimersByTime(11000);
+    });
+
+    expect(onCallback).toHaveBeenCalled()
   });
 })

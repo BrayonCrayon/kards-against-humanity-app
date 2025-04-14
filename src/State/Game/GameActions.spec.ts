@@ -1,4 +1,4 @@
-import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
+import { SetBlackCardAction, SetGameAction, ToggleSpectation } from "@/State/Game/GameActions";
 import { Game } from "@/Types/Game";
 import { initialGameState } from "@/State/Game/GameState";
 import { BlackCard } from "@/Types/BlackCard";
@@ -18,5 +18,13 @@ describe("GameActions", () => {
     const action = new SetBlackCardAction(blackCard);
 
     expect(action.execute(initialGameState).blackCard).toEqual(blackCard);
+  });
+
+  it("will set spectator", () => {
+    const spectator = true;
+
+    const action = new ToggleSpectation(spectator);
+
+    expect(action.execute(initialGameState).hasSpectator).toEqual(spectator);
   });
 });

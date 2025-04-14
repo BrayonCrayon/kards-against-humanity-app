@@ -15,10 +15,11 @@ import { PreGameModal } from "@/Components/PreGameModal";
 import SelectionRoundTimer from "@/Components/Molecules/SelectionRoundTimer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMugHot } from "@fortawesome/free-solid-svg-icons";
+import PlayerDrumRollModal from "@/Components/PlayerDrumRollModal";
 
 const GamePage = () => {
   const {
-    state: { game, blackCard },
+    state: { game, blackCard, hasSpectator },
   } = useGame();
 
   const {
@@ -78,7 +79,8 @@ const GamePage = () => {
         </div>
       ) : null}
       {showVotingSection && <VotingSection />}
-      <RoundWinnerModal />
+      {!hasSpectator && <RoundWinnerModal />}
+      {hasSpectator && <PlayerDrumRollModal />}
       <PreGameModal />
       {!showVotingSection && <SelectionRoundTimer className="fixed bottom-2 left-2 w-20" />}
     </div>

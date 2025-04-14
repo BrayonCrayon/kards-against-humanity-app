@@ -65,3 +65,13 @@ export const listenWhenGameRotates = (
   echo.channel(`game-${gameId}`).stopListening(".game.rotate");
   echo.channel(`game-${gameId}`).listen(".game.rotate", callback);
 };
+
+export const listenWhenSpectatorDisplaysWinner = (
+  gameId: string,
+  callback: () => void
+) => {
+  pusher.channel(`game-${gameId}`).unbind(".spectator.winner");
+  pusher.channel(`game-${gameId}`).bind(".spectator.winner", callback);
+  // echo.channel(`game-${gameId}`).stopListening(".spectator.winner");
+  // echo.channel(`game-${gameId}`).listenForWhisper(".spectator.winner", callback);
+}
