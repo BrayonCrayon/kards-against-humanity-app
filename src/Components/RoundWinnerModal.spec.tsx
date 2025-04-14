@@ -13,15 +13,15 @@ import { roundWinnerExampleResponse } from "@/Api/fixtures/roundWinnerExampleRes
 import { fillOutBlackCard } from "@/Utilities/helpers";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers, spyOnUseVote } from "@/Tests/testHelpers";
 
-const mockRotateGame = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useRotateGame", () => ({
-    default: () => mockRotateGame
-}));
+const mocks = vi.hoisted(() => ({
+  rotateGame: vi.fn(),
+  fetchGameState: vi.fn(),
+  pusherListener: vi.fn(),
+}))
 
-const mockFetchGameState = vi.fn();
-vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({
-    default: () => mockFetchGameState
-}));
+vi.mock("@/Hooks/Game/Actions/useRotateGame", () => ({ default: () => mocks.rotateGame }));
+vi.mock("@/Hooks/Game/State/useFetchGameState", () => ({ default: () => mocks.fetchGameState }));
+vi.mock("@/Services/PusherService", () => ({ listenWhenSpectatorDisplaysWinner: mocks.pusherListener }));
 
 const { data: { game, users, currentUser, blackCard } } = gameStateAllPlayerSubmittedCardsExampleResponse;
 
@@ -34,7 +34,7 @@ const renderComponent = () => {
 
 describe("RoundWinnerModal", () => {
   beforeEach(() => {
-    spyOnUseGame(vi.fn(), { game, blackCard: blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCard, hasSpectator: false });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
     spyOnUsePlayers(vi.fn(), { players });
     spyOnUseVote(vi.fn(), {
@@ -108,8 +108,8 @@ describe("RoundWinnerModal", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(mockRotateGame).toHaveBeenCalledTimes(1);
-      expect(mockRotateGame).toHaveBeenCalledWith(game.id);
+      expect(mocks.rotateGame).toHaveBeenCalledTimes(1);
+      expect(mocks.rotateGame).toHaveBeenCalledWith(game.id);
     });
   });
 
@@ -118,8 +118,8 @@ describe("RoundWinnerModal", () => {
 
     renderComponent();
 
-    expect(mockRotateGame).toHaveBeenCalledTimes(0);
-    expect(mockRotateGame).not.toHaveBeenCalledWith(game.id);
+    expect(mocks.rotateGame).toHaveBeenCalledTimes(0);
+    expect(mocks.rotateGame).not.toHaveBeenCalledWith(game.id);
   });
 
   it("does not call game rotate when user is not a judge", async () => {
@@ -127,7 +127,7 @@ describe("RoundWinnerModal", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(mockRotateGame).toHaveBeenCalledTimes(0);
+      expect(mocks.rotateGame).toHaveBeenCalledTimes(0);
     });
   });
 

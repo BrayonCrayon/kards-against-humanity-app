@@ -17,4 +17,11 @@ export class SetBlackCardAction extends BaseAction<IGameState, BlackCard> {
   });
 }
 
-export type GameActions = SetGameAction | SetBlackCardAction;
+export class ToggleSpectation extends BaseAction<IGameState, boolean> {
+  execute = (state: IGameState) => ({
+    ...state,
+    hasSpectator: this.payload,
+  })
+}
+
+export type GameActions = SetGameAction | SetBlackCardAction | ToggleSpectation;
