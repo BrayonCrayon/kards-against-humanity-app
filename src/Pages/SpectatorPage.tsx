@@ -22,11 +22,13 @@ import { ClearStateAction } from "@/State/Vote/VoteActions";
 import { ChangeStage } from "@/State/Spectate/SpectateActions";
 import { pusher } from "@/Services/PusherService";
 
+
 export const SpectatorPage: React.FC = () => {
   const { state: { players } } = usePlayers();
   const { state: { auth } } = useAuth();
   const { state: { game, blackCard } } = useGame();
   const { state: { stage }, dispatch: spectateDispatch } = useSpectate();
+
   const { dispatch: voteDispatch } = useVote();
   const { id } = useParams<{ id: string }>();
 
@@ -48,13 +50,16 @@ export const SpectatorPage: React.FC = () => {
 
   const resetForNextRound = useCallback(() => {
     spectateDispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
+
     reset();
     voteDispatch(new ClearStateAction());
   }, [])
 
+
   const onShowWinner = useCallback(() => {
     pusher.channel(`game-${game.id}`).trigger('.spectator.winner', {})
   }, [])
+
 
   useEffect(() => {
     if (game.id) {

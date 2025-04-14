@@ -41,6 +41,7 @@ describe("WinnerRoom", () => {
     })
   });
 
+
   it("will call passed callback after showing winner and their cards for a certain amount of time", () => {
     const winner = userFactory();
     const cards = Array.from({length: 3}).map(() => whiteCardFactory())
