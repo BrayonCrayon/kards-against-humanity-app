@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import {
   listenWhenGameRotates,
   listenWhenGameStart,
+  listenWhenSpectatorJoins,
   listenWhenUserJoinsGame,
   listenWhenUserSubmittedCards
 } from "@/Services/PusherService";
@@ -19,6 +20,7 @@ function useListenOnEvents() {
     listenWhenUserJoinsGame(gameId, userJoinsGameCallback);
     listenWhenGameRotates(gameId, updateGameState);
     listenWhenGameStart(userId, updateGameState);
+    listenWhenSpectatorJoins(gameId, updateGameState);
   }, []);
 }
 
