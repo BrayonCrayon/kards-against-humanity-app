@@ -18,9 +18,11 @@ import Timer from "@/Components/Atoms/Timer";
 import { useSwitchStages } from "@/Hooks/Spectate/useSwitchStages";
 import useDetermineWinner from "@/Hooks/Spectate/useDetermineWinner";
 import { useVote } from "@/State/Vote/useVote";
-import { ClearStateAction } from "@/State/Vote/VoteActions";
 import { ChangeStage } from "@/State/Spectate/SpectateActions";
 import { pusher } from "@/Services/PusherService";
+import { userFactory } from "@/Tests/Factories/UserFactory";
+import { whiteCardFactory } from "@/Tests/Factories/WhiteCardFactory";
+import playerSubmissionFactory from "@/Tests/Factories/PlayerSubmissionFactory";
 
 
 export const SpectatorPage: React.FC = () => {
@@ -49,16 +51,20 @@ export const SpectatorPage: React.FC = () => {
   }, [id]);
 
   const resetForNextRound = useCallback(() => {
-    spectateDispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
-
-    reset();
-    voteDispatch(new ClearStateAction());
+    // spectateDispatch(new ChangeStage(Stage.DISPLAY_BLACK_CARD))
+    //
+    // reset();
+    // voteDispatch(new ClearStateAction());
   }, [])
 
 
   const onShowWinner = useCallback(() => {
     pusher.channel(`game-${game.id}`).trigger('.spectator.winner', {})
   }, [])
+
+  useEffect(() => {
+    spectateDispatch(new ChangeStage(Stage.DISPLAY_WINNER))
+  }, []);
 
 
   useEffect(() => {
@@ -107,8 +113,7 @@ export const SpectatorPage: React.FC = () => {
         }
         {
           stage === Stage.DISPLAY_WINNER &&
-          winner &&
-          <WinnerRoom player={winner} cards={winnerCards} onEnd={resetForNextRound} onShowWinner={onShowWinner} />
+          <WinnerRoom winner={userFactory()} submissions={[playerSubmissionFactory(), playerSubmissionFactory()]} winnerCards={[whiteCardFactory(), whiteCardFactory()]} onEnd={resetForNextRound} onShowWinner={onShowWinner} />
         }
       </div>
       <SpectatePlayerList players={players} judgeId={game.judgeId} />
