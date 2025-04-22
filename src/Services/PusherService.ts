@@ -75,3 +75,11 @@ export const listenWhenSpectatorDisplaysWinner = (
   // echo.channel(`game-${gameId}`).stopListening(".spectator.winner");
   // echo.channel(`game-${gameId}`).listenForWhisper(".spectator.winner", callback);
 }
+
+export const listenWhenSpectatorJoins = (
+  gameId: string,
+  callback: (data: gameCallbackData) => void
+) => {
+  echo.channel(`game-${gameId}`).stopListening(".spectator.joined");
+  echo.channel(`game-${gameId}`).listen(".spectator.joined", callback);
+}
