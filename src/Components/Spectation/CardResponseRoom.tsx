@@ -3,7 +3,7 @@ import useSwitchCard from "@/Hooks/Spectate/useSwitchCard";
 import { isEmpty } from "lodash";
 import { WhiteCard } from "@/Types/WhiteCard";
 import { WhiteKard } from "@/Components/WhiteKard";
-import { Card } from "@/Types/Card";
+import { CardType, ICard } from "@/Types/Card";
 import { useGame } from "@/State/Game/useGame";
 import { BlackKard } from "@/Components/BlackKard";
 import { BlackCard } from "@/Types/BlackCard";
@@ -36,8 +36,8 @@ const CardResponseRoom: FC<CardResponseRoomProps> = ({ showAnswers, cards = [], 
     return !!cardsToDisplay && cardsToDisplay.length > 0;
   }, [cardsToDisplay])
 
-  const isWhiteCard = useCallback((card: Card) => {
-    return card.constructor.name === "WhiteCard";
+  const isWhiteCard = useCallback((card: ICard) => {
+    return card.getType() === CardType.White
   }, [])
 
   useEffect(() => {

@@ -46,6 +46,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
+    "prod": "vite preview",
     "compile-ts": "tsc --project tsconfig.json",
     "ts-lint": "tsc --project tsconfig.json",
     "test": "vitest run --watch=false",

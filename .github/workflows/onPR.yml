@@ -2,7 +2,7 @@ name: PR Check
 
 on:
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, master ]
 
 jobs:
   pr-checks:
@@ -13,10 +13,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '18.16.0'
+          node-version: 22
+          cache: 'npm'
 
       - name: Install node modules
-        run: npm i
+        run: npm ci
 
       - name: Compile Typescript
         run: npm run compile-ts
