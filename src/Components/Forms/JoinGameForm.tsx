@@ -7,6 +7,7 @@ import useJoinGame from "@/Hooks/Game/Join/useJoinGame";
 import { KAHCard } from "@/Components/KAHCard";
 import useLoading from "@/Hooks/Game/Shared/useLoading";
 import { useParams } from "react-router-dom";
+import KickPlayerModal from "@/Components/Molecules/KickPlayerModal";
 
 const JoinGameForm: FC = () => {
   const { code: sharedCode } = useParams<{ code: string | undefined }>();
@@ -17,7 +18,8 @@ const JoinGameForm: FC = () => {
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
-  const submitToApi = useCallback(async (event: FormEvent) => {
+  const submitToApi = useCallback(
+    async (event: FormEvent) => {
       event.preventDefault();
       setLoading(true);
       if (spectator) {
@@ -26,11 +28,24 @@ const JoinGameForm: FC = () => {
       }
 
       await joinGame(code, userName);
-  }, [userName, code, spectator]);
+    },
+    [userName, code, spectator],
+  );
+
+  const [show, setShow] = useState(true);
+  const openModal = () => {
+    setShow(true);
+  };
+
+  const closeModal = () => {
+    setShow(false);
+  };
 
   return (
     <div className="flex flex-col w-full h-full" data-testid="join-game-section">
       <KAHCard className="grow mx-3 my-6 md:w-1/2 md:max-w-lg md:mx-auto lg:w-1/3">
+        <Button text="open Modal" dataTestid="join-game-form-submit" onClick={openModal} />
+        <KickPlayerModal show={show} playerName="Johnjfjfjfjfjfjfj" />
         <form data-testid="join-game-form" onSubmit={submitToApi} className="flex flex-col">
           <h2 className="text-2xl font-bold mb-4 mt-2">Join Game</h2>
           <KAHInput

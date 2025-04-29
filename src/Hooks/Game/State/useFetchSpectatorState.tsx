@@ -7,26 +7,28 @@ import { usePlayers } from "@/State/Players/usePlayers";
 import { SetPlayersAction } from "@/State/Players/PlayersActions";
 import { useGame } from "@/State/Game/useGame";
 import { SetBlackCardAction, SetGameAction } from "@/State/Game/GameActions";
+import { transformBlackCard } from "@/Types/BlackCard";
 
 function useFetchSpectatorState() {
   const { dispatch: usersDispatch } = usePlayers();
   const { dispatch: userDispatch } = useAuth();
   const { dispatch: gameDispatch } = useGame();
 
-  return useCallback(async (gameId: string) => {
-    try {
+  return useCallback(
+    async (gameId: string) => {
+      try {
+        const { data } = await gameService.fetchSpectatorState(gameId);
 
-      const { data } = await gameService.fetchSpectatorState(gameId);
-
-      userDispatch(new SetAuthAction(transformUser(data.user)));
-      usersDispatch(new SetPlayersAction(transformUsers(data.users)));
-      gameDispatch(new SetGameAction(data.game));
-      gameDispatch(new SetBlackCardAction(data.blackCard));
-
-    } catch (e) {
-      console.error(e);
-    }
-  }, [usersDispatch, userDispatch, gameDispatch]);
+        userDispatch(new SetAuthAction(transformUser(data.user)));
+        usersDispatch(new SetPlayersAction(transformUsers(data.users)));
+        gameDispatch(new SetGameAction(data.game));
+        gameDispatch(new SetBlackCardAction(transformBlackCard(data.blackCard)));
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    [usersDispatch, userDispatch, gameDispatch],
+  );
 }
 
 export default useFetchSpectatorState;

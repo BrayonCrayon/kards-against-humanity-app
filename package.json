@@ -91,11 +91,5 @@
     "ts-node": "^10.9.2",
     "vite": "^6.2.0",
     "vitest": "^3.0.7"
-  },
-  "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.35.0",
-    "@tailwindcss/oxide-linux-x64-gnu": "4.0.14",
-    "@tailwindcss/oxide-linux-arm64-gnu": "^4.0.1",
-    "lightningcss-linux-x64-gnu": "^1.29.3"
   }
 }
