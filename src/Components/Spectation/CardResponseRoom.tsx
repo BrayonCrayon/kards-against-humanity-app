@@ -43,7 +43,6 @@ const CardResponseRoom: FC<CardResponseRoomProps> = ({ showAnswers, cards = [], 
   }, [cardsToDisplay]);
 
   const isWhiteCard = useCallback((card: ICard) => {
-    console.log(card);
     return card.getType() === CardType.White;
   }, []);
 

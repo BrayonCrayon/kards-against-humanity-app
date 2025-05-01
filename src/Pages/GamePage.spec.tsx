@@ -3,16 +3,12 @@ import GamePage from "./GamePage";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { listenWhenGameRotates, listenWhenUserJoinsGame, listenWhenUserSubmittedCards } from "@/Services/PusherService";
 import userEvent from "@testing-library/user-event";
-import {
-  gameStateSubmittedWhiteCardsExampleResponse
-} from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
+import { gameStateSubmittedWhiteCardsExampleResponse } from "@/Api/fixtures/gameStateSubmittedWhiteCardsExampleResponse";
 import { getWhiteCardElement, selectedCardClass, whiteCardOrderTestId, whiteCardTestId } from "@/Tests/selectors";
 import { selectAndSubmitWhiteCards, selectWhiteCards, togglePlayerList } from "@/Tests/actions";
 import { gameStateJudgeExampleResponse } from "@/Api/fixtures/gameStateJudgeExampleResponse";
 import { kardsRender } from "@/Tests/testRenders";
-import {
-  gameStateAllPlayerSubmittedCardsExampleResponse
-} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
 import { gameStateOnePlayerInGameExampleResponse } from "@/Api/fixtures/gameStateOnePlayerInGameExampleResponse";
 import { service } from "@/setupTests";
@@ -23,6 +19,8 @@ import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
 import { gameStatePickTwoExampleResponse } from "@/Api/fixtures/gameStatePickTwoExampleResponse";
 import roundWinnerFactory from "@/Tests/Factories/RoundWinnerFactory";
 import { initialGameState } from "@/State/Game/GameState";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { transformBlackCard } from "@/Types/BlackCard";
 
 vi.mock("@/Services/PusherService");
 vi.mock("@/Utilities/toasts");
@@ -37,7 +35,7 @@ vi.mock("react-router-dom", () => ({
 }));
 
 vi.mock("@/Hooks/Game/State/useGameStateCallback", () => ({
-  default: () => vi.fn()
+  default: () => vi.fn(),
 }));
 
 describe("GamePage", () => {
@@ -195,7 +193,7 @@ describe("GamePage", () => {
     it("sets next selected card to the last pick order when select limit is reached", async () => {
       service.fetchState.mockResolvedValueOnce(gameStatePickTwoExampleResponse as AxiosResponse);
       const { hand, blackCard } = gameStatePickTwoExampleResponse.data;
-      const cardsToSelect = hand.slice(0, blackCard.pick);
+      const cardsToSelect = transformWhiteCardArray(hand.slice(0, blackCard.pick));
       const nextCardToSelect = hand[blackCard.pick];
       const wrapper = kardsRender(<GamePage />);
 
@@ -230,6 +228,8 @@ describe("GamePage", () => {
       await waitFor(() => togglePlayerList());
 
       await waitFor(() => userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`)));
+
+      await waitFor(() => userEvent.click(wrapper.getByRole("yes-kick-player")));
 
       expect(wrapper.queryByTestId(`user-${playerToKick.id}`)).not.toBeInTheDocument();
       sweetSpy.mockReset();
@@ -370,7 +370,7 @@ describe("GamePage", () => {
     });
 
     describe("Selecting cards", () => {
-      const cardsToSelect = gameStateExampleResponse.data.hand.slice(0, 2).reverse();
+      const cardsToSelect = transformWhiteCardArray(gameStateExampleResponse.data.hand.slice(0, 2).reverse());
 
       beforeAll(() => {
         gameStateExampleResponse.data.blackCard.pick = 2;
@@ -388,10 +388,11 @@ describe("GamePage", () => {
           expect(service.submitCards).toHaveBeenCalledWith(
             game.id,
             cardsToSelect.length,
-            cardsToSelect.map((item) => item.id)
+            cardsToSelect.map((item) => item.id),
           );
         });
       });
+
       it("when selecting and deselecting cards, order is properly updated", async () => {
         const {
           data: { game },
@@ -404,10 +405,11 @@ describe("GamePage", () => {
           expect(service.submitCards).toHaveBeenCalledWith(
             game.id,
             cardsToSelect.length,
-            cardsToSelect.map((item) => item.id)
+            cardsToSelect.map((item) => item.id),
           );
         });
       });
+
       it("indicator of card matches card order", async () => {
         const wrapper = kardsRender(<GamePage />);
 
@@ -419,7 +421,7 @@ describe("GamePage", () => {
             expect(wrapper.queryByTestId(whiteCardOrderTestId(card.id))).toHaveTextContent(order.toString());
             ++order;
           });
-        })
+        });
       });
     });
   });
@@ -479,7 +481,7 @@ describe("Voting section", () => {
       selectedRoundWinner: {
         user_id: 1,
         submitted_cards: [submittedCard],
-        black_card: gameStateExampleResponse.data.blackCard,
+        black_card: transformBlackCard(gameStateExampleResponse.data.blackCard),
       },
     });
 
@@ -489,14 +491,14 @@ describe("Voting section", () => {
   });
 
   it("will not display round winner modal when a spectator is in the game", async () => {
-    spyOnUseGame(vi.fn(), { ...initialGameState, hasSpectator: true })
+    spyOnUseGame(vi.fn(), { ...initialGameState, hasSpectator: true });
     service.fetchState.mockResolvedValueOnce(gameStateExampleResponse as AxiosResponse);
     const [submittedCard] = submittedCardsResponse.data[0].submitted_cards;
     const selectedRoundWinner = roundWinnerFactory({
       user_id: 1,
       submitted_cards: [submittedCard],
-      black_card: gameStateExampleResponse.data.blackCard,
-    })
+      black_card: transformBlackCard(gameStateExampleResponse.data.blackCard),
+    });
     spyOnUseVote(vi.fn(), { selectedPlayerId: -1, selectedRoundWinner });
 
     const wrapper = kardsRender(<GamePage />);
@@ -504,6 +506,6 @@ describe("Voting section", () => {
     await waitFor(() => {
       expect(wrapper.queryByTestId("round-winner-modal")).not.toBeInTheDocument();
       expect(wrapper.queryByTestId("player-drum-roll-modal")).toBeInTheDocument();
-    })
+    });
   });
 });
