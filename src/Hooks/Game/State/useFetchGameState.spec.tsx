@@ -14,6 +14,7 @@ import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import { fetchState } from "@/Services/GameService";
 import { renderHook } from "@testing-library/react";
+import { transformBlackCard } from "@/Types/BlackCard";
 
 let mockedDispatch = vi.fn();
 
@@ -50,7 +51,7 @@ describe("useFetchGameState", () => {
 
     expectDispatch(mockedDispatch, transformUser(data.currentUser));
     expectDispatch(mockedDispatch, data.hasSubmittedWhiteCards);
-    expectDispatch(mockedDispatch, data.blackCard);
+    expectDispatch(mockedDispatch, transformBlackCard(data.blackCard));
     expectDispatch(mockedDispatch, data.hasSpectator);
   });
 });

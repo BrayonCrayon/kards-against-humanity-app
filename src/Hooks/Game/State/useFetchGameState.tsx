@@ -10,6 +10,7 @@ import { SetAuthAction, SetHasSubmittedCards } from "@/State/Auth/AuthActions";
 import { useGame } from "@/State/Game/useGame";
 import { SetBlackCardAction, SetGameAction, ToggleSpectation } from "@/State/Game/GameActions";
 import { fetchState } from "@/Services/GameService";
+import { transformBlackCard } from "@/Types/BlackCard";
 
 function useFetchGameState() {
     const {dispatch: usersDispatch} = usePlayers();
@@ -35,7 +36,7 @@ function useFetchGameState() {
                   )
               )
             );
-            gameDispatch(new SetBlackCardAction(data.blackCard));
+            gameDispatch(new SetBlackCardAction(transformBlackCard(data.blackCard)));
         } catch (error) {
             console.error(error);
         }

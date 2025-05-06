@@ -48,6 +48,7 @@ export const gameStateSubmittedWhiteCardsExampleResponse = {
       id: 4624,
       pick: 1,
       text: "_ is the key to recovery.",
+      expansionId: 1,
     },
     hand: [
       {

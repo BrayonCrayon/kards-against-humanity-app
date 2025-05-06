@@ -4,8 +4,10 @@ import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleRespons
 import { AxiosResponse } from "axios";
 import { kardsHookRender } from "@/Tests/testRenders";
 import useCreateGame from "@/Hooks/Game/Create/useCreateGame";
-import { transformUser, transformUsers } from "@/Types/User";
 import { ICreateGameOptions } from "@/Services/GameService";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
+import { transformUser, transformUsers } from "@/Types/User";
+import { transformBlackCard } from "@/Types/BlackCard";
 
 const mockedNavigate = vi.fn();
 vi.mock("react-router-dom", () => ({
@@ -40,11 +42,11 @@ describe("useCreateGame", () => {
     expect(service.createGame).toHaveBeenCalledWith(options);
     expect(mockedNavigate).toHaveBeenCalledWith(`/game/${data.game.id}`);
     expectDispatch(dispatchSpy, data.game);
-    expectDispatch(dispatchSpy, data.blackCard);
+    expectDispatch(dispatchSpy, transformBlackCard(data.blackCard));
     expectDispatch(dispatchSpy, transformUsers(data.users));
     expectDispatch(dispatchSpy, transformUser(data.currentUser));
     expectDispatch(dispatchSpy, false);
-    expectDispatch(dispatchSpy, data.hand);
+    expectDispatch(dispatchSpy, transformWhiteCardArray(data.hand, false, []));
   });
 
   it("will handle server error", async () => {

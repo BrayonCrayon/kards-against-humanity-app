@@ -1,11 +1,10 @@
 import { isNull } from "lodash";
-import { Card } from "@/Types/Card";
 
 function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export class BaseTimeline<T extends K, K = Card> {
+export class BaseTimeline<T> {
 
   protected items: T[];
   private currentIdx: number | null;

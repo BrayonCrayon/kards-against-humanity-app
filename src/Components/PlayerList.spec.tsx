@@ -1,21 +1,25 @@
+import "@testing-library/jest-dom/vitest";
 import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { kardsRender } from "@/Tests/testRenders";
 import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import PlayerList from "./PlayerList";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
-const { users: players, currentUser: auth, game, blackCard } = gameStateExampleResponse.data;
+const { users: players, currentUser: auth, game, blackCard: blackCardResponse } = gameStateExampleResponse.data;
+
+const blackCard = blackCardFactory(blackCardResponse);
 
 const mockKickPlayer = vi.fn();
 vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => ({
-  default: () => mockKickPlayer
+  default: () => mockKickPlayer,
 }));
 
 describe("PlayerList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    spyOnUseGame(vi.fn(), { game, blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard, hasSpectator: false });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
   });
 
@@ -60,7 +64,7 @@ describe("PlayerList", () => {
   });
 
   it("shows a button to kick players on users list", async () => {
-    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
+    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id }, hasSpectator: false });
     const playerToKickId = players.filter((item) => item.id !== auth.id)[0].id;
     const wrapper = kardsRender(<PlayerList users={players} />);
 
@@ -80,7 +84,7 @@ describe("PlayerList", () => {
   });
 
   it("will not show kick player on player that is the judge", async () => {
-    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
+    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id }, hasSpectator: false });
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
@@ -90,12 +94,16 @@ describe("PlayerList", () => {
 
   it("will call api endpoint to kick player from game", async () => {
     confirmedSweetAlert(true);
-    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id } });
+    spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id }, hasSpectator: false });
     const playerToKick = players.filter((item) => item.id !== auth.id)[0];
     const wrapper = kardsRender(<PlayerList users={players} />);
 
     await waitFor(() => {
       userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`));
+    });
+
+    await waitFor(() => {
+      userEvent.click(wrapper.getByRole("yes-kick-player"));
     });
 
     await waitFor(() => {

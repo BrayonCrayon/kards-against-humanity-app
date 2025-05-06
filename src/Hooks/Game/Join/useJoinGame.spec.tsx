@@ -6,6 +6,7 @@ import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleRespons
 import { AxiosResponse } from "axios";
 import { transformUser, transformUsers } from "@/Types/User";
 import { errorToast } from "@/Utilities/toasts";
+import { transformWhiteCardArray } from "@/Types/WhiteCard";
 
 const {data} = gameStateExampleResponse;
 const code = "1k2k";
@@ -29,7 +30,7 @@ describe("useJoinGame", () => {
     expectDispatch(dispatchSpy, data.game);
     expectDispatch(dispatchSpy, transformUser(data.currentUser));
     expectDispatch(dispatchSpy, transformUsers(data.users));
-    expectDispatch(dispatchSpy, data.hand);
+    expectDispatch(dispatchSpy, transformWhiteCardArray(data.hand));
     expect(mockedUsedNavigate).toHaveBeenCalledWith(`/game/${data.game.id}`);
   });
 

@@ -1,4 +1,4 @@
-import { Card } from "@/Types/Card";
+import { Card, CardType } from "@/Types/Card";
 import { SubmittedCard } from "@/Types/SubmittedCard";
 
 export interface IWhiteCard {
@@ -14,6 +14,7 @@ export interface IWhiteCard {
 export class WhiteCard extends Card implements IWhiteCard {
   id: number;
   text: string;
+  type: CardType;
   expansionId: number;
   selected: boolean;
   order: number;
@@ -28,16 +29,21 @@ export class WhiteCard extends Card implements IWhiteCard {
     order = 0
   ) {
     super();
+    this.type = CardType.White;
     this.id = id;
     this.text = text;
     this.expansionId = expansionId;
     this.selected = selected;
     this.order = order;
   }
+
+  getType(): CardType {
+    return this.type;
+  }
 }
 
 export const transformWhiteCardArray = (
-    cards: WhiteCard[],
+    cards: IWhiteCard[],
     hasSubmittedWhiteCards: boolean = false,
     submittedWhiteCardIds: number[] = []
 ) => {
