@@ -12,16 +12,13 @@ export const errorToast = (message: string = "Error") => {
   });
 };
 
-export const happyToast = (
-  message: string = "Success",
-  position: SweetAlertPosition = "bottom-end"
-) => {
+export const happyToast = (message: string = "Success", position: SweetAlertPosition = "bottom-end") => {
   Swal.fire({
     toast: true,
     text: message,
     position: position,
     icon: "success",
-    timer: 3000,
+    timer: 3000000,
     timerProgressBar: true,
     showConfirmButton: false,
   });
