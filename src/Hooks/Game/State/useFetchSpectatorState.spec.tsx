@@ -7,7 +7,8 @@ import { service } from "@/setupTests";
 import { AxiosResponse } from "axios";
 import { initialPlayersState } from "@/State/Players/PlayersState";
 import { initialGameState } from "@/State/Game/GameState";
-import {renderHook} from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
+import { transformBlackCard } from "@/Types/BlackCard";
 
 let mockedDispatch = vi.fn();
 const gameId = "tacoGameId";
@@ -18,9 +19,7 @@ describe("useFetchSpectatorState", () => {
     spyOnUsePlayers(mockedDispatch, initialPlayersState);
     spyOnUseGame(mockedDispatch, initialGameState);
 
-    service.fetchSpectatorState.mockResolvedValue(
-      gameSpectatorExampleResponse as AxiosResponse
-    );
+    service.fetchSpectatorState.mockResolvedValue(gameSpectatorExampleResponse as AxiosResponse);
   });
 
   it("will call endpoint to set state", async () => {
@@ -33,9 +32,8 @@ describe("useFetchSpectatorState", () => {
     expectDispatch(mockedDispatch, data.user);
     expectDispatch(mockedDispatch, data.users);
     expectDispatch(mockedDispatch, data.game);
-    expectDispatch(mockedDispatch, data.blackCard);
+    expectDispatch(mockedDispatch, transformBlackCard(data.blackCard));
   });
-
 
   it("will catch server error", async () => {
     const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});

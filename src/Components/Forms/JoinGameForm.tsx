@@ -17,7 +17,8 @@ const JoinGameForm: FC = () => {
   const joinAsSpectator = useJoinAsSpectator();
   const joinGame = useJoinGame();
 
-  const submitToApi = useCallback(async (event: FormEvent) => {
+  const submitToApi = useCallback(
+    async (event: FormEvent) => {
       event.preventDefault();
       setLoading(true);
       if (spectator) {
@@ -26,7 +27,9 @@ const JoinGameForm: FC = () => {
       }
 
       await joinGame(code, userName);
-  }, [userName, code, spectator]);
+    },
+    [userName, code, spectator],
+  );
 
   return (
     <div className="flex flex-col w-full h-full" data-testid="join-game-section">

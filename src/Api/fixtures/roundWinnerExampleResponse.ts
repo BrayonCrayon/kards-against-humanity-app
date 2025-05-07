@@ -1,4 +1,5 @@
 import { RoundWinnerResponse } from "@/Types/ResponseTypes";
+import { BlackCard } from "@/Types/BlackCard";
 
 export const roundWinnerExampleResponse: RoundWinnerResponse = {
   data: {
@@ -17,11 +18,6 @@ export const roundWinnerExampleResponse: RoundWinnerResponse = {
         order: 1,
       },
     ],
-    black_card: {
-      id: 1234,
-      pick: 2,
-      text: "_ is what you tell cheap hookers when they leave _.",
-      expansionId: 69,
-    },
+    black_card: new BlackCard(1234, "_ is what you tell cheap hookers when they leave _.", 2, 69),
   },
 };

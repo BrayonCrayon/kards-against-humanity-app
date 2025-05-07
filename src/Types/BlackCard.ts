@@ -1,4 +1,4 @@
-import { Card } from "@/Types/Card";
+import { Card, CardType } from "@/Types/Card";
 
 export interface IBlackCard {
   id: number;
@@ -12,6 +12,7 @@ export interface IBlackCard {
 export class BlackCard extends Card implements IBlackCard {
     id: number;
     text: string;
+    type: CardType;
     pick: number;
     expansionId: number;
     createdAt?: Date | undefined;
@@ -26,6 +27,7 @@ export class BlackCard extends Card implements IBlackCard {
       deleted_at?: Date | undefined,
     ) {
       super();
+      this.type = CardType.Black;
       this.id = id;
       this.text = text;
       this.pick = pick;
@@ -33,13 +35,16 @@ export class BlackCard extends Card implements IBlackCard {
       this.createdAt = createdAt;
       this.deleted_at = deleted_at;
     }
+
+    getType(): CardType {
+      return this.type;
+    }
+}
+
+export const transformBlackCard = (item: IBlackCard): BlackCard => {
+  return new BlackCard(item.id, item.text, item.pick, item.expansionId, item.createdAt, item.deleted_at);
 }
 
 export const initialBlackCardObject = (): BlackCard => {
-    return {
-        id: 0,
-        text: "",
-        pick: 0,
-        expansionId: 0,
-    }
+    return new BlackCard();
 }
