@@ -18,7 +18,7 @@ export const happyToast = (message: string = "Success", position: SweetAlertPosi
     text: message,
     position: position,
     icon: "success",
-    timer: 3000000,
+    timer: 3000,
     timerProgressBar: true,
     showConfirmButton: false,
   });
