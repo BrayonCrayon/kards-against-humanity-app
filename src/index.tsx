@@ -9,6 +9,7 @@ import { GameProvider } from "@/State/Game/GameContext";
 import { createRoot } from "react-dom/client";
 import { SpectateProvider } from "@/State/Spectate/SpectateContext";
 import { VoteProvider } from "@/State/Vote/VoteContext";
+import { NotificationsProvider } from "@/State/Notifications/NotificationsContext";
 
 const container = document.getElementById("root");
 
@@ -18,19 +19,21 @@ const root = createRoot(container);
 
 root.render(
   // <React.StrictMode>
-    <AuthProvider>
-      <HandProvider>
-        <PlayersProvider>
-          <GameProvider>
-            <VoteProvider>
-              <SpectateProvider>
+  <AuthProvider>
+    <HandProvider>
+      <PlayersProvider>
+        <GameProvider>
+          <VoteProvider>
+            <SpectateProvider>
+              <NotificationsProvider>
                 <App />
-              </SpectateProvider>
-            </VoteProvider>
-          </GameProvider>
-        </PlayersProvider>
-      </HandProvider>
-    </AuthProvider>
+              </NotificationsProvider>
+            </SpectateProvider>
+          </VoteProvider>
+        </GameProvider>
+      </PlayersProvider>
+    </HandProvider>
+  </AuthProvider>,
   // </React.StrictMode>
 );
 
