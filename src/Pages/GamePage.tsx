@@ -66,7 +66,11 @@ const GamePage = () => {
   return (
     <div className="h-full relative">
       <GameInfo />
-      <KAHNotification />
+      <KAHNotification
+        text={
+          "I am a happy little notification. And I have a lot of text and I cant shut up and I am too long to fit by this point."
+        }
+      />
       {game.judgeId !== auth.id && !hasSubmittedCards && (
         <div className="bg-lukewarmGray-300">
           <Hand onSubmit={onSubmit} />
