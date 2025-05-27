@@ -28,7 +28,7 @@ const KAHNotification: FC<KAHNotificationProps> = ({ text, type = NotificationTy
     <div className="w-[400px] h-[75px] fixed top-1/2 left-1/2 translate-[-50%] flex items-center border border-lukewarmGray-100 shadow-xl p-2 rounded bg-white animate-notification">
       <div className={"mr-4 ml-2 inline-block"}>{looks[type].icon}</div>
       <p className={"w-[320px] truncate"}>{text}</p>
-      <div className="absolute bottom-0 left-0 h-[5px] animate-progress-bar bg-red-500"></div>
+      <div className="absolute bottom-0 left-0 h-[5px] animate-progress-bar bg-lukewarmGray-400"></div>
     </div>
   );
 };
