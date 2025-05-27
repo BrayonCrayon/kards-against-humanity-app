@@ -9,4 +9,19 @@ export class AddNotification extends BaseAction<INotificationsState, Notificatio
     };
   };
 }
-export type NotificationsActionTypes = AddNotification;
+
+export class RemoveNotification extends BaseAction<INotificationsState, Notification> {
+  execute = (state: INotificationsState) => {
+    const notificatiosnWithoutThisMessage = state.notifications.filter((notification) => {
+      return notification.message != this.payload.message;
+    });
+
+    console.log(notificatiosnWithoutThisMessage);
+
+    return {
+      ...state,
+      notifications: notificatiosnWithoutThisMessage,
+    };
+  };
+}
+export type NotificationsActionTypes = AddNotification | RemoveNotification;

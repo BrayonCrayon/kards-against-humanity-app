@@ -1,5 +1,5 @@
-import { useGenericContext } from "src/State/GeneralContext";
-import { NotificationsContext } from "src/State/Notifications/NotificationsContext";
+import { useGenericContext } from "@/State/GeneralContext";
+import { NotificationsContext } from "@/State/Notifications/NotificationsContext";
 
 function useNotifications() {
   return useGenericContext(NotificationsContext);

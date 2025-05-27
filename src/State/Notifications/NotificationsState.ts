@@ -1,8 +1,4 @@
-export enum NotificationType {
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-  INFO = "INFO",
-}
+import { NotificationType } from "@/Components/Molecules/KAHNotification";
 
 export enum Location {
   TOP = "TOP",
@@ -26,7 +22,7 @@ export class Notification implements INotification {
   constructor(location: Location, message: string, type?: NotificationType) {
     this.location = location;
     this.message = message;
-    this.type = type ?? NotificationType.INFO;
+    this.type = type ?? NotificationType.SUCCESS;
   }
 }
 

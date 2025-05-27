@@ -17,6 +17,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMugHot } from "@fortawesome/free-solid-svg-icons";
 import PlayerDrumRollModal from "@/Components/PlayerDrumRollModal";
 import KAHNotification from "@/Components/Molecules/KAHNotification";
+import { useNotifications } from "@/State/Notifications/useNotifications";
+import { Location, Notification } from "@/State/Notifications/NotificationsState";
+import { AddNotification, RemoveNotification } from "@/State/Notifications/NotificationActions";
 
 const GamePage = () => {
   const {
@@ -63,14 +66,26 @@ const GamePage = () => {
     });
   }, [id]);
 
+  const { state, dispatch } = useNotifications();
+
+  const createNotification = () => {
+    console.log("create notification");
+    dispatch(new AddNotification(new Notification(Location.CENTER, "I AM A NOTIFY")));
+  };
+
+  const closeNotification = () => {
+    console.log("I smell like beef");
+    dispatch(new RemoveNotification(new Notification(Location.TOP, "I AM A NOTIFY")));
+  };
+
   return (
     <div className="h-full relative">
+      <button onClick={createNotification}>Create Notification</button>
+
       <GameInfo />
-      <KAHNotification
-        text={
-          "I am a happy little notification. And I have a lot of text and I cant shut up and I am too long to fit by this point."
-        }
-      />
+      {state.notifications.map((item) => (
+        <KAHNotification message={item.message} />
+      ))}
       {game.judgeId !== auth.id && !hasSubmittedCards && (
         <div className="bg-lukewarmGray-300">
           <Hand onSubmit={onSubmit} />
