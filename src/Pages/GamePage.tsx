@@ -18,8 +18,6 @@ import { faMugHot } from "@fortawesome/free-solid-svg-icons";
 import PlayerDrumRollModal from "@/Components/PlayerDrumRollModal";
 import KAHNotification from "@/Components/Molecules/KAHNotification";
 import { useNotifications } from "@/State/Notifications/useNotifications";
-import { Location, Notification } from "@/State/Notifications/NotificationsState";
-import { AddNotification, RemoveNotification } from "@/State/Notifications/NotificationActions";
 
 const GamePage = () => {
   const {
@@ -37,6 +35,10 @@ const GamePage = () => {
   const {
     state: { auth, hasSubmittedCards },
   } = useAuth();
+
+  const {
+    state: { notifications },
+  } = useNotifications();
 
   const { id } = useParams<{ id: string }>();
 
@@ -66,25 +68,11 @@ const GamePage = () => {
     });
   }, [id]);
 
-  const { state, dispatch } = useNotifications();
-
-  const createNotification = () => {
-    console.log("create notification");
-    dispatch(new AddNotification(new Notification(Location.CENTER, "I AM A NOTIFY")));
-  };
-
-  const closeNotification = () => {
-    console.log("I smell like beef");
-    dispatch(new RemoveNotification(new Notification(Location.TOP, "I AM A NOTIFY")));
-  };
-
   return (
     <div className="h-full relative">
-      <button onClick={createNotification}>Create Notification</button>
-
       <GameInfo />
-      {state.notifications.map((item) => (
-        <KAHNotification message={item.message} />
+      {notifications.map((notification) => (
+        <KAHNotification message={notification.message} />
       ))}
       {game.judgeId !== auth.id && !hasSubmittedCards && (
         <div className="bg-lukewarmGray-300">
