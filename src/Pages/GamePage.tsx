@@ -16,8 +16,7 @@ import SelectionRoundTimer from "@/Components/Molecules/SelectionRoundTimer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMugHot } from "@fortawesome/free-solid-svg-icons";
 import PlayerDrumRollModal from "@/Components/PlayerDrumRollModal";
-import KAHNotification from "@/Components/Molecules/KAHNotification";
-import { useNotifications } from "@/State/Notifications/useNotifications";
+import Notifications from "@/Components/Notifications";
 
 const GamePage = () => {
   const {
@@ -35,10 +34,6 @@ const GamePage = () => {
   const {
     state: { auth, hasSubmittedCards },
   } = useAuth();
-
-  const {
-    state: { notifications },
-  } = useNotifications();
 
   const { id } = useParams<{ id: string }>();
 
@@ -71,9 +66,7 @@ const GamePage = () => {
   return (
     <div className="h-full relative">
       <GameInfo />
-      {notifications.map((notification) => (
-        <KAHNotification message={notification.message} />
-      ))}
+      <Notifications />
       {game.judgeId !== auth.id && !hasSubmittedCards && (
         <div className="bg-lukewarmGray-300">
           <Hand onSubmit={onSubmit} />

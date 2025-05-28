@@ -1,30 +1,4 @@
-import { NotificationType } from "@/Components/Molecules/KAHNotification";
-
-export enum Location {
-  TOP = "TOP",
-  BOTTOM = "BOTTOM",
-  LEFT = "LEFT",
-  RIGHT = "RIGHT",
-  CENTER = "CENTER",
-}
-
-export interface INotification {
-  message: string;
-  type: NotificationType;
-  location: Location;
-}
-
-export class Notification implements INotification {
-  location: Location;
-  message: string;
-  type: NotificationType;
-
-  constructor(location: Location, message: string, type?: NotificationType) {
-    this.location = location;
-    this.message = message;
-    this.type = type ?? NotificationType.SUCCESS;
-  }
-}
+import { Notification } from "src/Types/Notification";
 
 export interface INotificationsState {
   notifications: Notification[];

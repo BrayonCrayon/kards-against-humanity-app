@@ -1,4 +1,5 @@
-import { INotificationsState, Notification } from "@/State/Notifications/NotificationsState";
+import { INotificationsState } from "@/State/Notifications/NotificationsState";
+import { Notification } from "@/Types/Notification";
 import { BaseAction } from "@/State/GeneralContext";
 
 export class AddNotification extends BaseAction<INotificationsState, Notification> {
@@ -12,15 +13,11 @@ export class AddNotification extends BaseAction<INotificationsState, Notificatio
 
 export class RemoveNotification extends BaseAction<INotificationsState, Notification> {
   execute = (state: INotificationsState) => {
-    const notificatiosnWithoutThisMessage = state.notifications.filter((notification) => {
-      return notification.message != this.payload.message;
-    });
-
-    console.log(notificatiosnWithoutThisMessage);
-
     return {
       ...state,
-      notifications: notificatiosnWithoutThisMessage,
+      notifications: state.notifications.filter((notification) => {
+        return notification !== this.payload;
+      }),
     };
   };
 }

@@ -1,5 +1,6 @@
 import { notificationFactory } from "@/Tests/Factories/NotificationFactory";
-import { AddNotification } from "@/State/Notifications/NotificationActions";
+import { AddNotification, RemoveNotification } from "@/State/Notifications/NotificationActions";
+import { INotificationsState } from "@/State/Notifications/NotificationsState";
 
 describe("NotificationActions", () => {
   it("will add a notification from default state", () => {
@@ -26,5 +27,27 @@ describe("NotificationActions", () => {
     });
   });
 
-  it.todo("will remove an notification ", () => {});
+  it("will remove an notification ", () => {
+    const notificationToRemove = notificationFactory();
+    const state: INotificationsState = {
+      notifications: [notificationToRemove, notificationFactory()],
+    };
+    const action = new RemoveNotification(notificationToRemove);
+
+    const result = action.execute(state);
+
+    expect(result.notifications).toEqual(state.notifications.filter((item) => item !== notificationToRemove));
+  });
+
+  it("will remove exact notification when a message is duplicated", () => {
+    const notificationToRemove = notificationFactory({ message: "im a foo" });
+    const state: INotificationsState = {
+      notifications: [notificationToRemove, notificationFactory({ message: "im a foo" })],
+    };
+    const action = new RemoveNotification(notificationToRemove);
+
+    const result = action.execute(state);
+
+    expect(result.notifications).toEqual(state.notifications.filter((item) => item !== notificationToRemove));
+  });
 });
