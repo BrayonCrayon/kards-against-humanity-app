@@ -1,16 +1,15 @@
-export const useNotification = () => {
-  // element state is pulled in from KAHNotification
+import { Location, Notification } from "@/Types/Notification";
+import { AddNotification } from "@/State/Notifications/NotificationActions";
+import { useNotifications } from "@/State/Notifications/useNotifications";
 
-  // showNotification method
-  // handle show of state
-  const showNotification = () => {
-    console.log("show notification");
+export const useNotification = () => {
+  const { dispatch } = useNotifications();
+
+  const happyNotification = (message: string = "Success", location: Location = Location.CENTER) => {
+    dispatch(new AddNotification(new Notification({ message, location })));
   };
 
-  // hideNotification method
-  // handle hide of state
-
   return {
-    showNotification,
+    happyNotification,
   };
 };

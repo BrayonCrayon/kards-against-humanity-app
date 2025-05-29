@@ -1,8 +1,6 @@
 import React, { FC, PropsWithChildren, useCallback } from "react";
 import { SweetAlertPosition } from "sweetalert2";
-import { useNotifications } from "@/State/Notifications/useNotifications";
-import { AddNotification } from "@/State/Notifications/NotificationActions";
-import { Location, Notification } from "@/State/Notifications/NotificationsState";
+import { useNotification } from "@/Hooks/Notification/useNotification";
 
 interface ClipboardProps extends PropsWithChildren {
   copy: string;
@@ -20,13 +18,12 @@ const ClipBoard: FC<ClipboardProps> = ({
   successMessage = "Text Copied!",
   messagePosition = "top-start",
 }) => {
-  const { dispatch } = useNotifications();
+  const { happyNotification } = useNotification();
 
   const copyText = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(copy);
-      //happyToast(successMessage, messagePosition);
-      dispatch(new AddNotification(new Notification(Location.CENTER, successMessage)));
+      happyNotification(successMessage);
     } catch (error) {
       console.error(error);
     }
