@@ -1,13 +1,25 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faClose, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useNotifications } from "@/State/Notifications/useNotifications";
 import { RemoveNotification } from "@/State/Notifications/NotificationActions";
-import { Notification, NotificationType } from "@/Types/Notification";
+import { Location, Notification, NotificationType } from "@/Types/Notification";
 
 type KAHNotificationProps = {
   notification: Notification;
   type?: NotificationType;
+};
+
+const NotificationPosition = {
+  [Location.TOP_LEFT]: "top-2 left-2",
+  [Location.TOP_RIGHT]: "top-2 right-2",
+  [Location.TOP_CENTER]: "top-2 left-1/2 translate-x-[-50%]",
+  [Location.CENTER]: "top-1/2 left-1/2 translate-[-50%]",
+  [Location.CENTER_LEFT]: "top-1/2 left-2 translate-y-[-50%]",
+  [Location.CENTER_RIGHT]: "top-1/2 right-2 translate-y-[-50%]",
+  [Location.BOTTOM_LEFT]: "bottom-2 left-2",
+  [Location.BOTTOM_RIGHT]: "bottom-2 right-2",
+  [Location.BOTTOM_CENTER]: "bottom-2 left-1/2 translate-x-[-50%]",
 };
 
 const KAHNotification: FC<KAHNotificationProps> = ({ notification, type = notification.type }) => {
@@ -36,8 +48,14 @@ const KAHNotification: FC<KAHNotificationProps> = ({ notification, type = notifi
     return () => clearTimeout(timeout);
   }, []);
 
+  const position = useMemo(() => {
+    return NotificationPosition[notification.location];
+  }, [notification.location]);
+
   return (
-    <div className="w-[400px] h-[75px] fixed top-1/2 left-1/2 translate-[-50%] flex items-center border border-lukewarmGray-100 shadow-xl p-2 rounded bg-white animate-notification">
+    <div
+      className={`w-[400px] h-[75px] z-100 fixed flex items-center border border-lukewarmGray-100 shadow-xl p-2 rounded bg-white animate-notification ${position}`}
+    >
       <div className={"mr-4 ml-2 inline-block"}>{looks[type].icon}</div>
       <p className={"w-[320px] truncate"}>{notification.message}</p>
       <FontAwesomeIcon className="absolute top-1 right-2 cursor-pointer" icon={faXmark} onClick={closeNotification} />

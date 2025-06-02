@@ -8,6 +8,7 @@ import { CreateGameForm } from "@/Components/Forms/CreateGameForm";
 import Navigation from "@/Layouts/Navigation";
 import Footer from "@/Layouts/Footer";
 import AboutUs from "@/Pages/AboutUs";
+import Notifications from "@/Components/Notifications";
 
 export default function App() {
   useEffect(() => {
@@ -19,6 +20,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="h-screen flex flex-col">
+        <Notifications />
         <Navigation />
 
         <div className="flex-1">

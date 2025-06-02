@@ -10,22 +10,31 @@ import ShareButton from "@/Components/Atoms/ShareButton";
 import { ShareData } from "@/Types/WebShare";
 import CopyGameCode from "@/Components/Molecules/CopyGameCode";
 import useUpdateGameSettings from "@/Hooks/Game/State/useUpdateGameSettings";
-import { happyToast } from "@/Utilities/toasts";
+import { useToasts } from "@/Hooks/Notification/useToasts";
+import { Location } from "@/Types/Notification";
 
 const GameInfo: FC = () => {
-  const { state: { game, blackCard }, } = useGame();
-  const { state: { players }, } = usePlayers();
-  const { state: { auth }, } = useAuth();
+  const {
+    state: { game, blackCard },
+  } = useGame();
+  const {
+    state: { players },
+  } = usePlayers();
+  const {
+    state: { auth },
+  } = useAuth();
+  const { happyToast } = useToasts();
+
   const [data] = useState<ShareData>({
     title: "Kards Against Humanity",
     text: "Come join my game!",
-    url: `https://kardsagainsthumanity.ca/${game.code}`
+    url: `https://kardsagainsthumanity.ca/${game.code}`,
   });
   const update = useUpdateGameSettings();
 
   const updateSettings = useCallback(async (seconds: number) => {
-      await update(game.id, seconds);
-      happyToast("Game updated!");
+    await update(game.id, seconds);
+    happyToast("Game updated!", Location.CENTER);
   }, []);
 
   return (
@@ -38,7 +47,7 @@ const GameInfo: FC = () => {
         <div className="shadow-md p-2 m-2 md:w-auto">
           <CopyGameCode code={game.code} />
         </div>
-        <Settings className="grow md:grow-0 md:mr-5" players={players}/>
+        <Settings className="grow md:grow-0 md:mr-5" players={players} />
       </div>
       <div className="pb-12 mx-auto my-2 pt-4 w-full px-6 flex flex-col items-center md:w-1/2 lg:w-1/3">
         <BlackKard card={blackCard} />

@@ -16,7 +16,6 @@ import SelectionRoundTimer from "@/Components/Molecules/SelectionRoundTimer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMugHot } from "@fortawesome/free-solid-svg-icons";
 import PlayerDrumRollModal from "@/Components/PlayerDrumRollModal";
-import Notifications from "@/Components/Notifications";
 
 const GamePage = () => {
   const {
@@ -66,7 +65,6 @@ const GamePage = () => {
   return (
     <div className="h-full relative">
       <GameInfo />
-      <Notifications />
       {game.judgeId !== auth.id && !hasSubmittedCards && (
         <div className="bg-lukewarmGray-300">
           <Hand onSubmit={onSubmit} />

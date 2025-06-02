@@ -6,9 +6,9 @@ import { transformWhiteCardArray, WhiteCard } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
 import { transformUser } from "@/Types/User";
-import { errorToast } from "@/Utilities/toasts";
 import { confirmedSweetAlert, dismissSweetAlert, spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "@/Tests/testHelpers";
 import { getCardSubmitButton, whiteCardTestId } from "@/Tests/selectors";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
 const {
   data: { game, hand: handResponse, blackCard, currentUser },
@@ -16,33 +16,40 @@ const {
 
 const hand = transformWhiteCardArray(handResponse, false, []);
 const auth = transformUser(currentUser);
-
-const mockRedraw = vi.fn();
-vi.mock("@/Hooks/Game/Actions/useRedrawPlayerHand", () => ({
-  default: () => mockRedraw
+const mocks = vi.hoisted(() => ({
+  errorToast: vi.fn(),
+  redraw: vi.fn(),
 }));
-vi.mock("@/Utilities/toasts");
+
+vi.mock("@/Hooks/Game/Actions/useRedrawPlayerHand", () => ({
+  default: () => mocks.redraw,
+}));
+vi.mock("@/Hooks/Notification/useToasts", () => ({
+  useToasts: () => ({
+    errorToast: mocks.errorToast,
+  }),
+}));
 
 describe("Hand", () => {
   beforeEach(() => {
-    spyOnUseGame(vi.fn(), { game, blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCardFactory(blackCard), hasSpectator: false });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: false });
     spyOnUseHand(vi.fn(), { hand });
   });
 
   afterEach(() => {
     vi.clearAllMocks();
-  })
+  });
 
   it("will not redraw hand when user cancels confirm", async () => {
-    mockRedraw.mockClear();
+    mocks.redraw.mockClear();
     const sweetSpy = dismissSweetAlert();
     const wrapper = kardsRender(<Hand />);
 
     await userEvent.click(wrapper.getByTestId("redraw-button"));
 
     await waitFor(() => {
-      expect(mockRedraw).not.toHaveBeenCalled();
+      expect(mocks.redraw).not.toHaveBeenCalled();
     });
     sweetSpy.mockReset();
   });
@@ -54,7 +61,7 @@ describe("Hand", () => {
     await userEvent.click(wrapper.getByTestId("redraw-button"));
 
     await waitFor(() => {
-      expect(mockRedraw).toHaveBeenCalledWith(game.id);
+      expect(mocks.redraw).toHaveBeenCalledWith(game.id);
     });
     sweetSpy.mockReset();
   });
@@ -79,8 +86,8 @@ describe("Hand", () => {
 
     await userEvent.click(wrapper.getByTestId("redraw-button"));
 
-    expect(errorToast).toHaveBeenCalledWith("Cannot redraw, please wait until next round.");
-    expect(mockRedraw).not.toHaveBeenCalled();
+    expect(mocks.errorToast).toHaveBeenCalledWith("Cannot redraw, please wait until next round.");
+    expect(mocks.redraw).not.toHaveBeenCalled();
   });
 
   it("will only show submit button on the last card the player selected", async () => {
@@ -114,7 +121,7 @@ describe("Hand", () => {
     card.order = 2;
     card.selected = true;
     spyOnUseHand(vi.fn(), { hand: handWithSelection });
-    spyOnUseGame(vi.fn(), { game, blackCard: { ...blackCard, pick: 2 } });
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCardFactory({ ...blackCard, pick: 2 }), hasSpectator: false });
     kardsRender(<Hand />);
 
     expect(getCardSubmitButton(card.id)).not.toBeInTheDocument();

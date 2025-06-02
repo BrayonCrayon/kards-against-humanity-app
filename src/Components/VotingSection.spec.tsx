@@ -1,13 +1,10 @@
 import { submittedCardsResponse } from "@/Api/fixtures/submittedCardsResponse";
-import {
-  gameStateAllPlayerSubmittedCardsExampleResponse
-} from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
+import { gameStateAllPlayerSubmittedCardsExampleResponse } from "@/Api/fixtures/gameStateAllPlayerSubmittedCardsExampleResponse";
 import { waitFor } from "@testing-library/react";
 import { transformUser, transformUsers } from "@/Types/User";
 import { VotingSection } from "./VotingSection";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
-import { happyToast } from "@/Utilities/toasts";
 import { listenWhenWinnerIsSelected } from "@/Services/PusherService";
 import { kardsRender } from "@/Tests/testRenders";
 import { expectDispatch, spyOnUseAuth, spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
@@ -15,16 +12,21 @@ import { service } from "@/setupTests";
 import gameService, { fetchSubmittedCards } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
 import { initialVoteState } from "@/State/Vote/VoteState";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { Location } from "@/Types/Notification";
 
 const mocks = vi.hoisted(() => ({
   FetchRoundWinner: vi.fn(),
-  Dispatch: vi.fn()
-}))
+  Dispatch: vi.fn(),
+  happyToast: vi.fn(),
+}));
 
-vi.mock("@/Utilities/toasts");
+vi.mock("@/Hooks/Notification/useToasts", () => ({
+  useToasts: () => ({ happyToast: mocks.happyToast }),
+}));
 vi.mock("@/Services/PusherService");
 vi.mock("@/Hooks/Game/State/useFetchRoundWinner", () => ({
-  default: () => mocks.FetchRoundWinner
+  default: () => mocks.FetchRoundWinner,
 }));
 
 const {
@@ -47,7 +49,7 @@ const renderer = () => {
 
 describe("VotingSection", () => {
   beforeEach(() => {
-    spyOnUseGame(vi.fn(), { game, blackCard: mockProps.blackCard, hasSpectator: false });
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCardFactory(mockProps.blackCard), hasSpectator: false });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards: mockHasSubmittedWhiteCards });
   });
 
@@ -88,13 +90,13 @@ describe("VotingSection", () => {
         const buttons = wrapper.getAllByTestId("submit-selected-winner");
         expect(buttons).toHaveLength(2);
         return buttons;
-      })
+      });
 
       await userEvent.click(submitButtons[0]);
 
       await waitFor(() => {
         expect(gameService.submitWinner).toHaveBeenCalledWith(mockProps.game.id, user_id);
-        expect(happyToast).toHaveBeenCalledWith("Winner Selected!", "top");
+        expect(mocks.happyToast).toHaveBeenCalledWith("Winner Selected!", Location.TOP);
       });
       spy.mockRestore();
     });
@@ -104,13 +106,13 @@ describe("VotingSection", () => {
     beforeEach(() => {
       service.fetchSubmittedCards.mockResolvedValue(submittedCardsResponse as AxiosResponse);
     });
-    
+
     it("listens on winner selected pusher event when loading game page", async () => {
       renderer();
 
       await waitFor(() => {
         expect(listenWhenWinnerIsSelected).toHaveBeenCalledWith(game.id, mocks.FetchRoundWinner);
-      })
+      });
     });
   });
 
@@ -136,8 +138,8 @@ describe("VotingSection", () => {
     it("will not show submit winner button when user is not the judge", async () => {
       spyOnUseGame(vi.fn(), {
         game: { ...mockProps.game, judgeId: mockProps.users[0].id },
-        blackCard: mockProps.blackCard,
-        hasSpectator: false
+        blackCard: blackCardFactory(mockProps.blackCard),
+        hasSpectator: false,
       });
       const wrapper = renderer();
 
@@ -162,7 +164,7 @@ describe("VotingSection", () => {
 
     it("does not show submit winner button when a winner is in state", async () => {
       spyOnUseVote(vi.fn(), {
-        selectedRoundWinner: { ...submittedCardsResponse.data[0], black_card: mockProps.blackCard },
+        selectedRoundWinner: { ...submittedCardsResponse.data[0], black_card: blackCardFactory(mockProps.blackCard) },
         selectedPlayerId: -1,
       });
       const wrapper = renderer();
@@ -192,8 +194,8 @@ describe("VotingSection", () => {
 
           submittedData.submitted_cards.forEach((card) =>
             expect(wrapper.queryByTestId(`player-submitted-response-${submittedData.user_id}`)?.textContent).toEqual(
-              expect.stringContaining(card.text.replace(".", ""))
-            )
+              expect.stringContaining(card.text.replace(".", "")),
+            ),
           );
         });
       });

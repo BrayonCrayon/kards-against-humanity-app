@@ -10,56 +10,58 @@ import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
 import { initialGameState } from "@/State/Game/GameState";
 
-
 describe("GameSettingsTab", () => {
-
-    it("will show leave and update settings button when user is in game", () => {
-        const spyInstance = spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory()});
-        const wrapper = kardsRender(<GameSettingsTab />);
-
-        expect(wrapper.queryByTestId("update-settings")).toBeInTheDocument();
-        expect(wrapper.queryByTestId("leave-game")).toBeInTheDocument();
-        spyInstance.mockRestore();
+  it("will show leave and update settings button when user is in game", () => {
+    const spyInstance = spyOnUseGame(vi.fn(), {
+      game: gameFactory(),
+      blackCard: blackCardFactory(),
+      hasSpectator: false,
     });
+    const wrapper = kardsRender(<GameSettingsTab />);
 
-    it("will not show leave and update settings buttons when user is not in game", () => {
-        spyOnUseGame(vi.fn(), initialGameState);
-        const wrapper = kardsRender(<GameSettingsTab />);
+    expect(wrapper.queryByTestId("update-settings")).toBeInTheDocument();
+    expect(wrapper.queryByTestId("leave-game")).toBeInTheDocument();
+    spyInstance.mockRestore();
+  });
 
-        expect(wrapper.queryByTestId("update-settings")).not.toBeInTheDocument();
-        expect(wrapper.queryByTestId("leave-game")).not.toBeInTheDocument();
+  it("will not show leave and update settings buttons when user is not in game", () => {
+    spyOnUseGame(vi.fn(), initialGameState);
+    const wrapper = kardsRender(<GameSettingsTab />);
+
+    expect(wrapper.queryByTestId("update-settings")).not.toBeInTheDocument();
+    expect(wrapper.queryByTestId("leave-game")).not.toBeInTheDocument();
+  });
+
+  it.skip("will set animation toggle and timer when values are provided", () => {
+    const options = { timer: 150, hasAnimations: true };
+    spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory(), hasSpectator: false });
+    const wrapper = kardsRender(<GameSettingsTab options={options} />);
+
+    expect(wrapper.queryByText(toMinutesSeconds(options.timer))).toBeInTheDocument();
+    expect(wrapper.getByTestId("animation-toggle").innerHTML).toContain("fa-toggle-on");
+  });
+
+  it("will call update callback when timer has been updated", async () => {
+    const callback = vi.fn();
+    spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory(), hasSpectator: false });
+    const wrapper = kardsRender(<GameSettingsTab onUpdatedSettings={callback} />);
+
+    await userEvent.click(wrapper.getByTestId("timer-toggle"));
+
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalledWith({ timer: 180, hasAnimations: false });
     });
+  });
 
-    it.skip("will set animation toggle and timer when values are provided", () => {
-        const options = { timer: 150, hasAnimations: true };
-        spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
-        const wrapper = kardsRender(<GameSettingsTab options={options} />);
+  it.skip("will call update callback when animations have been toggled", async () => {
+    const callback = vi.fn();
+    spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory(), hasSpectator: false });
+    const wrapper = kardsRender(<GameSettingsTab onUpdatedSettings={callback} />);
 
-        expect(wrapper.queryByText(toMinutesSeconds(options.timer))).toBeInTheDocument();
-        expect(wrapper.getByTestId("animation-toggle").innerHTML).toContain("fa-toggle-on");
+    await userEvent.click(wrapper.getByTestId("animation-toggle"));
+
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalledWith({ timer: null, hasAnimations: true });
     });
-
-    it("will call update callback when timer has been updated", async () => {
-        const callback = vi.fn();
-        spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
-        const wrapper = kardsRender(<GameSettingsTab onUpdatedSettings={callback}/>);
-
-        await userEvent.click(wrapper.getByTestId("timer-toggle"));
-
-        await waitFor(() => {
-            expect(callback).toHaveBeenCalledWith({ timer: 180, hasAnimations: false});
-        });
-    });
-
-    it.skip("will call update callback when animations have been toggled", async () => {
-        const callback = vi.fn();
-        spyOnUseGame(vi.fn(), { game: gameFactory(), blackCard: blackCardFactory() });
-        const wrapper = kardsRender(<GameSettingsTab onUpdatedSettings={callback}/>);
-
-        await userEvent.click(wrapper.getByTestId("animation-toggle"));
-
-        await waitFor(() => {
-            expect(callback).toHaveBeenCalledWith({timer: null, hasAnimations: true});
-        });
-    });
+  });
 });
