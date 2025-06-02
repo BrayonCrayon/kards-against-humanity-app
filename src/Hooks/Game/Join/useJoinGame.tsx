@@ -10,18 +10,18 @@ import { transformUser, transformUsers } from "@/Types/User";
 import { SetPlayersAction } from "@/State/Players/PlayersActions";
 import { SetHandAction } from "@/State/Hand/HandActions";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
-import { errorToast } from "@/Utilities/toasts";
 import { joinGame } from "@/Services/GameService";
+import { useToasts } from "@/Hooks/Notification/useToasts";
 
-function useJoinGame () {
+function useJoinGame() {
   const navigate = useNavigate();
+  const { errorToast } = useToasts();
   const { dispatch } = usePlayers();
   const { dispatch: handDispatch } = useHand();
   const { dispatch: userDispatch } = useAuth();
   const { dispatch: gameDispatch } = useGame();
 
   return useCallback(async (code: string, userName: string) => {
-
     try {
       const { data } = await joinGame(code, userName);
       gameDispatch(new SetGameAction(data.game));

@@ -11,7 +11,7 @@ const Notifications = () => {
   return (
     <>
       {notifications.map((notification: Notification) => (
-        <KAHNotification notification={notification} />
+        <KAHNotification notification={notification} key={notification.id} />
       ))}
     </>
   );

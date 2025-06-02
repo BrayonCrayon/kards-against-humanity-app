@@ -1,3 +1,5 @@
+import { random } from "lodash";
+
 export enum Location {
   TOP = "TOP",
   BOTTOM = "BOTTOM",
@@ -12,6 +14,7 @@ export enum NotificationType {
 }
 
 export interface INotification {
+  id: number;
   message: string;
   type: NotificationType;
   location: Location;
@@ -19,12 +22,14 @@ export interface INotification {
 }
 
 export class Notification implements INotification {
+  id: number;
   location: Location;
   message: string;
   type: NotificationType;
   duration: number;
 
   constructor({ message = "", location, type, duration = 3 }: Partial<INotification>) {
+    this.id = random(1000);
     this.message = message;
     this.location = location ?? Location.CENTER;
     this.type = type ?? NotificationType.SUCCESS;

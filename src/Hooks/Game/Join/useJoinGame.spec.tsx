@@ -5,13 +5,21 @@ import { mockedUsedNavigate, service } from "@/setupTests";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import { AxiosResponse } from "axios";
 import { transformUser, transformUsers } from "@/Types/User";
-import { errorToast } from "@/Utilities/toasts";
 import { transformWhiteCardArray } from "@/Types/WhiteCard";
 
-const {data} = gameStateExampleResponse;
+const { data } = gameStateExampleResponse;
 const code = "1k2k";
 const userName = "Frodo";
 const dispatchSpy = vi.fn();
+const mocks = vi.hoisted(() => ({
+  errorToast: vi.fn(),
+}));
+
+vi.mock("@/Hooks/Notification/useToasts", () => ({
+  useToasts: () => ({
+    errorToast: mocks.errorToast,
+  }),
+}));
 
 describe("useJoinGame", () => {
   beforeEach(() => {
@@ -20,7 +28,7 @@ describe("useJoinGame", () => {
     spyOnUsePlayers(dispatchSpy);
     spyOnUseHand(dispatchSpy);
     spyOnUseAuth(dispatchSpy);
-  })
+  });
 
   it("will call endpoint and set state", async () => {
     const { result } = kardsHookRender(useJoinGame);
@@ -45,6 +53,6 @@ describe("useJoinGame", () => {
     await result.current(code, userName);
 
     expect(consoleSpy).toHaveBeenCalledWith(errorMessage);
-    expect(errorToast).toHaveBeenCalledWith("Game does not exist");
+    expect(mocks.errorToast).toHaveBeenCalledWith("Game does not exist");
   });
 });

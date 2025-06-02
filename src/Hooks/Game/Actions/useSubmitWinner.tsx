@@ -1,14 +1,15 @@
 import { useCallback } from "react";
 import gameService from "@/Services/GameService";
-import { happyToast } from "@/Utilities/toasts";
-
+import { useToasts } from "@/Hooks/Notification/useToasts";
+import { Location } from "@/Types/Notification";
 
 function useSubmitWinner() {
+  const { happyToast } = useToasts();
 
   return useCallback(async (gameId: string, playerId: number) => {
     try {
       await gameService.submitWinner(gameId, playerId);
-      happyToast("Winner Selected!", "top");
+      happyToast("Winner Selected!", Location.TOP);
     } catch (e) {
       console.error(e);
     }

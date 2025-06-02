@@ -7,10 +7,12 @@ import { transformUser, transformUsers } from "@/Types/User";
 import { kardsRender } from "@/Tests/testRenders";
 import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers";
 import userEvent from "@testing-library/user-event";
-import { happyToast } from "@/Utilities/toasts";
 import { gameFactory } from "@/Tests/Factories/GameFactory";
+import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
-const { data: {game, users, currentUser, blackCard} } = gameStateJudgeExampleResponse;
+const {
+  data: { game, users, currentUser, blackCard },
+} = gameStateJudgeExampleResponse;
 const players = transformUsers(users);
 const auth = transformUser(currentUser);
 const hasSubmittedCards = false;
@@ -20,24 +22,29 @@ const renderer = async (): Promise<RenderResult> => {
 };
 
 const mocks = vi.hoisted(() => ({
-  updateGameSettings: vi.fn()
-}))
+  updateGameSettings: vi.fn(),
+  happyToast: vi.fn(),
+}));
 
 vi.mock("@/Hooks/Game/Actions/useKickPlayer", () => ({
-    default: () => vi.fn()
+  default: () => vi.fn(),
 }));
 
 vi.mock("@/Hooks/Game/State/useUpdateGameSettings", () => ({
-    default: () => mocks.updateGameSettings,
-}))
+  default: () => mocks.updateGameSettings,
+}));
 
-vi.mock("@/Utilities/toasts");
+vi.mock("@/Hooks/Notification/useToasts", () => ({
+  useToasts: () => ({
+    happyToast: mocks.happyToast,
+  }),
+}));
 
 describe("GameInfo", () => {
   beforeEach(() => {
     spyOnUsePlayers(vi.fn(), { players });
     spyOnUseAuth(vi.fn(), { auth, hasSubmittedCards });
-    spyOnUseGame(vi.fn(), { game, blackCard });
+    spyOnUseGame(vi.fn(), { game, blackCard: blackCardFactory(blackCard), hasSpectator: false });
   });
 
   it("shows game code", async () => {
@@ -71,19 +78,17 @@ describe("GameInfo", () => {
     });
 
     await waitFor(() => {
-      expect(happyToast).toHaveBeenCalledWith(
-        "Game code copied!",
-        "center"
-      );
+      expect(mocks.happyToast).toHaveBeenCalledWith("Game code copied!");
     });
   });
 
   it("will update game settings when user clicks update in timer settings", async () => {
     const seconds = 300;
-    const callbackSpy = spyOnUseGame(
-        vi.fn(),
-        {game: gameFactory({selectionTimer: 200, selectionEndsAt: 5000}), blackCard}
-    );
+    const callbackSpy = spyOnUseGame(vi.fn(), {
+      game: gameFactory({ selectionTimer: 200, selectionEndsAt: 5000 }),
+      blackCard: blackCardFactory(blackCard),
+      hasSpectator: false,
+    });
     const wrapper = await renderer();
 
     await userEvent.click(wrapper.getByTestId("game-settings"));
