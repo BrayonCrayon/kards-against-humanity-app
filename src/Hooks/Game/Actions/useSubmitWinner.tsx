@@ -9,7 +9,7 @@ function useSubmitWinner() {
   return useCallback(async (gameId: string, playerId: number) => {
     try {
       await gameService.submitWinner(gameId, playerId);
-      happyToast("Winner Selected!", Location.TOP);
+      happyToast("Winner Selected!", Location.TOP_CENTER);
     } catch (e) {
       console.error(e);
     }

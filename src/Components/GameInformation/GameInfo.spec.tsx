@@ -9,6 +9,7 @@ import { spyOnUseAuth, spyOnUseGame, spyOnUsePlayers } from "@/Tests/testHelpers
 import userEvent from "@testing-library/user-event";
 import { gameFactory } from "@/Tests/Factories/GameFactory";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
+import { Location } from "@/Types/Notification";
 
 const {
   data: { game, users, currentUser, blackCard },
@@ -78,7 +79,7 @@ describe("GameInfo", () => {
     });
 
     await waitFor(() => {
-      expect(mocks.happyToast).toHaveBeenCalledWith("Game code copied!");
+      expect(mocks.happyToast).toHaveBeenCalledWith("Game code copied!", Location.CENTER);
     });
   });
 

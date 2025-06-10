@@ -1,8 +1,8 @@
-import React, { FC, useCallback, useMemo } from "react";
-import Swal from "sweetalert2";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import useRedrawPlayerHand from "@/Hooks/Game/Actions/useRedrawPlayerHand";
-import { Game } from "../Types/Game";
+import { Game } from "@/Types/Game";
 import { useToasts } from "@/Hooks/Notification/useToasts";
+import RedrawModal from "@/Components/Molecules/RedrawModal";
 
 interface RedrawProps {
   game: Game;
@@ -14,33 +14,25 @@ interface RedrawProps {
 const Redraw: FC<RedrawProps> = ({ game, redrawsUsed, className = "", buttonClass = "" }) => {
   const { errorToast } = useToasts();
   const redrawHand = useRedrawPlayerHand();
+  const [showModal, setShowModal] = useState(false);
 
   const redrawsLeft = useMemo(() => {
     return game.redrawLimit - redrawsUsed;
   }, [redrawsUsed, game]);
 
-  const redraw = useCallback(async () => {
+  const canUserRedraw = useCallback(async () => {
     if (redrawsUsed === game.redrawLimit) {
       errorToast("Cannot redraw, please wait until next round.");
       return;
     }
 
-    // TODO: Change this sweet alert modal to use built in one
-    const result = await Swal.fire({
-      title: "Are you sure you want to redraw?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes",
-    });
-
-    if (result.isDismissed || result.isDenied) {
-      return;
-    }
-
-    await redrawHand(game.id);
+    setShowModal(true);
   }, [game, redrawsUsed]);
+
+  const redraw = useCallback(async () => {
+    setShowModal(false);
+    await redrawHand(game.id);
+  }, [game]);
 
   return (
     <div className={className}>
@@ -51,10 +43,11 @@ const Redraw: FC<RedrawProps> = ({ game, redrawsUsed, className = "", buttonClas
       <button
         className={`text-sm text-black border border-lightBlack cursor-pointer ${buttonClass}`}
         data-testid="redraw-button"
-        onClick={redraw}
+        onClick={canUserRedraw}
       >
         Redraw
       </button>
+      <RedrawModal show={showModal} onConfirm={redraw} onClose={() => setShowModal(false)} />
     </div>
   );
 };

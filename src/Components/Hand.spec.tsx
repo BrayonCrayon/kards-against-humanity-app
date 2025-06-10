@@ -6,7 +6,7 @@ import { transformWhiteCardArray, WhiteCard } from "@/Types/WhiteCard";
 import userEvent from "@testing-library/user-event";
 import { waitFor } from "@testing-library/react";
 import { transformUser } from "@/Types/User";
-import { confirmedSweetAlert, dismissSweetAlert, spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "@/Tests/testHelpers";
+import { spyOnUseAuth, spyOnUseGame, spyOnUseHand } from "@/Tests/testHelpers";
 import { getCardSubmitButton, whiteCardTestId } from "@/Tests/selectors";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
 
@@ -43,27 +43,25 @@ describe("Hand", () => {
 
   it("will not redraw hand when user cancels confirm", async () => {
     mocks.redraw.mockClear();
-    const sweetSpy = dismissSweetAlert();
     const wrapper = kardsRender(<Hand />);
 
     await userEvent.click(wrapper.getByTestId("redraw-button"));
+    await userEvent.click(wrapper.getByRole("cancel"));
 
     await waitFor(() => {
       expect(mocks.redraw).not.toHaveBeenCalled();
     });
-    sweetSpy.mockReset();
   });
 
   it("will call redraw hook when user confirms to redraw", async () => {
-    const sweetSpy = confirmedSweetAlert(true);
     const wrapper = kardsRender(<Hand />);
 
     await userEvent.click(wrapper.getByTestId("redraw-button"));
+    await userEvent.click(wrapper.getByRole("confirm"));
 
     await waitFor(() => {
       expect(mocks.redraw).toHaveBeenCalledWith(game.id);
     });
-    sweetSpy.mockReset();
   });
 
   it("will show the remaining redraws a user can take", () => {

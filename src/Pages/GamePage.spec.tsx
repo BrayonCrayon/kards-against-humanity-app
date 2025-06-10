@@ -229,7 +229,7 @@ describe("GamePage", () => {
 
       await waitFor(() => userEvent.click(wrapper.getByTestId(`kick-player-${playerToKick.id}`)));
 
-      await waitFor(() => userEvent.click(wrapper.getByRole("yes-kick-player")));
+      await waitFor(() => userEvent.click(wrapper.getByRole("confirm")));
 
       expect(wrapper.queryByTestId(`user-${playerToKick.id}`)).not.toBeInTheDocument();
       sweetSpy.mockReset();

@@ -96,7 +96,7 @@ describe("VotingSection", () => {
 
       await waitFor(() => {
         expect(gameService.submitWinner).toHaveBeenCalledWith(mockProps.game.id, user_id);
-        expect(mocks.happyToast).toHaveBeenCalledWith("Winner Selected!", Location.TOP);
+        expect(mocks.happyToast).toHaveBeenCalledWith("Winner Selected!", Location.TOP_CENTER);
       });
       spy.mockRestore();
     });

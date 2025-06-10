@@ -103,7 +103,7 @@ describe("PlayerList", () => {
     });
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole("yes-kick-player"));
+      userEvent.click(wrapper.getByRole("confirm"));
     });
 
     await waitFor(() => {
