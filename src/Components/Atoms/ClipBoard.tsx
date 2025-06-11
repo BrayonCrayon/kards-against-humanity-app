@@ -16,7 +16,7 @@ const ClipBoard: FC<ClipboardProps> = ({
   className = "",
   role = "copy",
   successMessage = "Text Copied!",
-  messagePosition = Location.TOP_LEFT,
+  messagePosition = Location.CENTER,
 }) => {
   const { happyToast } = useToasts();
 

@@ -11,7 +11,6 @@ import * as useHand from "@/State/Hand/useHand";
 import * as useVote from "@/State/Vote/useVote";
 import * as useSpectate from "@/State/Spectate/useSpectate";
 import * as useNotifications from "@/State/Notifications/useNotifications";
-import Swal from "sweetalert2";
 import { vi } from "vitest";
 import { initialNotificationsState, INotificationsState } from "@/State/Notifications/NotificationsState";
 
@@ -78,20 +77,4 @@ export const spyOnState = <T extends object>(state: any = {}, mockedDispatch = v
     },
     dispatch: mockedDispatch,
   }));
-};
-
-export const confirmedSweetAlert = (confirmed: boolean) => {
-  return vi.spyOn(Swal, "fire").mockResolvedValueOnce({
-    isConfirmed: confirmed,
-    isDenied: false,
-    isDismissed: false,
-  });
-};
-
-export const dismissSweetAlert = () => {
-  return vi.spyOn(Swal, "fire").mockResolvedValueOnce({
-    isConfirmed: false,
-    isDenied: false,
-    isDismissed: true,
-  });
 };
