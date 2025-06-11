@@ -14,7 +14,12 @@ export const mockedAxios = apiClient as Mocked<typeof apiClient>;
 vi.mock("@/Services/GameService");
 export const service = gameService as Mocked<typeof gameService>;
 
-vi.mock("@/Utilities/toasts");
+vi.mock("@/Hooks/Notification/useToasts", () => ({
+  useToasts: () => ({
+    happyToast: vi.fn(),
+    errorToast: vi.fn(),
+  }),
+}));
 
 Object.assign(navigator, {
   clipboard: {
@@ -33,9 +38,9 @@ vi.mock("react-router-dom", () => ({
 
 vi.mock("react-confetti");
 vi.mock("@lottiefiles/dotlottie-react", () => ({
-  DotLottieReact: () => <div data-testid="drum-icon" />
+  DotLottieReact: () => <div data-testid="drum-icon" />,
 }));
 
 afterEach(() => {
-  vi.clearAllMocks()
-})
+  vi.clearAllMocks();
+});

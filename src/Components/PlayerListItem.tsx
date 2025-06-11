@@ -60,7 +60,8 @@ const PlayerListItem: FC<PlayerListItemProps> = ({ player }) => {
             <KickPlayerModal
               show={showKickModal}
               playerName={player.name}
-              onYesCallback={() => onPlayerKick(player.id)}
+              onConfirm={() => onPlayerKick(player.id)}
+              onClose={() => setShowKickModal(false)}
             />
           </div>
         )}
