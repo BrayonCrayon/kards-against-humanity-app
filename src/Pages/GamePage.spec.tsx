@@ -14,7 +14,7 @@ import { gameStateOnePlayerInGameExampleResponse } from "@/Api/fixtures/gameStat
 import { service } from "@/setupTests";
 import { fetchState } from "@/Services/GameService";
 import { AxiosResponse } from "axios";
-import { confirmedSweetAlert, spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
+import { spyOnUseGame, spyOnUseVote } from "@/Tests/testHelpers";
 import { blackCardFixture } from "@/Api/fixtures/blackcardFixture";
 import { gameStatePickTwoExampleResponse } from "@/Api/fixtures/gameStatePickTwoExampleResponse";
 import roundWinnerFactory from "@/Tests/Factories/RoundWinnerFactory";
@@ -222,7 +222,6 @@ describe("GamePage", () => {
       service.fetchState.mockResolvedValueOnce(gameStateJudgeExampleResponse);
       const { users, currentUser } = gameStateJudgeExampleResponse.data;
       const [playerToKick] = users.filter((item) => item.id !== currentUser.id);
-      const sweetSpy = confirmedSweetAlert(true);
       const wrapper = kardsRender(<GamePage />);
 
       await waitFor(() => togglePlayerList());
@@ -232,7 +231,6 @@ describe("GamePage", () => {
       await waitFor(() => userEvent.click(wrapper.getByRole("confirm")));
 
       expect(wrapper.queryByTestId(`user-${playerToKick.id}`)).not.toBeInTheDocument();
-      sweetSpy.mockReset();
     });
 
     it("will not display white cards when current user is judge", async () => {
