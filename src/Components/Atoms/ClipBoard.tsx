@@ -1,23 +1,24 @@
-import React, {FC, PropsWithChildren, useCallback} from "react";
-import { happyToast } from "@/Utilities/toasts";
-import { SweetAlertPosition } from "sweetalert2";
+import React, { FC, PropsWithChildren, useCallback } from "react";
+import { useToasts } from "@/Hooks/Notification/useToasts";
+import { Location } from "@/Types/Notification";
 
-interface ClipboardProps extends PropsWithChildren{
+interface ClipboardProps extends PropsWithChildren {
   copy: string;
   className?: string;
   role?: string;
   successMessage?: string;
-  messagePosition?: SweetAlertPosition;
+  messagePosition?: Location;
 }
 
 const ClipBoard: FC<ClipboardProps> = ({
-                                         children,
-                                         copy,
-                                         className = "",
-                                         role = "copy",
-                                         successMessage = "Text Copied!",
-                                         messagePosition = "top-start"
-                                       }) => {
+  children,
+  copy,
+  className = "",
+  role = "copy",
+  successMessage = "Text Copied!",
+  messagePosition = Location.CENTER,
+}) => {
+  const { happyToast } = useToasts();
 
   const copyText = useCallback(async () => {
     try {
@@ -29,11 +30,7 @@ const ClipBoard: FC<ClipboardProps> = ({
   }, [copy, successMessage]);
 
   return (
-    <div
-      role={role}
-      onClick={() => copyText()}
-      className={`cursor-pointer ${className}`}
-    >
+    <div role={role} onClick={() => copyText()} className={`cursor-pointer ${className}`}>
       {children}
     </div>
   );

@@ -2,15 +2,20 @@ import { render } from "@testing-library/react";
 import ShareButton from "@/Components/Atoms/ShareButton";
 import userEvent from "@testing-library/user-event";
 import { webShare } from "@/Types/WebShare";
-import { errorToast } from "@/Utilities/toasts";
 
-vi.mock("@/Utilities/toasts", () => ({
-  errorToast: vi.fn()
-}))
+const mocks = vi.hoisted(() => ({
+  errorToast: vi.fn(),
+}));
+
+vi.mock("@/Hooks/Notification/useToasts", () => ({
+  useToasts: () => ({
+    errorToast: mocks.errorToast,
+  }),
+}));
 
 const renderComponent = () => {
   return render(<ShareButton />);
-}
+};
 
 describe("ShareButton", () => {
   it("will check if user can share", async () => {
@@ -41,7 +46,7 @@ describe("ShareButton", () => {
 
     await userEvent.click(wrapper.getByRole("share-button"));
 
-    expect(errorToast).toHaveBeenCalled();
+    expect(mocks.errorToast).toHaveBeenCalled();
     webSpy.mockRestore();
   });
-})
+});

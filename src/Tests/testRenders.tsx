@@ -6,36 +6,39 @@ import { PlayersProvider } from "@/State/Players/PlayersContext";
 import { HandProvider } from "@/State/Hand/HandContext";
 import { AuthProvider } from "@/State/Auth/AuthContext";
 import React, { ReactNode } from "react";
+import { NotificationsProvider } from "@/State/Notifications/NotificationsContext";
 
-export const kardsRender = (children: ReactNode): RenderResult => render(
-  // <MemoryRouter>
+export const kardsRender = (children: ReactNode): RenderResult =>
+  render(
+    // <MemoryRouter>
     <GameProvider>
       <AuthProvider>
         <HandProvider>
           <VoteProvider>
             <PlayersProvider>
-              {children}
+              <NotificationsProvider>{children}</NotificationsProvider>
             </PlayersProvider>
           </VoteProvider>
         </HandProvider>
       </AuthProvider>
     </GameProvider>,
-  // </MemoryRouter>,
-);
+    // </MemoryRouter>,
+  );
 
-export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TResult, props?: TProps) => renderHook(callback, {
+export const kardsHookRender = <TProps, TResult>(callback: (props: TProps) => TResult, props?: TProps) =>
+  renderHook(callback, {
     wrapper: ({ children }) => (
-        <GameProvider>
-          <AuthProvider>
-            <HandProvider>
-              <VoteProvider>
-                <PlayersProvider>
-                  {children}
-                </PlayersProvider>
-              </VoteProvider>
-            </HandProvider>
-          </AuthProvider>
-        </GameProvider>
+      <GameProvider>
+        <AuthProvider>
+          <HandProvider>
+            <VoteProvider>
+              <PlayersProvider>
+                <NotificationsProvider>{children}</NotificationsProvider>
+              </PlayersProvider>
+            </VoteProvider>
+          </HandProvider>
+        </AuthProvider>
+      </GameProvider>
     ),
-    initialProps: props
+    initialProps: props,
   });

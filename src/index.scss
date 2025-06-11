@@ -22,6 +22,8 @@
   --color-emerald-500: #95D860;
 
   --animate-slide-in-and-slide-out: slide-in-and-slide-out 5s forwards;
+  --animate-notification: notification 0.5s forwards;
+  --animate-progress-bar: progress-bar 3s linear forwards;
 
   @keyframes slide-in-and-slide-out {
     0% {
@@ -51,6 +53,24 @@
       transform: translateX(100%);
       opacity: 1;
     }
+  }
+
+  @keyframes notification {
+    0% { transform: translateY(-0.625em) rotateZ(2deg); }
+    33% {
+      transform: translateY(0) rotateZ(-2deg);
+    }
+    66% {
+      transform: translateY(0.3125em) rotateZ(2deg);
+    }
+    100% {
+      transform: translateY(0) rotateZ(0deg);
+    }
+  }
+
+  @keyframes progress-bar {
+    0% { width: 100%; }
+    100% { width: 0; }
   }
 }
 

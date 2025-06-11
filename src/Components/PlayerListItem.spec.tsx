@@ -37,11 +37,11 @@ describe("PlayerListItem", () => {
     await userEvent.click(wrapper.getByTestId(`kick-player-${player.id}`));
 
     await waitFor(() => {
-      expect(wrapper.queryByRole("yes-kick-player")).toBeInTheDocument();
-      expect(wrapper.queryByRole("cancel-kicking-player")).toBeInTheDocument();
+      expect(wrapper.queryByRole("confirm")).toBeInTheDocument();
+      expect(wrapper.queryByRole("cancel")).toBeInTheDocument();
     });
 
-    await waitFor(() => userEvent.click(wrapper.getByRole("yes-kick-player")));
+    await waitFor(() => userEvent.click(wrapper.getByRole("confirm")));
 
     expect(mockKickPlayer).toHaveBeenCalledWith(game.id, player.id);
   });
@@ -55,7 +55,7 @@ describe("PlayerListItem", () => {
 
     await waitFor(() => {
       expect(mockKickPlayer).not.toHaveBeenCalledWith(game.id, player.id);
-      userEvent.click(wrapper.getByRole("cancel-kicking-player"));
+      userEvent.click(wrapper.getByRole("cancel"));
     });
 
     await waitFor(() => {

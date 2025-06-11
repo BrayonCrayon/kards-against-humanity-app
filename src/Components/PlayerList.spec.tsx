@@ -2,7 +2,7 @@ import "@testing-library/jest-dom/vitest";
 import { waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { kardsRender } from "@/Tests/testRenders";
-import { confirmedSweetAlert, spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
+import { spyOnUseAuth, spyOnUseGame } from "@/Tests/testHelpers";
 import { gameStateExampleResponse } from "@/Api/fixtures/gameStateExampleResponse";
 import PlayerList from "./PlayerList";
 import { blackCardFactory } from "@/Tests/Factories/BlackCardFactory";
@@ -93,7 +93,6 @@ describe("PlayerList", () => {
   });
 
   it("will call api endpoint to kick player from game", async () => {
-    confirmedSweetAlert(true);
     spyOnUseGame(vi.fn(), { blackCard, game: { ...game, judgeId: auth.id }, hasSpectator: false });
     const playerToKick = players.filter((item) => item.id !== auth.id)[0];
     const wrapper = kardsRender(<PlayerList users={players} />);
@@ -103,7 +102,7 @@ describe("PlayerList", () => {
     });
 
     await waitFor(() => {
-      userEvent.click(wrapper.getByRole("yes-kick-player"));
+      userEvent.click(wrapper.getByRole("confirm"));
     });
 
     await waitFor(() => {
