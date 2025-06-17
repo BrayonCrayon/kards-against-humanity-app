@@ -19,7 +19,8 @@
     "types": ["vitest/globals"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "outDir": "./dist"
   },
   "compileOnSave": false,
   "include": ["vite.config.ts"]
